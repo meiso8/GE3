@@ -9,11 +9,12 @@
 #include<numbers>
 
 
-void Model::Create(const ModelData& modelData,
+void Model::Create(const ModelData& modelData, ModelConfig mc,
     const Microsoft::WRL::ComPtr<ID3D12Device>& device,
     const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap,uint32_t index) {
 
-    modelData_ = modelData;
+    modelData_ = &modelData;
+    modelConfig_ = mc;
 
     //マテリアルの作成 lightType halfLambert
     materialResource_.CreateMaterial(device, 2);
@@ -21,19 +22,19 @@ void Model::Create(const ModelData& modelData,
     CreateWorldVPResource(device);
 
     //頂点リソースを作る
-    vertexResource_ = CreateBufferResource(device, sizeof(VertexData) * modelData_.vertices.size());
+    vertexResource_ = CreateBufferResource(device, sizeof(VertexData) * modelData_->vertices.size());
 
     vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();//リソースの先頭アドレスから使う
-    vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_.vertices.size());//使用するリソースのサイズは頂点のサイズ
+    vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_->vertices.size());//使用するリソースのサイズは頂点のサイズ
     vertexBufferView_.StrideInBytes = sizeof(VertexData);//1頂点あたりのサイズ
 
     //頂点リソースにデータを書き込む
     vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));//書き込むためのアドレスを取得
-    std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());//頂点データをリソースにコピー
+    std::memcpy(vertexData_, modelData_->vertices.data(), sizeof(VertexData) * modelData_->vertices.size());//頂点データをリソースにコピー
 
     //モデルのテクスチャを読む
     texture_ = new Texture(device, *modelConfig_.commandList);
-    texture_->Load(modelData_.material.textureFilePath);
+    texture_->Load(modelData_->material.textureFilePath);
 
     //これだとダメだわ
     srv_.Create(*texture_, index, device, srvDescriptorHeap);
@@ -143,7 +144,7 @@ void Model::Draw(const Matrix4x4& worldMatrix, Camera& camera,uint32_t lightType
     //expansionのCBufferの場所を設定
     modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
     //描画!(DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
-    modelConfig_.commandList->GetComandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+    modelConfig_.commandList->GetComandList()->DrawInstanced(UINT(modelData_->vertices.size()), 1, 0, 0);
 
 }
 
