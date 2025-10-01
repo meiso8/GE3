@@ -1,5 +1,6 @@
 #include<numbers>
 #include"MyEngine.h"
+#include"Player.h"
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
@@ -58,17 +59,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     DrawGrid grid = DrawGrid(myEngine.GetDevice(), myEngine.GetModelConfig(0));
 
     Sprite sprite;
-    sprite.Create(myEngine.GetDevice(),  myEngine.GetModelConfig(2));
+    sprite.Create(myEngine.GetDevice(), myEngine.GetModelConfig(2));
     sprite.SetSize(Vector2(1.0f, 1.0f));
     //sprite.SetTranslate({ WIN_WIDTH - sprite.GetSize().x,WIN_HEIGHT - sprite.GetSize().y,0.0f });
-    sprite.SetTranslate({0.0f,0.0f,0.0f });
-    //モデル呼び出し例
-    //ModelData hammerModelData = LoadObjeFile("resources/hammer", "hammer.obj");
+    sprite.SetTranslate({ 0.0f,0.0f,0.0f });
+
+    const ModelData modelData = LoadObjeFile("resources/player", "player.obj");
+    std::unique_ptr<Player>player;
+    player = std::make_unique<Player>(myEngine,modelData);
+    player.get()->Init();
 
     Cube cube;
     cube.Create(myEngine.GetDevice(), myEngine.GetModelConfig(1));
-
-
 
     Vector4 worldColor = { 0.6f,0.6f,0.6f,1.0f };
 
@@ -109,10 +111,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
                 camera.SetOrthographic(true);
 
             }
-     
+
 
             if (isDebug) {
-                debugUI.CheckDirectionalLight(myEngine.GetDirectionalLightData(),lightType);
+                debugUI.CheckDirectionalLight(myEngine.GetDirectionalLightData(), lightType);
                 debugUI.CheckFPS();
 
                 debugUI.CheckInput(*input);
@@ -122,11 +124,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
                 //デバッグカメラに切り替え
                        //視点操作
                 input->EyeOperation(camera);
- 
+
             }
 
             camera.Update();
-  
+
+            player.get()->Update();
+
 #endif
 
 #pragma region //描画
@@ -144,7 +148,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             }
 
             cube.PreDraw();
-            cube.Draw(srv, camera, MakeIdentity4x4(),lightType);
+            cube.Draw(srv, camera, MakeIdentity4x4(), lightType);
+
+            player.get()->Draw(camera);
 
             myEngine.PostCommandSet();
 

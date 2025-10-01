@@ -10,3 +10,9 @@ Vector2 Normalize(const Vector2& v) {
     float length = Length(v);
     return { v.x / length,v.y / length };
 };
+
+//template<typename Type> Type Normalize(Type& v) {
+//
+//    float length = Length(v)
+//
+//};

@@ -75,7 +75,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\main.cpp">
+    <ClCompile Include="Source\Application\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -323,6 +323,9 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Window.cpp">
       <Filter>ソース ファイル\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Player.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -639,6 +642,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\ImGui\FPSCounter.h">
       <Filter>ヘッダー ファイル\Engine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Player.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

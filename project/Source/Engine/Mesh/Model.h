@@ -12,18 +12,13 @@ class Model
 {
 public:
 
-    Model(ModelConfig mc)
-        : modelConfig_(mc)
-    {
-    }
-
-    void Create(const ModelData& modeldata,
+    void Create(const ModelData& modeldata, ModelConfig mc,
         const Microsoft::WRL::ComPtr<ID3D12Device>& device,
         const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap, uint32_t index);
 
     void UpdateUV();
 
-    void PreDraw(PSO::PSOType type);
+    void PreDraw(PSO::PSOType type = PSO::PSOType::TRIANGLE);
     void Draw(const Matrix4x4& worldMatrix, Camera& camera, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE);
 
     Material* GetMaterial() { return materialResource_.GetMaterial(); };
@@ -57,7 +52,7 @@ private:
 
     Matrix4x4 worldViewProjectionMatrix_ = { 0.0f };
     MaterialResource materialResource_;
-    ModelData modelData_;
+    const ModelData* modelData_;
 
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
