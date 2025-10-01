@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Development|x64">
+      <Configuration>Development</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{0bdf6d0f-7dc9-4be0-84ee-3f1a8b776470}</ProjectGuid>
+    <RootNamespace>Project1</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>CG2</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>$(SolutionDir)..\generated\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\generated\outputs\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'">
+    <IntDir>$(SolutionDir)..\generated\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\generated\outputs\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>$(SolutionDir)..\generated\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\generated\outputs\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
+copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <Optimization>MinSpace</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
+copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
+      <LinkTimeCodeGeneration />
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
+copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Engine\MyEngine.cpp" />
+    <ClCompile Include="Source\Engine\ImGui\FPSCounter.cpp" />
+    <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Cube.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\LineMesh.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\DrawGrid.cpp" />
+    <ClCompile Include="Source\Engine\Math\AABB.cpp" />
+    <ClCompile Include="Source\Engine\Math\CatmullRom.cpp" />
+    <ClCompile Include="Source\Engine\Math\Collision.cpp" />
+    <ClCompile Include="Source\Engine\Math\Cross.cpp" />
+    <ClCompile Include="Source\Engine\Math\Vector2.cpp" />
+    <ClCompile Include="Source\Engine\Math\Vector4.cpp" />
+    <ClCompile Include="Source\Engine\RootSignature.cpp" />
+    <ClCompile Include="Source\Engine\InputLayout.cpp" />
+    <ClCompile Include="Source\Engine\GPU.cpp" />
+    <ClCompile Include="Source\Engine\ImGui\ImGuiClass.cpp" />
+    <ClCompile Include="Source\Engine\Surface\MaterialResource.cpp" />
+    <ClCompile Include="Source\Engine\Math\Easing.cpp" />
+    <ClCompile Include="Source\Engine\Math\Lerp.cpp" />
+    <ClCompile Include="Source\Engine\Math\Matrix4x4.cpp" />
+    <ClCompile Include="Source\Engine\Math\Vector3.cpp" />
+    <ClCompile Include="Source\Engine\Math\TransformVector.cpp" />
+    <ClCompile Include="Source\Engine\Math\WorldTransform.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Model.cpp" />
+    <ClCompile Include="Source\Engine\ShaderResourceView.cpp" />
+    <ClCompile Include="Source\Engine\CreateBufferResource.cpp" />
+    <ClCompile Include="Source\Engine\ScissorRect.cpp" />
+    <ClCompile Include="Source\Engine\BlendState.cpp" />
+    <ClCompile Include="Source\Engine\CompileShader.cpp" />
+    <ClCompile Include="Source\Engine\Log.cpp" />
+    <ClCompile Include="Source\Engine\FenceEvent.cpp" />
+    <ClCompile Include="Source\Engine\Fence.cpp" />
+    <ClCompile Include="Source\Engine\DebugError.cpp" />
+    <ClCompile Include="Source\Engine\GetCPUDescriptorHandle.cpp" />
+    <ClCompile Include="Source\Engine\GetGPUDescriptorHandle.cpp" />
+    <ClCompile Include="Source\Engine\PSO.cpp" />
+    <ClCompile Include="Source\Engine\RasterizerState.cpp" />
+    <ClCompile Include="Source\Engine\RenderTargetView.cpp" />
+    <ClCompile Include="Source\Engine\CommandList.cpp" />
+    <ClCompile Include="Source\Engine\CommandQueue.cpp" />
+    <ClCompile Include="Source\Engine\DescriptorHeap.cpp" />
+    <ClCompile Include="Source\Engine\DXGIFactory.cpp" />
+    <ClCompile Include="Source\Engine\Camera\Camera.cpp" />
+    <ClCompile Include="Source\Engine\Camera\DebugCamera.cpp" />
+    <ClCompile Include="externals\imgui\imgui.cpp" />
+    <ClCompile Include="externals\imgui\imgui_demo.cpp" />
+    <ClCompile Include="externals\imgui\imgui_draw.cpp" />
+    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="externals\imgui\imgui_tables.cpp" />
+    <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\main.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MaxSpeed</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</WholeProgramOptimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Math\Add.cpp" />
+    <ClCompile Include="Source\Engine\Math\cotangent.cpp" />
+    <ClCompile Include="Source\Engine\Depth.cpp" />
+    <ClCompile Include="Source\Engine\Math\Dot.cpp" />
+    <ClCompile Include="Source\Engine\Input\Input.cpp" />
+    <ClCompile Include="Source\Engine\Math\Inverse.cpp" />
+    <ClCompile Include="Source\Engine\Math\Length.cpp" />
+    <ClCompile Include="Source\Engine\Math\MakeAffineMatrix.cpp" />
+    <ClCompile Include="Source\Engine\Math\MakeIdentity4x4.cpp" />
+    <ClCompile Include="Source\Engine\Math\MakeOrthographicMatrix.cpp" />
+    <ClCompile Include="Source\Engine\Math\MakePerspectiveFovMatrix.cpp" />
+    <ClCompile Include="Source\Engine\Math\MakeRotateMatrix.cpp" />
+    <ClCompile Include="Source\Engine\Math\MakeScaleMatrix.cpp" />
+    <ClCompile Include="Source\Engine\Math\MakeTranslateMatrix.cpp" />
+    <ClCompile Include="Source\Engine\Math\MakeViewportMatrix.cpp" />
+    <ClCompile Include="Source\Engine\Surface\MaterialData.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\ModelData.cpp" />
+    <ClCompile Include="Source\Engine\Math\Multiply.cpp" />
+    <ClCompile Include="Source\Engine\Math\Normalize.cpp" />
+    <ClCompile Include="Source\Engine\Math\ShericalCoordinate.cpp" />
+    <ClCompile Include="Source\Engine\Sound\Sound.cpp" />
+    <ClCompile Include="Source\Engine\Math\Subtract.cpp" />
+    <ClCompile Include="Source\Engine\Math\CoordinateTransform.cpp" />
+    <ClCompile Include="Source\Engine\Math\Transpose.cpp" />
+    <ClCompile Include="Source\Engine\Window.cpp" />
+    <ClCompile Include="Source\Engine\SwapChain.cpp" />
+    <ClCompile Include="Source\Engine\TransitionBarrier.cpp" />
+    <ClCompile Include="Source\Engine\Viewport.cpp" />
+    <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Sprite.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\SphereMesh.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="resources\shader\Object3d.PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Development|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="resources\shader\Object3d.VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Development|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="externals\imgui\imconfig.h" />
+    <ClInclude Include="externals\imgui\imgui.h" />
+    <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="externals\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="externals\imgui\imgui_internal.h" />
+    <ClInclude Include="externals\imgui\imstb_rectpack.h" />
+    <ClInclude Include="externals\imgui\imstb_textedit.h" />
+    <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\Engine\MyEngine.h" />
+    <ClInclude Include="Source\Engine\Mesh\Balloon.h" />
+    <ClInclude Include="Source\Engine\BlendState.h" />
+    <ClInclude Include="Source\Engine\Camera\Camera.h" />
+    <ClInclude Include="Source\Engine\CommandList.h" />
+    <ClInclude Include="Source\Engine\CommandQueue.h" />
+    <ClInclude Include="Source\Engine\CompileShader.h" />
+    <ClInclude Include="Source\Engine\Mesh\Config.h" />
+    <ClInclude Include="Source\Engine\CrashHandler.h" />
+    <ClInclude Include="Source\Engine\CreateBufferResource.h" />
+    <ClInclude Include="Source\Engine\Mesh\Cube.h" />
+    <ClInclude Include="Source\Engine\D3DResourceLeakChecker.h" />
+    <ClInclude Include="Source\Engine\Camera\DebugCamera.h" />
+    <ClInclude Include="Source\Engine\DebugError.h" />
+    <ClInclude Include="Source\Engine\ImGui\DebugUI.h" />
+    <ClInclude Include="Source\Engine\Depth.h" />
+    <ClInclude Include="Source\Engine\DescriptorHeap.h" />
+    <ClInclude Include="Source\Engine\Surface\DirectionalLight.h" />
+    <ClInclude Include="Source\Engine\Mesh\DrawGrid.h" />
+    <ClInclude Include="Source\Engine\DXGIFactory.h" />
+    <ClInclude Include="Source\Engine\Fence.h" />
+    <ClInclude Include="Source\Engine\FenceEvent.h" />
+    <ClInclude Include="Source\Engine\ImGui\FPSCounter.h" />
+    <ClInclude Include="Source\Engine\GetCPUDescriptorHandle.h" />
+    <ClInclude Include="Source\Engine\GetGPUDescriptorHandle.h" />
+    <ClInclude Include="Source\Engine\GPU.h" />
+    <ClInclude Include="Source\Engine\ImGui\ImGuiClass.h" />
+    <ClInclude Include="Source\Engine\Input\Input.h" />
+    <ClInclude Include="Source\Engine\InputLayout.h" />
+    <ClInclude Include="Source\Engine\Mesh\LineMesh.h" />
+    <ClInclude Include="Source\Engine\Log.h" />
+    <ClInclude Include="Source\Engine\Surface\Material.h" />
+    <ClInclude Include="Source\Engine\Surface\MaterialData.h" />
+    <ClInclude Include="Source\Engine\Surface\MaterialResource.h" />
+    <ClInclude Include="Source\Engine\Math\AABB.h" />
+    <ClInclude Include="Source\Engine\Math\Add.h" />
+    <ClInclude Include="Source\Engine\Math\CatmullRom.h" />
+    <ClInclude Include="Source\Engine\Math\Collision.h" />
+    <ClInclude Include="Source\Engine\Math\CoordinateTransform.h" />
+    <ClInclude Include="Source\Engine\Math\cotangent.h" />
+    <ClInclude Include="Source\Engine\Math\Cross.h" />
+    <ClInclude Include="Source\Engine\Math\Dot.h" />
+    <ClInclude Include="Source\Engine\Math\Easing.h" />
+    <ClInclude Include="Source\Engine\Math\Inverse.h" />
+    <ClInclude Include="Source\Engine\Math\Length.h" />
+    <ClInclude Include="Source\Engine\Math\Lerp.h" />
+    <ClInclude Include="Source\Engine\Math\Line.h" />
+    <ClInclude Include="Source\Engine\Math\MakeAffineMatrix.h" />
+    <ClInclude Include="Source\Engine\Math\MakeIdentity4x4.h" />
+    <ClInclude Include="Source\Engine\Math\MakeOrthographicMatrix.h" />
+    <ClInclude Include="Source\Engine\Math\MakePerspectiveFovMatrix.h" />
+    <ClInclude Include="Source\Engine\Math\MakeRotateMatrix.h" />
+    <ClInclude Include="Source\Engine\Math\MakeScaleMatrix.h" />
+    <ClInclude Include="Source\Engine\Math\MakeTranslateMatrix.h" />
+    <ClInclude Include="Source\Engine\Math\MakeViewportMatrix.h" />
+    <ClInclude Include="Source\Engine\Math\Matrix3x3.h" />
+    <ClInclude Include="Source\Engine\Math\Matrix4x4.h" />
+    <ClInclude Include="Source\Engine\Math\Multiply.h" />
+    <ClInclude Include="Source\Engine\Math\Normalize.h" />
+    <ClInclude Include="Source\Engine\Math\Pendulum.h" />
+    <ClInclude Include="Source\Engine\Math\Plane.h" />
+    <ClInclude Include="Source\Engine\Math\Project.h" />
+    <ClInclude Include="Source\Engine\Math\Ray.h" />
+    <ClInclude Include="Source\Engine\Math\Segment.h" />
+    <ClInclude Include="Source\Engine\Math\Sphere.h" />
+    <ClInclude Include="Source\Engine\Math\SphericalCoordinate.h" />
+    <ClInclude Include="Source\Engine\Math\Subtract.h" />
+    <ClInclude Include="Source\Engine\Math\Transform.h" />
+    <ClInclude Include="Source\Engine\Math\TransformVector.h" />
+    <ClInclude Include="Source\Engine\Math\Transpose.h" />
+    <ClInclude Include="Source\Engine\Math\Triangle.h" />
+    <ClInclude Include="Source\Engine\Math\Vector2.h" />
+    <ClInclude Include="Source\Engine\Math\Vector3.h" />
+    <ClInclude Include="Source\Engine\Math\Vector4.h" />
+    <ClInclude Include="Source\Engine\Math\WorldTransform.h" />
+    <ClInclude Include="Source\Engine\Mesh\Model.h" />
+    <ClInclude Include="Source\Engine\Mesh\ModelData.h" />
+    <ClInclude Include="Source\Engine\PSO.h" />
+    <ClInclude Include="Source\Engine\RasterizerState.h" />
+    <ClInclude Include="Source\Engine\RenderTargetView.h" />
+    <ClInclude Include="Source\Engine\RootSignature.h" />
+    <ClInclude Include="Source\Engine\ScissorRect.h" />
+    <ClInclude Include="Source\Engine\ShaderResourceView.h" />
+    <ClInclude Include="Source\Engine\Sound\Sound.h" />
+    <ClInclude Include="Source\Engine\Mesh\SphereMesh.h" />
+    <ClInclude Include="Source\Engine\Mesh\Sprite.h" />
+    <ClInclude Include="Source\Engine\SwapChain.h" />
+    <ClInclude Include="Source\Engine\Surface\Texture.h" />
+    <ClInclude Include="Source\Engine\Math\TransformationMatrix.h" />
+    <ClInclude Include="Source\Engine\TransitionBarrier.h" />
+    <ClInclude Include="Source\Engine\Mesh\VertexData.h" />
+    <ClInclude Include="Source\Engine\Viewport.h" />
+    <ClInclude Include="Source\Engine\Mesh\Wave.h" />
+    <ClInclude Include="Source\Engine\Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="externals\imgui\LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
+      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="externals\assimp\lib\Debug\assimp-vc143-mdd.lib" />
+    <Library Include="externals\assimp\lib\Debug\assimp-vc143-mtd.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="externals\assimp\lib\Debug\assimp-vc143-mtd.pdb" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
