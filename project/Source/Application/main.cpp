@@ -11,7 +11,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     MyEngine myEngine;
     myEngine.Create(L"2102", WIN_WIDTH, WIN_HEIGHT);
     //DirectX初期化処理の末尾に追加する
-//音声クラスの作成
+    //音声クラスの作成
     Sound sound;
 
     FPSCounter fpsCounter;
