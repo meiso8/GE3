@@ -19,7 +19,6 @@ public:
         TRIANGLE,
         LINE,
         POINT,
-        NONE_TEX,
         PSO_MAX
     };
 

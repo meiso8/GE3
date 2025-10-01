@@ -7,8 +7,8 @@ class RootSignature
 {
 public:
     void Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
-    Microsoft::WRL::ComPtr <ID3D12RootSignature>& GetRootSignature(size_t index) { return rootSignature_[index]; };
+    Microsoft::WRL::ComPtr <ID3D12RootSignature>& GetRootSignature() { return rootSignature_; };
 private:
-    Microsoft::WRL::ComPtr <ID3D12RootSignature> rootSignature_[2] = { nullptr };
+    Microsoft::WRL::ComPtr <ID3D12RootSignature> rootSignature_ = { nullptr };
 };
 

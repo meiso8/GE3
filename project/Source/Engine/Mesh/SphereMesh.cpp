@@ -220,12 +220,9 @@ void SphereMesh::SetColor(const Vector4& color) {
     materialResource_.SetColor(color);
 };
 
-void SphereMesh::PreDraw() {
-    modelConfig_.commandList->GetComandList()->RSSetViewports(1, modelConfig_.viewport);//Viewportを設定
-    modelConfig_.commandList->GetComandList()->RSSetScissorRects(1, modelConfig_.scissorRect);//Scirssorを設定
-    //RootSignatureを設定。PSOに設定しているけど別途設定が必要
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0).Get());
-    modelConfig_.commandList->GetComandList()->SetPipelineState(modelConfig_.pso->GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
+void SphereMesh::PreDraw(PSO& pso, PSO::PSOType type) {
+
+    modelConfig_.commandList->GetComandList()->SetPipelineState(pso.GetGraphicsPipelineState(type).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     modelConfig_.commandList->GetComandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }

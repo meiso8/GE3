@@ -7,7 +7,7 @@ Player::Player(MyEngine& myEngine, const ModelData& modelData) {
 
     modelData_ = &modelData;
     model_ = std::make_unique<Model>();
-    model_->Create(*modelData_, myEngine.GetModelConfig(0), myEngine.GetDevice(), myEngine.GetSrvDescriptorHeap(), 2);
+    model_->Create(*modelData_, myEngine.GetModelConfig(), myEngine.GetDevice(), myEngine.GetSrvDescriptorHeap(), 2);
 
 }
 
@@ -18,12 +18,9 @@ void Player::Init()
     kSpeed_ = { 0.5f };
 }
 
-void Player::Draw(Camera& camera)
+void Player::Draw(Camera& camera,uint32_t lightType)
 {
-    model_->PreDraw();
-    model_->Draw(worldTransform_.matWorld_, camera);
-
-
+    model_->Draw(worldTransform_.matWorld_, camera, lightType);
 }
 
 void Player::Update()
@@ -57,7 +54,7 @@ void Player::Update()
 
     WorldTransformUpdate(worldTransform_);
 
-    ImGui::Begin("Player");
-    ImGui::SliderFloat3("velocity", &velocity_.x, 0.0f, 1.0f);
-    ImGui::End();
+    //ImGui::Begin("Player");
+    //ImGui::SliderFloat3("velocity", &velocity_.x, 0.0f, 1.0f);
+    //ImGui::End();
 }

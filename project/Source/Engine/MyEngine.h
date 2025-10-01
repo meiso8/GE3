@@ -68,7 +68,9 @@
 #pragma endregion
 
 class MyEngine {
+
 public:
+
     void Create(const std::wstring& title, int32_t clientWidth, int32_t clientHeight);
     void Update();
     void PreCommandSet(Vector4& color);
@@ -76,10 +78,14 @@ public:
     void End();
     Window& GetWC() { return wc; };
     CommandList& GetCommandList() { return commandList; };
-    ModelConfig& GetModelConfig(size_t index) { return modelConfig_[index]; };
+    ModelConfig& GetModelConfig() { return modelConfig_; };
+    PSO& GetPSO(uint32_t index) { return pso[index]; }
     Microsoft::WRL::ComPtr<ID3D12Device>& GetDevice() { return device; };
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& GetSrvDescriptorHeap() { return srvDescriptorHeap; }
     DirectionalLight& GetDirectionalLightData() { return *directionalLightData; }
+
+    void SetBlendMode(uint32_t blendMode =BlendMode::kBlendModeNormal);
+
 private:
 
     int32_t clientWidth_ = 1280;
@@ -109,10 +115,10 @@ private:
     DxcCompiler dxcCompiler = {};
     RootSignature rootSignature = {};
     InputLayout inputLayout = {};
-    std::vector<BlendState> blendState = {};
-    RasterizerState rasterizerState[CULL_MODE_MAX] = {};
+    std::vector<BlendState> blendStates = {};
+    std::vector<RasterizerState> rasterizerStates = {};
     DepthStencil depthStencil = {};
-    PSO pso[3] = {};
+    PSO pso[kCountOfBlendMode] = {};
     Microsoft::WRL::ComPtr <ID3D12Resource> depthStencilResource = nullptr;
     Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap = nullptr;
     D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
@@ -125,6 +131,6 @@ private:
 #endif // _DEBUG
 
     TransitionBarrier barrier = {};
-    ModelConfig modelConfig_[3] = {};
+    ModelConfig modelConfig_ = {};
 };
 

@@ -56,27 +56,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     srv.Create(textures, 1, myEngine.GetDevice(), myEngine.GetSrvDescriptorHeap());
 
-    DrawGrid grid = DrawGrid(myEngine.GetDevice(), myEngine.GetModelConfig(0));
+    DrawGrid grid = DrawGrid(myEngine.GetDevice(), myEngine.GetModelConfig(), myEngine.GetPSO(0));
 
     Sprite sprite;
-    sprite.Create(myEngine.GetDevice(), myEngine.GetModelConfig(2));
+    sprite.Create(myEngine.GetDevice(), myEngine.GetModelConfig());
     sprite.SetSize(Vector2(1.0f, 1.0f));
     //sprite.SetTranslate({ WIN_WIDTH - sprite.GetSize().x,WIN_HEIGHT - sprite.GetSize().y,0.0f });
     sprite.SetTranslate({ 0.0f,0.0f,0.0f });
 
     const ModelData modelData = LoadObjeFile("resources/player", "player.obj");
     std::unique_ptr<Player>player;
-    player = std::make_unique<Player>(myEngine,modelData);
+    player = std::make_unique<Player>(myEngine, modelData);
     player.get()->Init();
 
     Cube cube;
-    cube.Create(myEngine.GetDevice(), myEngine.GetModelConfig(1));
+    cube.Create(myEngine.GetDevice(), myEngine.GetModelConfig());
 
     Vector4 worldColor = { 0.6f,0.6f,0.6f,1.0f };
 
     MSG msg{};
 
     int32_t lightType = MaterialResource::LIGHTTYPE::NONE;
+    uint32_t blendMode = BlendMode::kBlendModeNone;
 
     // =============================================
     //ウィンドウのxボタンが押されるまでループ メインループ
@@ -109,7 +110,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
             if (input->IsTriggerKey(DIK_O)) {
                 camera.SetOrthographic(true);
-
             }
 
 
@@ -120,6 +120,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
                 debugUI.CheckInput(*input);
                 debugUI.CheckColor(worldColor);
                 debugUI.CheckCamera(camera);
+                debugUI.CheckBlendMode(blendMode);
 
                 //デバッグカメラに切り替え
                        //視点操作
@@ -137,20 +138,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
             myEngine.PreCommandSet(worldColor);
 
-
-            sprite.PreDraw();
+            sprite.PreDraw(myEngine.GetPSO(1));
             sprite.Draw(srv, camera, lightType);
-
 
             //グリッドの描画
             if (isDebug) {
                 grid.Draw(srv, camera);
             }
 
-            cube.PreDraw();
+            cube.PreDraw(myEngine.GetPSO(1));
             cube.Draw(srv, camera, MakeIdentity4x4(), lightType);
 
-            player.get()->Draw(camera);
+            myEngine.SetBlendMode(blendMode);
+            player.get()->Draw(camera, lightType);
+            myEngine.SetBlendMode();
+
 
             myEngine.PostCommandSet();
 

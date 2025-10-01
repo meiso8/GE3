@@ -29,6 +29,26 @@ void DebugUI::CheckDirectionalLight(DirectionalLight& directionalLights,int& lig
 
 };
 
+void DebugUI::CheckBlendMode(uint32_t& blendMode) {
+
+    ImGui::Begin("BlendMode");
+    const char* blendModes[] = { 
+        "kBlendModeNone",
+        "kBlendModeNormal",
+        "kBlendModeAdd",
+        "kBlendModeSubtract",
+        "kBlendModeMultiply",
+        "kBlendModeScreen"
+    };
+
+    static int blendMode_current = 1;
+
+    ImGui::Combo("blendMode", &blendMode_current, blendModes, IM_ARRAYSIZE(blendModes));
+    blendMode = blendMode_current % 6;
+    ImGui::End();
+
+};
+
 void DebugUI::CheckFPS() {
     ImGui::Begin("Debug");
     ImGui::Text("FPS : %f", ImGui::GetIO().Framerate);

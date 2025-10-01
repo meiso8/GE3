@@ -3,7 +3,7 @@
 #include"ModelData.h"
 #include"MaterialResource.h"
 #include"TransformationMatrix.h"
-#include"Config.h"
+#include"ModelConfig.h"
 #include"Balloon.h"
 #include"Wave.h"
 #include"Transform.h"
@@ -18,7 +18,7 @@ public:
 
     void UpdateUV();
 
-    void PreDraw(PSO::PSOType type = PSO::PSOType::TRIANGLE);
+    void PreDraw(PSO& pso, PSO::PSOType type = PSO::PSOType::TRIANGLE);
     void Draw(const Matrix4x4& worldMatrix, Camera& camera, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE);
 
     Material* GetMaterial() { return materialResource_.GetMaterial(); };

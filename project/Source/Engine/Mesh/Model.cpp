@@ -11,7 +11,7 @@
 
 void Model::Create(const ModelData& modelData, ModelConfig mc,
     const Microsoft::WRL::ComPtr<ID3D12Device>& device,
-    const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap,uint32_t index) {
+    const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap, uint32_t index) {
 
     modelData_ = &modelData;
     modelConfig_ = mc;
@@ -107,22 +107,14 @@ void Model::SetColor(const Vector4& color) {
     materialResource_.SetColor(color);
 };
 
-void Model::PreDraw(PSO::PSOType type) {
-    modelConfig_.commandList->GetComandList()->RSSetViewports(1, modelConfig_.viewport);//Viewportを設定
-    modelConfig_.commandList->GetComandList()->RSSetScissorRects(1, modelConfig_.scissorRect);//Scirssorを設定
-    //RootSignatureを設定。PSOに設定しているけど別途設定が必要
-    if (type == PSO::NONE_TEX) {
-        modelConfig_.commandList->GetComandList()->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(1).Get());
+void Model::PreDraw(PSO& pso, PSO::PSOType type) {
 
-    } else {
-        modelConfig_.commandList->GetComandList()->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0).Get());
-    }
-modelConfig_.commandList->GetComandList()->SetPipelineState(modelConfig_.pso->GetGraphicsPipelineState(type).Get());//PSOを設定
+    modelConfig_.commandList->GetComandList()->SetPipelineState(pso.GetGraphicsPipelineState(type).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     modelConfig_.commandList->GetComandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void Model::Draw(const Matrix4x4& worldMatrix, Camera& camera,uint32_t lightType) {
+void Model::Draw(const Matrix4x4& worldMatrix, Camera& camera, uint32_t lightType) {
 
     materialResource_.SetLightType(lightType);
 

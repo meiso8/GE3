@@ -280,7 +280,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\CommandList.h" />
     <ClInclude Include="Source\Engine\CommandQueue.h" />
     <ClInclude Include="Source\Engine\CompileShader.h" />
-    <ClInclude Include="Source\Engine\Mesh\Config.h" />
+    <ClInclude Include="Source\Engine\Mesh\ModelConfig.h" />
     <ClInclude Include="Source\Engine\CrashHandler.h" />
     <ClInclude Include="Source\Engine\CreateBufferResource.h" />
     <ClInclude Include="Source\Engine\Mesh\Cube.h" />

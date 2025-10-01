@@ -6,7 +6,7 @@
 #include"ModelData.h"
 #include"MaterialResource.h"
 #include"TransformationMatrix.h"
-#include"Config.h"
+#include"ModelConfig.h"
 #include"Balloon.h"
 #include"Wave.h"
 
@@ -23,7 +23,7 @@ public:
         const Microsoft::WRL::ComPtr<ID3D12Device>& device,
         const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap);
 
-    void PreDraw();
+    void PreDraw(PSO& pso,PSO::PSOType type = PSO::PSOType::TRIANGLE);
     void Draw(Camera& camera, ShaderResourceView& srv,uint32_t lightType);
 
     Material* GetMaterial() { return materialResource_.GetMaterial(); }

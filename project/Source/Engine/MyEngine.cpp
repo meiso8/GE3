@@ -112,19 +112,21 @@ void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t cl
 #pragma endregion
 
     //BlendStateの設定を行う
-    
-    blendState.resize(kCountOfBlendMode);
-    for (int i = 0; i < blendState.size(); ++i) {
-        blendState[i].Create(i);
+
+    blendStates.resize(kCountOfBlendMode);
+    for (int i = 0; i < blendStates.size(); ++i) {
+        blendStates[i].Create(i);
     }
 
     Log(logStream, "SetBlendState");
 
+
+    rasterizerStates.resize(3);
     //RasterizerStateの設定を行う
-    rasterizerState[NONE].Create(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
-    rasterizerState[BACK].Create(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
-    //rasterizerState[1].Create(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
-    rasterizerState[FRONT].Create(D3D12_CULL_MODE_FRONT, D3D12_FILL_MODE_SOLID);
+    rasterizerStates[kCullModeNone].Create(kCullModeNone, kFillModeSolid);//ソリッドモードカリングなし
+    rasterizerStates[kCullModeFront].Create(kCullModeFront, kFillModeSolid);//ソリッドモード裏面
+    rasterizerStates[kCullModeBack].Create(kCullModeBack, kFillModeSolid);//ソリッドモード表面
+    //rasterizerStates[0].Create(kCullModeNone, kFillModeWireframe);//ワイヤーフレームモード
     Log(logStream, "SetRasterizerState");
 
 #pragma region//ShaderをCompileする
@@ -142,8 +144,8 @@ void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t cl
         rootSignature,
         inputLayout,
         dxcCompiler,
-        blendState[kBlendModeNone],//ブレンドしない
-        rasterizerState[BACK],//後ろをカリング
+        blendStates[kBlendModeNone],//ブレンドしない
+        rasterizerStates[kCullModeBack],//後ろをカリング
         depthStencil,
         device);
 
@@ -151,8 +153,8 @@ void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t cl
         rootSignature,
         inputLayout,
         dxcCompiler,
-        blendState[kBlendModeNormal],//ブレンドする
-        rasterizerState[BACK],//後ろをカリング
+        blendStates[kBlendModeNormal],//ブレンドする
+        rasterizerStates[kCullModeBack],//後ろをカリング
         depthStencil,
         device);
 
@@ -160,8 +162,35 @@ void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t cl
         rootSignature,
         inputLayout,
         dxcCompiler,
-        blendState[kBlendModeNone],//ブレンドしない
-        rasterizerState[NONE],//裏面描画
+        blendStates[kBlendModeAdd],//ブレンドしない
+        rasterizerStates[kCullModeBack],//描画
+        depthStencil,
+        device);
+
+    pso[3].Create(
+        rootSignature,
+        inputLayout,
+        dxcCompiler,
+        blendStates[kBlendModeSubtract],
+        rasterizerStates[kCullModeBack],//描画
+        depthStencil,
+        device);
+
+    pso[4].Create(
+        rootSignature,
+        inputLayout,
+        dxcCompiler,
+        blendStates[kBlendModeMultiply],
+        rasterizerStates[kCullModeBack],//描画
+        depthStencil,
+        device);
+
+    pso[5].Create(
+        rootSignature,
+        inputLayout,
+        dxcCompiler,
+        blendStates[kBlendModeScreen],
+        rasterizerStates[kCullModeBack],//描画
         depthStencil,
         device);
 
@@ -199,30 +228,10 @@ void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t cl
     scissorRect = CreateScissorRect(wc.GetClientWidth(), wc.GetClientHeight());
     Log(logStream, "ViewportAndScissor");
 
-    modelConfig_[0] = {
+    modelConfig_ = {
         &commandList,
-        &viewport,
-        &scissorRect,
         &rootSignature,
-        &pso[0],
         directionalLightResource
-    };
-    modelConfig_[1] = {
-    &commandList,
-    &viewport,
-    &scissorRect,
-    &rootSignature,
-    &pso[1],
-    directionalLightResource
-    };
-
-    modelConfig_[2] = {
-&commandList,
-&viewport,
-&scissorRect,
-&rootSignature,
-&pso[2],
-directionalLightResource
     };
 
 #ifdef _DEBUG
@@ -233,6 +242,7 @@ directionalLightResource
 
     //ファイルへのログ出力
     Log(logStream, "LoopStart");
+
 }
 
 void MyEngine::Update() {
@@ -281,6 +291,10 @@ void MyEngine::PreCommandSet(Vector4& color) {
     ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap.Get() };
     commandList.GetComandList()->SetDescriptorHeaps(1, descriptorHeaps);
 
+    //PreDrawの一部が共通になったためここに移動
+    commandList.GetComandList()->RSSetViewports(1, &viewport);//Viewportを設定
+    commandList.GetComandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
+    commandList.GetComandList()->SetGraphicsRootSignature(rootSignature.GetRootSignature().Get());
 };
 
 void MyEngine::PostCommandSet() {
@@ -340,4 +354,11 @@ void MyEngine::End() {
 #pragma endregion
 
     CoUninitialize();
+}
+
+//ここでBlenModeを変更する
+void MyEngine::SetBlendMode(uint32_t blendMode) {
+
+    commandList.GetComandList()->SetPipelineState(pso[blendMode].GetGraphicsPipelineState(PSO::PSOType::TRIANGLE).Get());//PSOを設定
+
 }

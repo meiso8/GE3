@@ -34,22 +34,28 @@ void RootSignature::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
      //CBufferを利用することになったので、RootParameterに設定を追加する
     /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
      D3D12_ROOT_PARAMETER rootParameters[6] = {};
+     //Material
      rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
      rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
      rootParameters[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+     //Transform用
      rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
      rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
      rootParameters[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+
      rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
      rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
      rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
      rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
+     //DirectionalLight
      rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
      rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
      rootParameters[3].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
+     //Wave
      rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;//SRVを使う
      rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
      rootParameters[4].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+     //Ballon
      rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
      rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
      rootParameters[5].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
@@ -71,52 +77,9 @@ void RootSignature::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
     //バイナリ元に生成
     result = device->CreateRootSignature(0,
         signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(),
-        IID_PPV_ARGS(&rootSignature_[0]));
+        IID_PPV_ARGS(&rootSignature_));
 
     assert(SUCCEEDED(result));
-
-
-
-    descriptionRootSignature[1].Flags =
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
-    //CBufferを利用することになったので、RootParameterに設定を追加する
-   /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
-    D3D12_ROOT_PARAMETER rootParameters2[5] = {};
-    //Material
-    rootParameters2[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-    rootParameters2[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters2[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
-
-    //Transform用
-    rootParameters2[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-    rootParameters2[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    rootParameters2[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
-
-    //DirectionalLight
-    rootParameters2[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-    rootParameters2[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters2[2].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
-
-    //Wave
-    rootParameters2[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;//SRVを使う
-    rootParameters2[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    rootParameters2[3].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
-    //Ballon
-    rootParameters2[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-    rootParameters2[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    rootParameters2[4].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
-
-    descriptionRootSignature[1].pParameters = rootParameters2;//ルートパラメータ配列へのポインタ
-    descriptionRootSignature[1].NumParameters = _countof(rootParameters2);//配列の長さ
-
-    //バイナリ元に生成
-    result = device->CreateRootSignature(0,
-        signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(),
-        IID_PPV_ARGS(&rootSignature_[1]));
-
-    assert(SUCCEEDED(result));
-
 
 }
 

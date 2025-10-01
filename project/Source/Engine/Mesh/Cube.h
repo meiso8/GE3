@@ -4,7 +4,7 @@
 #include"VertexData.h"
 #include<wrl.h>
 #include<d3d12.h>
-#include"Config.h"
+#include"ModelConfig.h"
 
 #include"CommandList.h"  
 #include"ModelData.h"  
@@ -26,7 +26,7 @@ class Cube
 public:
     void Create(
         const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc);
-    void  PreDraw();
+    void  PreDraw(PSO& pso);
     void Draw(
         ShaderResourceView& srv, Camera& camera, const Matrix4x4& worldMatrix, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
     );

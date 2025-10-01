@@ -12,7 +12,7 @@ class Player
 public:
     Player(MyEngine& myEngine, const ModelData& modelData);
     void Init();
-    void Draw(Camera& camera);
+    void Draw(Camera& camera, uint32_t lightType);
     void Update();
 private:
     Vector3 velocity_;

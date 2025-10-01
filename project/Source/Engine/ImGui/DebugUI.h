@@ -54,6 +54,7 @@ public:
     /// @param color 
     void CheckColor(Vector4& color);
 
+    void CheckBlendMode(uint32_t& blendMode);
     void CheckInt(int& value);
     void CheckFPS();
 

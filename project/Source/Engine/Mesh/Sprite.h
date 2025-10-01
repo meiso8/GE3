@@ -10,7 +10,7 @@
 #include"MaterialResource.h"  
 #include"Vector2.h"  
 #include"RootSignature.h"  
-#include"Config.h"
+#include"ModelConfig.h"
 #include"Balloon.h"
 #include"Wave.h"
 
@@ -21,7 +21,7 @@ public:
         const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc);
     void UpdateUV();
 
-    void PreDraw();
+    void PreDraw(PSO& pso);
     void Draw(
         ShaderResourceView& srv, Camera& camera, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
     );

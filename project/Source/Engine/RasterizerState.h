@@ -1,18 +1,26 @@
 #pragma once
 
 #include<d3d12.h>
+#include<stdint.h>
 
 enum CULL_MODE
 {
-    NONE,
-    FRONT,
-    BACK,
-    CULL_MODE_MAX
+    kCullModeNone,
+    kCullModeFront,
+    kCullModeBack,
+    kCountOfCullMode
+};
+
+enum FILL_MODE
+{
+    kFillModeWireframe,
+    kFillModeSolid,
+    kCountOfFillMode,
 };
 
 class RasterizerState {
 public:
-    void Create(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
+    void Create(uint32_t cullMode, uint32_t fillMode);
     D3D12_RASTERIZER_DESC& GetDesc()
     {
         return rasterizerDesc_;

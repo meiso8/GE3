@@ -3,7 +3,7 @@
 #include"VertexData.h"
 #include<wrl.h>
 #include<d3d12.h>
-#include"Config.h"
+#include"ModelConfig.h"
 
 #include"CommandList.h"  
 #include"ModelData.h"  
@@ -21,7 +21,7 @@ class LineMesh
 {
 public:
     void Create(
-        const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc);
+        const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc,PSO& pso);
 
     void PreDraw();
     void Draw(
@@ -71,6 +71,6 @@ private:
     Wave* waveData = nullptr;
 
     ModelConfig modelConfig_{};
-
+    PSO* pso_ = { nullptr };
 };
 

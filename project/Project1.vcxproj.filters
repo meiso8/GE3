@@ -373,7 +373,7 @@
     <ClInclude Include="Source\Engine\CompileShader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Config.h">
+    <ClInclude Include="Source\Engine\Mesh\ModelConfig.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\CrashHandler.h">
