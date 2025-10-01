@@ -49,18 +49,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
 
     Texture textures(myEngine.GetDevice(), myEngine.GetCommandList());
-    textures.Load("resources/sky.png");
+    textures.Load("resources/white1x1.png");
+
+    Texture textures2(myEngine.GetDevice(), myEngine.GetCommandList());
+    textures2.Load("resources/numbers.png");
 
     //ShaderResourceViewを作る
-    ShaderResourceView srv = {};
+    ShaderResourceView srv[2] = {};
 
-    srv.Create(textures, 1, myEngine.GetDevice(), myEngine.GetSrvDescriptorHeap());
+    srv[0].Create(textures, 1, myEngine.GetDevice(), myEngine.GetSrvDescriptorHeap());
+    srv[1].Create(textures2, 2, myEngine.GetDevice(), myEngine.GetSrvDescriptorHeap());
 
     DrawGrid grid = DrawGrid(myEngine.GetDevice(), myEngine.GetModelConfig(), myEngine.GetPSO(0));
 
     Sprite sprite;
     sprite.Create(myEngine.GetDevice(), myEngine.GetModelConfig());
-    sprite.SetSize(Vector2(1.0f, 1.0f));
+    sprite.SetSize(Vector2(2.0f, 1.0f));
     //sprite.SetTranslate({ WIN_WIDTH - sprite.GetSize().x,WIN_HEIGHT - sprite.GetSize().y,0.0f });
     sprite.SetTranslate({ 0.0f,0.0f,0.0f });
 
@@ -69,8 +73,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     player = std::make_unique<Player>(myEngine, modelData);
     player.get()->Init();
 
-    Cube cube;
-    cube.Create(myEngine.GetDevice(), myEngine.GetModelConfig());
+    Cube cube[2];
+    cube[0].Create(myEngine.GetDevice(), myEngine.GetModelConfig());
+    cube[1].Create(myEngine.GetDevice(), myEngine.GetModelConfig());
+    WorldTransform cubeWorldTransform;
+    cubeWorldTransform.Initialize();
+    cubeWorldTransform.SetRotationY(std::numbers::pi_v<float>/4.0f);
+    WorldTransformUpdate(cubeWorldTransform);
 
     Vector4 worldColor = { 0.6f,0.6f,0.6f,1.0f };
 
@@ -118,7 +127,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
                 debugUI.CheckFPS();
 
                 debugUI.CheckInput(*input);
-                debugUI.CheckColor(worldColor);
+                /*        debugUI.CheckColor(worldColor);*/
                 debugUI.CheckCamera(camera);
                 debugUI.CheckBlendMode(blendMode);
 
@@ -132,6 +141,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
             player.get()->Update();
 
+            cube[0].SetColor({1.0f, 1.0f, 1.0f, 0.2f
+                });
+
+            cube[1].SetColor({ 1.0f, 1.0f, 1.0f, 0.2f
+                });
+
 #endif
 
 #pragma region //描画
@@ -139,15 +154,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             myEngine.PreCommandSet(worldColor);
 
             sprite.PreDraw(myEngine.GetPSO(1));
-            sprite.Draw(srv, camera, lightType);
+            sprite.Draw(srv[1], cameraSprite, lightType);
 
             //グリッドの描画
             if (isDebug) {
-                grid.Draw(srv, camera);
+                grid.Draw(srv[0], camera);
             }
 
-            cube.PreDraw(myEngine.GetPSO(1));
-            cube.Draw(srv, camera, MakeIdentity4x4(), lightType);
+            cube[0].PreDraw(myEngine.GetPSO(kBlendModeNormal));
+            cube[0].Draw(srv[1], camera, MakeIdentity4x4(), lightType);
+            cube[1].Draw(srv[1], camera, cubeWorldTransform.matWorld_, lightType);
 
             myEngine.SetBlendMode(blendMode);
             player.get()->Draw(camera, lightType);
