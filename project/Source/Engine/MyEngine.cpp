@@ -1,10 +1,13 @@
 #include "MyEngine.h"
 #include<algorithm>
+#include"TextureManager.h"
+
+const uint32_t MyEngine::kMaxSRVCount = 512;
 
 void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t clientHeight) {
 
-    //clientWidth_ = clientWidth;
-    //clientHeight_ = clientHeight;
+
+
 
     //main関数の先頭でComの初期化を行う
     HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
@@ -63,9 +66,12 @@ void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t cl
 #pragma endregion
 
 #pragma region //SRV　SRVやCBV用のDescriptorHeapは一旦ゲーム中に一つだけ
-    srvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128, true);
+    srvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true);
     Log(logStream, "Create SRV DescriptorHeap");
 #pragma endregion
+
+    //TextureManagerの初期化
+    TextureManager::GetInstance()->Initialize();
 
 #pragma region//SwapChainからResourceを引っ張ってくる
     //SwapChainからResourceを引っ張ってくる
@@ -355,6 +361,8 @@ void MyEngine::End() {
 #pragma endregion
 
     CoUninitialize();
+
+    TextureManager::GetInstance()->Finalize();
 }
 
 //ここでBlenModeを変更する
