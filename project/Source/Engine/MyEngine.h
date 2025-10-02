@@ -88,8 +88,8 @@ public:
 
 private:
 
-    int32_t clientWidth_ = 1280;
-    int32_t clientHeight_ = 720;
+    //int32_t clientWidth_ = 1280;
+    //int32_t clientHeight_ = 720;
 
     D3DResourceLeakChecker leakCheck = {};
     LogFile logFile = {};

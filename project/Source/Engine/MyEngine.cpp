@@ -3,8 +3,8 @@
 
 void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t clientHeight) {
 
-    clientWidth_ = clientWidth;
-    clientHeight_ = clientHeight;
+    //clientWidth_ = clientWidth;
+    //clientHeight_ = clientHeight;
 
     //main関数の先頭でComの初期化を行う
     HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
@@ -197,8 +197,9 @@ void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t cl
     Log(logStream, "CreatePSO");
 
 
-#pragma region//stencileTextureResourceの作成
-    depthStencilResource = CreateDepthStencileTextureResource(device, clientWidth_, clientHeight_);
+#pragma region//stencileTextureResourceの作成 
+ 
+    depthStencilResource = CreateDepthStencileTextureResource(device, wc.GetClientWidth(), wc.GetClientHeight());
 
     //DSV用ヒープでディスクリプタの数は1。DSVはShader内で触るものではないので、ShaderVisibleはfalse
     dsvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);

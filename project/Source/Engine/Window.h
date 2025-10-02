@@ -6,9 +6,11 @@
 class Window
 {
 public:
+    static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+public:
     void Create(const std::wstring& title,int32_t clientWidth, int32_t clientHeight);
     WNDCLASS GetWindowClass() { return wc_; }
-    HWND& GetHwnd() { return hwnd_; }
+    HWND GetHwnd() const{ return hwnd_; }
     int32_t GetClientWidth() const {
         return clientWidth_;
     }
@@ -22,6 +24,6 @@ private:
     /// @brief ウィンドウハンドル  
     HWND hwnd_{};
     //クライアント領域のサイズ  
-    int32_t clientWidth_{};
+   int32_t clientWidth_{};
     int32_t clientHeight_{};
 };
