@@ -1,6 +1,7 @@
 #include<numbers>
 #include"MyEngine.h"
 #include"Player.h"
+#include"Particle/Particle.h"
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
@@ -82,6 +83,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     int32_t lightType = MaterialResource::LIGHTTYPE::NONE;
     uint32_t blendMode = BlendMode::kBlendModeNone;
 
+    Particle particle;
+    particle.Create(myEngine.GetDevice(),myEngine.GetCommandList(),myEngine.GetRootSignature());
+
     // =============================================
     //ウィンドウのxボタンが押されるまでループ メインループ
     // =============================================
@@ -141,22 +145,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         myEngine.PreCommandSet(worldColor);
 
-        sprite.PreDraw(myEngine.GetPSO(1));
-        sprite.Draw(srv[1], cameraSprite, lightType);
+        //sprite.PreDraw(myEngine.GetPSO(1));
+        //sprite.Draw(srv[1], cameraSprite, lightType);
 
-        //グリッドの描画
-        if (isDebug) {
-            grid.Draw(srv[0], camera);
-        }
+        ////グリッドの描画
+        //if (isDebug) {
+        //    grid.Draw(srv[0], camera);
+        //}
 
-        cube[0].PreDraw(myEngine.GetPSO(kBlendModeNormal));
-        cube[0].Draw(srv[1], camera, MakeIdentity4x4(), lightType);
-        cube[1].Draw(srv[1], camera, cubeWorldTransform.matWorld_, lightType);
+        //cube[0].PreDraw(myEngine.GetPSO(kBlendModeNormal));
+        //cube[0].Draw(srv[1], camera, MakeIdentity4x4(), lightType);
+        //cube[1].Draw(srv[1], camera, cubeWorldTransform.matWorld_, lightType);
 
-        myEngine.SetBlendMode(blendMode);
-        player.get()->Draw(camera, lightType);
-        myEngine.SetBlendMode();
+        //myEngine.SetBlendMode(blendMode);
+        //player.get()->Draw(camera, lightType);
+        //myEngine.SetBlendMode();
 
+        particle.Draw(camera);
 
         myEngine.PostCommandSet();
 

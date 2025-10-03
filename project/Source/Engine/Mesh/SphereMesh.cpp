@@ -222,6 +222,7 @@ void SphereMesh::SetColor(const Vector4& color) {
 
 void SphereMesh::PreDraw(PSO& pso, PSO::PSOType type) {
 
+    modelConfig_.commandList->GetComandList()->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0).Get());
     modelConfig_.commandList->GetComandList()->SetPipelineState(pso.GetGraphicsPipelineState(type).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     modelConfig_.commandList->GetComandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

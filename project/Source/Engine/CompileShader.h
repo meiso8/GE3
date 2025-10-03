@@ -3,7 +3,7 @@
 #include <dxcapi.h>
 #include<string>
 #include<wrl.h>
-
+#include<vector>
 
 //CompileShader関数
 IDxcBlob* CompileShader(
@@ -21,17 +21,16 @@ class DxcCompiler
 public:
     enum PSType {
         NORMAL,
-        NONE_TEX,
         PS_MAX
     };
     void Initialize();
     void ShaderSetting();
-    Microsoft::WRL::ComPtr <IDxcBlob>& GetVertexShaderBlob() { return vertexShaderBlob_; };
-    Microsoft::WRL::ComPtr <IDxcBlob>& GetPixelShaderBlob(PSType type) { return pixelShaderBlob_[type]; };
+    Microsoft::WRL::ComPtr <IDxcBlob>& GetVertexShaderBlob(uint32_t index) { return vertexShaderBlobs_[index]; };
+    Microsoft::WRL::ComPtr <IDxcBlob>& GetPixelShaderBlob(uint32_t index) { return pixelShaderBlobs_[index]; };
 private:
     IDxcUtils* dxcUtils_ = nullptr;
     IDxcCompiler3* dxcCompiler_ = nullptr;
     IDxcIncludeHandler* includeHandler_ = nullptr;
-    Microsoft::WRL::ComPtr <IDxcBlob> vertexShaderBlob_;
-    Microsoft::WRL::ComPtr <IDxcBlob>pixelShaderBlob_[PS_MAX];
+    std::vector<Microsoft::WRL::ComPtr<IDxcBlob>> vertexShaderBlobs_;
+    std::vector<Microsoft::WRL::ComPtr<IDxcBlob>>pixelShaderBlobs_;
 };

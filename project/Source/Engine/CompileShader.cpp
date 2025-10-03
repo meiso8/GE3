@@ -26,17 +26,22 @@ void DxcCompiler::Initialize() {
 void DxcCompiler::ShaderSetting() {
 
     //Shaderをコンパイルする
-    vertexShaderBlob_ = CompileShader(L"resources/shader/Object3D.VS.hlsl",
-        L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
-    assert(vertexShaderBlob_ != nullptr);
+    vertexShaderBlobs_.push_back(CompileShader(L"resources/shader/Object3d.VS.hlsl",
+        L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_));
+    assert(vertexShaderBlobs_[0] != nullptr);
 
-    pixelShaderBlob_[NORMAL] = CompileShader(L"resources/shader/Object3D.PS.hlsl",
-        L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
-    assert(pixelShaderBlob_[NORMAL] != nullptr);
+    pixelShaderBlobs_.push_back(CompileShader(L"resources/shader/Object3d.PS.hlsl",
+        L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_));
+    assert(pixelShaderBlobs_[0] != nullptr);
 
-    pixelShaderBlob_[NONE_TEX] = CompileShader(L"resources/shader/Object3DNoneTex.PS.hlsl",
-        L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
-    assert(pixelShaderBlob_[NONE_TEX] != nullptr);
+    //Shaderをコンパイルする
+    vertexShaderBlobs_.push_back(CompileShader(L"resources/shader/Particle.VS.hlsl",
+        L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_));
+    assert(vertexShaderBlobs_[1] != nullptr);
+
+    pixelShaderBlobs_.push_back(CompileShader(L"resources/shader/Particle.PS.hlsl",
+        L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_));
+    assert(pixelShaderBlobs_[1] != nullptr);
 
 
 }

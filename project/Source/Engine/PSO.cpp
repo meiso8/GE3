@@ -17,12 +17,12 @@ void PSO::Create(
 
     for (int i = 0; i < PSO_MAX; ++i) {
 
-        graphicsPipelineStateDesc[i].pRootSignature = rootSignature.GetRootSignature().Get();//RootSignature
+        graphicsPipelineStateDesc[i].pRootSignature = rootSignature.GetRootSignature(0).Get();//RootSignature
         graphicsPipelineStateDesc[i].InputLayout = inputLayout.GetDesc();//InputLayout
-        graphicsPipelineStateDesc[i].VS = { dxcCompiler.GetVertexShaderBlob()->GetBufferPointer(),
-       dxcCompiler.GetVertexShaderBlob()->GetBufferSize() };//VertexShader
-        graphicsPipelineStateDesc[i].PS = { dxcCompiler.GetPixelShaderBlob(DxcCompiler::NORMAL)->GetBufferPointer(),
-       dxcCompiler.GetPixelShaderBlob(DxcCompiler::NORMAL)->GetBufferSize() };//PixelShader
+        graphicsPipelineStateDesc[i].VS = { dxcCompiler.GetVertexShaderBlob(0)->GetBufferPointer(),
+       dxcCompiler.GetVertexShaderBlob(0)->GetBufferSize() };//VertexShader
+        graphicsPipelineStateDesc[i].PS = { dxcCompiler.GetPixelShaderBlob(0)->GetBufferPointer(),
+       dxcCompiler.GetPixelShaderBlob(0)->GetBufferSize() };//PixelShader
         graphicsPipelineStateDesc[i].BlendState = blendState.GetDesc();//BlendState
         graphicsPipelineStateDesc[i].RasterizerState = rasterizerState.GetDesc();//RasterizerState
         //書き込むRTVの情報

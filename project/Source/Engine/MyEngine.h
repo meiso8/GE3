@@ -74,7 +74,16 @@ class MyEngine {
 
 public:
     static const uint32_t kMaxSRVCount;
+    static uint32_t descriptorSizeSRV;
+private:
+    static MyEngine* instance_;
+
 public:
+ 
+    MyEngine() = default;
+    ~MyEngine() = default;
+
+    static MyEngine* GetInstance();
 
     void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
     void Update();
@@ -84,6 +93,7 @@ public:
     Window& GetWC() { return wc; };
     CommandList& GetCommandList() { return commandList; };
     ModelConfig& GetModelConfig() { return modelConfig_; };
+    RootSignature& GetRootSignature() { return rootSignature; }
     PSO& GetPSO(uint32_t index) { return pso[index]; }
     Microsoft::WRL::ComPtr<ID3D12Device>& GetDevice() { return device; };
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& GetSrvDescriptorHeap() { return srvDescriptorHeap; }
@@ -92,7 +102,6 @@ public:
     void SetBlendMode(uint32_t blendMode =BlendMode::kBlendModeNormal);
 
 private:
-
 
     D3DResourceLeakChecker leakCheck = {};
     LogFile logFile = {};

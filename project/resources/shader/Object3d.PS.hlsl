@@ -18,7 +18,7 @@ struct Material
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 
-Texture2D<float32_t4> gTexture : register(t0); //SRVはt
+Texture2D<float32_t4> gTexture : register(t2); //SRVはt
 SamplerState gSampler : register(s0); //Samplerはs これを介してtextureを読む
 
 struct PixelShaderOutput
