@@ -3,19 +3,13 @@
 #pragma region //自作関数
 //#include"Window.h"
 #include"Input.h"
-#include"CommandQueue.h"
-#include"CommandList.h"
-#include"DXGIFactory.h"
-#include"GPU.h"
-#include"SwapChain.h"
-#include"DescriptorHeap.h"
-#include"RenderTargetView.h"
+
+
 #include"GetCPUDescriptorHandle.h"
 #include"GetGPUDescriptorHandle.h"
-#include"DebugError.h"
+
 #include"TransitionBarrier.h"
-#include"Fence.h"
-#include"FenceEvent.h"
+
 #include"D3DResourceLeakChecker.h"
 #include"Depth.h"//StencilTextureの作成関数　奥行き
 #include"CompileShader.h"
@@ -39,7 +33,7 @@
 #include"Log.h"
 #include"ImGuiClass.h"
 #include"InputLayout.h"
-#include "RootSignature.h"
+
 
 #include"FPSCounter.h"
 
@@ -82,11 +76,11 @@ public:
     void PostCommandSet();
     void End();
     Window& GetWC() { return wc; };
-    CommandList& GetCommandList() { return commandList; };
+
     ModelConfig& GetModelConfig() { return modelConfig_; };
     PSO& GetPSO(uint32_t index) { return pso[index]; }
-    Microsoft::WRL::ComPtr<ID3D12Device>& GetDevice() { return device; };
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& GetSrvDescriptorHeap() { return srvDescriptorHeap; }
+
+
     DirectionalLight& GetDirectionalLightData() { return *directionalLightData; }
 
     void SetBlendMode(uint32_t blendMode =BlendMode::kBlendModeNormal);
@@ -96,39 +90,20 @@ private:
 
     D3DResourceLeakChecker leakCheck = {};
     LogFile logFile = {};
-    std::ofstream logStream;
+
     Window wc = {};
-    DXGIFactory dxgiFactory = {};
-    GPU gpu = {};
-    Microsoft::WRL::ComPtr<ID3D12Device> device = nullptr;
+
     Input* input = { nullptr };
-#ifdef _DEBUG
-    DebugError debugError = {};
-#endif
-    CommandQueue commandQueue = {};
-    CommandList commandList;
-    SwapChain swapChainClass;
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap = nullptr;
-    //ゲームに一つだけ
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap = nullptr;
-    Microsoft::WRL::ComPtr <ID3D12Resource> swapChainResources[2] = { nullptr };
-    RenderTargetView rtvClass = {};
-    Fence fence = {};
-    FenceEvent fenceEvent = {};
-    DxcCompiler dxcCompiler = {};
-    RootSignature rootSignature = {};
+
     InputLayout inputLayout = {};
     std::vector<BlendState> blendStates = {};
     std::vector<RasterizerState> rasterizerStates = {};
     DepthStencil depthStencil = {};
     PSO pso[kCountOfBlendMode] = {};
-    Microsoft::WRL::ComPtr <ID3D12Resource> depthStencilResource = nullptr;
-    Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap = nullptr;
-    D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+   
     Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource = nullptr;
     DirectionalLight* directionalLightData = nullptr;
-    D3D12_VIEWPORT viewport = {};
-    D3D12_RECT scissorRect = {};
+  
 #ifdef _DEBUG
     ImGuiClass imGuiClass = {};
 #endif // _DEBUG

@@ -3,16 +3,11 @@
 #include <filesystem>
 #include <chrono>
 
+std::ofstream LogFile::stream_;
 
-//ログを出力する関数
-void Log(const std::string& message) {
-    OutputDebugStringA(message.c_str());
-}
-
-void Log(std::ostream& os, const std::string& message) {
-    os << message << std::endl;
-    OutputDebugStringA(message.c_str());
-}
+//void Log(const std::string& message) {
+//    OutputDebugStringA(message.c_str());
+//}
 
 //string->wstringに変換する関数
 std::wstring ConvertString(const std::string& str) {
@@ -45,8 +40,15 @@ std::string ConvertString(const std::wstring& str) {
 }
 
 
-std::ofstream LogFile::CreateLogFile() {
+//std::ofstream LogFile::CreateLogFile() {
+//
+//
+//    return logStream;
+//
+//}
 
+void LogFile::Create()
+{
     // ログのディレクトリを用意
     std::filesystem::create_directory("logs");
     //現在時刻を取得（UTC時刻）
@@ -63,6 +65,12 @@ std::ofstream LogFile::CreateLogFile() {
     //ファイルを作って書き込み準備
     std::ofstream logStream(logFilePath);
 
-    return logStream;
+    stream_.open(logFilePath);
+}
 
+//ログを出力する関数
+void LogFile::Log(const std::string& message) {
+    //OSにログを出力する
+    stream_ << message << std::endl;
+    OutputDebugStringA(message.c_str());
 }
