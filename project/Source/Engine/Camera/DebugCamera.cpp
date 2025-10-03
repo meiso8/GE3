@@ -11,8 +11,6 @@
 #include<numbers>
 #include<cmath>
 
-#define FPS 60
-
 void DebugCamera::Initialize(Input* input, const float& width, const float& height) {
 
     input_ = input;

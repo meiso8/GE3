@@ -1,24 +1,27 @@
 #include "MyEngine.h"
 #include<algorithm>
+//#include"TextureManager.h"
 
-void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t clientHeight) {
+const uint32_t MyEngine::kMaxSRVCount = 512;
 
-    //clientWidth_ = clientWidth;
-    //clientHeight_ = clientHeight;
+void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const int32_t clientHeight) {
 
-    //main関数の先頭でComの初期化を行う
-    HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
-    assert(SUCCEEDED(hr));
 
     //誰も捕捉しなかった場合に(Unhandled),補足する関数を登録
     //main関数始まってすぐに登録すると良い
     SetUnhandledExceptionFilter(ExportDump);
 
     logStream = logFile.CreateLogFile();
+    Log(logStream, "CreateLogFile");
 
     //WindowClassの生成
     wc.Create(title, clientWidth, clientHeight);
     Log(logStream, "CreateWindowClass");
+
+    //InputClassの生成
+    input = Input::GetInstance();
+    //入力
+    input->Initialize(wc);
 
     //DXGIFactoryの生成
     dxgiFactory.Create();
@@ -63,9 +66,12 @@ void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t cl
 #pragma endregion
 
 #pragma region //SRV　SRVやCBV用のDescriptorHeapは一旦ゲーム中に一つだけ
-    srvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128, true);
+    srvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true);
     Log(logStream, "Create SRV DescriptorHeap");
 #pragma endregion
+
+    //TextureManagerの初期化
+    //TextureManager::GetInstance()->Initialize();
 
 #pragma region//SwapChainからResourceを引っ張ってくる
     //SwapChainからResourceを引っ張ってくる
@@ -248,6 +254,8 @@ void MyEngine::Create(const std::wstring& title, int32_t clientWidth, int32_t cl
 
 void MyEngine::Update() {
 
+    //キーボード情報の取得開始
+    input->Update();
 
 #ifdef _DEBUG
 
@@ -350,11 +358,13 @@ void MyEngine::End() {
 #pragma region //解放処理
 
     CloseHandle(fenceEvent.GetEvent());
-    CloseWindow(wc.GetHwnd());
+    wc.Finalize();
 
 #pragma endregion
 
-    CoUninitialize();
+  
+
+    //TextureManager::GetInstance()->Finalize();
 }
 
 //ここでBlenModeを変更する

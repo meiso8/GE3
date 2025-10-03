@@ -15,15 +15,17 @@ BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* 
     return DIENUM_STOP; // 最初のデバイスだけ取得
 }
 
-HRESULT Input::Initialize(Window& window, int& fps) {
+HRESULT Input::Initialize(Window& window/*, int& fps*/) {
 
-    fps_ = &fps;
+    //fps_ = &fps;
+
+    window_ = &window;
 
     HRESULT result;
     //DirectInputの初期化 ゲームパッドを追加するにしてもこのオブジェクトは一つでよい。
     IDirectInput8* directInput = nullptr;
     result = DirectInput8Create(
-        window.GetWindowClass().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
+        window_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8,
         (void**)&directInput, nullptr
     );
     assert(SUCCEEDED(result));
@@ -38,7 +40,7 @@ HRESULT Input::Initialize(Window& window, int& fps) {
 
     //排他制御レベルのセット
     result = keyboard_->SetCooperativeLevel(
-        window.GetHwnd(),
+        window_->GetHwnd(),
         DISCL_FOREGROUND//画面が手前にある場合のみ入力を受け付ける
         | DISCL_NONEXCLUSIVE //デバイスをこのアプリだけで占有しない
         | DISCL_NOWINKEY//Windowsキーを無効にする
@@ -58,7 +60,7 @@ HRESULT Input::Initialize(Window& window, int& fps) {
 
     // モードを設定（フォアグラウンド＆非排他モード）
     result = mouse_->SetCooperativeLevel(
-        window.GetHwnd(),
+        window_->GetHwnd(),
         DISCL_FOREGROUND//画面が手前にある場合のみ入力を受け付ける
         | DISCL_NONEXCLUSIVE //デバイスをこのアプリだけで占有しない
         | DISCL_NOWINKEY//Windowsキーを無効にする
@@ -89,7 +91,7 @@ HRESULT Input::Initialize(Window& window, int& fps) {
 
         //排他制御レベルのセット
         result = gamePad_->SetCooperativeLevel(
-            window.GetHwnd(),
+            window_->GetHwnd(),
             DISCL_FOREGROUND//画面が手前にある場合のみ入力を受け付ける
             | DISCL_NONEXCLUSIVE //デバイスをこのアプリだけで占有しない
             | DISCL_NOWINKEY//Windowsキーを無効にする
@@ -234,7 +236,7 @@ Vector2& Input::GetMousePos() {
 }
 
 float Input::GetMouseWheel() {
-    mouseWheelVol_ += static_cast<float>(mouseState_.lZ) / *fps_;
+    mouseWheelVol_ += static_cast<float>(mouseState_.lZ) / FPS;
     return mouseWheelVol_;
 };
 
@@ -244,7 +246,7 @@ void Input::EyeOperation(Camera& camera) {
         //視点の移動 offset をずらす
         //後でoffsetをくわえる
         offset_ += GetMousePos();
-        camera.SetOffset({ offset_.x / *fps_ ,offset_.y / *fps_ * 2.0f });
+        camera.SetOffset({offset_.x / FPS,offset_.y / FPS * 2.0f });
     } else if (IsPressMouse(2)) {
         //視点の回転
         //中ボタン押し込み&&ドラッグ
@@ -260,8 +262,8 @@ void Input::EyeOperation(Camera& camera) {
 
     if (isDragging_) {
         currentPos_ = GetMousePos();
-        shericalCoordinate_.polar += currentPos_.x / *fps_;
-        shericalCoordinate_.azimuthal += currentPos_.y / *fps_;
+        shericalCoordinate_.polar += currentPos_.x / FPS;
+        shericalCoordinate_.azimuthal += currentPos_.y / FPS;
         camera.SetRotateY(shericalCoordinate_.polar);
         camera.SetRotateZ(shericalCoordinate_.azimuthal);
     }
