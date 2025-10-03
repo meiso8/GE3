@@ -1,7 +1,8 @@
 #pragma once
 
 #pragma region //自作関数
-#include"Window.h"
+//#include"Window.h"
+#include"Input.h"
 #include"CommandQueue.h"
 #include"CommandList.h"
 #include"DXGIFactory.h"
@@ -31,7 +32,7 @@
 #include"SphereMesh.h"
 #include"LineMesh.h"
 #include"Sound.h"
-#include"Input.h"
+
 #include"Camera/DebugCamera.h"
 #include"Camera/Camera.h"
 #include"CrashHandler.h"
@@ -75,7 +76,7 @@ public:
     static const uint32_t kMaxSRVCount;
 public:
 
-    void Create(const std::wstring& title, int32_t clientWidth, int32_t clientHeight);
+    void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
     void Update();
     void PreCommandSet(Vector4& color);
     void PostCommandSet();
@@ -100,7 +101,7 @@ private:
     DXGIFactory dxgiFactory = {};
     GPU gpu = {};
     Microsoft::WRL::ComPtr<ID3D12Device> device = nullptr;
-
+    Input* input = { nullptr };
 #ifdef _DEBUG
     DebugError debugError = {};
 #endif

@@ -6,6 +6,9 @@
 #include"Vector2.h"
 #include"Window.h"
 #include"SphericalCoordinate.h"
+#include"Window.h"
+
+#define FPS 60.0f
 
 class Camera;
 
@@ -13,10 +16,8 @@ class Input {
 
 private:
     static Input* instance_;
-    Input() {
-
-
-    }
+    Input() = default;
+    Window* window_ = nullptr;
 
 public:
 
@@ -28,7 +29,7 @@ public:
         return instance_;
     }
 
-    HRESULT Initialize(Window& window, int& fps);
+    HRESULT Initialize(Window& window/*, int& fps*/);
     /// @brief キーを押した状態 
     bool IsPushKey(const uint8_t& key);
     /// @briefキーを押した瞬間
@@ -78,8 +79,6 @@ private:
     Vector2 currentPos_ = { 0.0f };
     Vector3 pos_ = { 0.0f };
     ShericalCoordinate shericalCoordinate_ = { 0.0f,0.0f,0.0f };
-
-    int* fps_ = 0;
 
     //ゲームパッド
     IDirectInputDevice8* gamePad_ = nullptr;

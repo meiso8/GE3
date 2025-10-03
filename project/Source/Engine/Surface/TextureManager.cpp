@@ -64,7 +64,7 @@ void TextureManager::LoadTexture(const std::string& filePath)
     );
 
     //テクスチャ枚数上限チェック
- /*   assert(textureDatas.size() + kSRVIndexTop < MyEngine::kMaxSRVCount);*/
+    assert(textureDatas.size() + kSRVIndexTop < MyEngine::kMaxSRVCount);
 
     if (it != textureDatas.end()) {
         return;
@@ -105,8 +105,6 @@ void TextureManager::LoadTexture(const std::string& filePath)
     textureData.srvHandleCPU = GetCPUDescriptorHandle(srvIndex);
     textureData.srvHandleGPU = GetGPUDescriptorHandle(srvIndex);
 
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-
     //metaDataを基にSRVの設定
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
     srvDesc.Format = textureData.metadata.format;
@@ -136,4 +134,16 @@ uint32_t TextureManager::GetTextureIndexByFilePath(const std::string& filePath)
 
     assert(0);
     return 0;
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(uint32_t textureIndex)
+{
+
+    //テクスチャ番号が正常範囲内にある
+    assert(textureIndex + kSRVIndexTop < MyEngine::kMaxSRVCount);
+
+    //テクスチャデータの参照を取得
+    TextureData& textureData = textureDatas[textureIndex];
+
+    return textureData.srvHandleGPU;
 }

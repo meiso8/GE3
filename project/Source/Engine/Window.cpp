@@ -39,10 +39,14 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 }
 
 
-void Window::Create(const std::wstring& title,int32_t clientWidth, int32_t clientHeight) {
+void Window::Create(const std::wstring& title, const int32_t& clientWidth, const int32_t& clientHeight) {
 
     clientWidth_ = clientWidth;
     clientHeight_ = clientHeight;
+
+    //main関数の先頭でComの初期化を行う
+    HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
+    assert(SUCCEEDED(hr));
 
 #pragma region ウィンドウクラスの登録
 
@@ -103,5 +107,29 @@ void Window::Create(const std::wstring& title,int32_t clientWidth, int32_t clien
 #pragma endregion 
 
 
+}
+
+bool Window::ProcessMassage()
+{
+    MSG msg{};
+    //Windowにメッセージが来ていたら最優先で処理させる
+    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    //メッセージが来たら終了する
+    if (msg.message == WM_QUIT) {
+        return true;
+    }
+
+    return false;
+}
+
+void Window::Finalize()
+{
+
+    CloseWindow(hwnd_);
+    CoUninitialize();
 }
 
