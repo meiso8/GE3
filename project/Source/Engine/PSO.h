@@ -19,6 +19,7 @@ public:
         TRIANGLE,
         LINE,
         POINT,
+        PARTICLE,
         PSO_MAX
     };
 

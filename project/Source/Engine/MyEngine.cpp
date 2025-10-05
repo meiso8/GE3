@@ -3,8 +3,20 @@
 //#include"TextureManager.h"
 
 const uint32_t MyEngine::kMaxSRVCount = 512;
+uint32_t MyEngine::descriptorSizeSRV = 0;
+MyEngine* MyEngine::instance_ = nullptr;
 
-void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const int32_t clientHeight) {
+MyEngine* MyEngine::GetInstance()
+{
+
+    if (instance_ == nullptr) {
+        instance_ = new MyEngine();
+    }
+    return instance_;
+
+}
+
+void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
 
 
     //誰も捕捉しなかった場合に(Unhandled),補足する関数を登録
@@ -80,6 +92,12 @@ void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const 
     Log(logStream, "Pull Resource from SwapChain");
 
 #pragma endregion
+
+    if (descriptorSizeSRV == 0) {
+        descriptorSizeSRV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    }
+ 
+  /*  const uint32_t descriptorSizeRYV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);*/
 
 #pragma region//DescriptorSIze
     //DescriptorSizeを取得しておく
@@ -204,7 +222,7 @@ void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const 
 
 
 #pragma region//stencileTextureResourceの作成 
- 
+
     depthStencilResource = CreateDepthStencileTextureResource(device, wc.GetClientWidth(), wc.GetClientHeight());
 
     //DSV用ヒープでディスクリプタの数は1。DSVはShader内で触るものではないので、ShaderVisibleはfalse
@@ -238,7 +256,7 @@ void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const 
     modelConfig_ = {
         &commandList,
         &rootSignature,
-        directionalLightResource
+        directionalLightResource,
     };
 
 #ifdef _DEBUG
@@ -303,7 +321,7 @@ void MyEngine::PreCommandSet(Vector4& color) {
     //PreDrawの一部が共通になったためここに移動
     commandList.GetComandList()->RSSetViewports(1, &viewport);//Viewportを設定
     commandList.GetComandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
-    commandList.GetComandList()->SetGraphicsRootSignature(rootSignature.GetRootSignature().Get());
+
 };
 
 void MyEngine::PostCommandSet() {
@@ -362,7 +380,7 @@ void MyEngine::End() {
 
 #pragma endregion
 
-  
+
 
     //TextureManager::GetInstance()->Finalize();
 }

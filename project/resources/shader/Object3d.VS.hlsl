@@ -26,7 +26,7 @@ struct Balloon
 ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b0);
 ConstantBuffer<Balloon> gBalloon : register(b1);
 
-StructuredBuffer<Wave> gWave : register(t0);
+StructuredBuffer<Wave> gWave : register(t1);
 
 
 struct VertexShaderInput

@@ -3,11 +3,13 @@
 #include"MyEngine.h"
 #include"Normalize.h"
 
-Player::Player(MyEngine& myEngine, const ModelData& modelData) {
+Player::Player(const ModelData& modelData) {
+
+    MyEngine* myEngine = MyEngine::GetInstance();
 
     modelData_ = &modelData;
     model_ = std::make_unique<Model>();
-    model_->Create(*modelData_, myEngine.GetModelConfig(), myEngine.GetDevice(), myEngine.GetSrvDescriptorHeap(), 3);
+    model_->Create(*modelData_, myEngine->GetModelConfig(), myEngine->GetDevice(), myEngine->GetSrvDescriptorHeap(), 5);
 
 }
 
@@ -26,28 +28,30 @@ void Player::Draw(Camera& camera,uint32_t lightType)
 void Player::Update()
 {
 
+    Input* input = Input::GetInstance();
+
     velocity_ = { 0.0f,0.0f,0.0f };
 
-    if (Input::GetInstance()->IsPushKey(DIK_A)) {
+    if (input->IsPushKey(DIK_A)) {
         velocity_.x = -1.0f;
     }
 
-    if (Input::GetInstance()->IsPushKey(DIK_D)) {
+    if (input->IsPushKey(DIK_D)) {
         velocity_.x = 1.0f;
     }
 
 
-    if (Input::GetInstance()->IsPushKey(DIK_W)) {
-        velocity_.z -= 1.0f;
-    }
-
-    if (Input::GetInstance()->IsPushKey(DIK_S)) {
+    if (input->IsPushKey(DIK_W)) {
         velocity_.z += 1.0f;
     }
 
-    kSpeed_ = (Input::GetInstance()->IsPushKey(DIK_LSHIFT)) ? 0.25f : 0.5f;
+    if (input->IsPushKey(DIK_S)) {
+        velocity_.z -= 1.0f;
+    }
 
-    if (Input::GetInstance()->IsPushKey(DIK_A) || Input::GetInstance()->IsPushKey(DIK_D) || Input::GetInstance()->IsPushKey(DIK_W) || Input::GetInstance()->IsPushKey(DIK_S)) {
+    kSpeed_ = (input->IsPushKey(DIK_LSHIFT)) ? 0.25f : 0.5f;
+
+    if (input->IsPushKey(DIK_A) || input->IsPushKey(DIK_D) || input->IsPushKey(DIK_W) || input->IsPushKey(DIK_S)) {
         velocity_ = Normalize(velocity_);
         worldTransform_.translate_ += velocity_ * kSpeed_;
     }
