@@ -10,7 +10,7 @@
 #include<algorithm>
 #include"Camera/Camera.h"
 
-void DebugUI::CheckDirectionalLight(DirectionalLight& directionalLights,int& lightType) {
+void DebugUI::CheckDirectionalLight(DirectionalLight& directionalLights, int& lightType) {
 
     Vector3 direction = directionalLights.direction;
     ImGui::Begin("DirectionalLight");
@@ -32,7 +32,7 @@ void DebugUI::CheckDirectionalLight(DirectionalLight& directionalLights,int& lig
 void DebugUI::CheckBlendMode(uint32_t& blendMode) {
 
     ImGui::Begin("BlendMode");
-    const char* blendModes[] = { 
+    const char* blendModes[] = {
         "kBlendModeNone",
         "kBlendModeNormal",
         "kBlendModeAdd",
@@ -138,11 +138,15 @@ void DebugUI::CheckInput(Input& input) {
     ImGui::SliderFloat2("startPos", &input.GetOffset().x, -100.0f, 100.0f);
     ImGui::SliderFloat2("currentPos", &input.GetCurrentPos().x, -100.0f, 100.0f);
 
-
-    Vector2 normL = Normalize(Vector2(static_cast<float>(input.GetJoyState().lX), static_cast<float>(input.GetJoyState().lY)));
-
-    ImGui::Text("normLX: %f %f", normL.x, normL.y);//x軸位置
-
+    float x = 100;
+    float y = 100;
+    input.GetJoyStickPos(&x, &y, Input::BUTTON_LEFT);
+    ImGui::Text("normLX:%f %f", x, y);
+    float dX = 100;
+    float dY = 100;
+    input.GetJoyStickDPadButton(&dX, &dY);
+  
+    ImGui::Text("Dpad:%f %f", dX, dY);
 
     ImGui::Text("joyStateLX: %ld", input.GetJoyState().lX);//x軸位置
     ImGui::Text("joyStateLY: %ld", input.GetJoyState().lY);
@@ -155,6 +159,8 @@ void DebugUI::CheckInput(Input& input) {
     } else {
         ImGui::Text("POV[%d]: Centered", 0);
     }
+
+
 
     for (int i = 0; i < 12; ++i) {
         ImGui::Text("Button[%d]: %s", i,

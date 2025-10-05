@@ -8,6 +8,15 @@
 
 Input* Input::instance_ = nullptr;
 
+Input* Input::GetInstance() {
+
+    if (instance_ == nullptr) {
+        instance_ = new Input();
+    }
+    return instance_;
+}
+
+
 BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext) {
     auto* self = static_cast<Input*>(pContext);
     self->joystickGUID = pdidInstance->guidInstance;
@@ -159,6 +168,7 @@ void Input::Update() {
 
     if (foundJoystick_) {
         ////ゲームパッドの状態を取得する
+        memcpy(preJoyButtons_, joyState_.rgbButtons, 32);
         gamePad_->Acquire();
         gamePad_->Poll(); // デバイスにポーリング
         gamePad_->GetDeviceState(sizeof(DIJOYSTATE), &joyState_);
@@ -166,63 +176,156 @@ void Input::Update() {
 }
 
 
-bool Input::GetJoyStick(int stickNo, float* x, float* y) {
+bool Input::GetJoyStickPos(float* x, float* y, ButtonType buttonType) {
+
     if (foundJoystick_) {
+
         if (!x || !y) {
             return 0;
         }
 
-        if (stickNo == 0) {
+        if (buttonType == BUTTON_LEFT) {
+            return NormalizeButtonCount(x, y, joyState_.lX, joyState_.lY);
+        }
 
-            if (joyState_.lX >= SHRT_MAX - deadZone_ && joyState_.lX <= SHRT_MAX + deadZone_) {
-                return 0;
-            }
-
-            if (joyState_.lY >= SHRT_MAX - deadZone_ && joyState_.lY <= SHRT_MAX + deadZone_) {
-                return 0;
-            }
-
-            Vector2 normL = Normalize(Vector2(static_cast<float>(joyState_.lX), static_cast<float>(joyState_.lY)));
-
-            if (joyState_.lX >= 0.0f && joyState_.lX <= SHRT_MAX - deadZone_) {
-                *x = -normL.x;
-            } else if (joyState_.lX >= SHRT_MAX + deadZone_) {
-                *x = normL.x;
-            } else {
-                *x = 0.0f;
-            }
-
-            if (joyState_.lY >= 0.0f && joyState_.lY <= SHRT_MAX - deadZone_) {
-                *y = -normL.y;
-            } else if (joyState_.lY >= SHRT_MAX + deadZone_) {
-                *y = normL.y;
-            } else {
-                *y = 0.0f;
-            }
-
-
-            return 1;
+        if (buttonType == BUTTON_RIGHT) {
+            return NormalizeButtonCount(x, y, joyState_.lRx, joyState_.lRy);
         }
 
     }
-
 
     *x = 0.0f;
     *y = 0.0f;
     return 0;
 }
 
+bool Input::GetJoyStickDPadButton(float* x, float* y)
+{
+
+    if (!foundJoystick_) {
+        return false;
+    }
+    if (joyState_.rgdwPOV[0] == -1) {
+        *x = 0.0f;
+        *y = 0.0f;
+        return false;
+    }
+
+    if (joyState_.rgdwPOV[0] == 0) {
+        //上
+        *x = 0.0f;
+        *y = 1.0f;
+    }
+
+    if (joyState_.rgdwPOV[0] == 4500) {
+        //上
+        *x = 0.707107f;
+        *y = 0.707107f;
+    }
+
+    if (joyState_.rgdwPOV[0] == 9000) {
+        *x = 1.0f;
+        *y = 0.0f;
+    }
+
+    if (joyState_.rgdwPOV[0] == 13500) {
+        //上
+        *x = 0.707107f;
+        *y = -0.707107f;
+    }
+
+    if (joyState_.rgdwPOV[0] == 18000) {
+        //上
+        *x = 0.0f;
+        *y = -1.0f;
+    }
+    if (joyState_.rgdwPOV[0] == 22500) {
+        *x = -0.707107f;
+        *y = -0.707107f;
+    }
+
+    if (joyState_.rgdwPOV[0] == 27000) {
+        //左
+        *x = -1.0f;
+        *y = 0.0f;
+    }
+
+    if (joyState_.rgdwPOV[0] == 31500) {
+        //左上
+        //*x = -1.0f / std::sqrtf(2.0f);
+        *x =-0.707107f;
+        *y = 0.707107f;
+    }
+
+    return false;
+}
+
+bool Input::NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& buttonLY)
+{
+    float normX = (static_cast<float>(buttonLX) - SHRT_MAX) / SHRT_MAX;
+    float normY = (static_cast<float>(buttonLY) - SHRT_MAX) / SHRT_MAX;
+
+    if (normX > 1.0f - deadZone_) {
+        normX = 1.0f;
+    } else if (normX < -1.0f + deadZone_) {
+        normX = -1.0f;
+    }
+
+    if (normY > 1.0f - deadZone_) {
+        normY = 1.0f;
+    } else if (normY < -1.0f + deadZone_) {
+        normY = -1.0f;
+    }
+
+    float absX = std::fabsf(normX);
+    float absY = std::fabsf(normY);
+
+    if (absX == 1.0f || absY < deadZone_) {
+        normY = 0.0f;
+    }
+
+    if (absY == 1.0f || absX < deadZone_) {
+        normX = 0.0f;
+    }
+
+    *x = normX;
+    *y = -normY;
+
+    return 1;
+
+}
+
 
 
 bool Input::IsJoyStickPressButton(uint32_t index) {
     if (foundJoystick_) {
+
+        if (index > 31) {
+            return false;
+        }
+
         if (joyState_.rgbButtons[index] & 0x80) {
+            return true;
+        }
+
+
+    }
+    return false;
+}
+bool Input::IsJoyStickTrigger(uint32_t index)
+{
+    if (foundJoystick_) {
+
+        if (index > 31) {
+            return false;
+        }
+        if (joyState_.rgbButtons[index] & 0x80 && !(preJoyButtons_[index] & 0x80)) {
             return true;
         }
     }
     return false;
-};
-
+}
+;
 
 bool Input::IsPressMouse(uint32_t index) {
     return (mouseState_.rgbButtons[index] & 0x80) ? true : false;
@@ -246,7 +349,7 @@ void Input::EyeOperation(Camera& camera) {
         //視点の移動 offset をずらす
         //後でoffsetをくわえる
         offset_ += GetMousePos();
-        camera.SetOffset({offset_.x / FPS,offset_.y / FPS * 2.0f });
+        camera.SetOffset({ offset_.x / FPS,offset_.y / FPS * 2.0f });
     } else if (IsPressMouse(2)) {
         //視点の回転
         //中ボタン押し込み&&ドラッグ

@@ -76,8 +76,7 @@ public:
     static const uint32_t kMaxSRVCount;
     static uint32_t descriptorSizeSRV;
 private:
-    static MyEngine* instance_;
-
+    static std::unique_ptr<MyEngine> instance_;
 public:
  
     MyEngine() = default;

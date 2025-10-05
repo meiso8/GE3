@@ -14,6 +14,7 @@ public:
     void Init();
     void Draw(Camera& camera, uint32_t lightType);
     void Update();
+    Vector3& GetTranslate() { return worldTransform_.translate_; }
 private:
     Vector3 velocity_;
     float kSpeed_;

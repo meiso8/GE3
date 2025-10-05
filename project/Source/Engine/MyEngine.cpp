@@ -4,15 +4,16 @@
 
 const uint32_t MyEngine::kMaxSRVCount = 512;
 uint32_t MyEngine::descriptorSizeSRV = 0;
-MyEngine* MyEngine::instance_ = nullptr;
+std::unique_ptr<MyEngine> MyEngine::instance_ = nullptr;
 
 MyEngine* MyEngine::GetInstance()
 {
 
     if (instance_ == nullptr) {
-        instance_ = new MyEngine();
+        instance_ = std::make_unique<MyEngine>();
     }
-    return instance_;
+
+    return instance_.get();
 
 }
 
@@ -96,8 +97,8 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     if (descriptorSizeSRV == 0) {
         descriptorSizeSRV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     }
- 
-  /*  const uint32_t descriptorSizeRYV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);*/
+
+    /*  const uint32_t descriptorSizeRYV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);*/
 
 #pragma region//DescriptorSIze
     //DescriptorSizeを取得しておく

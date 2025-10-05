@@ -2,6 +2,7 @@
 #include"MyEngine.h"
 #include"Player.h"
 #include"Particle/Particle.h"
+#include"Lerp.h"
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
@@ -23,6 +24,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     SoundData bgmData[2] = {
         sound.SoundLoad(L"resources/Sounds/dreamcore.mp3"),
         sound.SoundLoad(L"resources/Sounds/kiritan.mp3") };
+
+    SoundData seData = sound.SoundLoad(L"resources/Sounds/poppo.mp3");
 
 #pragma endregion
 
@@ -65,7 +68,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     Sprite sprite;
     sprite.Create(myEngine->GetDevice(), myEngine->GetModelConfig());
     sprite.SetSize(Vector2(256.0f, 256.0f));
-    //sprite.SetTranslate({ WIN_WIDTH - sprite.GetSize().x,WIN_HEIGHT - sprite.GetSize().y,0.0f });
     sprite.SetTranslate({ 0.0f,0.0f,0.0f });
 
     const ModelData modelData = LoadObjeFile("resources/player", "player.obj");
@@ -89,7 +91,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     uint32_t blendMode = BlendMode::kBlendModeNone;
 
     Particle particle;
-    particle.Create(myEngine->GetDevice(),myEngine->GetCommandList(),myEngine->GetRootSignature());
+    particle.Create(myEngine->GetDevice(), myEngine->GetCommandList(), myEngine->GetRootSignature());
 
     // =============================================
     //ウィンドウのxボタンが押されるまでループ メインループ
@@ -109,7 +111,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef _DEBUG
 
-        if (Input::GetInstance()->IsTriggerKey(DIK_SPACE)) {
+        if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) || Input::GetInstance()->IsJoyStickTrigger(1)) {
             //デバッグの切り替え
             isDebug = (isDebug) ? false : true;
         }
@@ -118,6 +120,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             camera.SetOrthographic(true);
         }
 
+        if (Input::GetInstance()->IsJoyStickPressButton(0)) {
+            sound.SoundPlay(seData, 1.0f, false);
+        }
+
+        if (!sound.IsPlaying()) {
+            sound.SoundPlay(bgmData[1], 0.0625f, true);
+        }
 
         if (isDebug) {
             debugUI.CheckDirectionalLight(myEngine->GetDirectionalLightData(), lightType);
@@ -132,15 +141,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
                    //視点操作
             Input::GetInstance()->EyeOperation(camera);
 
+        } else {
+
+            Vector3 cameraPos = player.get()->GetTranslate();
+ 
+            Vector2 delta = { 0.0f,0.0f };
+            if (Input::GetInstance()->GetJoyStickPos(&delta.x, &delta.y, Input::BUTTON_RIGHT)) {
+                camera.SetRotateY(delta.x);
+            }
+            cameraPos.y += 1.0f+ delta.y;
+            cameraPos.z -= 10.0f;
+
+            cameraPos = Lerp(cameraPos, camera.GetTranslate(), 0.01f);
+            camera.SetTranslate(cameraPos);
+
         }
+
+
 
         camera.Update();
 
         player.get()->Update();
-
         cube[0].SetColor({ 1.0f, 1.0f, 1.0f, 0.2f
             });
-
         cube[1].SetColor({ 1.0f, 1.0f, 1.0f, 0.2f
             });
 
@@ -153,10 +176,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         sprite.PreDraw(myEngine->GetPSO(kBlendModeNormal));
         sprite.Draw(srv[2], cameraSprite, lightType);
 
-        //グリッドの描画
-        if (isDebug) {
-            grid.Draw(srv[0], camera);
-        }
+
+#ifdef _DEBUG
+        grid.Draw(srv[0], camera);
+#endif // _DEBUG
+
+
 
         cube[0].PreDraw(myEngine->GetPSO(kBlendModeNormal));
         cube[0].Draw(srv[1], camera, MakeIdentity4x4(), lightType);
@@ -166,7 +191,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         player.get()->Draw(camera, lightType);
         myEngine->SetBlendMode();
 
-        particle.Draw(camera,srv[2]);
+        particle.Draw(camera, srv[2]);
 
         myEngine->PostCommandSet();
 

@@ -20,22 +20,17 @@ struct SoundData {
 #include <stdint.h> // int32_t  
 
 #include <wrl.h> // ComPtr(コムポインタ)  
+#include<memory>//unique_ptr
 
 class Sound {
 public:
 
-    static Sound* instance_;
+
     Sound();
 
 public:
 
-    static Sound* GetInstance() {
-
-        if (instance_ == nullptr) {
-            instance_ = new Sound();
-        }
-        return instance_;
-    }
+    static Sound* GetInstance();
     SoundData SoundLoad(const std::wstring& path);
 
     void SoundPlay(const SoundData& soundData, const float& volume, bool isLoop = false);
@@ -51,6 +46,7 @@ public:
     bool IsPlaying()const;
     ~Sound();
 private:
+    static std::unique_ptr<Sound> instance_;
 
     Microsoft::WRL::ComPtr<IXAudio2> xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
     IXAudio2MasteringVoice* masterVoice_ = { nullptr }; // ReleaseなしのためComPtrで管理することが出来ない。  

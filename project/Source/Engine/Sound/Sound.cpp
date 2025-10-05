@@ -10,8 +10,7 @@
 #pragma comment(lib, "xaudio2.lib") // xaudio2.libをリンクする。  
 
 
-
-Sound* Sound::instance_ = nullptr;
+std::unique_ptr<Sound> Sound::instance_ = nullptr;
 
 Sound::Sound() {
     HRESULT result;
@@ -26,6 +25,14 @@ Sound::Sound() {
     assert(SUCCEEDED(result));
 }
 
+
+Sound* Sound::GetInstance()
+{
+    if (instance_ == nullptr) {
+        instance_ = std::make_unique<Sound>();
+    }
+    return instance_.get();
+}
 
 SoundData Sound::SoundLoad(const std::wstring& path) {
 
