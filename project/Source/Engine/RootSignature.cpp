@@ -31,11 +31,11 @@ void RootSignature::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
     descriptorRangeForInstancing[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     descriptorRangeForInstancing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-    D3D12_DESCRIPTOR_RANGE waveDescriptorRange[1] = {};
-    waveDescriptorRange[0].BaseShaderRegister = 1; // gWave : register(t1)
-    waveDescriptorRange[0].NumDescriptors = 1;
-    waveDescriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-    waveDescriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+    //D3D12_DESCRIPTOR_RANGE waveDescriptorRange[1] = {};
+    //waveDescriptorRange[0].BaseShaderRegister = 1; // gWave : register(t1)
+    //waveDescriptorRange[0].NumDescriptors = 1;
+    //waveDescriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+    //waveDescriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 #pragma endregion
 
@@ -82,14 +82,14 @@ void RootSignature::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
     rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParameters[3].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
     //Wave
-    //rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;//SRVを使う
-    //rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    //rootParameters[4].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
+    rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;//SRVを使う
+    rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParameters[4].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
 
-    rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-    rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-    rootParameters[4].DescriptorTable.pDescriptorRanges = waveDescriptorRange;
-    rootParameters[4].DescriptorTable.NumDescriptorRanges = _countof(waveDescriptorRange);
+    //rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+    //rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+    //rootParameters[4].DescriptorTable.pDescriptorRanges = waveDescriptorRange;
+    //rootParameters[4].DescriptorTable.NumDescriptorRanges = _countof(waveDescriptorRange);
 
     //Ballon
     rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
@@ -97,7 +97,7 @@ void RootSignature::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
     rootParameters[5].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
 #pragma endregion
 
-#pragma region//NormalRootParameters
+#pragma region//ParticleRootParameters
     //CBufferを利用することになったので、RootParameterに設定を追加する
    /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
     D3D12_ROOT_PARAMETER rootParametersForInstancing[3] = {};

@@ -10,7 +10,7 @@ class Camera;
 class Player
 {
 public:
-    Player(MyEngine& myEngine, const ModelData& modelData);
+    Player(const ModelData& modelData);
     void Init();
     void Draw(Camera& camera, uint32_t lightType);
     void Update();

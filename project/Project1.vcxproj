@@ -157,8 +157,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
     <ClCompile Include="Source\Application\Player.cpp" />
+    <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
     <ClCompile Include="Source\Engine\MyEngine.cpp" />
     <ClCompile Include="Source\Engine\ImGui\FPSCounter.cpp" />
     <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
@@ -273,8 +273,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
-    <ClInclude Include="Source\Engine\Particle\Particle.h" />
     <ClInclude Include="Source\Application\Player.h" />
+    <ClInclude Include="Source\Engine\Particle\Particle.h" />
     <ClInclude Include="Source\Engine\MyEngine.h" />
     <ClInclude Include="Source\Engine\Mesh\Balloon.h" />
     <ClInclude Include="Source\Engine\BlendState.h" />

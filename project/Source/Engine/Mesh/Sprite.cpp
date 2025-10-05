@@ -173,6 +173,7 @@ void Sprite::UpdateUV() {
 
 void Sprite::PreDraw(PSO& pso) {
 
+    modelConfig_.commandList->GetComandList()->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0).Get());
     modelConfig_.commandList->GetComandList()->SetPipelineState(pso.GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     modelConfig_.commandList->GetComandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -200,7 +201,7 @@ void Sprite::Draw(
     modelConfig_.commandList->GetComandList()->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
     //LightのCBufferの場所を設定
     modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(3, modelConfig_.directionalLightResource->GetGPUVirtualAddress());
-    //timeのSRVの場所を設定
+    //Wave timeのSRVの場所を設定
     modelConfig_.commandList->GetComandList()->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
     modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());

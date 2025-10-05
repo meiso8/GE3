@@ -7,17 +7,27 @@
 #include"GetGPUDescriptorHandle.h"
 #include"MyEngine.h"
 
+
 using namespace  Microsoft::WRL;
 
 void Particle::Create(const ComPtr<ID3D12Device>& device, CommandList& commandList, RootSignature& rootSignature)
 {
     commandList_ = &commandList;
     rootSignature_ = &rootSignature;
+
     CreateModelData(device);
     CreateTransformationMatrix(device);
 
     //マテリアルリソースを作成 //ライトなし
     materialResource_.CreateMaterial(device, MaterialResource::LIGHTTYPE::NONE);
+
+    vertexBufferResource_ = CreateBufferResource(device, sizeof(VertexData) * modelData_.vertices.size());
+    vertexBufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexBufferData_));
+    std::copy(modelData_.vertices.begin(), modelData_.vertices.end(), vertexBufferData_);
+
+    vertexBufferView_.BufferLocation = vertexBufferResource_->GetGPUVirtualAddress();
+    vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_.vertices.size());
+    vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
 }
 
@@ -43,6 +53,8 @@ void Particle::CreateTransformationMatrix(const ComPtr<ID3D12Device>& device)
     instancingResource = CreateBufferResource(device, sizeof(TransformationMatrix) * kNumInstance);
     //書き込むためのアドレスを取得
     instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
+
+    assert(instancingResource != nullptr);
 
     for (uint32_t index = 0; index < kNumInstance; ++index) {
         instancingData[index].WVP = MakeIdentity4x4();
@@ -70,7 +82,7 @@ void Particle::CreateTransformationMatrix(const ComPtr<ID3D12Device>& device)
 }
 
 
-void Particle::Draw(Camera& camera)
+void Particle::Draw(Camera& camera,ShaderResourceView& srv)
 {
 
     for (uint32_t index = 0; index < kNumInstance; ++index) {
@@ -81,15 +93,18 @@ void Particle::Draw(Camera& camera)
 
     //rootSignatureの設定
     commandList_->GetComandList()->SetGraphicsRootSignature(rootSignature_->GetRootSignature(1).Get());
+    commandList_->GetComandList()->SetPipelineState(MyEngine::GetInstance()->GetPSO(BlendMode::kBlendModeNormal).GetGraphicsPipelineState(PSO::PARTICLE).Get());
+    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+    commandList_->GetComandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList_->GetComandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
     //マテリアルの設定
     commandList_->GetComandList()->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //粒ごとのトランスフォーム
-    commandList_->GetComandList()->SetGraphicsRootConstantBufferView(1, instancingResource->GetGPUVirtualAddress());
-
+    commandList_->GetComandList()->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
     //テスクチャ
-    commandList_->GetComandList()->SetGraphicsRootDescriptorTable(2, instancingSrvHandleGPU);
+    commandList_->GetComandList()->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
 
     //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
-    commandList_->GetComandList()->DrawIndexedInstanced(UINT(modelData_.vertices.size()), kNumInstance, 0, 0, 0);
+    commandList_->GetComandList()->DrawInstanced(UINT(modelData_.vertices.size()), kNumInstance, 0, 0);
 
 }
