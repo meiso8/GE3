@@ -8,7 +8,7 @@ class RootSignature
 {
 public:
    void Create();
-   ID3D12RootSignature* GetRootSignature(uint32_t index) { return rootSignature_[index].Get(); };
+   ID3D12RootSignature* GetRootSignature(uint32_t index) { return rootSignatures_[index].Get(); };
 
 private:
     Microsoft::WRL::ComPtr <ID3D12RootSignature> rootSignatures_[2] = {nullptr};

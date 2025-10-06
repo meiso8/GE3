@@ -7,6 +7,7 @@
 #include"Balloon.h"
 #include"Wave.h"
 #include"Transform.h"
+#include<d3d12.h>
 
 class Model
 {

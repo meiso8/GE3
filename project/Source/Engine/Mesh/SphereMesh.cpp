@@ -140,7 +140,7 @@ void SphereMesh::CreateMaterial() {
 
 }
 
-void SphereMesh::Create() {
+void SphereMesh::Create(ModelConfig& mc) {
 
     //マテリアルの作成
     CreateMaterial();
@@ -166,7 +166,7 @@ void SphereMesh::Create() {
     };
 
     uvTransformMatrix_ = MakeIdentity4x4();
-
+    modelConfig_ = mc;
 }
 
 //void Sphere::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
@@ -220,14 +220,20 @@ void SphereMesh::SetColor(const Vector4& color) {
 
 void SphereMesh::PreDraw(PSO& pso, PSO::PSOType type) {
 
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0).Get());
-    modelConfig_.commandList->GetComandList()->SetPipelineState(pso.GetGraphicsPipelineState(type).Get());//PSOを設定
+    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
+
+
+    commandList->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0));
+    commandList->SetPipelineState(pso.GetGraphicsPipelineState(type).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    modelConfig_.commandList->GetComandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void SphereMesh::Draw(Camera& camera, ShaderResourceView& srv, uint32_t lightType
 ) {
+
+    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
+
 
     materialResource_.SetLightType(lightType);
 
@@ -236,21 +242,21 @@ void SphereMesh::Draw(Camera& camera, ShaderResourceView& srv, uint32_t lightTyp
     //データを書き込む
     *wvpDate_ = { worldViewProjectionMatrix_,worldMatrix_ };
 
-    modelConfig_.commandList->GetComandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //wvp用のCBufferの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
+    commandList->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
     //LightのCBufferの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(3, modelConfig_.directionalLightResource->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_.directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
     //描画!(DrawCall/ドローコール)。
-    modelConfig_.commandList->GetComandList()->DrawInstanced(6 * kSubdivision_ * kSubdivision_, 1, 0, 0);
+    commandList->DrawInstanced(6 * kSubdivision_ * kSubdivision_, 1, 0, 0);
 
 }
 

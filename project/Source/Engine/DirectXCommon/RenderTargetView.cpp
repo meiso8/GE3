@@ -4,13 +4,7 @@
 #include "DirectXCommon.h"
 
 void RenderTargetView::Create(
-    const Microsoft::WRL::ComPtr<ID3D12Device>& device,
-    std::array< Microsoft::WRL::ComPtr <ID3D12Resource>,2>swapChainResources,
-    const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& rtvDescriptorHeap) {
-
-    uint32_t descriptorSize = DirectXCommon::descriptorSizeRTV;
-
-    assert(descriptorSize != 0);
+   const std::array< Microsoft::WRL::ComPtr <ID3D12Resource>,2>swapChainResources) {
 
     //Descriptorは必ずDescriptorHandleというポインタのようなものを介して扱う必要がある
     //Viewを作るときは、どこのDescriptorに情報を格納するかを明示的に指定する必要がる
@@ -20,7 +14,7 @@ void RenderTargetView::Create(
     //2つ作る。
     for (int i = 0; i < 2; ++i) {
         rtvHandles_[i] = DirectXCommon::GetRTVCPUDescriptorHandle(i);
-        device->CreateRenderTargetView(swapChainResources[i].Get(), &rtvDesc_, rtvHandles_[i]);
+        DirectXCommon::GetDevice()->CreateRenderTargetView(swapChainResources[i].Get(), &rtvDesc_, rtvHandles_[i]);
     }
 
 }

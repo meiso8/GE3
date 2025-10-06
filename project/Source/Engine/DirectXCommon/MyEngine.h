@@ -65,28 +65,30 @@
 
 class MyEngine {
 
-public:
 
-    static const uint32_t kMaxSRVCount;
-
-private:
-    static std::unique_ptr<MyEngine> instance_;
 public:
+    MyEngine() = default;
+    ~MyEngine() = default;
+    static MyEngine* GetInstance();
     void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
     void Update();
     void PreCommandSet(Vector4& color);
     void PostCommandSet();
     void End();
+
     Window& GetWC() { return wc; };
     ModelConfig& GetModelConfig() { return modelConfig_; };
     RootSignature& GetRootSignature() { return rootSignature; }
-    PSO& GetPSO(uint32_t index) { return pso[index]; }
+    static PSO& GetPSO(uint32_t index) { return pso[index]; }
     DirectionalLight& GetDirectionalLightData() { return *directionalLightData; }
-    void SetBlendMode(uint32_t blendMode =BlendMode::kBlendModeNormal);
+    void SetBlendMode(uint32_t blendMode = BlendMode::kBlendModeNormal);
+public:
+    static const uint32_t kMaxSRVCount;
 private:
-    std::unique_ptr<DirectXCommon> directXCommon = nullptr;
-
     D3DResourceLeakChecker leakCheck = {};
+    std::unique_ptr<DirectXCommon> directXCommon = nullptr;
+    static std::unique_ptr<MyEngine> instance_;
+
     LogFile logFile = {};
     Window wc = {};
     Input* input = { nullptr };
@@ -95,7 +97,7 @@ private:
     std::vector<BlendState> blendStates = {};
     std::vector<RasterizerState> rasterizerStates = {};
     DepthStencil depthStencil = {};
-    PSO pso[kCountOfBlendMode] = {};
+    static PSO pso[kCountOfBlendMode];
     Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource = nullptr;
     DirectionalLight* directionalLightData = nullptr;
     RootSignature rootSignature = {};

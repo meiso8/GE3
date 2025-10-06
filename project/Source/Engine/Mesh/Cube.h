@@ -6,7 +6,7 @@
 #include<d3d12.h>
 #include"ModelConfig.h"
 
-#include"CommandList.h"  
+#include"commandList.h"  
 #include"ModelData.h"  
 #include"PSO.h"  
 #include"ShaderResourceView.h"  
@@ -58,7 +58,6 @@ private:
     MaterialResource materialResource_{};
 
     ModelConfig modelConfig_{};
-
     Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_;
     Balloon* expansionData_ = nullptr;
 

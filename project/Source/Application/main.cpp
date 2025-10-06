@@ -49,11 +49,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     Texture textures;
     textures.Load("resources/white1x1.png");
-
     Texture textures2;
-
     textures2.Load("resources/numbers.png");
-
     Texture textures3;
     textures3.Load("resources/uvChecker.png");
 
@@ -63,10 +60,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     srv[0].Create(textures, 1);
     srv[1].Create(textures2, 2);
  srv[2].Create(textures3, 3);
-    DrawGrid grid = DrawGrid(myEngine.GetModelConfig(), myEngine.GetPSO(0));
+    DrawGrid grid = DrawGrid(myEngine->GetModelConfig(), myEngine->GetPSO(0));
 
     Sprite sprite;
-    sprite.Create(myEngine.GetModelConfig());
+    sprite.Create(myEngine->GetModelConfig());
      sprite.SetSize(Vector2(256.0f, 256.0f));
     //sprite.SetTranslate({ WIN_WIDTH - sprite.GetSize().x,WIN_HEIGHT - sprite.GetSize().y,0.0f });
 
@@ -79,8 +76,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     Cube cube[2];
 
-    cube[0].Create(myEngine.GetModelConfig());
-    cube[1].Create(myEngine.GetModelConfig());
+    cube[0].Create(myEngine->GetModelConfig());
+    cube[1].Create(myEngine->GetModelConfig());
 
     WorldTransform cubeWorldTransform;
     cubeWorldTransform.Initialize();
@@ -95,7 +92,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     uint32_t blendMode = BlendMode::kBlendModeNone;
 
     Particle particle;
-    particle.Create(myEngine->GetDevice(), myEngine->GetCommandList(), myEngine->GetRootSignature());
+    particle.Create(myEngine->GetRootSignature());
 
     // =============================================
     //ウィンドウのxボタンが押されるまでループ メインループ
@@ -124,13 +121,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             camera.SetOrthographic(true);
         }
 
-        if (Input::GetInstance()->IsJoyStickPressButton(0)) {
+ /*       if (Input::GetInstance()->IsJoyStickPressButton(0)) {
             sound.SoundPlay(seData, 1.0f, false);
         }
 
         if (!sound.IsPlaying()) {
             sound.SoundPlay(bgmData[1], 0.0625f, true);
-        }
+        }*/
 
         if (isDebug) {
             debugUI.CheckDirectionalLight(myEngine->GetDirectionalLightData(), lightType);

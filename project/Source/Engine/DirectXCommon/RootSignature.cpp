@@ -155,12 +155,12 @@ void RootSignature::Create() {
         D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 
     if (FAILED(result)) {
-        Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+        LogFile::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
         assert(false);
     }
 
     //バイナリ元に生成
-    result = device->CreateRootSignature(0,
+    result = DirectXCommon::GetDevice()->CreateRootSignature(0,
         signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(),
         IID_PPV_ARGS(&rootSignatures_[1]));
 

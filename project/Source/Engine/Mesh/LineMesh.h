@@ -5,7 +5,7 @@
 #include<d3d12.h>
 #include"ModelConfig.h"
 
-#include"CommandList.h"  
+#include"commandList.h"  
 #include"ModelData.h"  
 #include"PSO.h"  
 #include"ShaderResourceView.h"  
@@ -17,6 +17,8 @@
 #include"RootSignature.h"  
 #include"Balloon.h"
 #include"Wave.h"
+#include<d3d12.h>
+
 class LineMesh
 {
 public:

@@ -26,11 +26,9 @@ public:
     void Create(
         RootSignature& rootSignature,
         InputLayout& inputLayout,
-        DxcCompiler& dxcCompiler,
         BlendState& blendState,
         RasterizerState& rasterizerState,
-        DepthStencil& depthStencil,
-        ID3D12Device& device);
+        DepthStencil& depthStencil);
 
     Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineState(PSOType type) {
         return graphicsPipelineState_[type];

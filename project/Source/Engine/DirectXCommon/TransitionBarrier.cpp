@@ -3,7 +3,7 @@
 //TransitionBarrierの設定
 void TransitionBarrier::SettingBarrier(
     const Microsoft::WRL::ComPtr <ID3D12Resource>& swapChainResources,
-    const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& commandList) {
+    ID3D12GraphicsCommandList* commandList) {
 
     //今回はバリアはTransition
     barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -16,7 +16,7 @@ void TransitionBarrier::SettingBarrier(
     //遷移後のResourceState
     barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
     //TransitionBarrierを張る
-    commandList.Get()->ResourceBarrier(1, &barrier_);
+    commandList->ResourceBarrier(1, &barrier_);
 }
 
 void TransitionBarrier::Transition() {

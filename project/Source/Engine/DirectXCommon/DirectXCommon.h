@@ -1,7 +1,7 @@
 #pragma once
 
 #include"CommandQueue.h"
-#include"CommandList.h"
+#include"commandList.h"
 #include"DXGIFactory.h"
 #include"GPU.h"
 #include"SwapChain.h"
@@ -39,11 +39,14 @@ private:
     static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
     //ゲームに一つだけ
     static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap;
-    static DxcCompiler* dxcCompiler;
-    CommandQueue commandQueue = {};
-    static CommandList commandList;
-    SwapChain swapChainClass;
+    static Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap;
 
+    static std::unique_ptr< DxcCompiler> dxcCompiler;
+    CommandQueue commandQueue = {};
+    static std::unique_ptr<CommandList> commandList;
+    SwapChain swapChainClass;
+    GPU gpu = {};
+    DebugError debugError = {};
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, 2> swapChainResources;
     RenderTargetView rtvClass = {};
     Fence fence = {};
@@ -51,7 +54,7 @@ private:
 
 
     Microsoft::WRL::ComPtr <ID3D12Resource> depthStencilResource = nullptr;
-    Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap = nullptr;
+
     D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
     D3D12_VIEWPORT viewport = {};
     D3D12_RECT scissorRect = {};
@@ -82,13 +85,16 @@ public:
         const DirectX::ScratchImage& mipImages);
     static DirectX::ScratchImage LoadTextureFile(const std::string& filePath);
     static ID3D12Device* GetDevice() { return device.Get(); };
-    static DxcCompiler* GetDxcCompiler() { return dxcCompiler; }
-    static ID3D12GraphicsCommandList* GetCommandList() { return commandList.GetCommandList(); };
+    static DxcCompiler* GetDxcCompiler() { return dxcCompiler.get(); }
+    static ID3D12GraphicsCommandList* GetCommandList() { return commandList->GetCommandList().Get(); };
     ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap.Get(); }
     static D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUDescriptorHandle(uint32_t index);
     static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUDescriptorHandle(uint32_t index);
     static D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);
     static D3D12_GPU_DESCRIPTOR_HANDLE GetRTVGPUDescriptorHandle(uint32_t index);
+    static D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);
+    static D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
+
 
 private:
     static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);

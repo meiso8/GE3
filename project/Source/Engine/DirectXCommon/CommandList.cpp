@@ -1,9 +1,14 @@
 #include "CommandList.h"
 #pragma comment(lib,"d3d12.lib")
 #include<cassert> //assertも利用するため
+#include"DirectXCommon.h"
 
+Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList> CommandList::commandList_ = nullptr;
+ Microsoft::WRL::ComPtr<ID3D12CommandAllocator> CommandList::commandAllocator_ = nullptr;
 //コマンドリストに必要な命令保存用メモリ管理構造を生成
-void CommandList::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void CommandList::Create() {
+
+    ID3D12Device* device = DirectXCommon::GetDevice();
 
     HRESULT result = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator_));
     //コマンドアロケータの生成が上手くいかなかったので起動できない

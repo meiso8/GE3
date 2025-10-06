@@ -9,6 +9,7 @@
 #include"ModelConfig.h"
 #include"Balloon.h"
 #include"Wave.h"
+#include<d3d12.h>
 
 class SphereMesh
 {
@@ -19,7 +20,7 @@ public:
     {
     }
 
-    void Create();
+    void Create(ModelConfig& mc);
 
     void PreDraw(PSO& pso,PSO::PSOType type = PSO::PSOType::TRIANGLE);
     void Draw(Camera& camera, ShaderResourceView& srv,uint32_t lightType);

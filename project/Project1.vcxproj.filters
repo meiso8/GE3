@@ -73,6 +73,9 @@
     <Filter Include="externals\assimp">
       <UniqueIdentifier>{00c9f943-af76-4b6c-acad-e01d7dccd3dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\DirectXCommon">
+      <UniqueIdentifier>{5489f04e-d69c-4b24-aeb7-e892d983ca96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application\main.cpp">
@@ -117,16 +120,16 @@
     <ClCompile Include="Source\Engine\Math\Collision.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\CommandList.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\CommandList.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\CommandQueue.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\CommandQueue.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\CompileShader.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\CompileShader.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\BlendState.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\BlendState.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\CoordinateTransform.cpp">
@@ -138,7 +141,7 @@
     <ClCompile Include="Source\Engine\Math\Cross.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Depth.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\Depth.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\Dot.cpp">
@@ -147,13 +150,13 @@
     <ClCompile Include="Source\Engine\Math\Easing.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\FenceEvent.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\FenceEvent.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Fence.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\GPU.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\Lerp.cpp">
@@ -162,7 +165,7 @@
     <ClCompile Include="Source\Engine\Mesh\Cube.cpp">
       <Filter>ソース ファイル\Engine\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\DebugError.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\DebugError.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp">
@@ -174,7 +177,7 @@
     <ClCompile Include="Source\Engine\Mesh\DrawGrid.cpp">
       <Filter>ソース ファイル\Engine\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\DXGIFactory.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\DXGIFactory.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Input\Input.cpp">
@@ -216,10 +219,10 @@
     <ClCompile Include="Source\Engine\ImGui\FPSCounter.cpp">
       <Filter>ソース ファイル\Engine\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\InputLayout.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\InputLayout.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Log.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\Log.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Surface\MaterialData.cpp">
@@ -234,25 +237,25 @@
     <ClCompile Include="Source\Engine\Math\Normalize.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\MyEngine.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\PSO.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\PSO.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\RasterizerState.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\RasterizerState.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\RenderTargetView.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\RenderTargetView.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\RootSignature.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\RootSignature.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\ScissorRect.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\ShaderResourceView.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\ShaderResourceView.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\Vector2.cpp">
@@ -264,7 +267,7 @@
     <ClCompile Include="Source\Engine\Math\Vector4.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Viewport.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\Viewport.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\Transpose.cpp">
@@ -303,13 +306,13 @@
     <ClCompile Include="Source\Engine\Math\Subtract.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\SwapChain.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\SwapChain.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\TransitionBarrier.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\TransitionBarrier.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Window.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\Window.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Particle\Particle.cpp">
@@ -318,10 +321,10 @@
     <ClCompile Include="Source\Application\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\StringUtility.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -357,84 +360,6 @@
     </ClInclude>
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\BlendState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\CommandList.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\CommandQueue.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\CompileShader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\ModelConfig.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\CrashHandler.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\D3DResourceLeakChecker.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DebugError.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Depth.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DXGIFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Fence.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\FenceEvent.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\GPU.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\InputLayout.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Log.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\PSO.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\RasterizerState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\RenderTargetView.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\RootSignature.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\ScissorRect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\ShaderResourceView.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\SwapChain.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\TransitionBarrier.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Viewport.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Window.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\MyEngine.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\AABB.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
@@ -628,17 +553,95 @@
     <ClInclude Include="Source\Engine\ImGui\FPSCounter.h">
       <Filter>ヘッダー ファイル\Engine\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\BlendState.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\CompileShader.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\CrashHandler.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\D3DResourceLeakChecker.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\DebugError.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\Depth.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\DXGIFactory.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\Fence.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\FenceEvent.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\GPU.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\InputLayout.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\Log.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Mesh\ModelConfig.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Engine\Particle\Particle.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\Player.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Source\Engine\DirectXCommon\PSO.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\StringUtility.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Source\Engine\DirectXCommon\RasterizerState.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\RenderTargetView.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\RootSignature.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\ScissorRect.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\ShaderResourceView.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\SwapChain.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\TransitionBarrier.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\Viewport.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\Window.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

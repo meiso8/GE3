@@ -7,7 +7,7 @@
 #include"Window.h"
 #include"SphericalCoordinate.h"
 #include"Window.h"
-
+#include<memory>
 #define FPS 60.0f
 
 class Camera;
@@ -60,7 +60,7 @@ public:
     Vector3& GetPos() { return pos_; }
     ShericalCoordinate& GetSc() { return shericalCoordinate_; }
 private:
-    static Input* instance_;
+    static std::unique_ptr<Input>instance_;
     Window* window_ = nullptr;
 
     IDirectInputDevice8* keyboard_ = nullptr;

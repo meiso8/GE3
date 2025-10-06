@@ -81,7 +81,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\DirectXCommon</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,7 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>MinSpace</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\DirectXCommon</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,7 +138,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\DirectXCommon</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
@@ -157,10 +157,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Engine\DirectXCommon.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
     <ClCompile Include="Source\Application\Player.cpp" />
     <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
-    <ClCompile Include="Source\Engine\MyEngine.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp" />
     <ClCompile Include="Source\Engine\ImGui\FPSCounter.cpp" />
     <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Cube.cpp" />
@@ -172,9 +172,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Math\Cross.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector2.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector4.cpp" />
-    <ClCompile Include="Source\Engine\RootSignature.cpp" />
-    <ClCompile Include="Source\Engine\InputLayout.cpp" />
-    <ClCompile Include="Source\Engine\GPU.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\RootSignature.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\InputLayout.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp" />
     <ClCompile Include="Source\Engine\ImGui\ImGuiClass.cpp" />
     <ClCompile Include="Source\Engine\Surface\MaterialResource.cpp" />
     <ClCompile Include="Source\Engine\Math\Easing.cpp" />
@@ -184,20 +184,20 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Math\TransformVector.cpp" />
     <ClCompile Include="Source\Engine\Math\WorldTransform.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Model.cpp" />
-    <ClCompile Include="Source\Engine\ShaderResourceView.cpp" />
-    <ClCompile Include="Source\Engine\ScissorRect.cpp" />
-    <ClCompile Include="Source\Engine\BlendState.cpp" />
-    <ClCompile Include="Source\Engine\CompileShader.cpp" />
-    <ClCompile Include="Source\Engine\Log.cpp" />
-    <ClCompile Include="Source\Engine\FenceEvent.cpp" />
-    <ClCompile Include="Source\Engine\Fence.cpp" />
-    <ClCompile Include="Source\Engine\DebugError.cpp" />
-    <ClCompile Include="Source\Engine\PSO.cpp" />
-    <ClCompile Include="Source\Engine\RasterizerState.cpp" />
-    <ClCompile Include="Source\Engine\RenderTargetView.cpp" />
-    <ClCompile Include="Source\Engine\CommandList.cpp" />
-    <ClCompile Include="Source\Engine\CommandQueue.cpp" />
-    <ClCompile Include="Source\Engine\DXGIFactory.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\ShaderResourceView.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\BlendState.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\CompileShader.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\Log.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\FenceEvent.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\DebugError.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\PSO.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\RasterizerState.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\RenderTargetView.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\CommandList.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\CommandQueue.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\DXGIFactory.cpp" />
     <ClCompile Include="Source\Engine\Camera\Camera.cpp" />
     <ClCompile Include="Source\Engine\Camera\DebugCamera.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
@@ -213,7 +213,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\Add.cpp" />
     <ClCompile Include="Source\Engine\Math\cotangent.cpp" />
-    <ClCompile Include="Source\Engine\Depth.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\Depth.cpp" />
     <ClCompile Include="Source\Engine\Math\Dot.cpp" />
     <ClCompile Include="Source\Engine\Input\Input.cpp" />
     <ClCompile Include="Source\Engine\Math\Inverse.cpp" />
@@ -235,14 +235,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Math\Subtract.cpp" />
     <ClCompile Include="Source\Engine\Math\CoordinateTransform.cpp" />
     <ClCompile Include="Source\Engine\Math\Transpose.cpp" />
-    <ClCompile Include="Source\Engine\Window.cpp" />
-    <ClCompile Include="Source\Engine\SwapChain.cpp" />
-    <ClCompile Include="Source\Engine\TransitionBarrier.cpp" />
-    <ClCompile Include="Source\Engine\Viewport.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\Window.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\SwapChain.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\TransitionBarrier.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\Viewport.cpp" />
     <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Sprite.cpp" />
     <ClCompile Include="Source\Engine\Mesh\SphereMesh.cpp" />
-    <ClCompile Include="Source\Engine\StringUtility.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl">
@@ -263,7 +263,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Engine\DirectXCommon.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
     <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
@@ -274,33 +274,33 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Source\Application\Player.h" />
     <ClInclude Include="Source\Engine\Particle\Particle.h" />
-    <ClInclude Include="Source\Engine\MyEngine.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h" />
     <ClInclude Include="Source\Engine\Mesh\Balloon.h" />
-    <ClInclude Include="Source\Engine\BlendState.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\BlendState.h" />
     <ClInclude Include="Source\Engine\Camera\Camera.h" />
-    <ClInclude Include="Source\Engine\CommandList.h" />
-    <ClInclude Include="Source\Engine\CommandQueue.h" />
-    <ClInclude Include="Source\Engine\CompileShader.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\CommandList.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\CompileShader.h" />
     <ClInclude Include="Source\Engine\Mesh\ModelConfig.h" />
-    <ClInclude Include="Source\Engine\CrashHandler.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\CrashHandler.h" />
     <ClInclude Include="Source\Engine\Mesh\Cube.h" />
-    <ClInclude Include="Source\Engine\D3DResourceLeakChecker.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\D3DResourceLeakChecker.h" />
     <ClInclude Include="Source\Engine\Camera\DebugCamera.h" />
-    <ClInclude Include="Source\Engine\DebugError.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\DebugError.h" />
     <ClInclude Include="Source\Engine\ImGui\DebugUI.h" />
-    <ClInclude Include="Source\Engine\Depth.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\Depth.h" />
     <ClInclude Include="Source\Engine\Surface\DirectionalLight.h" />
     <ClInclude Include="Source\Engine\Mesh\DrawGrid.h" />
-    <ClInclude Include="Source\Engine\DXGIFactory.h" />
-    <ClInclude Include="Source\Engine\Fence.h" />
-    <ClInclude Include="Source\Engine\FenceEvent.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\DXGIFactory.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\Fence.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\FenceEvent.h" />
     <ClInclude Include="Source\Engine\ImGui\FPSCounter.h" />
-    <ClInclude Include="Source\Engine\GPU.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\GPU.h" />
     <ClInclude Include="Source\Engine\ImGui\ImGuiClass.h" />
     <ClInclude Include="Source\Engine\Input\Input.h" />
-    <ClInclude Include="Source\Engine\InputLayout.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\InputLayout.h" />
     <ClInclude Include="Source\Engine\Mesh\LineMesh.h" />
-    <ClInclude Include="Source\Engine\Log.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\Log.h" />
     <ClInclude Include="Source\Engine\Surface\Material.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialData.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialResource.h" />
@@ -347,24 +347,24 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Math\WorldTransform.h" />
     <ClInclude Include="Source\Engine\Mesh\Model.h" />
     <ClInclude Include="Source\Engine\Mesh\ModelData.h" />
-    <ClInclude Include="Source\Engine\PSO.h" />
-    <ClInclude Include="Source\Engine\RasterizerState.h" />
-    <ClInclude Include="Source\Engine\RenderTargetView.h" />
-    <ClInclude Include="Source\Engine\RootSignature.h" />
-    <ClInclude Include="Source\Engine\ScissorRect.h" />
-    <ClInclude Include="Source\Engine\ShaderResourceView.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\PSO.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\RasterizerState.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\RenderTargetView.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\RootSignature.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\ScissorRect.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\ShaderResourceView.h" />
     <ClInclude Include="Source\Engine\Sound\Sound.h" />
     <ClInclude Include="Source\Engine\Mesh\SphereMesh.h" />
     <ClInclude Include="Source\Engine\Mesh\Sprite.h" />
-    <ClInclude Include="Source\Engine\SwapChain.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\SwapChain.h" />
     <ClInclude Include="Source\Engine\Surface\Texture.h" />
     <ClInclude Include="Source\Engine\Math\TransformationMatrix.h" />
-    <ClInclude Include="Source\Engine\TransitionBarrier.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\TransitionBarrier.h" />
     <ClInclude Include="Source\Engine\Mesh\VertexData.h" />
-    <ClInclude Include="Source\Engine\Viewport.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\Viewport.h" />
     <ClInclude Include="Source\Engine\Mesh\Wave.h" />
-    <ClInclude Include="Source\Engine\Window.h" />
-    <ClInclude Include="Source\Engine\StringUtility.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\Window.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

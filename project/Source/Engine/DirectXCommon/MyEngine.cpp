@@ -4,15 +4,26 @@
 
 
 const uint32_t MyEngine::kMaxSRVCount = 512;
+PSO MyEngine::pso[kCountOfBlendMode] = {};
+std::unique_ptr<MyEngine> MyEngine::instance_ = nullptr;
 
-void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const int32_t clientHeight) {
+MyEngine* MyEngine::GetInstance()
+{
+    if (instance_ == nullptr) {
+        instance_ = std::make_unique<MyEngine>();
+    }
+
+    return instance_.get();
+}
+
+void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
 
 
     //誰も捕捉しなかった場合に(Unhandled),補足する関数を登録
     //main関数始まってすぐに登録すると良い
     SetUnhandledExceptionFilter(ExportDump);
 
-    LogFile logFile;
+
     logFile.Create();
     LogFile::Log("CreateLogFile");
 
@@ -59,72 +70,60 @@ void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const 
     rasterizerStates[kCullModeFront].Create(kCullModeFront, kFillModeSolid);//ソリッドモード裏面
     rasterizerStates[kCullModeBack].Create(kCullModeBack, kFillModeSolid);//ソリッドモード表面
     //rasterizerStates[0].Create(kCullModeNone, kFillModeWireframe);//ワイヤーフレームモード
-    LogFile::Log( "SetRasterizerState");
+    LogFile::Log("SetRasterizerState");
 
 #pragma region //DepthStencilStateの設定
     depthStencil.Create();
-    LogFile::Log( "Create depthStencilDesc");
+    LogFile::Log("Create depthStencilDesc");
 #pragma endregion
 
     //PSOを生成する
     pso[0].Create(
         rootSignature,
         inputLayout,
-        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeNone],//ブレンドしない
         rasterizerStates[kCullModeBack],//後ろをカリング
-        depthStencil,
-        *directXCommon->GetDevice());
+        depthStencil);
 
     pso[1].Create(
         rootSignature,
         inputLayout,
-        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeNormal],//ブレンドする
         rasterizerStates[kCullModeBack],//後ろをカリング
-        depthStencil,
-        *directXCommon->GetDevice());
+        depthStencil);
 
     pso[2].Create(
         rootSignature,
         inputLayout,
-        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeAdd],//ブレンドしない
         rasterizerStates[kCullModeBack],//描画
-        depthStencil,
-        *directXCommon->GetDevice());
+        depthStencil);
 
     pso[3].Create(
         rootSignature,
         inputLayout,
-        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeSubtract],
         rasterizerStates[kCullModeBack],//描画
-        depthStencil,
-        *directXCommon->GetDevice());
+        depthStencil);
 
     pso[4].Create(
         rootSignature,
         inputLayout,
-        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeMultiply],
         rasterizerStates[kCullModeBack],//描画
-        depthStencil,
-        *directXCommon->GetDevice());
+        depthStencil);
 
     pso[5].Create(
         rootSignature,
         inputLayout,
-        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeScreen],
         rasterizerStates[kCullModeBack],//描画
-        depthStencil,
-        *directXCommon->GetDevice());
+        depthStencil);
 
     LogFile::Log("CreatePSO");
 
 #pragma region//平行光源用のResourceを作成する
-    directionalLightResource = directXCommon->CreateBufferResource(sizeof(DirectionalLight));
+    directionalLightResource = DirectXCommon::CreateBufferResource(sizeof(DirectionalLight));
 
     //書き込むためのアドレスを取得
     directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
@@ -136,10 +135,8 @@ void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const 
 #pragma endregion
 
     modelConfig_ = {
-    directXCommon->GetCommandList(),
     &rootSignature,
     directionalLightResource.Get()
-
     };
 
 
@@ -157,12 +154,7 @@ void MyEngine::Update() {
 }
 
 void MyEngine::PreCommandSet(Vector4& color) {
-
     directXCommon.get()->PreDraw(color);
-    //ここ注意
-    //directXCommon.get()->GetCommandList()->SetGraphicsRootSignature(rootSignature.GetRootSignature());
-
-
 };
 
 void MyEngine::PostCommandSet() {
@@ -174,11 +166,12 @@ void MyEngine::PostCommandSet() {
 void MyEngine::End() {
 
     directXCommon.get()->EndFrame();
+    directXCommon.reset();
     wc.Finalize();
-
 
     //TextureManager::GetInstance()->Finalize();
 }
+
 
 //ここでBlenModeを変更する
 void MyEngine::SetBlendMode(uint32_t blendMode) {

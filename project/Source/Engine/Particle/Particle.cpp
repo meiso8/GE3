@@ -1,27 +1,26 @@
 #include "Particle.h"
 #include"Multiply.h"
-#include"CreateBufferResource.h"
+#include"DirectXCommon.h"
 #include"Camera/Camera.h"
 #include"MakeIdentity4x4.h"
-#include"GetCPUDescriptorHandle.h"
-#include"GetGPUDescriptorHandle.h"
+
 #include"MyEngine.h"
 
 
 using namespace  Microsoft::WRL;
 
-void Particle::Create(const ComPtr<ID3D12Device>& device, CommandList& commandList, RootSignature& rootSignature)
+void Particle::Create(RootSignature& rootSignature)
 {
-    commandList_ = &commandList;
     rootSignature_ = &rootSignature;
 
-    CreateModelData(device);
-    CreateTransformationMatrix(device);
+
+    CreateModelData();
+    CreateTransformationMatrix();
 
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial(device, MaterialResource::LIGHTTYPE::NONE);
+    materialResource_.CreateMaterial(MaterialResource::LIGHTTYPE::NONE);
 
-    vertexBufferResource_ = CreateBufferResource(device, sizeof(VertexData) * modelData_.vertices.size());
+    vertexBufferResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
     vertexBufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexBufferData_));
     std::copy(modelData_.vertices.begin(), modelData_.vertices.end(), vertexBufferData_);
 
@@ -32,7 +31,7 @@ void Particle::Create(const ComPtr<ID3D12Device>& device, CommandList& commandLi
 }
 
 
-void Particle::CreateModelData(const ComPtr<ID3D12Device>& device)
+void Particle::CreateModelData()
 {
     modelData_.vertices.push_back({ .position = {1.0f,1.0f,0.0f,1.0f},.texcoord = {0.0f,0.0f},.normal = {0.0f,0.0f,1.0f} });//左上
     modelData_.vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
@@ -44,13 +43,13 @@ void Particle::CreateModelData(const ComPtr<ID3D12Device>& device)
 
 }
 
-void Particle::CreateTransformationMatrix(const ComPtr<ID3D12Device>& device)
+void Particle::CreateTransformationMatrix()
 {
 
     transforms.resize(kNumInstance);
 
     //Instancing用のTransformationMatrixリソースを作成
-    instancingResource = CreateBufferResource(device, sizeof(TransformationMatrix) * kNumInstance);
+    instancingResource = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix) * kNumInstance);
     //書き込むためのアドレスを取得
     instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
 
@@ -69,9 +68,9 @@ void Particle::CreateTransformationMatrix(const ComPtr<ID3D12Device>& device)
     instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
     instancingSrvDesc.Buffer.NumElements = kNumInstance;
     instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
-    instancingSrvHandleCPU = GetCPUDescriptorHandle(MyEngine::GetInstance()->GetSrvDescriptorHeap().Get(), MyEngine::descriptorSizeSRV, 4);
-    instancingSrvHandleGPU = GetGPUDescriptorHandle(MyEngine::GetInstance()->GetSrvDescriptorHeap().Get(), MyEngine::descriptorSizeSRV, 4);
-    device->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
+    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(4);
+    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(4);
+    DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 
     for (uint32_t index = 0; index < kNumInstance; ++index) {
         transforms[index].scale = { 1.0f,1.0f,1.0f };
@@ -91,20 +90,22 @@ void Particle::Draw(Camera& camera,ShaderResourceView& srv)
         instancingData[index].WVP = worldViewProjectionMatrix;
     }
 
+    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
+
     //rootSignatureの設定
-    commandList_->GetComandList()->SetGraphicsRootSignature(rootSignature_->GetRootSignature(1).Get());
-    commandList_->GetComandList()->SetPipelineState(MyEngine::GetInstance()->GetPSO(BlendMode::kBlendModeNormal).GetGraphicsPipelineState(PSO::PARTICLE).Get());
+    commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(1));
+    commandList->SetPipelineState(MyEngine::GetInstance()->GetPSO(BlendMode::kBlendModeNormal).GetGraphicsPipelineState(PSO::PARTICLE).Get());
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList_->GetComandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    commandList_->GetComandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
     //マテリアルの設定
-    commandList_->GetComandList()->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //粒ごとのトランスフォーム
-    commandList_->GetComandList()->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
+    commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
     //テスクチャ
-    commandList_->GetComandList()->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
+    commandList->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
 
     //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
-    commandList_->GetComandList()->DrawInstanced(UINT(modelData_.vertices.size()), kNumInstance, 0, 0);
+    commandList->DrawInstanced(UINT(modelData_.vertices.size()), kNumInstance, 0, 0);
 
 }
