@@ -6,14 +6,14 @@
 #include"Camera/Camera.h"
 #include"math/Normalize.h"
 
-std::unique_ptr<Input> Input::instance_ = nullptr;
+Input* Input::instance_ = nullptr;
 
 Input* Input::GetInstance() {
 
     if (instance_ == nullptr) {
-        instance_ = std::make_unique<Input>();
+        instance_ = new Input();
     }
-    return instance_.get();
+    return instance_;
 }
 
 

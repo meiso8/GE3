@@ -5,15 +5,17 @@
 
 const uint32_t MyEngine::kMaxSRVCount = 512;
 PSO MyEngine::pso[kCountOfBlendMode] = {};
-std::unique_ptr<MyEngine> MyEngine::instance_ = nullptr;
+MyEngine* MyEngine::instance_ = nullptr;
 
 MyEngine* MyEngine::GetInstance()
 {
-    if (instance_ == nullptr) {
-        instance_ = std::make_unique<MyEngine>();
-    }
 
-    return instance_.get();
+        if (instance_ == nullptr) {
+            instance_ = new MyEngine();
+        }
+        return instance_;
+
+    
 }
 
 void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {

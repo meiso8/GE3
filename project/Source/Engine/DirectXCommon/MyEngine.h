@@ -87,7 +87,7 @@ public:
 private:
     D3DResourceLeakChecker leakCheck = {};
     std::unique_ptr<DirectXCommon> directXCommon = nullptr;
-    static std::unique_ptr<MyEngine> instance_;
+    static MyEngine* instance_;
 
     LogFile logFile = {};
     Window wc = {};

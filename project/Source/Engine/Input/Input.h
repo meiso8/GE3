@@ -60,7 +60,7 @@ public:
     Vector3& GetPos() { return pos_; }
     ShericalCoordinate& GetSc() { return shericalCoordinate_; }
 private:
-    static std::unique_ptr<Input>instance_;
+    static Input*instance_;
     Window* window_ = nullptr;
 
     IDirectInputDevice8* keyboard_ = nullptr;

@@ -46,7 +46,7 @@ public:
     bool IsPlaying()const;
     ~Sound();
 private:
-    static std::unique_ptr<Sound> instance_;
+    static Sound* instance_;
 
     Microsoft::WRL::ComPtr<IXAudio2> xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
     IXAudio2MasteringVoice* masterVoice_ = { nullptr }; // ReleaseなしのためComPtrで管理することが出来ない。  
