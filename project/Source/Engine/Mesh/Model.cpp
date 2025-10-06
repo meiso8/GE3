@@ -1,5 +1,5 @@
 #include "Model.h"
-#include"CreateBufferResource.h"
+#include"DirectXCommon.h"
 #include"Texture.h"
 #include"TransformationMatrix.h"
 #include"MakeAffineMatrix.h"
@@ -9,20 +9,18 @@
 #include<numbers>
 
 
-void Model::Create(const ModelData& modelData, ModelConfig mc,
-    const Microsoft::WRL::ComPtr<ID3D12Device>& device,
-    const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap, uint32_t index) {
+void Model::Create(const ModelData& modelData, ModelConfig mc, uint32_t index) {
 
     modelData_ = &modelData;
     modelConfig_ = mc;
 
     //マテリアルの作成 lightType halfLambert
-    materialResource_.CreateMaterial(device, 2);
+    materialResource_.CreateMaterial(2);
 
-    CreateWorldVPResource(device);
+    CreateWorldVPResource();
 
     //頂点リソースを作る
-    vertexResource_ = CreateBufferResource(device, sizeof(VertexData) * modelData_->vertices.size());
+    vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * modelData_->vertices.size());
 
     vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();//リソースの先頭アドレスから使う
     vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_->vertices.size());//使用するリソースのサイズは頂点のサイズ
@@ -33,11 +31,11 @@ void Model::Create(const ModelData& modelData, ModelConfig mc,
     std::memcpy(vertexData_, modelData_->vertices.data(), sizeof(VertexData) * modelData_->vertices.size());//頂点データをリソースにコピー
 
     //モデルのテクスチャを読む
-    texture_ = new Texture(device, *modelConfig_.commandList);
+    texture_ = new Texture();
     texture_->Load(modelData_->material.textureFilePath);
 
     //これだとダメだわ
-    srv_.Create(*texture_, index, device, srvDescriptorHeap);
+    srv_.Create(*texture_, index);
 
     uvTransform_ = {
         {1.0f,1.0f,1.0f},
@@ -53,7 +51,7 @@ void Model::Create(const ModelData& modelData, ModelConfig mc,
 
     int waveCount = 2;
 
-    waveResource_ = CreateBufferResource(device, sizeof(Wave) * waveCount);
+    waveResource_ = DirectXCommon::CreateBufferResource(sizeof(Wave) * waveCount);
 
     //データを書き込む
 
@@ -74,7 +72,7 @@ void Model::Create(const ModelData& modelData, ModelConfig mc,
 
 #pragma region//Balloon
 
-    expansionResource_ = CreateBufferResource(device, sizeof(Balloon));
+    expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
 
     //書き込むためのアドレスを取得
     expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&expansionData_));
@@ -88,9 +86,9 @@ void Model::Create(const ModelData& modelData, ModelConfig mc,
 
 }
 
-void Model::CreateWorldVPResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Model::CreateWorldVPResource() {
     //WVP用のリソースを作る。Matrix3x3 1つ分のサイズを用意する。
-    wvpResource_ = CreateBufferResource(device, sizeof(TransformationMatrix));
+    wvpResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix));
     //データを書き込む
     //書き込むためのアドレスを取得
     wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpDate_));

@@ -4,7 +4,7 @@
 #include"RootSignature.h"
 
 struct ModelConfig {
-    CommandList* commandList;
+    ID3D12GraphicsCommandList* commandList;
     RootSignature* rootSignature;
-    Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource;//共通のライトリソース
+    ID3D12Resource* directionalLightResource;//共通のライトリソース
 };

@@ -14,9 +14,7 @@ class ShaderResourceView
 public:
     void Create(
         Texture& texture,
-        uint32_t index,
-        const Microsoft::WRL::ComPtr<ID3D12Device>& device,
-        const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap
+        uint32_t index
     );
 
     D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU()const {

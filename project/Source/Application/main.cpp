@@ -46,28 +46,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma endregion
 
-    Texture textures(myEngine->GetDevice(), myEngine->GetCommandList());
+
+    Texture textures;
     textures.Load("resources/white1x1.png");
 
-    Texture textures2(myEngine->GetDevice(), myEngine->GetCommandList());
+    Texture textures2;
+
     textures2.Load("resources/numbers.png");
 
-    Texture textures3(myEngine->GetDevice(), myEngine->GetCommandList());
+    Texture textures3;
     textures3.Load("resources/uvChecker.png");
 
     //ShaderResourceViewを作る
     ShaderResourceView srv[3] = {};
 
-    srv[0].Create(textures, 1, myEngine->GetDevice(), myEngine->GetSrvDescriptorHeap());
-    srv[1].Create(textures2, 2, myEngine->GetDevice(), myEngine->GetSrvDescriptorHeap());
-    srv[2].Create(textures3, 3, myEngine->GetDevice(), myEngine->GetSrvDescriptorHeap());
-
-
-    DrawGrid grid = DrawGrid(myEngine->GetDevice(), myEngine->GetModelConfig(), myEngine->GetPSO(0));
+    srv[0].Create(textures, 1);
+    srv[1].Create(textures2, 2);
+ srv[2].Create(textures3, 3);
+    DrawGrid grid = DrawGrid(myEngine.GetModelConfig(), myEngine.GetPSO(0));
 
     Sprite sprite;
-    sprite.Create(myEngine->GetDevice(), myEngine->GetModelConfig());
-    sprite.SetSize(Vector2(256.0f, 256.0f));
+    sprite.Create(myEngine.GetModelConfig());
+     sprite.SetSize(Vector2(256.0f, 256.0f));
+    //sprite.SetTranslate({ WIN_WIDTH - sprite.GetSize().x,WIN_HEIGHT - sprite.GetSize().y,0.0f });
+
     sprite.SetTranslate({ 0.0f,0.0f,0.0f });
 
     const ModelData modelData = LoadObjeFile("resources/player", "player.obj");
@@ -76,8 +78,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     player.get()->Init();
 
     Cube cube[2];
-    cube[0].Create(myEngine->GetDevice(), myEngine->GetModelConfig());
-    cube[1].Create(myEngine->GetDevice(), myEngine->GetModelConfig());
+
+    cube[0].Create(myEngine.GetModelConfig());
+    cube[1].Create(myEngine.GetModelConfig());
+
     WorldTransform cubeWorldTransform;
     cubeWorldTransform.Initialize();
     cubeWorldTransform.SetRotationY(std::numbers::pi_v<float> / 4.0f);

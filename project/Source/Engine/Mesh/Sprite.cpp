@@ -1,18 +1,17 @@
 #include "Sprite.h"
-#include"CreateBufferResource.h"
+#include"DirectXCommon.h"
 #include"TransformationMatrix.h"
 #include"MakeAffineMatrix.h"
 #include"MakeIdentity4x4.h"
 #include"Multiply.h"
 
-void Sprite::Create(
-    const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc
+void Sprite::Create( ModelConfig& mc
 ) {
 
-    CreateVertex(device);
-    CreateIndexResource(device);
-    CreateTransformationMatrix(device);
-    CreateMaterial(device);
+    CreateVertex();
+    CreateIndexResource();
+    CreateTransformationMatrix();
+    CreateMaterial();
 
     uvTransform_ = {
           {1.0f,1.0f,1.0f},
@@ -26,7 +25,7 @@ void Sprite::Create(
 
     int waveCount = 2;
 
-    waveResource_ = CreateBufferResource(device, sizeof(Wave) * waveCount);
+    waveResource_ = DirectXCommon::CreateBufferResource(sizeof(Wave) * waveCount);
 
     //データを書き込む
 
@@ -47,7 +46,7 @@ void Sprite::Create(
 
 #pragma region//Balloon
 
-    expansionResource_ = CreateBufferResource(device, sizeof(Balloon));
+    expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
 
     //書き込むためのアドレスを取得
     expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&expansionData_));
@@ -65,10 +64,10 @@ void Sprite::Create(
 
 }
 
-void Sprite::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Sprite::CreateVertex() {
 
     //VertexResourceとVertexBufferViewを用意 矩形を表現するための三角形を二つ(頂点4つ)
-    vertexResource_ = CreateBufferResource(device, sizeof(VertexData) * 4);
+    vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 4);
 
     //頂点バッファビューを作成する
     //リソースの先頭アドレスから使う
@@ -103,10 +102,10 @@ void Sprite::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
 
 }
 
-void Sprite::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Sprite::CreateIndexResource() {
 
 #pragma region//IndexResourceを作成
-    indexResource_ = CreateBufferResource(device, sizeof(uint32_t) * 6);
+    indexResource_ = DirectXCommon::CreateBufferResource(sizeof(uint32_t) * 6);
     //Viewを作成する IndexBufferView(IBV)
 
     //リソースの先頭アドレスから使う
@@ -133,10 +132,10 @@ void Sprite::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& dev
 #pragma endregion
 }
 
-void Sprite::CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Sprite::CreateTransformationMatrix() {
 
     //Matrix4x4　1つ分のサイズを用意
-    transformationMatrixResource_ = CreateBufferResource(device, sizeof(TransformationMatrix));
+    transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix));
     //データを書き込む
     //書き込むためのアドレスを取得
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
@@ -146,10 +145,10 @@ void Sprite::CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Devic
 
 }
 
-void Sprite::CreateMaterial(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Sprite::CreateMaterial() {
 
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial(device, MaterialResource::LIGHTTYPE::NONE);
+    materialResource_.CreateMaterial(MaterialResource::LIGHTTYPE::NONE);
 
 }
 

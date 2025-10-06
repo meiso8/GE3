@@ -3,9 +3,12 @@
 #include<cassert>
 
 #include"Log.h"
-#include<iostream>
 
-void RootSignature::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+#include<iostream>
+#include"DirectXCommon.h"
+
+
+void RootSignature::Create() {
 
 #pragma region//rootSignature
     //rootSignature作成
@@ -133,12 +136,12 @@ void RootSignature::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
         D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 
     if (FAILED(result)) {
-        Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+        LogFile::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
         assert(false);
     }
 
     //バイナリ元に生成
-    result = device->CreateRootSignature(0,
+    result = DirectXCommon::GetDevice()->CreateRootSignature(0,
         signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(),
         IID_PPV_ARGS(&rootSignatures_[0]));
 

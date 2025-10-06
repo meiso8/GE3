@@ -1,11 +1,11 @@
 #include"MaterialResource.h"
 #include"MakeIdentity4x4.h"
-#include"CreateBufferResource.h"
+#include"DirectXCommon.h"
 
-void MaterialResource::CreateMaterial(const Microsoft::WRL::ComPtr<ID3D12Device>& device, uint32_t lightType) {
+void MaterialResource::CreateMaterial(uint32_t lightType) {
 
     //マテリアル用のリソースを作る。
-    materialResource_ = CreateBufferResource(device, sizeof(Material));
+    materialResource_ = DirectXCommon::CreateBufferResource(sizeof(Material));
     //マテリアルにデータを書き込む
 
     //書き込むためのアドレスを取得

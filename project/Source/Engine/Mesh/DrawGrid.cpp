@@ -2,12 +2,12 @@
 #include<numbers>
 #include"MakeIdentity4x4.h"
 
-DrawGrid::DrawGrid(const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc, PSO& pso) {
+DrawGrid::DrawGrid(ModelConfig& mc, PSO& pso) {
 
     pso_ = &pso;
 
     for (int i = 0; i < 102; ++i) {
-        line_[i].Create(device, mc, pso);
+        line_[i].Create(mc, pso);
     }
 
     for (int i = 0; i < 51; ++i) {
@@ -26,8 +26,8 @@ DrawGrid::DrawGrid(const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConf
         }
     }
 
-    cube_[0].Create(device, mc);
-    cube_[1].Create(device, mc);
+    cube_[0].Create(mc);
+    cube_[1].Create(mc);
 
     cube_[0].SetMinMax({ -1.0f / 128.0f,-1.0f / 128.0f,-25.0f }, { 1.0f / 128.0f,1.0f / 128.0f,25.0f });
     cube_[1].SetMinMax({ -25.0f,-1.0f / 128.0f,-1.0f / 128.0f }, { 25.0f,1.0f / 128.0f,1.0f / 128.0f });

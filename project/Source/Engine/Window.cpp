@@ -91,15 +91,7 @@ void Window::Create(const std::wstring& title, const int32_t& clientWidth, const
         wc_.hInstance,             // インスタンスハンドル
         nullptr);                 // オプション
 
-#ifdef _DEBUG
-    Microsoft::WRL::ComPtr <ID3D12Debug1> debugController = nullptr;
-    if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
-        //デバッグレイヤーを有効化する
-        debugController->EnableDebugLayer();
-        //さらにGPU側でもチェックを行うようにする
-        debugController->SetEnableGPUBasedValidation(TRUE);
-    }
-#endif
+
 
     //ウィンドウを表示する
     ShowWindow(hwnd_, SW_SHOW);

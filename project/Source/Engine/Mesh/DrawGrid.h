@@ -5,7 +5,7 @@
 
 class DrawGrid {
 public:
-    DrawGrid(const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc, PSO& pso);
+    DrawGrid(ModelConfig& mc, PSO& pso);
     void Draw(ShaderResourceView& srv, Camera& camera);
 private:
     LineMesh line_[102];

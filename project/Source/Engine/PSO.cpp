@@ -11,11 +11,11 @@ void PSO::Create(
     BlendState& blendState,
     RasterizerState& rasterizerState,
     DepthStencil& depthStencil,
-    const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+    ID3D12Device& device) {
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc[PSO_MAX]{};
 
-    for (int i = 0; i < PSO_MAX; ++i) {
+    for (int i = 0; i < PSO_MAX-1; ++i) {
 
         graphicsPipelineStateDesc[i].pRootSignature = rootSignature.GetRootSignature(0).Get();//RootSignature
         graphicsPipelineStateDesc[i].InputLayout = inputLayout.GetDesc();//InputLayout
@@ -76,7 +76,7 @@ void PSO::Create(
     for (int i = 0; i < PSO_MAX; ++i) {
 
         //実際に生成
-        HRESULT hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc[i],
+        HRESULT hr = device.CreateGraphicsPipelineState(&graphicsPipelineStateDesc[i],
             IID_PPV_ARGS(&graphicsPipelineState_[i]));
         assert(SUCCEEDED(hr));
     }
