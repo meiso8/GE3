@@ -40,44 +40,40 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     camera.SetTransform(cameraTransform);
     camera.Initialize(static_cast<float>(WIN_WIDTH), static_cast<float>(WIN_HEIGHT), false);
 
-
     Camera cameraSprite;
     cameraSprite.Initialize(static_cast<float>(WIN_WIDTH), static_cast<float>(WIN_HEIGHT), true);
 
 #pragma endregion
 
-    Texture textures(myEngine->GetDevice(), myEngine->GetCommandList());
-    textures.Load("resources/white1x1.png");
 
-    Texture textures2(myEngine->GetDevice(), myEngine->GetCommandList());
-    textures2.Load("resources/numbers.png");
-
-    Texture textures3(myEngine->GetDevice(), myEngine->GetCommandList());
-    textures3.Load("resources/uvChecker.png");
+    Texture textures[3];
+    textures[0].Load("resources/white1x1.png");
+    textures[1].Load("resources/numbers.png");
+    textures[2].Load("resources/uvChecker.png");
 
     //ShaderResourceViewを作る
     ShaderResourceView srv[3] = {};
+    srv[0].Create(textures[0], 1);
+    srv[1].Create(textures[1], 2);
+    srv[2].Create(textures[2], 3);
 
-    srv[0].Create(textures, 1, myEngine->GetDevice(), myEngine->GetSrvDescriptorHeap());
-    srv[1].Create(textures2, 2, myEngine->GetDevice(), myEngine->GetSrvDescriptorHeap());
-    srv[2].Create(textures3, 3, myEngine->GetDevice(), myEngine->GetSrvDescriptorHeap());
-
-
-    DrawGrid grid = DrawGrid(myEngine->GetDevice(), myEngine->GetModelConfig(), myEngine->GetPSO(0));
+    DrawGrid grid = DrawGrid(myEngine->GetModelConfig(), myEngine->GetPSO(0));
 
     Sprite sprite;
-    sprite.Create(myEngine->GetDevice(), myEngine->GetModelConfig());
+    sprite.Create(myEngine->GetModelConfig());
     sprite.SetSize(Vector2(256.0f, 256.0f));
     sprite.SetTranslate({ 0.0f,0.0f,0.0f });
 
     const ModelData modelData = LoadObjeFile("resources/player", "player.obj");
+
     std::unique_ptr<Player>player;
     player = std::make_unique<Player>(modelData);
     player.get()->Init();
 
     Cube cube[2];
-    cube[0].Create(myEngine->GetDevice(), myEngine->GetModelConfig());
-    cube[1].Create(myEngine->GetDevice(), myEngine->GetModelConfig());
+    cube[0].Create(myEngine->GetModelConfig());
+    cube[1].Create(myEngine->GetModelConfig());
+
     WorldTransform cubeWorldTransform;
     cubeWorldTransform.Initialize();
     cubeWorldTransform.SetRotationY(std::numbers::pi_v<float> / 4.0f);
@@ -85,13 +81,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     Vector4 worldColor = { 0.6f,0.6f,0.6f,1.0f };
 
-    //MSG msg{};
-
     int32_t lightType = MaterialResource::LIGHTTYPE::NONE;
     uint32_t blendMode = BlendMode::kBlendModeNone;
 
     Particle particle;
-    particle.Create(myEngine->GetDevice(), myEngine->GetCommandList(), myEngine->GetRootSignature());
+    particle.Create(myEngine->GetRootSignature());
 
     // =============================================
     //ウィンドウのxボタンが押されるまでループ メインループ
@@ -120,13 +114,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             camera.SetOrthographic(true);
         }
 
-        if (Input::GetInstance()->IsJoyStickPressButton(0)) {
-            sound.SoundPlay(seData, 1.0f, false);
-        }
+        /*       if (Input::GetInstance()->IsJoyStickPressButton(0)) {
+                   sound.SoundPlay(seData, 1.0f, false);
+               }
 
-        if (!sound.IsPlaying()) {
-            sound.SoundPlay(bgmData[1], 0.0625f, true);
-        }
+               if (!sound.IsPlaying()) {
+                   sound.SoundPlay(bgmData[1], 0.0625f, true);
+               }*/
 
         if (isDebug) {
             debugUI.CheckDirectionalLight(myEngine->GetDirectionalLightData(), lightType);
@@ -144,12 +138,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         } else {
 
             Vector3 cameraPos = player.get()->GetTranslate();
- 
+
             Vector2 delta = { 0.0f,0.0f };
             if (Input::GetInstance()->GetJoyStickPos(&delta.x, &delta.y, Input::BUTTON_RIGHT)) {
                 camera.SetRotateY(delta.x);
             }
-            cameraPos.y += 1.0f+ delta.y;
+            cameraPos.y += 1.0f + delta.y;
             cameraPos.z -= 10.0f;
 
             cameraPos = Lerp(cameraPos, camera.GetTranslate(), 0.01f);

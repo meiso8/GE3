@@ -6,7 +6,7 @@
 #include<d3d12.h>
 #include"ModelConfig.h"
 
-#include"CommandList.h"  
+#include"commandList.h"  
 #include"ModelData.h"  
 #include"PSO.h"  
 #include"ShaderResourceView.h"  
@@ -24,8 +24,7 @@ class Cube
 
 
 public:
-    void Create(
-        const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc);
+    void Create(ModelConfig& mc);
     void  PreDraw(PSO& pso);
     void Draw(
         ShaderResourceView& srv, Camera& camera, const Matrix4x4& worldMatrix, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
@@ -39,10 +38,10 @@ public:
     }
     Material* GetMaterial() { return materialResource_.GetMaterial(); };
 private:
-    void CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
-    void CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
-    void CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
-    void CreateMaterial(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
+    void CreateVertex();
+    void CreateIndexResource();
+    void CreateTransformationMatrix();
+    void CreateMaterial();
 private:
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
@@ -59,7 +58,6 @@ private:
     MaterialResource materialResource_{};
 
     ModelConfig modelConfig_{};
-
     Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_;
     Balloon* expansionData_ = nullptr;
 

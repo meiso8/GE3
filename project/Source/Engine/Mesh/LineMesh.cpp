@@ -1,23 +1,22 @@
 #include "LineMesh.h"
-#include"CreateBufferResource.h"
 
 #include"MakeAffineMatrix.h"
 #include"Multiply.h"
+#include"DirectXCommon.h"
 
-void LineMesh::Create(
-    const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc, PSO& pso
+void LineMesh::Create(ModelConfig& mc, PSO& pso
 ) {
 
     pso_ = &pso;
-    CreateVertex(device);
-    CreateTransformationMatrix(device);
-    CreateMaterial(device);
+    CreateVertex();
+    CreateTransformationMatrix();
+    CreateMaterial();
 
 #pragma region//time
 
     int waveCount = 2;
 
-    waveResource_ = CreateBufferResource(device, sizeof(Wave) * waveCount);
+    waveResource_ = DirectXCommon::CreateBufferResource(sizeof(Wave) * waveCount);
 
     //データを書き込む
 
@@ -38,7 +37,7 @@ void LineMesh::Create(
 
 #pragma region//Balloon
 
-    expansionResource_ = CreateBufferResource(device, sizeof(Balloon));
+    expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
 
     //書き込むためのアドレスを取得
     expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&expansionData_));
@@ -54,10 +53,10 @@ void LineMesh::Create(
 
 }
 
-void LineMesh::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void LineMesh::CreateVertex() {
 
     //VertexResourceとVertexBufferViewを用意
-    vertexResource_ = CreateBufferResource(device, sizeof(VertexData) * 2);
+    vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 2);
 
     //頂点バッファビューを作成する
     //リソースの先頭アドレスから使う
@@ -89,10 +88,10 @@ void LineMesh::SetVertexPos(const Vector3& start, const Vector3& end) {
     vertexData_[1].normal = { vertexData_[1].position.x,  vertexData_[1].position.y,  vertexData_[1].position.z };
 };
 
-void LineMesh::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void LineMesh::CreateIndexResource() {
 
 #pragma region//IndexResourceを作成
-    indexResource_ = CreateBufferResource(device, sizeof(uint32_t) * 12);
+    indexResource_ = DirectXCommon::CreateBufferResource(sizeof(uint32_t) * 12);
     //Viewを作成する IndexBufferView(IBV)
 
     //リソースの先頭アドレスから使う
@@ -127,10 +126,10 @@ void LineMesh::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& d
 #pragma endregion
 }
 
-void LineMesh::CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void LineMesh::CreateTransformationMatrix() {
 
     //Matrix4x4　1つ分のサイズを用意
-    transformationMatrixResource_ = CreateBufferResource(device, sizeof(TransformationMatrix));
+    transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix));
     //データを書き込む
     //書き込むためのアドレスを取得
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
@@ -140,10 +139,10 @@ void LineMesh::CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Dev
 
 }
 
-void LineMesh::CreateMaterial(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void LineMesh::CreateMaterial() {
 
     //マテリアルリソースを作成 ライトなし
-    materialResource_.CreateMaterial(device, MaterialResource::LIGHTTYPE::NONE);
+    materialResource_.CreateMaterial(MaterialResource::LIGHTTYPE::NONE);
 
 }
 
@@ -152,35 +151,39 @@ void LineMesh::SetColor(const Vector4& color) {
 }
 
 void LineMesh::PreDraw() {
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0).Get());
-    modelConfig_.commandList->GetComandList()->SetPipelineState(pso_->GetGraphicsPipelineState(PSO::LINE).Get());//PSOを設定
+    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
+
+    commandList->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0));
+    commandList->SetPipelineState(pso_->GetGraphicsPipelineState(PSO::LINE).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    modelConfig_.commandList->GetComandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 }
 
 void LineMesh::Draw(
     ShaderResourceView& srv, Camera& camera
 ) {
 
+    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
+
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     worldViewProjectionMatrix_ = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix_ };
     //頂点バッファビューを設定
-    modelConfig_.commandList->GetComandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
+    commandList->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
     //LightのCBufferの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(3, modelConfig_.directionalLightResource->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_.directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
 
     //描画!（DrawCall/ドローコール）
-    modelConfig_.commandList->GetComandList()->DrawInstanced(2, 1, 0, 0);
+    commandList->DrawInstanced(2, 1, 0, 0);
 };
 

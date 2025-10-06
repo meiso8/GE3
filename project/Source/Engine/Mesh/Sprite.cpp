@@ -1,18 +1,17 @@
 #include "Sprite.h"
-#include"CreateBufferResource.h"
+#include"DirectXCommon.h"
 #include"TransformationMatrix.h"
 #include"MakeAffineMatrix.h"
 #include"MakeIdentity4x4.h"
 #include"Multiply.h"
 
-void Sprite::Create(
-    const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc
+void Sprite::Create( ModelConfig& mc
 ) {
 
-    CreateVertex(device);
-    CreateIndexResource(device);
-    CreateTransformationMatrix(device);
-    CreateMaterial(device);
+    CreateVertex();
+    CreateIndexResource();
+    CreateTransformationMatrix();
+    CreateMaterial();
 
     uvTransform_ = {
           {1.0f,1.0f,1.0f},
@@ -26,7 +25,7 @@ void Sprite::Create(
 
     int waveCount = 2;
 
-    waveResource_ = CreateBufferResource(device, sizeof(Wave) * waveCount);
+    waveResource_ = DirectXCommon::CreateBufferResource(sizeof(Wave) * waveCount);
 
     //データを書き込む
 
@@ -47,7 +46,7 @@ void Sprite::Create(
 
 #pragma region//Balloon
 
-    expansionResource_ = CreateBufferResource(device, sizeof(Balloon));
+    expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
 
     //書き込むためのアドレスを取得
     expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&expansionData_));
@@ -60,15 +59,14 @@ void Sprite::Create(
 #pragma endregion
 
     modelConfig_ = mc;
-
     size_ = { 640.0f,360.0f };
 
 }
 
-void Sprite::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Sprite::CreateVertex() {
 
     //VertexResourceとVertexBufferViewを用意 矩形を表現するための三角形を二つ(頂点4つ)
-    vertexResource_ = CreateBufferResource(device, sizeof(VertexData) * 4);
+    vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 4);
 
     //頂点バッファビューを作成する
     //リソースの先頭アドレスから使う
@@ -103,10 +101,10 @@ void Sprite::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
 
 }
 
-void Sprite::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Sprite::CreateIndexResource() {
 
 #pragma region//IndexResourceを作成
-    indexResource_ = CreateBufferResource(device, sizeof(uint32_t) * 6);
+    indexResource_ = DirectXCommon::CreateBufferResource(sizeof(uint32_t) * 6);
     //Viewを作成する IndexBufferView(IBV)
 
     //リソースの先頭アドレスから使う
@@ -133,10 +131,10 @@ void Sprite::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& dev
 #pragma endregion
 }
 
-void Sprite::CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Sprite::CreateTransformationMatrix() {
 
     //Matrix4x4　1つ分のサイズを用意
-    transformationMatrixResource_ = CreateBufferResource(device, sizeof(TransformationMatrix));
+    transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix));
     //データを書き込む
     //書き込むためのアドレスを取得
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
@@ -146,10 +144,10 @@ void Sprite::CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Devic
 
 }
 
-void Sprite::CreateMaterial(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Sprite::CreateMaterial() {
 
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial(device, MaterialResource::LIGHTTYPE::NONE);
+    materialResource_.CreateMaterial(MaterialResource::LIGHTTYPE::NONE);
 
 }
 
@@ -172,16 +170,18 @@ void Sprite::UpdateUV() {
 }
 
 void Sprite::PreDraw(PSO& pso) {
+    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
 
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0).Get());
-    modelConfig_.commandList->GetComandList()->SetPipelineState(pso.GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
+    commandList->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0));
+    commandList->SetPipelineState(pso.GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    modelConfig_.commandList->GetComandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void Sprite::Draw(
     ShaderResourceView& srv, Camera& camera, uint32_t lightType
 ) {
+    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
 
     materialResource_.SetLightType(lightType);
 
@@ -190,23 +190,23 @@ void Sprite::Draw(
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix_ };
 
     //頂点バッファビューを設定
-    modelConfig_.commandList->GetComandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    DirectXCommon::GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     //IBVを設定new
-    modelConfig_.commandList->GetComandList()->IASetIndexBuffer(&indexBufferView_);//IBVを設定
+    commandList->IASetIndexBuffer(&indexBufferView_);//IBVを設定
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
+    commandList->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
     //LightのCBufferの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(3, modelConfig_.directionalLightResource->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_.directionalLightResource->GetGPUVirtualAddress());
     //Wave timeのSRVの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
-    modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
 
     //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
-    modelConfig_.commandList->GetComandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+    commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 };
 

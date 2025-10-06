@@ -9,7 +9,8 @@ Player::Player(const ModelData& modelData) {
 
     modelData_ = &modelData;
     model_ = std::make_unique<Model>();
-    model_->Create(*modelData_, myEngine->GetModelConfig(), myEngine->GetDevice(), myEngine->GetSrvDescriptorHeap(), 5);
+
+    model_->Create(*modelData_, myEngine->GetModelConfig(), 5);
 
 }
 

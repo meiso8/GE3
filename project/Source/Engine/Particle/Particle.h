@@ -1,6 +1,6 @@
 #pragma once
 #include "ModelData.h"
-#include"CommandList.h"
+#include"commandList.h"
 #include"WorldTransform.h"
 #include"TransformationMatrix.h"
 #include"MaterialResource.h"
@@ -20,25 +20,21 @@ private:
 
     ModelData modelData_;
     MaterialResource materialResource_{};
-
-    CommandList* commandList_ = nullptr;
     RootSignature* rootSignature_ = nullptr;
 
     D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
     D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;
     Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
 
-
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexBufferResource_;
     VertexData* vertexBufferData_ = nullptr;
 
 public:
-    void Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, CommandList& commandList,RootSignature& rootSignature);
+    void Create(RootSignature& rootSignature);
     void Draw(Camera& camera, ShaderResourceView& srv);
 private:
-    void CreateModelData(
-        const Microsoft::WRL::ComPtr<ID3D12Device>& device);
-    void CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
+    void CreateModelData();
+    void CreateTransformationMatrix();
 };
 

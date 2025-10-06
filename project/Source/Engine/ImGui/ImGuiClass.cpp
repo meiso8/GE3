@@ -41,7 +41,7 @@ void ImGuiClass::DrawImGui(CommandList& commandList) {
 
     //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
 //実際のcommandListのImGuiの描画コマンドを積む
-    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.GetComandList().Get());
+    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.GetCommandList().Get());
 }
 
 void ImGuiClass::ShutDown() {

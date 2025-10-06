@@ -16,7 +16,7 @@ public:
         HALF_L,
     };
 
-    void CreateMaterial(const Microsoft::WRL::ComPtr<ID3D12Device>& device, uint32_t lightType = LIGHTTYPE::NONE);
+    void CreateMaterial(uint32_t lightType = LIGHTTYPE::NONE);
     Material* GetMaterial() {
         return material_;
     };

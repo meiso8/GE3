@@ -1,6 +1,6 @@
 #pragma once  
 
-#include"CommandList.h"  
+#include"commandList.h"  
 #include"ModelData.h"  
 #include"PSO.h"  
 #include"ShaderResourceView.h"  
@@ -13,12 +13,12 @@
 #include"ModelConfig.h"
 #include"Balloon.h"
 #include"Wave.h"
+#include<d3d12.h>
 
 class Sprite
 {
 public:
-    void Create(
-        const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc);
+    void Create( ModelConfig& mc);
     void UpdateUV();
 
     void PreDraw(PSO& pso);
@@ -43,10 +43,10 @@ public:
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
 
 private:
-    void CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
-    void CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
-    void CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
-    void CreateMaterial(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
+    void CreateVertex();
+    void CreateIndexResource();
+    void CreateTransformationMatrix();
+    void CreateMaterial();
 private:
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};

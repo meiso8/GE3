@@ -7,14 +7,13 @@
 #include"Balloon.h"
 #include"Wave.h"
 #include"Transform.h"
+#include<d3d12.h>
 
 class Model
 {
 public:
 
-    void Create(const ModelData& modeldata, ModelConfig mc,
-        const Microsoft::WRL::ComPtr<ID3D12Device>& device,
-        const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap, uint32_t index);
+    void Create(const ModelData& modeldata, ModelConfig mc,uint32_t index);
 
     void UpdateUV();
 
@@ -39,7 +38,7 @@ public:
     ~Model();
 
 private:
-    void CreateWorldVPResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device);
+    void CreateWorldVPResource();
 private:
     ShaderResourceView srv_;
 

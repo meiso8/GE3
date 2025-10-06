@@ -29,11 +29,8 @@ public:
         const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap);
 
     void FrameStart();
-
     void Render();
-
     void DrawImGui(CommandList& commandList);
-
     void ShutDown();
 
 };
