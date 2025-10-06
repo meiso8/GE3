@@ -4,9 +4,8 @@
 //#include"Window.h"
 #include"Input.h"
 
-
-#include"GetCPUDescriptorHandle.h"
-#include"GetGPUDescriptorHandle.h"
+#include"DirectXCommon.h"
+#include "RootSignature.h"
 
 #include"TransitionBarrier.h"
 
@@ -19,7 +18,7 @@
 #include"ViewPort.h"
 #include"ScissorRect.h"
 #include"Texture.h"
-#include"CreateBufferResource.h"
+
 #include"ShaderResourceView.h"
 #include"Model.h"
 #include"Sprite.h"
@@ -67,32 +66,23 @@
 class MyEngine {
 
 public:
-    static const uint32_t kMaxSRVCount;
-public:
 
+public:
     void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
     void Update();
     void PreCommandSet(Vector4& color);
     void PostCommandSet();
     void End();
     Window& GetWC() { return wc; };
-
     ModelConfig& GetModelConfig() { return modelConfig_; };
     PSO& GetPSO(uint32_t index) { return pso[index]; }
-
-
     DirectionalLight& GetDirectionalLightData() { return *directionalLightData; }
-
     void SetBlendMode(uint32_t blendMode =BlendMode::kBlendModeNormal);
-
 private:
-
-
+    std::unique_ptr<DirectXCommon> directXCommon = nullptr;
     D3DResourceLeakChecker leakCheck = {};
     LogFile logFile = {};
-
     Window wc = {};
-
     Input* input = { nullptr };
 
     InputLayout inputLayout = {};
@@ -100,15 +90,9 @@ private:
     std::vector<RasterizerState> rasterizerStates = {};
     DepthStencil depthStencil = {};
     PSO pso[kCountOfBlendMode] = {};
-   
     Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource = nullptr;
     DirectionalLight* directionalLightData = nullptr;
-  
-#ifdef _DEBUG
-    ImGuiClass imGuiClass = {};
-#endif // _DEBUG
-
-    TransitionBarrier barrier = {};
+    RootSignature rootSignature = {};
     ModelConfig modelConfig_ = {};
 };
 

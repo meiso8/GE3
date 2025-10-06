@@ -3,6 +3,7 @@
 
 #include<cassert>
 #include<format>
+#include"StringUtility.h"
 
 void GPU::SettingGPU(DXGIFactory& dxgiFactory) {
 
@@ -18,7 +19,7 @@ void GPU::SettingGPU(DXGIFactory& dxgiFactory) {
         //ソフトウェアアダプタでなければ採用！
         if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
             //採用したアダプタ情報をログに出力。wstringの方なので注意
-            Log(ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
+            LogFile::Log(StringUtility::ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
             break;
         }
 
@@ -48,7 +49,7 @@ Microsoft::WRL::ComPtr<ID3D12Device> CreateD3D12Device(GPU& gpu) {
         //指定した機能レベルでデバイスが生成できたかを確認する
         if (SUCCEEDED(hr)) {
 
-            Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
+            LogFile::Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
             break;
         }
     }

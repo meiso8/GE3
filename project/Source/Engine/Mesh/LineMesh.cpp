@@ -1,23 +1,22 @@
 #include "LineMesh.h"
-#include"CreateBufferResource.h"
 
 #include"MakeAffineMatrix.h"
 #include"Multiply.h"
+#include"DirectXCommon.h"
 
-void LineMesh::Create(
-    const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc, PSO& pso
+void LineMesh::Create(ModelConfig& mc, PSO& pso
 ) {
 
     pso_ = &pso;
-    CreateVertex(device);
-    CreateTransformationMatrix(device);
-    CreateMaterial(device);
+    CreateVertex();
+    CreateTransformationMatrix();
+    CreateMaterial();
 
 #pragma region//time
 
     int waveCount = 2;
 
-    waveResource_ = CreateBufferResource(device, sizeof(Wave) * waveCount);
+    waveResource_ = DirectXCommon::CreateBufferResource(sizeof(Wave) * waveCount);
 
     //データを書き込む
 
@@ -38,7 +37,7 @@ void LineMesh::Create(
 
 #pragma region//Balloon
 
-    expansionResource_ = CreateBufferResource(device, sizeof(Balloon));
+    expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
 
     //書き込むためのアドレスを取得
     expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&expansionData_));
@@ -54,10 +53,10 @@ void LineMesh::Create(
 
 }
 
-void LineMesh::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void LineMesh::CreateVertex() {
 
     //VertexResourceとVertexBufferViewを用意
-    vertexResource_ = CreateBufferResource(device, sizeof(VertexData) * 2);
+    vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 2);
 
     //頂点バッファビューを作成する
     //リソースの先頭アドレスから使う
@@ -89,10 +88,10 @@ void LineMesh::SetVertexPos(const Vector3& start, const Vector3& end) {
     vertexData_[1].normal = { vertexData_[1].position.x,  vertexData_[1].position.y,  vertexData_[1].position.z };
 };
 
-void LineMesh::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void LineMesh::CreateIndexResource() {
 
 #pragma region//IndexResourceを作成
-    indexResource_ = CreateBufferResource(device, sizeof(uint32_t) * 12);
+    indexResource_ = DirectXCommon::CreateBufferResource(sizeof(uint32_t) * 12);
     //Viewを作成する IndexBufferView(IBV)
 
     //リソースの先頭アドレスから使う
@@ -127,10 +126,10 @@ void LineMesh::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& d
 #pragma endregion
 }
 
-void LineMesh::CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void LineMesh::CreateTransformationMatrix() {
 
     //Matrix4x4　1つ分のサイズを用意
-    transformationMatrixResource_ = CreateBufferResource(device, sizeof(TransformationMatrix));
+    transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix));
     //データを書き込む
     //書き込むためのアドレスを取得
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
@@ -140,10 +139,10 @@ void LineMesh::CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Dev
 
 }
 
-void LineMesh::CreateMaterial(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void LineMesh::CreateMaterial() {
 
     //マテリアルリソースを作成 ライトなし
-    materialResource_.CreateMaterial(device, MaterialResource::LIGHTTYPE::NONE);
+    materialResource_.CreateMaterial(MaterialResource::LIGHTTYPE::NONE);
 
 }
 

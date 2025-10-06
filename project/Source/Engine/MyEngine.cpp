@@ -2,32 +2,43 @@
 #include<algorithm>
 //#include"TextureManager.h"
 
-const uint32_t MyEngine::kMaxSRVCount = 512;
-
 void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const int32_t clientHeight) {
-
 
     //誰も捕捉しなかった場合に(Unhandled),補足する関数を登録
     //main関数始まってすぐに登録すると良い
     SetUnhandledExceptionFilter(ExportDump);
 
-
-    Log("CreateLogFile");
+    LogFile logFile;
+    logFile.Create();
+    LogFile::Log("CreateLogFile");
 
     //WindowClassの生成
     wc.Create(title, clientWidth, clientHeight);
-    Log(logStream, "CreateWindowClass");
+    LogFile::Log("CreateWindowClass");
 
     //InputClassの生成
     input = Input::GetInstance();
     //入力
     input->Initialize(wc);
 
-   
+    directXCommon = std::make_unique<DirectXCommon>();
+    directXCommon.get()->Initialize(wc);
+
+
+    //TextureManagerの初期化
+//TextureManager::GetInstance()->Initialize();
+
+#pragma region//RootSignatureを生成する
+
+    //具体的にShaderがどこかでデータを読めばいいのかの情報を取りまとめたもの
+    rootSignature.Create();
+    LogFile::Log("CreateRootSignature");
+
+#pragma endregion
 
 #pragma region//InputLayout
     inputLayout.Create();
-    Log(logStream, "InputLayout");
+    LogFile::Log("InputLayout");
 #pragma endregion
 
     //BlendStateの設定を行う
@@ -37,7 +48,7 @@ void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const 
         blendStates[i].Create(i);
     }
 
-    Log(logStream, "SetBlendState");
+    LogFile::Log("SetBlendState");
 
 
     rasterizerStates.resize(3);
@@ -46,80 +57,73 @@ void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const 
     rasterizerStates[kCullModeFront].Create(kCullModeFront, kFillModeSolid);//ソリッドモード裏面
     rasterizerStates[kCullModeBack].Create(kCullModeBack, kFillModeSolid);//ソリッドモード表面
     //rasterizerStates[0].Create(kCullModeNone, kFillModeWireframe);//ワイヤーフレームモード
-    Log(logStream, "SetRasterizerState");
-
-#pragma region//ShaderをCompileする
-    dxcCompiler.ShaderSetting();
-    Log(logStream, "CompileShader");
-#pragma endregion
+    LogFile::Log( "SetRasterizerState");
 
 #pragma region //DepthStencilStateの設定
     depthStencil.Create();
-    Log(logStream, "Create depthStencilDesc");
+    LogFile::Log( "Create depthStencilDesc");
 #pragma endregion
 
     //PSOを生成する
     pso[0].Create(
         rootSignature,
         inputLayout,
-        dxcCompiler,
+        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeNone],//ブレンドしない
         rasterizerStates[kCullModeBack],//後ろをカリング
         depthStencil,
-        device);
+        *directXCommon->GetDevice());
 
     pso[1].Create(
         rootSignature,
         inputLayout,
-        dxcCompiler,
+        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeNormal],//ブレンドする
         rasterizerStates[kCullModeBack],//後ろをカリング
         depthStencil,
-        device);
+        *directXCommon->GetDevice());
 
     pso[2].Create(
         rootSignature,
         inputLayout,
-        dxcCompiler,
+        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeAdd],//ブレンドしない
         rasterizerStates[kCullModeBack],//描画
         depthStencil,
-        device);
+        *directXCommon->GetDevice());
 
     pso[3].Create(
         rootSignature,
         inputLayout,
-        dxcCompiler,
+        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeSubtract],
         rasterizerStates[kCullModeBack],//描画
         depthStencil,
-        device);
+        *directXCommon->GetDevice());
 
     pso[4].Create(
         rootSignature,
         inputLayout,
-        dxcCompiler,
+        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeMultiply],
         rasterizerStates[kCullModeBack],//描画
         depthStencil,
-        device);
+        *directXCommon->GetDevice());
 
     pso[5].Create(
         rootSignature,
         inputLayout,
-        dxcCompiler,
+        *directXCommon->GetDxcCompiler(),
         blendStates[kBlendModeScreen],
         rasterizerStates[kCullModeBack],//描画
         depthStencil,
-        device);
+        *directXCommon->GetDevice());
 
-    Log(logStream, "CreatePSO");
-
-
+    LogFile::Log("CreatePSO");
 
 
 #pragma region//平行光源用のResourceを作成する
-    directionalLightResource = CreateBufferResource(device, sizeof(DirectionalLight));
+    directionalLightResource = directXCommon->CreateBufferResource(sizeof(DirectionalLight));
 
     //書き込むためのアドレスを取得
     directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
@@ -130,16 +134,15 @@ void MyEngine::Create(const std::wstring& title,const int32_t clientWidth,const 
 
 #pragma endregion
 
+    modelConfig_ = {
+    directXCommon->GetCommandList(),
+    &rootSignature,
+    directionalLightResource.Get()
+    };
 
-
-#ifdef _DEBUG
-    //ImGuiの初期化。
-    imGuiClass.Initialize(wc, device.Get(), swapChainClass, rtvClass, srvDescriptorHeap);
-    Log(logStream, "InitImGui");
-#endif
 
     //ファイルへのログ出力
-    Log(logStream, "LoopStart");
+    LogFile::Log("LoopStart");
 
 }
 
@@ -147,113 +150,31 @@ void MyEngine::Update() {
 
     //キーボード情報の取得開始
     input->Update();
+    directXCommon.get()->Update();
 
-#ifdef _DEBUG
-
-    //ImGuiにここからフレームが始まる旨を伝える
-    imGuiClass.FrameStart();
-#endif
 }
 
 void MyEngine::PreCommandSet(Vector4& color) {
-#ifdef _DEBUG
-    //ImGuiの内部コマンドを生成する
-    imGuiClass.Render();
-#endif
 
-    //これからの流れ
-    //1.  BackBufferを決定する
-    //2.  書き込む作業（画面のクリア）をしたいので、RTVを設定する
-    //3.  画面のクリアを行う
-    //4.  CommandListを閉じる
-    //5.  CommandListの実行（キック）
-    //6.  画面のスワップ（BackBufferとFrontBufferを入れ替える）
-    //7.  次のフレーム用にCommandListを再準備
 
-    //1.これから書き込むバックバッファのインデックスを取得
-    UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
+    directXCommon.get()->PreDraw(color);
 
-    //TransitionBarrierの設定
+    //ここ注意
+    directXCommon.get()->GetCommandList()->SetGraphicsRootSignature(rootSignature.GetRootSignature());
 
-    barrier.SettingBarrier(swapChainResources[backBufferIndex], commandList.GetComandList());
 
-    //2.描画用のRTVとDSVを設定する
-    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-    commandList.GetComandList()->OMSetRenderTargets(1, &rtvClass.GetHandle(backBufferIndex), false, &dsvHandle);
-    //3.指定した色で画面全体をクリアする
-    float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
-    commandList.GetComandList()->ClearRenderTargetView(rtvClass.GetHandle(backBufferIndex), clearColor, 0, nullptr);
-
-    //指定した深度で画面全体をクリアする
-    commandList.GetComandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
-    //描画用のDescriptorHeapの設定
-    ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap.Get() };
-    commandList.GetComandList()->SetDescriptorHeaps(1, descriptorHeaps);
-
-    //PreDrawの一部が共通になったためここに移動
-    commandList.GetComandList()->RSSetViewports(1, &viewport);//Viewportを設定
-    commandList.GetComandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
-    commandList.GetComandList()->SetGraphicsRootSignature(rootSignature.GetRootSignature().Get());
 };
 
 void MyEngine::PostCommandSet() {
 
-#ifdef _DEBUG
-    //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
-    imGuiClass.DrawImGui(commandList);
-
-#endif // _DEBUG
-
-    //画面に書く処理は終わり、画面に移すので、状態を遷移
-    barrier.Transition();
-
-    //TransitionBarrierを張る
-    commandList.GetComandList()->ResourceBarrier(1, &barrier.GetBarrier());
-
-    //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
-    HRESULT hr = commandList.GetComandList()->Close();
-    assert(SUCCEEDED(hr));
-    Log(logStream, "CloseCommandList");
-
-    //5.GPUにコマンドリストの実行を行わせる
-    ID3D12CommandList* commandLists[] = { commandList.GetComandList().Get() };
-    commandQueue.GetCommandQueue()->ExecuteCommandLists(1, commandLists);
-    //6.GPUとOSに画面の交換を行うよう通知する
-    swapChainClass.GetSwapChain()->Present(1, 0);
-
-    //画面の更新が終わった直後GPUにシグナルを送る
-    //Fenceの値を更新
-    fence.AddValue();
-
-    //GPUがここまでたどり着いた時、Fenceの値を指定した値に代入するようにSignalを送る
-    fence.SendSignal(commandQueue);
-
-    //Fenceの値が指定したSignal値にたどり着いているか確認する GPUの処理を待つ
-    fence.CheckValue(fenceEvent);
-
-    //7.次のフレーム用のコマンドリストを準備
-    commandList.PrepareCommand();
-
-#pragma endregion
+    directXCommon.get()->PostDraw();
 
 };
 
 void MyEngine::End() {
 
-#ifdef _DEBUG
-    //ImGuiの終了処理 ゲームループが終わったら行う
-    imGuiClass.ShutDown();
-#endif
-
-#pragma region //解放処理
-
-    CloseHandle(fenceEvent.GetEvent());
+    directXCommon.get()->EndFrame();
     wc.Finalize();
-
-#pragma endregion
-
-  
 
     //TextureManager::GetInstance()->Finalize();
 }
@@ -261,6 +182,6 @@ void MyEngine::End() {
 //ここでBlenModeを変更する
 void MyEngine::SetBlendMode(uint32_t blendMode) {
 
-    commandList.GetComandList()->SetPipelineState(pso[blendMode].GetGraphicsPipelineState(PSO::PSOType::TRIANGLE).Get());//PSOを設定
+    directXCommon.get()->GetCommandList()->SetPipelineState(pso[blendMode].GetGraphicsPipelineState(PSO::PSOType::TRIANGLE).Get());//PSOを設定
 
 }

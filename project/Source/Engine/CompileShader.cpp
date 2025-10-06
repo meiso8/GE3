@@ -7,6 +7,8 @@
 
 //HLSLをGPUが解釈できる形にするためのインクルード
 #pragma comment(lib,"dxcompiler.lib")
+#include"StringUtility.h"
+
 
 void DxcCompiler::Initialize() {
 
@@ -27,39 +29,34 @@ void DxcCompiler::ShaderSetting() {
 
     //Shaderをコンパイルする
     vertexShaderBlob_ = CompileShader(L"resources/shader/Object3D.VS.hlsl",
-        L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+        L"vs_6_0");
     assert(vertexShaderBlob_ != nullptr);
 
     pixelShaderBlob_[NORMAL] = CompileShader(L"resources/shader/Object3D.PS.hlsl",
-        L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+        L"ps_6_0");
     assert(pixelShaderBlob_[NORMAL] != nullptr);
 
     pixelShaderBlob_[NONE_TEX] = CompileShader(L"resources/shader/Object3DNoneTex.PS.hlsl",
-        L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+        L"ps_6_0");
     assert(pixelShaderBlob_[NONE_TEX] != nullptr);
-
 
 }
 
 //CompileShader関数
-IDxcBlob* CompileShader(
+Microsoft::WRL::ComPtr<IDxcBlob> DxcCompiler::CompileShader(
     //CompilerするShaderファイルへのパス
     const std::wstring& filePath,
     //Compilerに使用するProfile
-    const wchar_t* profile,
-    //初期化で生成されたものを3つ
-    IDxcUtils* dxcUtils,
-    IDxcCompiler3* dxcCompiler,
-    IDxcIncludeHandler* includeHandler) {
+    const wchar_t* profile) {
     // ここの中身をこの後書いていく
     // 1.hlslファイルを読み込む
 
 #pragma region //1.hlslファイルを読む
 //ここからシェーダーをコンパイルする旨をログに出す
-    Log(ConvertString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
+    LogFile::Log(StringUtility::ConvertString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
     //hlslファイルを読む
     IDxcBlobEncoding* shaderSource = nullptr;
-    HRESULT result = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
+    HRESULT result = dxcUtils_->LoadFile(filePath.c_str(), nullptr, &shaderSource);
     //読めなかったら止める
     assert(SUCCEEDED(result));
     //読み込んだファイルの内容を設定する
@@ -84,11 +81,11 @@ IDxcBlob* CompileShader(
 
     //実際にShaderをコンパイルする
     IDxcResult* shaderResult = nullptr;
-    result = dxcCompiler->Compile(
+    result = dxcCompiler_->Compile(
         &shaderSourceBuffer,//読み込んだファイル
         arguments,//コンパイルオプション
         _countof(arguments),//コンパイルオプションの数
-        includeHandler,//includeが含まれた諸々
+        includeHandler_,//includeが含まれた諸々
         IID_PPV_ARGS(&shaderResult)//コンパイル結果
     );
 
@@ -107,12 +104,12 @@ IDxcBlob* CompileShader(
 
     if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
 
-        Log(shaderError->GetStringPointer());
+        LogFile::Log(shaderError->GetStringPointer());
 
         //警告・エラーダメ絶対
         assert(false);
     } else {
-        Log("No shader compilation errors detected.");
+        LogFile::Log("No shader compilation errors detected.");
     }
 #pragma endregion
 
@@ -123,7 +120,7 @@ IDxcBlob* CompileShader(
     result = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
     assert(SUCCEEDED(result));
     //成功したログを出す
-    Log(ConvertString(std::format(L"Compile Succeeded,path:{}profile;{}\n", filePath, profile)));
+    LogFile::Log(StringUtility::ConvertString(std::format(L"Compile Succeeded,path:{}profile;{}\n", filePath, profile)));
     //もう使わないリソース解放
     shaderSource->Release();
     shaderResult->Release();

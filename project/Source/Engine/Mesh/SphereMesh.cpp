@@ -1,5 +1,5 @@
 #include "SphereMesh.h"
-#include"CreateBufferResource.h"
+#include"DirectXCommon.h"
 #include"Texture.h"
 #include"TransformationMatrix.h"
 #include"MakeAffineMatrix.h"
@@ -8,10 +8,10 @@
 #include"MakeIdentity4x4.h"
 #include<numbers>
 
-void SphereMesh::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void SphereMesh::CreateVertex() {
 
     //VertexResourceとVertexBufferViewを用意 矩形を表現するための三角形を二つ(頂点4つ)
-    vertexResource_ = CreateBufferResource(device, sizeof(VertexData) * 6 * kSubdivision_ * kSubdivision_);
+    vertexResource_ = DirectXCommon::CreateBufferResource( sizeof(VertexData) * 6 * kSubdivision_ * kSubdivision_);
 
     //頂点バッファビューを作成する
     //リソースの先頭アドレスから使う
@@ -97,7 +97,7 @@ void SphereMesh::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device
 
     int waveCount = 2;
 
-    waveResource_ = CreateBufferResource(device, sizeof(Wave) * waveCount);
+    waveResource_ = DirectXCommon::CreateBufferResource(sizeof(Wave) * waveCount);
 
     //データを書き込む
 
@@ -118,7 +118,7 @@ void SphereMesh::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device
 
 #pragma region//Balloon
 
-    expansionResource_ = CreateBufferResource(device, sizeof(Balloon));
+    expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
 
     //書き込むためのアドレスを取得
     expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&expansionData_));
@@ -133,24 +133,22 @@ void SphereMesh::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device
 
 };
 
-void SphereMesh::CreateMaterial(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void SphereMesh::CreateMaterial() {
 
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial(device, MaterialResource::LIGHTTYPE::NONE);
+    materialResource_.CreateMaterial(MaterialResource::LIGHTTYPE::NONE);
 
 }
 
-void SphereMesh::Create(
-    const Microsoft::WRL::ComPtr<ID3D12Device>& device,
-    const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& srvDescriptorHeap) {
+void SphereMesh::Create() {
 
     //マテリアルの作成
-    CreateMaterial(device);
+    CreateMaterial();
 
-    CreateWorldVPResource(device);
+    CreateWorldVPResource();
 
     //頂点リソースを作る
-    CreateVertex(device);
+    CreateVertex();
 
     //CreateIndexResource(device);
 
@@ -208,9 +206,9 @@ void SphereMesh::UpdateUV() {
 }
 
 
-void SphereMesh::CreateWorldVPResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void SphereMesh::CreateWorldVPResource() {
     //WVP用のリソースを作る。Matrix3x3 1つ分のサイズを用意する。
-    wvpResource_ = CreateBufferResource(device, sizeof(TransformationMatrix));
+    wvpResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix));
     //データを書き込む
     //書き込むためのアドレスを取得
     wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpDate_));

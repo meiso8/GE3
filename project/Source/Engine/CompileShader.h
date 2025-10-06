@@ -6,15 +6,7 @@
 
 
 //CompileShader関数
-IDxcBlob* CompileShader(
-    //CompilerするShaderファイルへのパス
-    const std::wstring& filePath,
-    //Compilerに使用するProfile
-    const wchar_t* profile,
-    //初期化で生成されたものを3つ
-    IDxcUtils* dxcUtils,
-    IDxcCompiler3* dxcCompiler,
-    IDxcIncludeHandler* includeHandler);
+
 
 class DxcCompiler
 {
@@ -34,4 +26,10 @@ private:
     IDxcIncludeHandler* includeHandler_ = nullptr;
     Microsoft::WRL::ComPtr <IDxcBlob> vertexShaderBlob_;
     Microsoft::WRL::ComPtr <IDxcBlob>pixelShaderBlob_[PS_MAX];
+private:
+    Microsoft::WRL::ComPtr<IDxcBlob>CompileShader(
+        //CompilerするShaderファイルへのパス
+        const std::wstring& filePath,
+        //Compilerに使用するProfile
+        const wchar_t* profile);
 };

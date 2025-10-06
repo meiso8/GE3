@@ -1,21 +1,20 @@
 #include "Cube.h"
 
-#include"CreateBufferResource.h"
+#include"DirectXCommon.h"
 
 
 #include"MakeAffineMatrix.h"
 #include"Multiply.h"
 
-void Cube::Create(
-    const Microsoft::WRL::ComPtr<ID3D12Device>& device, ModelConfig& mc
+void Cube::Create(ModelConfig& mc
 ) {
 
     //camera_ = &camera;
 
-    CreateVertex(device);
-    CreateIndexResource(device);
-    CreateTransformationMatrix(device);
-    CreateMaterial(device);
+    CreateVertex();
+    CreateIndexResource();
+    CreateTransformationMatrix();
+    CreateMaterial();
 
     modelConfig_ = mc;
 
@@ -23,7 +22,7 @@ void Cube::Create(
 
     int waveCount = 2;
 
-    waveResource_ = CreateBufferResource(device, sizeof(Wave) * waveCount);
+    waveResource_ = DirectXCommon::CreateBufferResource(sizeof(Wave) * waveCount);
 
     //データを書き込む
 
@@ -44,7 +43,7 @@ void Cube::Create(
 
 #pragma region//Balloon
 
-    expansionResource_ = CreateBufferResource(device, sizeof(Balloon));
+    expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
 
     //書き込むためのアドレスを取得
     expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&expansionData_));
@@ -59,9 +58,9 @@ void Cube::Create(
 
 }
 
-void Cube::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Cube::CreateVertex() {
 
-    vertexResource_ = CreateBufferResource(device, sizeof(VertexData) * 8);
+    vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 8);
 
     //頂点バッファビューを作成する
     vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
@@ -104,10 +103,10 @@ void Cube::CreateVertex(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
 
 }
 
-void Cube::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Cube::CreateIndexResource() {
 
 #pragma region//IndexResourceを作成
-    indexResource_ = CreateBufferResource(device, sizeof(uint32_t) * 36);
+    indexResource_ = DirectXCommon::CreateBufferResource(sizeof(uint32_t) * 36);
     //Viewを作成する IndexBufferView(IBV)
 
     //リソースの先頭アドレスから使う
@@ -145,19 +144,19 @@ void Cube::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& devic
 #pragma endregion
 }
 
-void Cube::CreateTransformationMatrix(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Cube::CreateTransformationMatrix() {
 
     //Matrix4x4　1つ分のサイズを用意
-    transformationMatrixResource_ = CreateBufferResource(device, sizeof(TransformationMatrix));
+    transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix));
     //データを書き込む
     //書き込むためのアドレスを取得
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
 }
 
-void Cube::CreateMaterial(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+void Cube::CreateMaterial() {
 
     //マテリアルリソースを作成
-    materialResource_.CreateMaterial(device, 0);
+    materialResource_.CreateMaterial(0);
 
 }
 
@@ -192,9 +191,9 @@ void Cube::SetMinMax(const Vector3& min, const Vector3& max) {
 
 void Cube::PreDraw(PSO& pso) {
 
-    modelConfig_.commandList->GetComandList()->SetPipelineState(pso.GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
+    modelConfig_.commandList->GetCommandList()->SetPipelineState(pso.GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    modelConfig_.commandList->GetComandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    modelConfig_.commandList->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void Cube::Draw(
@@ -210,7 +209,7 @@ void Cube::Draw(
     //頂点バッファビューを設定
     modelConfig_.commandList->GetComandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     //IBVを設定new
-    modelConfig_.commandList->GetComandList()->IASetIndexBuffer(&indexBufferView_);//IBVを設定
+    modelConfig_.commandList->GetCommandList()->IASetIndexBuffer(&indexBufferView_);//IBVを設定
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
     modelConfig_.commandList->GetComandList()->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定

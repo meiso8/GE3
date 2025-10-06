@@ -29,7 +29,7 @@ public:
         BlendState& blendState,
         RasterizerState& rasterizerState,
         DepthStencil& depthStencil,
-        const Microsoft::WRL::ComPtr<ID3D12Device>& device);
+        ID3D12Device& device);
 
     Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineState(PSOType type) {
         return graphicsPipelineState_[type];
