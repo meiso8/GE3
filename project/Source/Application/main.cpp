@@ -171,6 +171,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         MyEngine::SetBlendMode();
 
 
+
+
 #ifdef _DEBUG
         grid.Draw(srv[0], camera);
 #endif // _DEBUG
