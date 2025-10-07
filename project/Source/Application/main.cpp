@@ -127,7 +127,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             debugUI.CheckFPS();
 
             debugUI.CheckInput(*Input::GetInstance());
-            /*        debugUI.CheckColor(worldColor);*/
+            debugUI.CheckColor(worldColor);
             debugUI.CheckCamera(camera);
             debugUI.CheckBlendMode(blendMode);
 
@@ -151,8 +151,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         }
 
-
-
         camera.Update();
 
         player.get()->Update();
@@ -174,8 +172,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #ifdef _DEBUG
         grid.Draw(srv[0], camera);
 #endif // _DEBUG
-
-
 
         cube[0].PreDraw(myEngine->GetPSO(kBlendModeNormal));
         cube[0].Draw(srv[1], camera, MakeIdentity4x4(), lightType);
