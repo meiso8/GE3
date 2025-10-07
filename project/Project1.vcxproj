@@ -159,9 +159,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
     <ClCompile Include="Source\Application\Player.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\ModelConfig.cpp" />
     <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp" />
-    <ClCompile Include="Source\Engine\ImGui\FPSCounter.cpp" />
     <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Cube.cpp" />
     <ClCompile Include="Source\Engine\Mesh\LineMesh.cpp" />
@@ -293,7 +293,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Mesh\DrawGrid.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DXGIFactory.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Fence.h" />
-    <ClInclude Include="Source\Engine\ImGui\FPSCounter.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\GPU.h" />
     <ClInclude Include="Source\Engine\ImGui\ImGuiClass.h" />
     <ClInclude Include="Source\Engine\Input\Input.h" />

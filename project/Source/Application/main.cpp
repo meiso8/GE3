@@ -16,8 +16,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     //音声クラスの作成
     Sound sound;
 
-    srand(static_cast<unsigned int>(time(nullptr)));
-
 #pragma region//XAudio全体の初期化と音声の読み込み
 
     //音声読み込み SoundDataの変数を増やせばメモリが許す限りいくつでも読み込める。
@@ -57,26 +55,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     srv[1].Create(textures[1], 2);
     srv[2].Create(textures[2], 3);
 
-    DrawGrid grid = DrawGrid(myEngine->GetModelConfig(), myEngine->GetPSO(0));
+    DrawGrid grid = DrawGrid();
 
-    std::unique_ptr<SpriteC> spriteCommon = nullptr;
-    spriteCommon = std::make_unique<SpriteC>();
-    spriteCommon->Initialize(myEngine->GetModelConfig());
+    SpriteC* spriteCommon = SpriteC::GetInstance();
 
     std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
-    sprite->Initialize();
-    sprite->SetSize(Vector2(256.0f, 256.0f));
+    sprite->Initialize(Vector2(256.0f, 256.0f));
     sprite->SetTranslate({ 0.0f,0.0f,0.0f });
 
     const ModelData modelData = LoadObjeFile("resources/player", "player.obj");
 
     std::unique_ptr<Player>player;
     player = std::make_unique<Player>(modelData);
-    player.get()->Init();
+    player->Init();
 
     Cube cube[2];
-    cube[0].Create(myEngine->GetModelConfig());
-    cube[1].Create(myEngine->GetModelConfig());
+    cube[0].Create();
+    cube[1].Create();
 
     WorldTransform cubeWorldTransform;
     cubeWorldTransform.Initialize();
@@ -89,7 +84,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     uint32_t blendMode = BlendMode::kBlendModeNone;
 
     Particle particle;
-    particle.Create(myEngine->GetRootSignature());
+    particle.Create();
 
     // =============================================
     //ウィンドウのxボタンが押されるまでループ メインループ
@@ -127,12 +122,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
                }*/
 
         if (isDebug) {
-            debugUI.CheckDirectionalLight(myEngine->GetDirectionalLightData(), lightType);
+            debugUI.CheckDirectionalLight(lightType);
             debugUI.CheckFPS();
 
             debugUI.CheckInput(*Input::GetInstance());
             debugUI.CheckColor(worldColor);
             debugUI.CheckCamera(camera);
+
             debugUI.CheckBlendMode(blendMode);
 
             //デバッグカメラに切り替え
@@ -141,7 +137,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         } else {
 
-            Vector3 cameraPos = player.get()->GetTranslate();
+            Vector3 cameraPos = player->GetTranslate();
 
             Vector2 delta = { 0.0f,0.0f };
             if (Input::GetInstance()->GetJoyStickPos(&delta.x, &delta.y, Input::BUTTON_RIGHT)) {
@@ -157,7 +153,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         camera.Update();
 
-        player.get()->Update();
+        player->Update();
         cube[0].SetColor({ 1.0f, 1.0f, 1.0f, 0.2f
             });
         cube[1].SetColor({ 1.0f, 1.0f, 1.0f, 0.2f
@@ -169,7 +165,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         myEngine->PreCommandSet(worldColor);
 
-        sprite->PreDraw(myEngine->GetPSO(kBlendModeNormal));
+        sprite->PreDraw(blendMode);
         sprite->Draw(srv[2], cameraSprite, lightType);
 
 
@@ -177,12 +173,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         grid.Draw(srv[0], camera);
 #endif // _DEBUG
 
-        cube[0].PreDraw(myEngine->GetPSO(kBlendModeNormal));
+        cube[0].PreDraw(kBlendModeNormal);
         cube[0].Draw(srv[1], camera, MakeIdentity4x4(), lightType);
         cube[1].Draw(srv[1], camera, cubeWorldTransform.matWorld_, lightType);
 
         myEngine->SetBlendMode(blendMode);
-        player.get()->Draw(camera, lightType);
+        player->Draw(camera, lightType);
         myEngine->SetBlendMode();
 
         particle.Draw(camera, srv[2]);
@@ -192,7 +188,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
 
     }
-
 
     myEngine->End();
 

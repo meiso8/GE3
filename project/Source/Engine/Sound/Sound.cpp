@@ -180,8 +180,3 @@ bool Sound::IsPlaying() const {
     }
     return false; // すべての音声が停止している
 }
-
-
-Sound::~Sound() {
- 
-};

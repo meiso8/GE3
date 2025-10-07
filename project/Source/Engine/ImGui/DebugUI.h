@@ -4,18 +4,15 @@
 #include"Vector3.h"
 #include"Vector4.h"
 #include"WorldTransform.h"
+#include"Model.h"
 
-class Model;
+enum BlendMode;
 class Input;
 class Sprite;
 class SphereMesh;
-class Mirror;
 class Camera;
-class Hammer;
 class Player;
-class Dove;
-class FPSCounter;
-struct DirectionalLight;
+
 #include<list>
 
 class DebugUI
@@ -49,7 +46,7 @@ public:
     /// @brief 光源
     /// @param directionalLights 
     /// @param lightType 
-    void CheckDirectionalLight(DirectionalLight& directionalLights, int& lightType);
+    void CheckDirectionalLight(int& lightType);
     /// @brief 色
     /// @param color 
     void CheckColor(Vector4& color);

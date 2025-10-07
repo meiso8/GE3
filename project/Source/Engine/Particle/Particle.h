@@ -6,6 +6,7 @@
 #include"MaterialResource.h"
 #include"Transform.h"
 #include"RootSignature.h"
+#include "BlendState.h"
 
 #include<cstdint>
 class Camera;
@@ -31,8 +32,8 @@ private:
     VertexData* vertexBufferData_ = nullptr;
 
 public:
-    void Create(RootSignature& rootSignature);
-    void Draw(Camera& camera, ShaderResourceView& srv);
+    void Create();
+    void Draw(Camera& camera, ShaderResourceView& srv, BlendMode blendMode = BlendMode::kBlendModeNormal);
 private:
     void CreateModelData();
     void CreateTransformationMatrix();

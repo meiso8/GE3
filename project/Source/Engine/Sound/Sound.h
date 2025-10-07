@@ -27,7 +27,7 @@ public:
 
 
     Sound();
-
+    ~Sound() = default;
 public:
 
     static Sound* GetInstance();
@@ -44,7 +44,7 @@ public:
     bool IsActuallyPlaying() const;
 
     bool IsPlaying()const;
-    ~Sound();
+ 
 private:
     static Sound* instance_;
 

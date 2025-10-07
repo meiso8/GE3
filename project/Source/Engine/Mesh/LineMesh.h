@@ -22,7 +22,7 @@
 class LineMesh
 {
 public:
-    void Create(ModelConfig& mc,PSO& pso);
+    void Create();
 
     void PreDraw();
     void Draw(
@@ -71,7 +71,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_;
     Wave* waveData = nullptr;
 
-    ModelConfig modelConfig_{};
+    ModelConfig* modelConfig_ = nullptr;
     PSO* pso_ = { nullptr };
 };
 

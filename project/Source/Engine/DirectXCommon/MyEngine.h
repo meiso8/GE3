@@ -6,24 +6,21 @@
 
 #include"DirectXCommon.h"
 #include "RootSignature.h"
-
-#include"TransitionBarrier.h"
-
 #include"D3DResourceLeakChecker.h"
+
 #include"Depth.h"//StencilTextureの作成関数　奥行き
 #include"CompileShader.h"
 #include"BlendState.h"
 #include"RasterizerState.h"
-#include"PSO.h"
-#include"ViewPort.h"
-#include"ScissorRect.h"
 #include"Texture.h"
 
 #include"ShaderResourceView.h"
-#include"Model.h"
+//#include"Model.h"
 #include"Sprite.h"
 #include"SphereMesh.h"
 #include"LineMesh.h"
+#include"Cube.h"
+
 #include"Sound.h"
 
 #include"Camera/DebugCamera.h"
@@ -32,9 +29,6 @@
 #include"Log.h"
 #include"ImGuiClass.h"
 #include"InputLayout.h"
-
-
-#include"FPSCounter.h"
 
 #include"Material.h"
 #include"VertexData.h"
@@ -55,7 +49,7 @@
 #include"Lerp.h"
 
 #include"DrawGrid.h"
-#include"Cube.h"
+
 
 #include"DebugUI.h"
 
@@ -76,31 +70,32 @@ public:
     void PostCommandSet();
     void End();
 
-    Window& GetWC() { return wc; };
-    ModelConfig& GetModelConfig() { return modelConfig_; };
-    RootSignature& GetRootSignature() { return rootSignature; }
-    static PSO& GetPSO(uint32_t index) { return pso[index]; }
-    DirectionalLight& GetDirectionalLightData() { return *directionalLightData; }
+    Window& GetWC() { return *wc; };
+    static RootSignature* GetRootSignature() { return rootSignature.get(); }
+    static PSO* GetPSO(uint32_t index) { return &pso[index]; }
+    static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
     void SetBlendMode(uint32_t blendMode = BlendMode::kBlendModeNormal);
 public:
     static const uint32_t kMaxSRVCount;
 private:
     D3DResourceLeakChecker leakCheck = {};
-    std::unique_ptr<DirectXCommon> directXCommon = nullptr;
     static MyEngine* instance_;
 
-    LogFile logFile = {};
-    Window wc = {};
-    Input* input = { nullptr };
-
-    InputLayout inputLayout = {};
+    std::unique_ptr<DirectXCommon> directXCommon = nullptr;
+    std::unique_ptr<LogFile> logFile = nullptr;
+    std::unique_ptr<Window> wc = nullptr;
+    std::unique_ptr<InputLayout>inputLayout = nullptr;
     std::vector<BlendState> blendStates = {};
     std::vector<RasterizerState> rasterizerStates = {};
+
+    Input* input = nullptr;
     DepthStencil depthStencil = {};
-    static PSO pso[kCountOfBlendMode];
+
     Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource = nullptr;
-    DirectionalLight* directionalLightData = nullptr;
-    RootSignature rootSignature = {};
-    ModelConfig modelConfig_ = {};
+    
+    static std::array<PSO, kCountOfBlendMode> pso;
+    static DirectionalLight* directionalLightData;
+    static std::unique_ptr<RootSignature>rootSignature;
+    static ModelConfig modelConfig_;
 };
 
