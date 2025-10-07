@@ -12,9 +12,10 @@ void Sprite::Initialize(const Vector2& size)
 {
 
     spriteCommon = SpriteC::GetInstance();
+
     commandList = DirectXCommon::GetCommandList();
-    spriteCommon->SetSize(size);
-    spriteCommon->Initialize();
+    SetSize(size);
+    CreateVertex();
     CreateTransformationMatrix();
     CreateUVTransformationMatrix();
     CreateWaveData();
@@ -23,11 +24,12 @@ void Sprite::Initialize(const Vector2& size)
     materialResource_.CreateMaterial();
 }
 
-
-
-void Sprite::SetSize(const Vector2& size)
-{
-    spriteCommon->ResetSize(size);
+void Sprite::ResetSize(const Vector2& size) {
+    size_ = size;
+    vertexData_[0].position = { 0.0f,size_.y,0.0f,1.0f };//左下
+    vertexData_[1].position = { 0.0f,0.0f,0.0f,1.0f };//左上
+    vertexData_[2].position = { size_.x,size_.y,0.0f,1.0f };//右下
+    vertexData_[3].position = { size_.x,0.0f,0.0f,1.0f };//右上
 }
 
 void Sprite::SetColor(const Vector4& color) {
@@ -60,7 +62,9 @@ void Sprite::Draw(
     worldViewProjectionMatrix_ = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix_ };
 
-    spriteCommon->DrawVertex(commandList);
+    //頂点バッファビューを設定
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    spriteCommon->SetIndexBuffer(commandList);
 
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
@@ -83,7 +87,44 @@ void Sprite::Draw(
 // ===================================//Private関数//===================================
 
 
+void Sprite::CreateVertex()
+{
+    //VertexResourceとVertexBufferViewを用意 矩形を表現するための三角形を二つ(頂点4つ)
+    vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 4);
 
+    //頂点バッファビューを作成する
+    //リソースの先頭アドレスから使う
+    vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+    //使用するリソースのサイズ頂点4つ分のサイズ
+    vertexBufferView_.SizeInBytes = sizeof(VertexData) * 4;
+    //1頂点あたりのサイズ
+    vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
+#pragma region //Sprite用の頂点データの設定
+
+    vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+    //1枚目の三角形 四頂点でスプライト描画が完成
+
+    vertexData_[0].position = { 0.0f,size_.y,0.0f,1.0f };//左下
+    vertexData_[0].texcoord = { 0.0f,1.0f };
+    vertexData_[0].normal = { 0.0f,0.0f,-1.0f };//法線
+
+    vertexData_[1].position = { 0.0f,0.0f,0.0f,1.0f };//左上
+    vertexData_[1].texcoord = { 0.0f,0.0f };
+    vertexData_[1].normal = { 0.0f,0.0f,-1.0f };
+
+    vertexData_[2].position = { size_.x,size_.y,0.0f,1.0f };//右下
+    vertexData_[2].texcoord = { 1.0f,1.0f };
+    vertexData_[2].normal = { 0.0f,0.0f,-1.0f };
+
+    vertexData_[3].position = { size_.x,0.0f,0.0f,1.0f };//右上
+    vertexData_[3].texcoord = { 1.0f,0.0f };
+    vertexData_[3].normal = { 0.0f,0.0f,-1.0f };
+
+
+#pragma endregion
+
+}
 
 void Sprite::CreateUVTransformationMatrix()
 {

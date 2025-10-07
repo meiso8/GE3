@@ -12,11 +12,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     MyEngine* myEngine = MyEngine::GetInstance();
     myEngine->Create(L"2102", WIN_WIDTH, WIN_HEIGHT);
-    //DirectX初期化処理の末尾に追加する
-    //音声クラスの作成
-    Sound sound;
 
 #pragma region//XAudio全体の初期化と音声の読み込み
+
+    //音声クラスの作成
+    Sound sound;
 
     //音声読み込み SoundDataの変数を増やせばメモリが許す限りいくつでも読み込める。
     SoundData bgmData[2] = {
@@ -42,6 +42,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     cameraSprite.Initialize(static_cast<float>(WIN_WIDTH), static_cast<float>(WIN_HEIGHT), true);
 
 #pragma endregion
+
     Texture textures[3];
     textures[0].Load("resources/white1x1.png");
     textures[1].Load("resources/numbers.png");
@@ -56,10 +57,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     DrawGrid grid = DrawGrid();
 
     SpriteC* spriteCommon = SpriteC::GetInstance();
+    spriteCommon->Initialize();
+    std::vector<Sprite*>sprites;
 
-    std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
-    sprite->Initialize(Vector2(256.0f, 256.0f));
-    sprite->SetPosition({ 0.0f,0.0f });
+    for (uint32_t i = 0; i < 5; ++i) {
+        Sprite* sprite = new Sprite();
+        sprite->Initialize({ 128.0f,128.0f });
+        sprite->SetPosition({ i * 256.0f,0.0f });
+        sprites.push_back(sprite);
+    }
 
     const ModelData modelData = LoadObjeFile("resources/player", "player.obj");
 
@@ -128,7 +134,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             debugUI.CheckCamera(camera);
 
             debugUI.CheckBlendMode(blendMode);
-            debugUI.CheckSprite(*sprite);
+            debugUI.CheckSprite(*sprites[0]);
 
             //デバッグカメラに切り替え
                    //視点操作
@@ -150,6 +156,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         }
 
+        for (Sprite* sprite : sprites) {
+            sprite->UpdateUV();
+        }
+
         camera.Update();
 
         player->Update();
@@ -165,12 +175,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         myEngine->PreCommandSet(worldColor);
 
 
-        sprite->PreDraw(blendMode);
-        sprite->Draw(srv[2], cameraSprite, lightType);
-        MyEngine::SetBlendMode();
-        
-
-
 
 #ifdef _DEBUG
         grid.Draw(srv[0], camera);
@@ -184,6 +188,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         player->Draw(camera, lightType);
         MyEngine::SetBlendMode();
 
+
+        sprites[0]->PreDraw(blendMode);
+
+        for (Sprite* sprite : sprites) {
+            sprite->Draw(srv[2], cameraSprite, lightType);
+        }
+
+        MyEngine::SetBlendMode();
+
         particle.Draw(camera, srv[2]);
 
         myEngine->PostCommandSet();
@@ -191,6 +204,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
 
     }
+
+    for (Sprite* sprite : sprites) {
+       delete sprite;
+    }
+
+    sprites.clear();
+
 
     myEngine->End();
 

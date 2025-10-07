@@ -25,13 +25,16 @@ public:
         ShaderResourceView& srv, Camera& camera, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
     );
 
-    void SetSize(const Vector2& size);
+
+    void SetSize(const Vector2& size) { size_ = size; };
+ 
     void SetColor(const Vector4& color);
-    void SetPosition(const Vector2& position) {position_ = position ;}
+    void SetPosition(const Vector2& position) { position_ = position; }
     void SetRotate(const float& rotate) { rotate_ = rotate; }
     void SetScale(const Vector3& scale) { transform_.scale = scale; };
-
-    Vector2& GetSize() { return *spriteCommon->GetSize(); }
+   
+    void ResetSize(const Vector2& size);
+    Vector2& GetSize() { return size_; }
     Vector3& GetScaleRef() { return transform_.scale; };
     float& GetRotateRef() { return rotate_; };
     Vector2& GetPositionRef() { return position_; };
@@ -41,9 +44,9 @@ public:
     Vector3& GetUVScale() { return uvTransform_.scale; };
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
-    const Vector4& GetColor() {return materialResource_.GetMaterial()->color; }
+    const Vector4& GetColor() { return materialResource_.GetMaterial()->color; }
 private:
-
+    void     CreateVertex();
     void CreateUVTransformationMatrix();
     void CreateTransformationMatrix();
     void CreateMaterial();
@@ -53,6 +56,10 @@ private:
     static SpriteC* spriteCommon;
     ID3D12GraphicsCommandList* commandList;
 
+    Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+    VertexData* vertexData_ = nullptr;
+    Vector2 size_;
 
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
     Vector2 position_ = { 0.0f,0.0f };
