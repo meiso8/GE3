@@ -5,20 +5,19 @@
 
 #include"MakeAffineMatrix.h"
 #include"Multiply.h"
+#include"MyEngine.h"
+#include"ModelConfig.h"
 
-void Cube::Create(ModelConfig& mc
+void Cube::Create(
 ) {
-
-    //camera_ = &camera;
 
     CreateVertex();
     CreateIndexResource();
     CreateTransformationMatrix();
     CreateMaterial();
 
-    modelConfig_ = mc;
+    modelConfig_ = ModelConfig::GetInstance();
  
-
 #pragma region//time
 
     int waveCount = 2;
@@ -190,13 +189,14 @@ void Cube::SetMinMax(const Vector3& min, const Vector3& max) {
 
 }
 
-void Cube::PreDraw(PSO& pso) {
+void Cube::PreDraw(BlendMode blendMode) {
 
     ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
 
-    commandList->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0));
-    commandList->SetPipelineState(pso.GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
+    PSO* pso = MyEngine::GetPSO(blendMode);
 
+    commandList->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
+    commandList->SetPipelineState(pso->GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
@@ -224,7 +224,7 @@ void Cube::Draw(
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     commandList->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
     //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_.directionalLightResource->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定
     commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定

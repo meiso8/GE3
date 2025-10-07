@@ -1,23 +1,26 @@
 #include "DebugUI.h"
 #include"Normalize.h"
-#include"Model.h"
 #include"Input.h"
 #include"Sprite.h"
 #include"SphereMesh.h"
-#include"FPSCounter.h"
 #include"DirectionalLight.h"
+#include"PSO.h"
+#include"Camera/Camera.h"
+#include"MyEngine.h"
+
 #include<numbers>
 #include<algorithm>
-#include"Camera/Camera.h"
 
-void DebugUI::CheckDirectionalLight(DirectionalLight& directionalLights, int& lightType) {
+void DebugUI::CheckDirectionalLight(int& lightType) {
 
-    Vector3 direction = directionalLights.direction;
+    DirectionalLight* directionalLight = MyEngine::GetDirectionalLightData();
+
+    Vector3 direction = directionalLight->direction;
     ImGui::Begin("DirectionalLight");
-    ImGui::ColorEdit4("color", &directionalLights.color.x);
+    ImGui::ColorEdit4("color", &directionalLight->color.x);
     ImGui::SliderFloat3("direction", &direction.x, -1.0f, 1.0f);//後で正規化する
-    directionalLights.direction = Normalize(direction);
-    ImGui::DragFloat("intensity", &directionalLights.intensity);
+    directionalLight->direction = Normalize(direction);
+    ImGui::DragFloat("intensity", &directionalLight->intensity);
 
     const char* lights[] = { "NONE", "LambertianReflectance", "HalfLambert" };
 
@@ -80,48 +83,51 @@ void DebugUI::CheckModel(Model& model) {
     ImGui::Begin("Model");
 
     if (ImGui::TreeNode("Wave")) {
-
-        ImGui::DragFloat("time", &model.GetWaveData(0).time, 0.03f);
-        ImGui::DragFloat("amplitude", &model.GetWaveData(0).amplitude, 0.03f);
-        ImGui::DragFloat3("direction", &model.GetWaveData(0).direction.x, 0.03f, 0.0f, 1.0f);
-        ImGui::SliderFloat("frequency", &model.GetWaveData(0).frequency, 1.0f, 10.0f);
+        Wave waveData1 = model.GetWaveData(0);
+        ImGui::DragFloat("time", &waveData1.time, 0.03f);
+        ImGui::DragFloat("amplitude", &waveData1.amplitude, 0.03f);
+        ImGui::DragFloat3("direction", &waveData1.direction.x, 0.03f, 0.0f, 1.0f);
+        ImGui::SliderFloat("frequency", &waveData1.frequency, 1.0f, 10.0f);
+        Vector3 waveDirection1 = waveData1.direction;
+        waveData1.direction = Normalize(waveDirection1);
         ImGui::TreePop();
+
     }
+
+ 
 
     if (ImGui::TreeNode("Wave2")) {
-        ImGui::DragFloat("time", &model.GetWaveData(1).time, 0.03f);
-        ImGui::DragFloat("amplitude", &model.GetWaveData(1).amplitude, 0.03f);
-        ImGui::DragFloat3("direction", &model.GetWaveData(1).direction.x, 0.03f, 0.0f, 1.0f);
-        ImGui::SliderFloat("frequency", &model.GetWaveData(1).frequency, 1.0f, 10.0f);
+        Wave waveData2 = model.GetWaveData(1);
 
+        ImGui::DragFloat("time", &waveData2.time, 0.03f);
+        ImGui::DragFloat("amplitude", &waveData2.amplitude, 0.03f);
+        ImGui::DragFloat3("direction", &waveData2.direction.x, 0.03f, 0.0f, 1.0f);
+        ImGui::SliderFloat("frequency", &waveData2.frequency, 1.0f, 10.0f);
+        Vector3 waveDirection2 = waveData2.direction;
+        waveData2.direction = Normalize(waveDirection2);
         ImGui::TreePop();
     }
-
-
-    Vector3 waveDirection1 = model.GetWaveData(0).direction;
-    model.GetWaveData(0).direction = Normalize(waveDirection1);
-
-
-    Vector3 waveDirection2 = model.GetWaveData(1).direction;
-    model.GetWaveData(1).direction = Normalize(waveDirection2);
 
     if (ImGui::TreeNode("Expansion")) {
 
-        ImGui::DragFloat("expansionData", &model.GetExpansionData().expansion, 0.03f, 0.0f, 10.0f);
-        ImGui::DragFloat("sphere", &model.GetExpansionData().sphere, 0.03f, 0.0f, 1.0f);
-        ImGui::DragFloat("cube", &model.GetExpansionData().cube, 0.03f, 0.0f, 1.0f);
-        ImGui::Checkbox("isSphere", &model.GetExpansionData().isSphere);
+        Balloon balloon = model.GetExpansionData();
+
+        ImGui::DragFloat("expansionData", &balloon.expansion, 0.03f, 0.0f, 10.0f);
+        ImGui::DragFloat("sphere", &balloon.sphere, 0.03f, 0.0f, 1.0f);
+        ImGui::DragFloat("cube", &balloon.cube, 0.03f, 0.0f, 1.0f);
+        ImGui::Checkbox("isSphere", &balloon.isSphere);
 
         ImGui::TreePop();
     }
 
 
     if (ImGui::TreeNode("UV")) {
-
-        ImGui::SliderFloat3("Translate", &model.GetUVTransform().translate.x, -100.0f, 100.0f);
-        ImGui::SliderFloat3("Rotation", &model.GetUVTransform().rotate.x, 0.0f, std::numbers::pi_v<float>*2.0f);
-        ImGui::SliderFloat3("Scale", &model.GetUVTransform().scale.x, 0.0f, 100.0f);
-        ImGui::ColorEdit4("color", &model.GetColor().x);
+        Transform uvTransform = model.GetUVTransform();
+        Vector4 color = model.GetColor();
+        ImGui::SliderFloat3("Translate", &uvTransform.translate.x, -100.0f, 100.0f);
+        ImGui::SliderFloat3("Rotation", &uvTransform.rotate.x, 0.0f, std::numbers::pi_v<float>*2.0f);
+        ImGui::SliderFloat3("Scale", &uvTransform.scale.x, 0.0f, 100.0f);
+        ImGui::ColorEdit4("color", &color.x);
         ImGui::TreePop();
     }
 

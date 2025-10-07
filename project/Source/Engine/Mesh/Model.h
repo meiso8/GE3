@@ -7,13 +7,18 @@
 #include"Balloon.h"
 #include"Wave.h"
 #include"Transform.h"
+#include"PSO.h"
+#include"CommandList.h"
 #include<d3d12.h>
+#include<memory>
 
 class Model
 {
 public:
 
-    void Create(const ModelData& modeldata, ModelConfig mc,uint32_t index);
+    Model() = default;
+    ~Model();
+    void Create(const ModelData& modeldata, uint32_t index);
 
     void UpdateUV();
 
@@ -27,7 +32,7 @@ public:
     }
 
     Balloon& GetExpansionData() {
-         return *expansionData_;
+        return *expansionData_;
     }
 
     Wave& GetWaveData(size_t index) { return waveData_[index]; };
@@ -35,11 +40,11 @@ public:
     Vector4& GetColor() { return materialResource_.GetMaterial()->color; }
     void SetColor(const Vector4& color);
 
-    ~Model();
 
 private:
     void CreateWorldVPResource();
 private:
+    ModelConfig* modelConfig_ = nullptr;
     ShaderResourceView srv_;
 
     Camera* camera_ = nullptr;
@@ -47,8 +52,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
     TransformationMatrix* wvpDate_ = nullptr;
 
-    ModelConfig modelConfig_;
-
+    ID3D12GraphicsCommandList* commandList_ =nullptr;
     Matrix4x4 worldViewProjectionMatrix_ = { 0.0f };
     MaterialResource materialResource_;
     const ModelData* modelData_;

@@ -5,10 +5,9 @@
 
 class DrawGrid {
 public:
-    DrawGrid(ModelConfig& mc, PSO& pso);
+    DrawGrid();
     void Draw(ShaderResourceView& srv, Camera& camera);
 private:
     LineMesh line_[102];
     Cube cube_[2];
-    PSO* pso_ = nullptr;
 };

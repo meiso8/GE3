@@ -3,11 +3,13 @@
 #include"MakeAffineMatrix.h"
 #include"Multiply.h"
 #include"DirectXCommon.h"
+#include"MyEngine.h"
 
-void LineMesh::Create(ModelConfig& mc, PSO& pso
+void LineMesh::Create(
 ) {
 
-    pso_ = &pso;
+    pso_ = MyEngine::GetPSO(BlendMode::kBlendModeNone);
+    modelConfig_ = ModelConfig::GetInstance();
     CreateVertex();
     CreateTransformationMatrix();
     CreateMaterial();
@@ -49,7 +51,6 @@ void LineMesh::Create(ModelConfig& mc, PSO& pso
 
 #pragma endregion
 
-    modelConfig_ = mc;
 
 }
 
@@ -153,7 +154,7 @@ void LineMesh::SetColor(const Vector4& color) {
 void LineMesh::PreDraw() {
     ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
 
-    commandList->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0));
+    commandList->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
     commandList->SetPipelineState(pso_->GetGraphicsPipelineState(PSO::LINE).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
@@ -177,7 +178,7 @@ void LineMesh::Draw(
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     commandList->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
     //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_.directionalLightResource->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定
     commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定

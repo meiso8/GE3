@@ -1,16 +1,17 @@
 #include "Player.h"
 
-#include"MyEngine.h"
+#include"Input.h"
 #include"Normalize.h"
+#include"Model.h"
 
 Player::Player(const ModelData& modelData) {
 
-    MyEngine* myEngine = MyEngine::GetInstance();
-
+    kSpeed_ = 0.0f;
+    velocity_ = { 0.0f };
     modelData_ = &modelData;
     model_ = std::make_unique<Model>();
 
-    model_->Create(*modelData_, myEngine->GetModelConfig(), 5);
+    model_.get()->Create(*modelData_, 5);
 
 }
 
@@ -23,7 +24,7 @@ void Player::Init()
 
 void Player::Draw(Camera& camera, uint32_t lightType)
 {
-    model_->Draw(worldTransform_.matWorld_, camera, lightType);
+    model_.get()->Draw(worldTransform_.matWorld_, camera, lightType);
 }
 
 void Player::Update()

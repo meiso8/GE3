@@ -140,7 +140,7 @@ void SphereMesh::CreateMaterial() {
 
 }
 
-void SphereMesh::Create(ModelConfig& mc) {
+void SphereMesh::Create() {
 
     //マテリアルの作成
     CreateMaterial();
@@ -166,7 +166,7 @@ void SphereMesh::Create(ModelConfig& mc) {
     };
 
     uvTransformMatrix_ = MakeIdentity4x4();
-    modelConfig_ = mc;
+    modelConfig_ = ModelConfig::GetInstance();
 }
 
 //void Sphere::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
@@ -222,8 +222,7 @@ void SphereMesh::PreDraw(PSO& pso, PSO::PSOType type) {
 
     ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
 
-
-    commandList->SetGraphicsRootSignature(modelConfig_.rootSignature->GetRootSignature(0));
+    commandList->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
     commandList->SetPipelineState(pso.GetGraphicsPipelineState(type).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -250,7 +249,7 @@ void SphereMesh::Draw(Camera& camera, ShaderResourceView& srv, uint32_t lightTyp
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
     commandList->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
     //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_.directionalLightResource->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定
     commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
@@ -259,8 +258,3 @@ void SphereMesh::Draw(Camera& camera, ShaderResourceView& srv, uint32_t lightTyp
     commandList->DrawInstanced(6 * kSubdivision_ * kSubdivision_, 1, 0, 0);
 
 }
-
-SphereMesh::~SphereMesh() {
-
-    delete texture_;
-};

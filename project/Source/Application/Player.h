@@ -2,6 +2,7 @@
 
 #include"WorldTransform.h"
 #include"ModelData.h"
+#include<memory>
 
 class MyEngine;
 class Model;
@@ -16,10 +17,10 @@ public:
     void Update();
     Vector3& GetTranslate() { return worldTransform_.translate_; }
 private:
-    Vector3 velocity_;
-    float kSpeed_;
+    Vector3 velocity_ = { 0.0f,0.0f,0.0f };
+    float kSpeed_ = 0.0f;
     const ModelData* modelData_;
-    std::unique_ptr<Model>model_;
+    std::unique_ptr<Model>model_ = nullptr;
     WorldTransform worldTransform_;
 };
 

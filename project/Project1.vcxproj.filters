@@ -213,9 +213,6 @@
     <ClCompile Include="Source\Engine\Math\MakeTranslateMatrix.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\ImGui\FPSCounter.cpp">
-      <Filter>ソース ファイル\Engine\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\InputLayout.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
@@ -322,6 +319,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\DirectXCommon\SpriteC.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Mesh\ModelConfig.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -547,9 +550,6 @@
     <ClInclude Include="Source\Engine\Math\Subtract.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\ImGui\FPSCounter.h">
-      <Filter>ヘッダー ファイル\Engine\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\DirectXCommon\BlendState.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
@@ -636,6 +636,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\DirectXCommon\Window.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\SpriteC.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

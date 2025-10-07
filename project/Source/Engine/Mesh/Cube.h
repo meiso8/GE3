@@ -24,8 +24,8 @@ class Cube
 
 
 public:
-    void Create(ModelConfig& mc);
-    void  PreDraw(PSO& pso);
+    void Create();
+    void  PreDraw(BlendMode blendMode = BlendMode::kBlendModeNormal);
     void Draw(
         ShaderResourceView& srv, Camera& camera, const Matrix4x4& worldMatrix, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
     );
@@ -57,7 +57,7 @@ private:
 
     MaterialResource materialResource_{};
 
-    ModelConfig modelConfig_{};
+    ModelConfig* modelConfig_{};
     Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_;
     Balloon* expansionData_ = nullptr;
 

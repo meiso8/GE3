@@ -10,17 +10,15 @@
 #include"Balloon.h"
 #include"Wave.h"
 #include<d3d12.h>
+#include"PSO.h"
 
 class SphereMesh
 {
 public:
 
-    SphereMesh(ModelConfig mc)
-        : modelConfig_(mc)
-    {
-    }
-
-    void Create(ModelConfig& mc);
+    SphereMesh() = default;
+    ~SphereMesh() = default;
+    void Create();
 
     void PreDraw(PSO& pso,PSO::PSOType type = PSO::PSOType::TRIANGLE);
     void Draw(Camera& camera, ShaderResourceView& srv,uint32_t lightType);
@@ -40,7 +38,7 @@ public:
     Vector3& GetRotate() { return transform_.rotate; };
     Vector3& GetTranslate() { return transform_.translate; };
 
-    ~SphereMesh();
+
 
 private:
     void CreateVertex();
@@ -48,7 +46,7 @@ private:
     void CreateMaterial();
 private:
     ShaderResourceView srv_;
-
+    ModelConfig* modelConfig_;
     Camera* camera_ = nullptr;
 
     Transform transform_{};
@@ -56,8 +54,6 @@ private:
 
     Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
     TransformationMatrix* wvpDate_ = nullptr;
-
-    ModelConfig modelConfig_;
 
     Matrix4x4 worldViewProjectionMatrix_ = { 0.0f };
     MaterialResource materialResource_;
@@ -75,9 +71,6 @@ private:
 
     Transform uvTransform_ = { 0.0f };
     Matrix4x4 uvTransformMatrix_{};
-
-    Texture* texture_ = nullptr;
-
     const uint32_t kSubdivision_ = 16;//分割数
 
 };

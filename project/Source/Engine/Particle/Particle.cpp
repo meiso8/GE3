@@ -9,9 +9,9 @@
 
 using namespace  Microsoft::WRL;
 
-void Particle::Create(RootSignature& rootSignature)
+void Particle::Create()
 {
-    rootSignature_ = &rootSignature;
+    rootSignature_ = MyEngine::GetRootSignature();
 
 
     CreateModelData();
@@ -81,7 +81,7 @@ void Particle::CreateTransformationMatrix()
 }
 
 
-void Particle::Draw(Camera& camera,ShaderResourceView& srv)
+void Particle::Draw(Camera& camera,ShaderResourceView& srv,BlendMode blendMode)
 {
 
     for (uint32_t index = 0; index < kNumInstance; ++index) {
@@ -91,10 +91,11 @@ void Particle::Draw(Camera& camera,ShaderResourceView& srv)
     }
 
     ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
+    PSO* pso = MyEngine::GetPSO(blendMode);
 
     //rootSignatureの設定
     commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(1));
-    commandList->SetPipelineState(MyEngine::GetInstance()->GetPSO(BlendMode::kBlendModeNormal).GetGraphicsPipelineState(PSO::PARTICLE).Get());
+    commandList->SetPipelineState(pso->GetGraphicsPipelineState(PSO::PARTICLE).Get());
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);

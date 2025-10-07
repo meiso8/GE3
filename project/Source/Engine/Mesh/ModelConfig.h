@@ -1,9 +1,15 @@
 #pragma once
 #include"commandList.h"
-#include"PSO.h"
 #include"RootSignature.h"
 
-struct ModelConfig {
-    RootSignature* rootSignature;
-    ID3D12Resource* directionalLightResource;//共通のライトリソース
+class ModelConfig {
+private:
+    static ModelConfig* instance_;
+public:
+    static RootSignature* rootSignature;
+    static ID3D12Resource* directionalLightResource;//共通のライトリソース
+private:
+public:
+    static ModelConfig* GetInstance();
+    void Initialize(RootSignature* rootSignature, ID3D12Resource* directionalLightResource);
 };
