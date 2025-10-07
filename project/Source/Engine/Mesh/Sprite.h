@@ -28,6 +28,8 @@ public:
     void SetSize(const Vector2& size);
     void SetColor(const Vector4& color);
     void SetTranslate(const Vector3& translate) { transform_.translate = translate; }
+    void SetRotate(const Vector3& rotate) { transform_.rotate = rotate; }
+    void SetScale(const Vector3& scale) { transform_.scale = scale; };
 
     Vector2& GetSize() { return *spriteCommon->GetSize(); }
     Vector3& GetScaleRef() { return transform_.scale; };

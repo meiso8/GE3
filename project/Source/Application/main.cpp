@@ -42,13 +42,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     cameraSprite.Initialize(static_cast<float>(WIN_WIDTH), static_cast<float>(WIN_HEIGHT), true);
 
 #pragma endregion
-
-    uint32_t textureHandle[3];
-
     Texture textures[3];
-    textureHandle[0] = textures[0].Load("resources/white1x1.png");
-    textureHandle[1] = textures[1].Load("resources/numbers.png");
-    textureHandle[2] = textures[2].Load("resources/player.png");
+    textures[0].Load("resources/white1x1.png");
+    textures[1].Load("resources/numbers.png");
+    textures[2].Load("resources/player.png");
 
     //ShaderResourceViewを作る
     ShaderResourceView srv[3] = {};
