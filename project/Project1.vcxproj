@@ -242,6 +242,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Mesh\Sprite.cpp" />
     <ClCompile Include="Source\Engine\Mesh\SphereMesh.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\SpriteC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl">
@@ -363,6 +364,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Mesh\Wave.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Window.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\SpriteC.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

@@ -324,6 +324,9 @@
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\DirectXCommon\SpriteC.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl">
@@ -636,6 +639,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\DirectXCommon\Window.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DirectXCommon\SpriteC.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

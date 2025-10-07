@@ -14,7 +14,6 @@
 //libのリンク includeのすぐ後ろに書くとよい
 #pragma comment(lib,"winmm.lib")
 
-
 // ウィンドウプロシージャ
 LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
@@ -100,6 +99,7 @@ void Window::Create(const std::wstring& title, const int32_t& clientWidth, const
 
     //ウィンドウを表示する
     ShowWindow(hwnd_, SW_SHOW);
+
 
 #pragma endregion 
 

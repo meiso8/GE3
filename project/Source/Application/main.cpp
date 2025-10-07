@@ -3,7 +3,7 @@
 #include"Player.h"
 #include"Particle/Particle.h"
 #include"Lerp.h"
-
+#include"SpriteC.h"
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
 
@@ -59,10 +59,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     DrawGrid grid = DrawGrid(myEngine->GetModelConfig(), myEngine->GetPSO(0));
 
-    Sprite sprite;
-    sprite.Create(myEngine->GetModelConfig());
-    sprite.SetSize(Vector2(256.0f, 256.0f));
-    sprite.SetTranslate({ 0.0f,0.0f,0.0f });
+    std::unique_ptr<SpriteC> spriteCommon = nullptr;
+    spriteCommon = std::make_unique<SpriteC>();
+    spriteCommon->Initialize(myEngine->GetModelConfig());
+
+    std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
+    sprite->Initialize();
+    sprite->SetSize(Vector2(256.0f, 256.0f));
+    sprite->SetTranslate({ 0.0f,0.0f,0.0f });
 
     const ModelData modelData = LoadObjeFile("resources/player", "player.obj");
 
@@ -165,8 +169,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         myEngine->PreCommandSet(worldColor);
 
-        sprite.PreDraw(myEngine->GetPSO(kBlendModeNormal));
-        sprite.Draw(srv[2], cameraSprite, lightType);
+        sprite->PreDraw(myEngine->GetPSO(kBlendModeNormal));
+        sprite->Draw(srv[2], cameraSprite, lightType);
 
 
 #ifdef _DEBUG
