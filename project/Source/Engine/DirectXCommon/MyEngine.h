@@ -75,7 +75,7 @@ public:
     static RootSignature* GetRootSignature() { return rootSignature.get(); }
     static PSO* GetPSO(uint32_t index) { return &pso[index]; }
     static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
-    static　void SetBlendMode(uint32_t blendMode = BlendMode::kBlendModeNormal);
+    static void SetBlendMode(uint32_t blendMode = BlendMode::kBlendModeNormal);
 
 public:
     static const uint32_t kMaxSRVCount;

@@ -11,7 +11,7 @@ Player::Player(const ModelData& modelData) {
     modelData_ = &modelData;
     model_ = std::make_unique<Model>();
 
-    model_.get()->Create(*modelData_, 5);
+    model_->Create(*modelData_, 5);
 
 }
 
@@ -24,7 +24,7 @@ void Player::Init()
 
 void Player::Draw(Camera& camera, uint32_t lightType)
 {
-    model_.get()->Draw(worldTransform_.matWorld_, camera, lightType);
+    model_->Draw(worldTransform_.matWorld_, camera, lightType);
 }
 
 void Player::Update()
