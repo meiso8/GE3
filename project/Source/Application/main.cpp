@@ -15,15 +15,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma region//XAudio全体の初期化と音声の読み込み
 
-    //音声クラスの作成
-    Sound sound;
-
     //音声読み込み SoundDataの変数を増やせばメモリが許す限りいくつでも読み込める。
     SoundData bgmData[2] = {
-        sound.SoundLoad(L"resources/Sounds/dreamcore.mp3"),
-        sound.SoundLoad(L"resources/Sounds/kiritan.mp3") };
+        Sound::Load(L"resources/Sounds/dreamcore.mp3"),
+        Sound::Load(L"resources/Sounds/kiritan.mp3") };
 
-    SoundData seData = sound.SoundLoad(L"resources/Sounds/poppo.mp3");
+    SoundData seData[2] = {
+        Sound::Load(L"resources/Sounds/poppo.mp3"),
+        Sound::Load(L"resources/Sounds/broken.mp3") };
 
 #pragma endregion
 
@@ -117,13 +116,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             camera.SetOrthographic(true);
         }
 
-        /*       if (Input::GetInstance()->IsJoyStickPressButton(0)) {
-                   sound.SoundPlay(seData, 1.0f, false);
-               }
+        if (Input::GetInstance()->IsTriggerKey(DIK_A)) {
+            Sound::Play(seData[0], 1.0f, false);
+        }
 
-               if (!sound.IsPlaying()) {
-                   sound.SoundPlay(bgmData[1], 0.0625f, true);
-               }*/
+        if (Input::GetInstance()->IsTriggerKey(DIK_S)) {
+            Sound::Play(seData[1], 1.0f, false);
+        }
+
+        if (!Sound::IsPlaying()) {
+            Sound::Play(bgmData[1], 0.0625f, true);
+        }
 
         if (isDebug) {
             debugUI.CheckDirectionalLight(lightType);
@@ -206,13 +209,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     }
 
     for (Sprite* sprite : sprites) {
-       delete sprite;
+        delete sprite;
     }
 
     sprites.clear();
-
-
-    myEngine->End();
+    myEngine->Finalize();
 
     return 0;
 }

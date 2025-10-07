@@ -24,7 +24,6 @@ public:
      void LightDraw(ID3D12GraphicsCommandList* commandList);
      void PreDraw(ID3D12GraphicsCommandList* commandList);
      void DrawCall(ID3D12GraphicsCommandList* commandList);
-
 private:
 
     void CreateIndexResource();

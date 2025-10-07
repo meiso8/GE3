@@ -63,12 +63,14 @@ class MyEngine {
 public:
     MyEngine() = default;
     ~MyEngine() = default;
+    MyEngine(MyEngine&) = delete;
+    MyEngine& operator=(MyEngine&) = delete;
     static MyEngine* GetInstance();
     void Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight);
     void Update();
     void PreCommandSet(Vector4& color);
     void PostCommandSet();
-    void End();
+    void Finalize();
 
 
     Window& GetWC() { return *wc; };
@@ -86,18 +88,20 @@ private:
     std::unique_ptr<DirectXCommon> directXCommon = nullptr;
     std::unique_ptr<LogFile> logFile = nullptr;
     std::unique_ptr<Window> wc = nullptr;
+
+    Input* input = nullptr;
+    //音声クラスの作成
+    Sound* sound = nullptr;
+
+    Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource = nullptr;
+    static DirectionalLight* directionalLightData;
+
+    static std::array<PSO, kCountOfBlendMode> pso;
+    static std::unique_ptr<RootSignature>rootSignature;
+    static ModelConfig modelConfig_;
     std::unique_ptr<InputLayout>inputLayout = nullptr;
     std::vector<BlendState> blendStates = {};
     std::vector<RasterizerState> rasterizerStates = {};
-
-    Input* input = nullptr;
     DepthStencil depthStencil = {};
-
-    Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource = nullptr;
-    
-    static std::array<PSO, kCountOfBlendMode> pso;
-    static DirectionalLight* directionalLightData;
-    static std::unique_ptr<RootSignature>rootSignature;
-    static ModelConfig modelConfig_;
 };
 

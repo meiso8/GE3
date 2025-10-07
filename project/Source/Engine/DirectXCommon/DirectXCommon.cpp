@@ -131,18 +131,9 @@ void DirectXCommon::PostDraw()
     swapChainClass.GetSwapChain()->Present(1, 0);
 
     //画面の更新が終わった直後GPUにシグナルを送る
-    //Fenceの値を更新
-    //fence.AddValue();
-
-    ////GPUがここまでたどり着いた時、Fenceの値を指定した値に代入するようにSignalを送る
-    //fence.SendSignal(commandQueue);
-
     fence.Update(commandQueue);
 
     UpdateFixFPS();
-
-    //Fenceの値が指定したSignal値にたどり着いているか確認する GPUの処理を待つ
-    //fence.CheckValue(fenceEvent);
 
     //7.次のフレーム用のコマンドリストを準備
     commandList->PrepareCommand();

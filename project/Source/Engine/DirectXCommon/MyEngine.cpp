@@ -147,6 +147,8 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
     srand(static_cast<unsigned int>(time(nullptr)));
 
+    sound = Sound::GetInstance();
+
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
 
@@ -170,11 +172,16 @@ void MyEngine::PostCommandSet() {
 
 };
 
-void MyEngine::End() {
+void MyEngine::Finalize() {
 
-    directXCommon.get()->EndFrame();
+  /*  sound->Finalize();*/
+    //modelConfig_.Finalize();
+    directXCommon->EndFrame();
+    /*input->Finalize();*/
     wc->Finalize();
-    
+
+    //delete instance_;
+    //instance_ = nullptr;
     //TextureManager::GetInstance()->Finalize();
 }
 

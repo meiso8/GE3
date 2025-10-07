@@ -17,3 +17,4 @@ void ModelConfig::Initialize(RootSignature* rootSignature, ID3D12Resource* direc
     this->directionalLightResource =directionalLightResource;
 
 }
+

@@ -1,7 +1,9 @@
 #include "TextureManager.h"
 #include"MyEngine.h"
-
+#include"StringUtility.h"
 #include<cassert>
+
+using namespace StringUtility;
 
 uint32_t TextureManager::kSRVIndexTop = 1;
 

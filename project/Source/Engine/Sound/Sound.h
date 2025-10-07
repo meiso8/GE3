@@ -25,34 +25,36 @@ struct SoundData {
 class Sound {
 public:
 
-
     Sound();
     ~Sound() = default;
-public:
+    Sound(Sound&) = delete;
 
     static Sound* GetInstance();
-    SoundData SoundLoad(const std::wstring& path);
+    static SoundData Load(const std::wstring& path);
 
-    void SoundPlay(const SoundData& soundData, const float& volume, bool isLoop = false);
+    static void Play(const SoundData& soundData, const float& volume, bool isLoop = false);
     /// @brief 音声データの解放関数  
     /// @param soundData 音声データ  
-    void SoundUnload(SoundData* soundData);
-    void SoundStop();
-    void SoundPause();  // 一時停止
-    void SoundResume(); // 再開
+    static void Unload(SoundData* soundData);
+    static void Stop();
+    static void Pause();  // 一時停止
+    static void Resume(); // 再開
 
-    bool IsActuallyPlaying() const;
-
-    bool IsPlaying()const;
+    static bool IsActuallyPlaying();
+    static bool IsPlaying();
  
+private:
+
+    Sound& operator=(Sound&) = delete;
+
 private:
     static Sound* instance_;
 
-    Microsoft::WRL::ComPtr<IXAudio2> xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
-    IXAudio2MasteringVoice* masterVoice_ = { nullptr }; // ReleaseなしのためComPtrで管理することが出来ない。  
+    static  Microsoft::WRL::ComPtr<IXAudio2> xAudio2_; // ComオブジェクトなのでComPtrで管理する。  
+    static IXAudio2MasteringVoice* masterVoice_; // ReleaseなしのためComPtrで管理することが出来ない。  
     //IXAudio2SourceVoice* pSourceVoice_ = { nullptr };
-    std::vector<IXAudio2SourceVoice*> voices_;
+    static std::vector<IXAudio2SourceVoice*> voices_;
 
-    bool isStarted_ = false;
-    bool isPaused_ = false;
+    static bool isStarted_;
+    static bool isPaused_;
 };

@@ -12,6 +12,7 @@ SpriteC* SpriteC::GetInstance()
     return instance_;
 }
 
+
 void SpriteC::Initialize()
 {
 
@@ -44,6 +45,8 @@ void SpriteC::DrawCall(ID3D12GraphicsCommandList* commandList)
     //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
+
+
 
 
 
