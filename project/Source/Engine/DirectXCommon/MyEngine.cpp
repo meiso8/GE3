@@ -178,6 +178,6 @@ void MyEngine::End() {
 //ここでBlenModeを変更する
 void MyEngine::SetBlendMode(uint32_t blendMode) {
 
-    directXCommon.get()->GetCommandList()->SetPipelineState(pso[blendMode].GetGraphicsPipelineState(PSO::PSOType::TRIANGLE).Get());//PSOを設定
+    DirectXCommon::GetCommandList()->SetPipelineState(pso[blendMode].GetGraphicsPipelineState(PSO::PSOType::TRIANGLE).Get());//PSOを設定
 
 }

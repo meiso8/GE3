@@ -49,7 +49,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     Texture textures[3];
     textures[0].Load("resources/white1x1.png");
     textures[1].Load("resources/numbers.png");
-    textures[2].Load("resources/uvChecker.png");
+    textures[2].Load("resources/player.png");
 
     //ShaderResourceViewを作る
     ShaderResourceView srv[3] = {};
@@ -165,9 +165,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         myEngine->PreCommandSet(worldColor);
 
-        sprite.PreDraw(myEngine->GetPSO(kBlendModeNormal));
-        sprite.Draw(srv[2], cameraSprite, lightType);
-
+        sprite.PreDraw(myEngine->GetPSO(blendMode));
+        sprite.Draw(srv[2], cameraSprite);
+        MyEngine::SetBlendMode();
 
 #ifdef _DEBUG
         grid.Draw(srv[0], camera);
@@ -177,9 +177,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         cube[0].Draw(srv[1], camera, MakeIdentity4x4(), lightType);
         cube[1].Draw(srv[1], camera, cubeWorldTransform.matWorld_, lightType);
 
-        myEngine->SetBlendMode(blendMode);
+        MyEngine::SetBlendMode(blendMode);
         player.get()->Draw(camera, lightType);
-        myEngine->SetBlendMode();
+        MyEngine::SetBlendMode();
 
         particle.Draw(camera, srv[2]);
 
