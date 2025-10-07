@@ -59,7 +59,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
     sprite->Initialize(Vector2(256.0f, 256.0f));
-    sprite->SetTranslate({ 0.0f,0.0f,0.0f });
+    sprite->SetPosition({ 0.0f,0.0f });
 
     const ModelData modelData = LoadObjeFile("resources/player", "player.obj");
 
@@ -128,6 +128,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             debugUI.CheckCamera(camera);
 
             debugUI.CheckBlendMode(blendMode);
+            debugUI.CheckSprite(*sprite);
 
             //デバッグカメラに切り替え
                    //視点操作

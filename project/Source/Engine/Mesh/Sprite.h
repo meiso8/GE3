@@ -27,20 +27,21 @@ public:
 
     void SetSize(const Vector2& size);
     void SetColor(const Vector4& color);
-    void SetTranslate(const Vector3& translate) { transform_.translate = translate; }
-    void SetRotate(const Vector3& rotate) { transform_.rotate = rotate; }
+    void SetPosition(const Vector2& position) {position_ = position ;}
+    void SetRotate(const float& rotate) { rotate_ = rotate; }
     void SetScale(const Vector3& scale) { transform_.scale = scale; };
 
     Vector2& GetSize() { return *spriteCommon->GetSize(); }
     Vector3& GetScaleRef() { return transform_.scale; };
-    Vector3& GetRotateRef() { return transform_.rotate; };
-    Vector3& GetTranslateRef() { return transform_.translate; };
+    float& GetRotateRef() { return rotate_; };
+    Vector2& GetPositionRef() { return position_; };
+
 
     Material* GetMaterial() { return materialResource_.GetMaterial(); };
     Vector3& GetUVScale() { return uvTransform_.scale; };
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
-
+    const Vector4& GetColor() {return materialResource_.GetMaterial()->color; }
 private:
 
     void CreateUVTransformationMatrix();
@@ -54,6 +55,8 @@ private:
 
 
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
+    Vector2 position_ = { 0.0f,0.0f };
+    float rotate_ = 0.0f;
     Transform transform_{};
     Matrix4x4 worldMatrix_{};
     Matrix4x4 worldViewProjectionMatrix_{};

@@ -182,9 +182,10 @@ void DebugUI::CheckSprite(Sprite& sprite) {
 
 
     if (ImGui::TreeNode("transform")) {
-        ImGui::SliderFloat3("translation", &sprite.GetTranslateRef().x, -1280.0f, 1280.0f);
-        ImGui::SliderFloat3("rotation", &sprite.GetRotateRef().x, 0.0f, std::numbers::pi_v<float>*2.0f);
+        ImGui::SliderFloat2("pos", &sprite.GetPositionRef().x, -1280.0f, 1280.0f);
+        ImGui::SliderFloat("rotation", &sprite.GetRotateRef(), 0.0f, std::numbers::pi_v<float>*2.0f);
         ImGui::SliderFloat3("scale", &sprite.GetScaleRef().x, 0.0f, 10.0f);
+
         ImGui::TreePop();
     }
 

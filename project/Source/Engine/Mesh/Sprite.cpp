@@ -54,7 +54,8 @@ void Sprite::Draw(
 ) {
 
     materialResource_.SetLightType(lightType);
-
+    transform_.translate = { position_.x,position_.y,0.0f };
+    transform_.rotate = { 0.0f,0.0f,rotate_ };
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     worldViewProjectionMatrix_ = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix_ };
@@ -74,7 +75,7 @@ void Sprite::Draw(
     commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
-   
+
     spriteCommon->DrawCall(commandList);
 
 };
@@ -103,7 +104,7 @@ void Sprite::CreateTransformationMatrix() {
     //書き込むためのアドレスを取得
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
 
-    transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+    transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{ position_.x,position_.y,0.0f } };
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 
 }
