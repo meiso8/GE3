@@ -70,11 +70,13 @@ public:
     void PostCommandSet();
     void End();
 
+
     Window& GetWC() { return *wc; };
     static RootSignature* GetRootSignature() { return rootSignature.get(); }
     static PSO* GetPSO(uint32_t index) { return &pso[index]; }
     static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
-    void SetBlendMode(uint32_t blendMode = BlendMode::kBlendModeNormal);
+    static　void SetBlendMode(uint32_t blendMode = BlendMode::kBlendModeNormal);
+
 public:
     static const uint32_t kMaxSRVCount;
 private:
