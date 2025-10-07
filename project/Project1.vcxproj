@@ -189,7 +189,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\DirectXCommon\BlendState.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\CompileShader.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Log.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\FenceEvent.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DebugError.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\PSO.cpp" />
@@ -293,7 +292,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Mesh\DrawGrid.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DXGIFactory.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Fence.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\FenceEvent.h" />
     <ClInclude Include="Source\Engine\ImGui\FPSCounter.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\GPU.h" />
     <ClInclude Include="Source\Engine\ImGui\ImGuiClass.h" />

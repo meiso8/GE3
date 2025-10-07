@@ -4,6 +4,7 @@
 #include "ScissorRect.h"
 #include<cassert>
 #include"StringUtility.h"
+#include <thread>
 
 using namespace Microsoft::WRL;
 ComPtr<ID3D12Device> DirectXCommon::device = nullptr;
@@ -26,6 +27,7 @@ void DirectXCommon::Initialize(Window& window)
 
     window_ = &window;
 
+    InitializeFixFPS();
     InitializeDevice();
     InitializeCommand();
     CreateSwapChain();
@@ -123,20 +125,24 @@ void DirectXCommon::PostDraw()
     LogFile::Log("CloseCommandList");
 
     //5.GPUにコマンドリストの実行を行わせる
-    ID3D12CommandList* commandLists[] = { commandList->GetCommandList().Get()};
+    ID3D12CommandList* commandLists[] = { commandList->GetCommandList().Get() };
     commandQueue.GetCommandQueue()->ExecuteCommandLists(1, commandLists);
     //6.GPUとOSに画面の交換を行うよう通知する
     swapChainClass.GetSwapChain()->Present(1, 0);
 
     //画面の更新が終わった直後GPUにシグナルを送る
     //Fenceの値を更新
-    fence.AddValue();
+    //fence.AddValue();
 
-    //GPUがここまでたどり着いた時、Fenceの値を指定した値に代入するようにSignalを送る
-    fence.SendSignal(commandQueue);
+    ////GPUがここまでたどり着いた時、Fenceの値を指定した値に代入するようにSignalを送る
+    //fence.SendSignal(commandQueue);
+
+    fence.Update(commandQueue);
+
+    UpdateFixFPS();
 
     //Fenceの値が指定したSignal値にたどり着いているか確認する GPUの処理を待つ
-    fence.CheckValue(fenceEvent);
+    //fence.CheckValue(fenceEvent);
 
     //7.次のフレーム用のコマンドリストを準備
     commandList->PrepareCommand();
@@ -153,7 +159,7 @@ void DirectXCommon::EndFrame()
     imGuiClass.ShutDown();
 #endif
 
-    CloseHandle(fenceEvent.GetEvent());
+    //CloseHandle(fenceEvent.GetEvent());
 
 }
 
@@ -288,9 +294,7 @@ void DirectXCommon::InitializeFence()
 {
 #pragma region //FenceとEventを生成する
     fence.Create(device);
-    // FenceのSignalを持つためのイベントを作成する
-    fenceEvent.Create();
-    LogFile::Log("CreateFence&Event");
+    LogFile::Log("CreateFence");
 #pragma endregion
 }
 
@@ -324,6 +328,38 @@ void DirectXCommon::InitializeImGui()
     imGuiClass.Initialize(*window_, device.Get(), swapChainClass, rtvClass, srvDescriptorHeap);
     LogFile::Log("InitImGui");
 #endif
+}
+
+void DirectXCommon::InitializeFixFPS()
+{
+    reference_ = std::chrono::steady_clock::now();
+
+}
+
+void DirectXCommon::UpdateFixFPS()
+{
+    //1/60秒ピッタリ
+    const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
+    //1/60秒よりわずかに短い時間
+    const std::chrono::microseconds kMinCheckTime(uint64_t(1000000.0f / 65.0f));
+    //現在時間を取得する
+    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+    //前回記録からの経過時間を取得する
+    std::chrono::microseconds elapsed =
+        std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
+
+    if (elapsed < kMinCheckTime) {
+        //1/60秒経過するまで微小なスリープを繰り返す
+        while (std::chrono::steady_clock::now() - reference_ < kMinTime) {
+            //1μ秒スリープ
+            std::this_thread::sleep_for(std::chrono::microseconds(1));
+        }
+    }
+
+    //現在の時間を記録する
+    reference_ = std::chrono::steady_clock::now();
+
+
 }
 
 // =============================================================================================

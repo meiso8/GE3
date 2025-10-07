@@ -2,7 +2,6 @@
 #include<wrl.h>
 #include<d3d12.h>
 #include<cstdint>
-#include"FenceEvent.h"
 #include"CommandQueue.h"
 
 class Fence
@@ -13,17 +12,11 @@ public:
         return fence_
             ;
     };
-
     uint64_t GetValue() {
         return fenceValue_
             ;
     };
-    void AddValue();
-
-    void SendSignal(CommandQueue& commandQueue/*const Microsoft::WRL::ComPtr<ID3D12CommandQueue>& commandQueue*/);
-
-    void CheckValue(FenceEvent&fenceEvent);
-
+    void Update(CommandQueue& commandQueue);
 private:
     //初期値0でFenceを作る
     Microsoft::WRL::ComPtr<ID3D12Fence> fence_;

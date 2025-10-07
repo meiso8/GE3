@@ -9,7 +9,6 @@
 
 #include"RenderTargetView.h"
 #include"Fence.h"
-#include"FenceEvent.h"
 #include"Depth.h"//StencilTextureの作成関数　奥行き
 #include"CompileShader.h"
 
@@ -23,7 +22,7 @@
 #include"../externals/DirectXTex/DirectXTex.h"
 //Textureの転送のために
 #include"../externals/DirectXTex/d3dx12.h"
-
+#include<chrono>
 
 class DirectXCommon
 {
@@ -50,15 +49,14 @@ private:
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, 2> swapChainResources;
     RenderTargetView rtvClass = {};
     Fence fence = {};
-    FenceEvent fenceEvent = {};
-
-
     Microsoft::WRL::ComPtr <ID3D12Resource> depthStencilResource = nullptr;
 
     D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
     D3D12_VIEWPORT viewport = {};
     D3D12_RECT scissorRect = {};
     TransitionBarrier barrier = {};
+    std::chrono::steady_clock::time_point reference_;
+
 #ifdef _DEBUG
     ImGuiClass imGuiClass = {};
 #endif // _DEBUG
@@ -111,5 +109,7 @@ private:
     void ScissorRectSetting();
     void CreateDXCCompiler();
     void InitializeImGui();
+    void InitializeFixFPS();
+    void UpdateFixFPS();
 };
 

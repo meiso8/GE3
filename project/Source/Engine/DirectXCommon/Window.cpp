@@ -12,6 +12,8 @@
 //libのリンクはヘッダに書いてはいけない
 //任意のひとつのcppに記述するかプロジェクトの設定で行う
 //libのリンク includeのすぐ後ろに書くとよい
+#pragma comment(lib,"winmm.lib")
+
 
 // ウィンドウプロシージャ
 LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
@@ -43,6 +45,9 @@ void Window::Create(const std::wstring& title, const int32_t& clientWidth, const
 
     clientWidth_ = clientWidth;
     clientHeight_ = clientHeight;
+
+    //システムタイマーの分解能を上げる
+    timeBeginPeriod(1);
 
     //main関数の先頭でComの初期化を行う
     HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);

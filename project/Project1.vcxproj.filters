@@ -150,9 +150,6 @@
     <ClCompile Include="Source\Engine\Math\Easing.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\FenceEvent.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
@@ -584,9 +581,6 @@
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\DirectXCommon\Fence.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\FenceEvent.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\DirectXCommon\GPU.h">
