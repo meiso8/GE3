@@ -7,12 +7,12 @@
 #include"MyEngine.h"
 #include"TextureManager.h"
 
-SpriteC* Sprite::spriteCommon = nullptr;
+SpriteCommon* Sprite::spriteCommon = nullptr;
 
 void Sprite::Initialize(uint32_t textureHandle, const Vector2& size)
 {
     textureIndex = textureHandle;
-    spriteCommon = SpriteC::GetInstance();
+    spriteCommon = SpriteCommon::GetInstance();
 
     commandList = DirectXCommon::GetCommandList();
     SetSize(size);

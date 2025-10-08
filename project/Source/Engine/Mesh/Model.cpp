@@ -42,8 +42,6 @@ void Model::Create(const ModelData& modelData) {
 
     uvTransformMatrix_ = MakeIdentity4x4();
 
-
-
 #pragma region//time
 
     int waveCount = 2;
@@ -110,7 +108,6 @@ void Model::PreDraw(PSO& pso, PSO::PSOType type) {
 }
 
 void Model::Draw(const Matrix4x4& worldMatrix, Camera& camera, uint32_t lightType) {
-
 
     materialResource_.SetLightType(lightType);
 

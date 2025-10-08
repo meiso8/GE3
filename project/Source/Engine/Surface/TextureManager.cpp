@@ -60,7 +60,6 @@ void TextureManager::LoadTexture(const std::string& filePath)
 
     if (metadata.width > 1 || metadata.height > 1) {
         hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-
         assert(SUCCEEDED(hr));
     } else {
         mipImages = std::move(image); // そのまま使う
@@ -91,8 +90,7 @@ void TextureManager::LoadTexture(const std::string& filePath)
 
     //SRVの生成
     DirectXCommon::GetDevice()->CreateShaderResourceView(textureData.resource.Get(), &srvDesc, textureData.srvHandleCPU);
-    assert(textureData.resource);
-    assert(textureData.srvHandleCPU.ptr != 0);
+
 }
 
 uint32_t TextureManager::Load(const std::string& filePath)

@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Sound\Sound.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
     <ClCompile Include="Source\Application\Player.cpp" />
     <ClCompile Include="Source\Engine\Mesh\ModelConfig.cpp" />
@@ -231,7 +232,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Math\Multiply.cpp" />
     <ClCompile Include="Source\Engine\Math\Normalize.cpp" />
     <ClCompile Include="Source\Engine\Math\ShericalCoordinate.cpp" />
-    <ClCompile Include="Source\Engine\Sound\Sound.cpp" />
+    <ClCompile Include="Source\Engine\Sound\SoundManager.cpp" />
     <ClCompile Include="Source\Engine\Math\Subtract.cpp" />
     <ClCompile Include="Source\Engine\Math\CoordinateTransform.cpp" />
     <ClCompile Include="Source\Engine\Math\Transpose.cpp" />
@@ -242,7 +243,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Mesh\Sprite.cpp" />
     <ClCompile Include="Source\Engine\Mesh\SphereMesh.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\SpriteC.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\SpriteCommon.cpp" />
     <ClCompile Include="Source\Engine\Surface\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -264,6 +265,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Sound\Sound.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
@@ -354,7 +356,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\RootSignature.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\ScissorRect.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\ShaderResourceView.h" />
-    <ClInclude Include="Source\Engine\Sound\Sound.h" />
+    <ClInclude Include="Source\Engine\Sound\SoundManager.h" />
     <ClInclude Include="Source\Engine\Mesh\SphereMesh.h" />
     <ClInclude Include="Source\Engine\Mesh\Sprite.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\SwapChain.h" />
@@ -365,7 +367,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Mesh\Wave.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Window.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\StringUtility.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\SpriteC.h" />
+    <ClInclude Include="Source\Engine\DirectXCommon\SpriteCommon.h" />
     <ClInclude Include="Source\Engine\Surface\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
