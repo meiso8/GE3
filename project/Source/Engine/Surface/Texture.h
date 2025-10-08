@@ -15,7 +15,7 @@ public:
         TEXTURES
     };
     static void Load();
-    static uint32_t GetHandle(TAG tag) {
+    static uint32_t GetHandle(uint32_t tag) {
         if (tag > TEXTURES) {
             return 0;
         }

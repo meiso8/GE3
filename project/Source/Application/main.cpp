@@ -29,7 +29,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
 
     bool isDebug = false;
-
     DebugUI debugUI;
 
 #pragma region//Camera
@@ -134,10 +133,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             debugUI.CheckCamera(camera);
 
             debugUI.CheckBlendMode(blendMode);
-                  debugUI.CheckSprite(*sprites[0]);
+            debugUI.CheckSprite(*sprites[0]);
 
-                  //デバッグカメラに切り替え
-                         //視点操作
+            //デバッグカメラに切り替え
+                   //視点操作
             Input::GetInstance()->EyeOperation(camera);
 
         } else {
@@ -162,7 +161,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         camera.Update();
 
-          player->Update();
+        player->Update();
 #endif
 
 #pragma region //描画
@@ -172,7 +171,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 #ifdef _DEBUG
-             grid.Draw(camera);
+        grid.Draw(camera);
 #endif // _DEBUG
 
         cube[0].PreDraw(kBlendModeNormal);
