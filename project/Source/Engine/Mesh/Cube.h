@@ -21,13 +21,10 @@
 
 class Cube
 {
-
-
 public:
-    void Create();
+    void Create(uint32_t textureHandle);
     void  PreDraw(BlendMode blendMode = BlendMode::kBlendModeNormal);
-    void Draw(
-        ShaderResourceView& srv, Camera& camera, const Matrix4x4& worldMatrix, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
+    void Draw(Camera& camera, const Matrix4x4& worldMatrix, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
     );
 
     void SetColor(const Vector4& color);
@@ -43,6 +40,8 @@ private:
     void CreateTransformationMatrix();
     void CreateMaterial();
 private:
+    uint32_t textureHandle_ = 0;
+    ID3D12GraphicsCommandList* commandList_ = nullptr;
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     VertexData* vertexData_ = nullptr;

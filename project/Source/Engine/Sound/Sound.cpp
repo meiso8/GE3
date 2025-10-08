@@ -12,6 +12,12 @@
 
 Sound* Sound::instance_ = nullptr;
 
+Microsoft::WRL::ComPtr<IXAudio2> Sound::xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
+std::vector<IXAudio2SourceVoice*> Sound::voices_ = {};
+IXAudio2MasteringVoice* Sound::masterVoice_ = nullptr;
+bool Sound::isStarted_ = false;
+bool Sound::isPaused_ = false;
+
 Sound::Sound() {
     HRESULT result;
     result = XAudio2Create(xAudio2_.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
@@ -34,7 +40,7 @@ Sound* Sound::GetInstance()
     return instance_;
 }
 
-SoundData Sound::SoundLoad(const std::wstring& path) {
+SoundData Sound::Load(const std::wstring& path) {
 
     //ソースリーダーの作成
     IMFSourceReader* pMFSourceReader{ nullptr };
@@ -94,7 +100,7 @@ SoundData Sound::SoundLoad(const std::wstring& path) {
 }
 
 
-void Sound::SoundUnload(SoundData* soundData) {
+void Sound::Unload(SoundData* soundData) {
 
     // メディアデータの解放
     soundData->mediaData.clear();
@@ -107,7 +113,7 @@ void Sound::SoundUnload(SoundData* soundData) {
 
 };
 
-void Sound::SoundPlay(const SoundData& soundData, const float& volume, bool isLoop) {
+void Sound::Play(const SoundData& soundData, const float& volume, bool isLoop) {
     HRESULT result;
 
     IXAudio2SourceVoice* newVoice = nullptr;
@@ -136,7 +142,7 @@ void Sound::SoundPlay(const SoundData& soundData, const float& volume, bool isLo
 
 };
 
-void Sound::SoundStop() {
+void Sound::Stop() {
 
     for (auto voice : voices_) {
         voice->Stop();
@@ -151,24 +157,24 @@ void Sound::SoundStop() {
 
 }
 
-void Sound::SoundPause() {
+void Sound::Pause() {
     //if (pSourceVoice_) {
     //    pSourceVoice_->Stop(); // バッファは保持されたまま停止
     //    isPaused_ = true;
     //}
 }
 
-void Sound::SoundResume() {
+void Sound::Resume() {
     //if (pSourceVoice_) {
     //    pSourceVoice_->Start(); // 停止した位置から再開
     //}
 }
 
-bool Sound::IsActuallyPlaying() const {
+bool Sound::IsActuallyPlaying(){
     return isStarted_ && !isPaused_;
 }
 
-bool Sound::IsPlaying() const {
+bool Sound::IsPlaying() {
     for (auto voice : voices_) {
         if (voice) {
             XAUDIO2_VOICE_STATE state{};

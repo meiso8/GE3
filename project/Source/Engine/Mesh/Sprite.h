@@ -17,12 +17,13 @@
 class Sprite
 {
 public:
-    void Initialize(const Vector2& size = { 360.0f,640.0f });
+    void Initialize(uint32_t textureHandle,const Vector2& size = { 360.0f,640.0f });
+    void ChangeTexture(uint32_t textureHandle);
+
     void UpdateUV();
 
     void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
-    void Draw(
-        ShaderResourceView& srv, Camera& camera, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
+    void Draw(Camera& camera, uint32_t lightType = MaterialResource::LIGHTTYPE::NONE
     );
 
 
@@ -53,6 +54,8 @@ private:
     void CreateWaveData();
     void CreateBalloonData();
 private:
+    uint32_t textureIndex = 0;
+
     static SpriteC* spriteCommon;
     ID3D12GraphicsCommandList* commandList;
 

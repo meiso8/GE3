@@ -8,7 +8,7 @@ void Fence::Create(const Microsoft::WRL::ComPtr <ID3D12Device>& device) {
     assert(SUCCEEDED(hr));
 }
 
-void Fence::Update(CommandQueue& commandQueue)
+void Fence::SendSignal(CommandQueue& commandQueue)
 {
     commandQueue.GetCommandQueue()->Signal(fence_.Get(), ++fenceValue_);
     //GetCompletedValueの初期値はFence作成時に渡した初期値

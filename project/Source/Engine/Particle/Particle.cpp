@@ -9,10 +9,10 @@
 
 using namespace  Microsoft::WRL;
 
-void Particle::Create()
+void Particle::Create(uint32_t textureHandle)
 {
     rootSignature_ = MyEngine::GetRootSignature();
-
+    textureHandle_ = textureHandle;
 
     CreateModelData();
     CreateTransformationMatrix();
@@ -68,8 +68,8 @@ void Particle::CreateTransformationMatrix()
     instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
     instancingSrvDesc.Buffer.NumElements = kNumInstance;
     instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
-    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(4);
-    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(4);
+    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(7);
+    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(7);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 
     for (uint32_t index = 0; index < kNumInstance; ++index) {
@@ -81,7 +81,7 @@ void Particle::CreateTransformationMatrix()
 }
 
 
-void Particle::Draw(Camera& camera,ShaderResourceView& srv,BlendMode blendMode)
+void Particle::Draw(Camera& camera,BlendMode blendMode)
 {
 
     for (uint32_t index = 0; index < kNumInstance; ++index) {
@@ -104,7 +104,7 @@ void Particle::Draw(Camera& camera,ShaderResourceView& srv,BlendMode blendMode)
     //粒ごとのトランスフォーム
     commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
     //テスクチャ
-    commandList->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
+    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureHandle_));
 
     //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
     commandList->DrawInstanced(UINT(modelData_.vertices.size()), kNumInstance, 0, 0);

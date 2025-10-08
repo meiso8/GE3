@@ -25,9 +25,9 @@ public:
 
     static Input* GetInstance();
     Input() = default;
-    ~Input();
+    Input(Input&) = delete;
 
-    HRESULT Initialize(Window& window/*, int& fps*/);
+    HRESULT Initialize(Window& window);
     /// @brief キーを押した状態 
     bool IsPushKey(const uint8_t& key);
     /// @briefキーを押した瞬間
@@ -88,5 +88,6 @@ private:
 
 private:
     bool NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& buttonLY);
-
+    Input& operator=(Input&) = delete;
+    ~Input();
 };

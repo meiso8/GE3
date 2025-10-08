@@ -8,8 +8,12 @@
 #include"MyEngine.h"
 #include"ModelConfig.h"
 
-void Cube::Create(
+
+void Cube::Create(uint32_t textureHandle
 ) {
+
+    commandList_ = DirectXCommon::GetCommandList();
+    textureHandle_ = textureHandle;
 
     CreateVertex();
     CreateIndexResource();
@@ -190,47 +194,40 @@ void Cube::SetMinMax(const Vector3& min, const Vector3& max) {
 }
 
 void Cube::PreDraw(BlendMode blendMode) {
-
-    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
-
     PSO* pso = MyEngine::GetPSO(blendMode);
 
-    commandList->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
-    commandList->SetPipelineState(pso->GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
+    commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
+    commandList_->SetPipelineState(pso->GetGraphicsPipelineState(PSO::TRIANGLE).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void Cube::Draw(
-    ShaderResourceView& srv, Camera& camera,const Matrix4x4& worldMatrix, uint32_t lightType
+void Cube::Draw(Camera& camera,const Matrix4x4& worldMatrix, uint32_t lightType
 ) {
-
-    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
 
     materialResource_.SetLightType(lightType);
 
     worldViewProjectionMatrix_ = Multiply(worldMatrix, camera.GetViewProjectionMatrix());
     *transformationMatrixData_ = { worldViewProjectionMatrix_,worldMatrix };
-
  
     //頂点バッファビューを設定
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     //IBVを設定new
-    commandList->IASetIndexBuffer(&indexBufferView_);//IBVを設定
+    commandList_->IASetIndexBuffer(&indexBufferView_);//IBVを設定
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
+    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureHandle_));
     //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定
-    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
     //expansionのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
 
     //描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
-    commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
+    commandList_->DrawIndexedInstanced(36, 1, 0, 0, 0);
 };
 

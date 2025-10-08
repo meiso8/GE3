@@ -1,9 +1,6 @@
 #include "MyEngine.h"
 #include<algorithm>
-//#include"TextureManager.h"
 
-
-const uint32_t MyEngine::kMaxSRVCount = 512;
 std::array<PSO, kCountOfBlendMode> MyEngine::pso = {};
 MyEngine* MyEngine::instance_ = nullptr;
 
@@ -147,6 +144,12 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
     srand(static_cast<unsigned int>(time(nullptr)));
 
+    Sound::GetInstance();
+
+    TextureManager::GetInstance()->Initialize();
+
+    SpriteC::GetInstance()->Initialize();
+
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
 
@@ -156,25 +159,32 @@ void MyEngine::Update() {
 
     //キーボード情報の取得開始
     input->Update();
-    directXCommon.get()->Update();
+    directXCommon->Update();
 
 }
 
 void MyEngine::PreCommandSet(Vector4& color) {
-    directXCommon.get()->PreDraw(color);
+    directXCommon->PreDraw(color);
 };
 
 void MyEngine::PostCommandSet() {
 
-    directXCommon.get()->PostDraw();
+    directXCommon->PostDraw();
 
 };
 
-void MyEngine::End() {
+void MyEngine::Finalize() {
 
-    directXCommon.get()->EndFrame();
+    TextureManager::GetInstance()->Finalize();
+
+    /*  sound->Finalize();*/
+      //modelConfig_.Finalize();
+    directXCommon->EndFrame();
+    /*input->Finalize();*/
     wc->Finalize();
-    
+
+    //delete instance_;
+    //instance_ = nullptr;
     //TextureManager::GetInstance()->Finalize();
 }
 

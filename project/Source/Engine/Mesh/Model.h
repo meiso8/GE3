@@ -1,4 +1,4 @@
-#include"Texture.h"
+
 #include"Camera/Camera.h"
 #include"ModelData.h"
 #include"MaterialResource.h"
@@ -17,8 +17,8 @@ class Model
 public:
 
     Model() = default;
-    ~Model();
-    void Create(const ModelData& modeldata, uint32_t index);
+    ~Model() = default;
+    void Create(const ModelData& modeldata);
 
     void UpdateUV();
 
@@ -45,8 +45,6 @@ private:
     void CreateWorldVPResource();
 private:
     ModelConfig* modelConfig_ = nullptr;
-    ShaderResourceView srv_;
-
     Camera* camera_ = nullptr;
 
     Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
@@ -61,8 +59,6 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
     VertexData* vertexData_ = nullptr;
 
-    Texture* texture_ = nullptr;
-
     Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_;
     Balloon* expansionData_ = nullptr;
 
@@ -72,4 +68,5 @@ private:
     Transform uvTransform_;
     Matrix4x4 uvTransformMatrix_{};
 
+    uint32_t textureIndex = 0;
 };

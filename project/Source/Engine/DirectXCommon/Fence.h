@@ -16,7 +16,7 @@ public:
         return fenceValue_
             ;
     };
-    void Update(CommandQueue& commandQueue);
+    void SendSignal(CommandQueue& commandQueue);
 private:
     //初期値0でFenceを作る
     Microsoft::WRL::ComPtr<ID3D12Fence> fence_;

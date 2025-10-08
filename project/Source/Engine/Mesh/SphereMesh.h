@@ -1,7 +1,5 @@
 #pragma once
 
-
-#include"Texture.h"
 #include"Camera/Camera.h"
 #include"ModelData.h"
 #include"MaterialResource.h"
@@ -18,10 +16,10 @@ public:
 
     SphereMesh() = default;
     ~SphereMesh() = default;
-    void Create();
+    void Create(uint32_t textureHandle);
 
     void PreDraw(PSO& pso,PSO::PSOType type = PSO::PSOType::TRIANGLE);
-    void Draw(Camera& camera, ShaderResourceView& srv,uint32_t lightType);
+    void Draw(Camera& camera,uint32_t lightType);
 
     Material* GetMaterial() { return materialResource_.GetMaterial(); }
 
@@ -45,7 +43,8 @@ private:
     void CreateWorldVPResource();
     void CreateMaterial();
 private:
-    ShaderResourceView srv_;
+    uint32_t textureIndex = 0;
+    ID3D12GraphicsCommandList* commandList_ = nullptr;
     ModelConfig* modelConfig_;
     Camera* camera_ = nullptr;
 

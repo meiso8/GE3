@@ -1,15 +1,25 @@
 #include"Texture.h"
-#include"Log.h"
-#include<cassert>
-#include"DirectXCommon.h"
+#include"TextureManager.h"
 
-Texture::Texture() {
+std::vector<uint32_t>Texture::textureHandle_;
+Texture* Texture::instance_ = nullptr;
 
+Texture* Texture::GetInstance()
+{
+    if (instance_ == nullptr) {
+        instance_ = new Texture();
+    }
+    return instance_;
 }
 
-void Texture::Load(const std::string& filePath) {
-    DirectX::ScratchImage mipImages = DirectXCommon::LoadTextureFile(filePath);
-    metadata_ = mipImages.GetMetadata();
-    textureResource_ = DirectXCommon::CreateTextureResource(metadata_);
-    intermediateResource_ = DirectXCommon::UploadTextureData(textureResource_.Get(), mipImages);
+void Texture::Load()
+{
+    TextureManager* textureManager = TextureManager::GetInstance();
+    textureHandle_.resize(TEXTURE_MAX);
+    textureHandle_[WHITE_1X1] = textureManager->Load("resources/white1x1.png");
+
+    textureHandle_[UV_CHECKER] = textureManager->Load("resources/uvChecker.png");
+    textureHandle_[NUMBERS] = textureManager->Load("resources/numbers.png");
+    textureHandle_[PLAYER] = textureManager->Load("resources/player.png");
+
 }

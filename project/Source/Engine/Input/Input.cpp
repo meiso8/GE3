@@ -16,7 +16,6 @@ Input* Input::GetInstance() {
     return instance_;
 }
 
-
 BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext) {
     auto* self = static_cast<Input*>(pContext);
     self->joystickGUID = pdidInstance->guidInstance;

@@ -1,23 +1,29 @@
 #pragma once
-
-#include <fstream>
-//ComPtr(コムポインタ)
-#include<wrl.h>
-#include<d3d12.h>
-
-#include"CommandList.h"
-#include"ShaderResourceView.h"
-
-//TextureResourceにデータを転送する　GPU
+#include<vector>
+#include<stdint.h>
 
 class Texture {
 public:
-    Texture();
-    void Load(const std::string& filePath);
-    DirectX::TexMetadata& GetMetadata() { return metadata_; };
-    Microsoft::WRL::ComPtr<ID3D12Resource>& GetTextureResource() { return textureResource_; };
+    static Texture* GetInstance();
+    
+
+    enum TAG {
+        WHITE_1X1,
+        UV_CHECKER,
+        NUMBERS,
+        PLAYER,
+        TEXTURE_MAX
+    };
+    static void Load();
+    static uint32_t GetHandle(TAG tag) {
+        if (tag > TEXTURE_MAX) {
+            return 0;
+        }
+        return textureHandle_
+            [tag];
+    };
 private:
-    DirectX::TexMetadata metadata_ = {};
-    Microsoft::WRL::ComPtr<ID3D12Resource> textureResource_;
-    Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource_;
+    static Texture* instance_;
+    static std::vector<uint32_t>textureHandle_;
 };
+

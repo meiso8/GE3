@@ -30,10 +30,10 @@ private:
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexBufferResource_;
     VertexData* vertexBufferData_ = nullptr;
-
+    uint32_t textureHandle_ = 0;
 public:
-    void Create();
-    void Draw(Camera& camera, ShaderResourceView& srv, BlendMode blendMode = BlendMode::kBlendModeNormal);
+    void Create(uint32_t textureHandle);
+    void Draw(Camera& camera,BlendMode blendMode = BlendMode::kBlendModeNormal);
 private:
     void CreateModelData();
     void CreateTransformationMatrix();

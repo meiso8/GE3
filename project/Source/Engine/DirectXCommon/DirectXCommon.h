@@ -85,7 +85,7 @@ public:
     static ID3D12Device* GetDevice() { return device.Get(); };
     static DxcCompiler* GetDxcCompiler() { return dxcCompiler.get(); }
     static ID3D12GraphicsCommandList* GetCommandList() { return commandList->GetCommandList().Get(); };
-    ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap.Get(); }
+    static ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap.Get(); }
     static D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUDescriptorHandle(uint32_t index);
     static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUDescriptorHandle(uint32_t index);
     static D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);

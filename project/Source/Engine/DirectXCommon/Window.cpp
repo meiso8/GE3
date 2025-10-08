@@ -125,7 +125,6 @@ bool Window::ProcessMassage()
 
 void Window::Finalize()
 {
-
     CloseWindow(hwnd_);
     CoUninitialize();
 }

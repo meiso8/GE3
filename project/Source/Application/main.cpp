@@ -4,8 +4,10 @@
 #include"Particle/Particle.h"
 #include"Lerp.h"
 #include"SpriteC.h"
+
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
+
 
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -15,15 +17,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma region//XAudio全体の初期化と音声の読み込み
 
-    //音声クラスの作成
-    Sound sound;
-
     //音声読み込み SoundDataの変数を増やせばメモリが許す限りいくつでも読み込める。
     SoundData bgmData[2] = {
-        sound.SoundLoad(L"resources/Sounds/dreamcore.mp3"),
-        sound.SoundLoad(L"resources/Sounds/kiritan.mp3") };
+        Sound::Load(L"resources/Sounds/dreamcore.mp3"),
+        Sound::Load(L"resources/Sounds/kiritan.mp3") };
 
-    SoundData seData = sound.SoundLoad(L"resources/Sounds/poppo.mp3");
+    SoundData seData[2] = {
+        Sound::Load(L"resources/Sounds/poppo.mp3"),
+        Sound::Load(L"resources/Sounds/broken.mp3") };
 
 #pragma endregion
 
@@ -43,26 +44,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma endregion
 
-    Texture textures[3];
-    textures[0].Load("resources/white1x1.png");
-    textures[1].Load("resources/numbers.png");
-    textures[2].Load("resources/player.png");
+    Texture::GetInstance();
+    Texture::Load();
 
-    //ShaderResourceViewを作る
-    ShaderResourceView srv[3] = {};
-    srv[0].Create(textures[0], 1);
-    srv[1].Create(textures[1], 2);
-    srv[2].Create(textures[2], 3);
+    DrawGrid grid = DrawGrid(Texture::GetHandle(Texture::WHITE_1X1));
 
-    DrawGrid grid = DrawGrid();
-
-    SpriteC* spriteCommon = SpriteC::GetInstance();
-    spriteCommon->Initialize();
     std::vector<Sprite*>sprites;
 
     for (uint32_t i = 0; i < 5; ++i) {
         Sprite* sprite = new Sprite();
-        sprite->Initialize({ 128.0f,128.0f });
+        if (i % 2 == 0) {
+            sprite->Initialize(Texture::GetHandle(Texture::PLAYER), { 128.0f,128.0f });
+        } else {
+            sprite->Initialize(Texture::GetHandle(Texture::UV_CHECKER), { 128.0f,128.0f });
+        }
+
         sprite->SetPosition({ i * 256.0f,0.0f });
         sprites.push_back(sprite);
     }
@@ -74,8 +70,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     player->Init();
 
     Cube cube[2];
-    cube[0].Create();
-    cube[1].Create();
+    cube[0].Create(Texture::GetHandle(Texture::WHITE_1X1));
+    cube[1].Create(Texture::GetHandle(Texture::WHITE_1X1));
 
     WorldTransform cubeWorldTransform;
     cubeWorldTransform.Initialize();
@@ -88,7 +84,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     uint32_t blendMode = BlendMode::kBlendModeNone;
 
     Particle particle;
-    particle.Create();
+    particle.Create(Texture::GetHandle(Texture::UV_CHECKER));
 
     // =============================================
     //ウィンドウのxボタンが押されるまでループ メインループ
@@ -117,13 +113,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             camera.SetOrthographic(true);
         }
 
-        /*       if (Input::GetInstance()->IsJoyStickPressButton(0)) {
-                   sound.SoundPlay(seData, 1.0f, false);
-               }
+        if (Input::GetInstance()->IsTriggerKey(DIK_A)) {
+            Sound::Play(seData[0], 1.0f, false);
+        }
 
-               if (!sound.IsPlaying()) {
-                   sound.SoundPlay(bgmData[1], 0.0625f, true);
-               }*/
+        if (Input::GetInstance()->IsTriggerKey(DIK_S)) {
+            Sound::Play(seData[1], 1.0f, false);
+        }
+
+        if (!Sound::IsPlaying()) {
+            Sound::Play(bgmData[1], 0.0625f, true);
+        }
 
         if (isDebug) {
             debugUI.CheckDirectionalLight(lightType);
@@ -134,10 +134,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             debugUI.CheckCamera(camera);
 
             debugUI.CheckBlendMode(blendMode);
-            debugUI.CheckSprite(*sprites[0]);
+                  debugUI.CheckSprite(*sprites[0]);
 
-            //デバッグカメラに切り替え
-                   //視点操作
+                  //デバッグカメラに切り替え
+                         //視点操作
             Input::GetInstance()->EyeOperation(camera);
 
         } else {
@@ -162,12 +162,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         camera.Update();
 
-        player->Update();
-        cube[0].SetColor({ 1.0f, 1.0f, 1.0f, 0.2f
-            });
-        cube[1].SetColor({ 1.0f, 1.0f, 1.0f, 0.2f
-            });
-
+          player->Update();
 #endif
 
 #pragma region //描画
@@ -177,27 +172,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 #ifdef _DEBUG
-        grid.Draw(srv[0], camera);
+             grid.Draw(camera);
 #endif // _DEBUG
 
         cube[0].PreDraw(kBlendModeNormal);
-        cube[0].Draw(srv[1], camera, MakeIdentity4x4(), lightType);
-        cube[1].Draw(srv[1], camera, cubeWorldTransform.matWorld_, lightType);
+        cube[0].Draw(camera, MakeIdentity4x4(), lightType);
+        cube[1].Draw(camera, cubeWorldTransform.matWorld_, lightType);
 
         MyEngine::SetBlendMode(blendMode);
         player->Draw(camera, lightType);
         MyEngine::SetBlendMode();
 
-
         sprites[0]->PreDraw(blendMode);
 
         for (Sprite* sprite : sprites) {
-            sprite->Draw(srv[2], cameraSprite, lightType);
+            sprite->Draw(cameraSprite, lightType);
         }
 
-        MyEngine::SetBlendMode();
-
-        particle.Draw(camera, srv[2]);
+        particle.Draw(camera);
 
         myEngine->PostCommandSet();
 
@@ -206,13 +198,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     }
 
     for (Sprite* sprite : sprites) {
-       delete sprite;
+        delete sprite;
     }
 
     sprites.clear();
 
-
-    myEngine->End();
+    myEngine->Finalize();
 
     return 0;
 }
