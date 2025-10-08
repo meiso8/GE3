@@ -5,8 +5,6 @@
 #include"MakeIdentity4x4.h"
 
 #include"MyEngine.h"
-
-
 using namespace  Microsoft::WRL;
 
 void Particle::Create(uint32_t textureHandle)

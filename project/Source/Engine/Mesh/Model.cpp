@@ -9,9 +9,10 @@
 #include<numbers>
 #include"TextureManager.h"
 
-void Model::Create(const ModelData& modelData) {
 
-    modelData_ = &modelData;
+void Model::Create(const ModelManager::TAG& modelHandle) {
+
+    modelData_ = &ModelManager::GetModelData(modelHandle);
     modelConfig_ = ModelConfig::GetInstance();
     commandList_ = DirectXCommon::GetCommandList();
 

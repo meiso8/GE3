@@ -32,6 +32,7 @@ public:
     static uint32_t descriptorSizeSRV;
     static const uint32_t kMaxSRVCount;
     static const uint32_t kMaxSoundCount;
+    static const uint32_t kMaxModelCount;
 private:
     Window* window_ = nullptr;
     DXGIFactory dxgiFactory = {};

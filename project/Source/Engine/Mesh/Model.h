@@ -12,13 +12,15 @@
 #include<d3d12.h>
 #include<memory>
 
+#include"ModelManager.h"
+
 class Model
 {
 public:
 
     Model() = default;
     ~Model() = default;
-    void Create(const ModelData& modeldata);
+    void Create(const ModelManager::TAG& modelHandle);
 
     void UpdateUV();
 
