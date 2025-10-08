@@ -49,8 +49,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     DrawGrid grid = DrawGrid(Texture::GetHandle(Texture::WHITE_1X1));
 
-    SpriteC* spriteCommon = SpriteC::GetInstance();
-    spriteCommon->Initialize();
     std::vector<Sprite*>sprites;
 
     for (uint32_t i = 0; i < 5; ++i) {

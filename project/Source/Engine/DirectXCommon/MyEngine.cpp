@@ -148,6 +148,8 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
 
     TextureManager::GetInstance()->Initialize();
 
+    SpriteC::GetInstance()->Initialize();
+
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
 
