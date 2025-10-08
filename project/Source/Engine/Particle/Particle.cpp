@@ -68,8 +68,8 @@ void Particle::CreateTransformationMatrix()
     instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
     instancingSrvDesc.Buffer.NumElements = kNumInstance;
     instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
-    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(7);
-    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(7);
+    instancingSrvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(Texture::TEXTURES + 2);//この書き方はダメですね
+    instancingSrvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(Texture::TEXTURES + 2);
     DirectXCommon::GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 
     for (uint32_t index = 0; index < kNumInstance; ++index) {
@@ -81,7 +81,7 @@ void Particle::CreateTransformationMatrix()
 }
 
 
-void Particle::Draw(Camera& camera,BlendMode blendMode)
+void Particle::Draw(Camera& camera, BlendMode blendMode)
 {
 
     for (uint32_t index = 0; index < kNumInstance; ++index) {

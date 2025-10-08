@@ -10,13 +10,10 @@ ModelConfig MyEngine::modelConfig_ = {};
 
 MyEngine* MyEngine::GetInstance()
 {
-
     if (instance_ == nullptr) {
         instance_ = new MyEngine();
     }
     return instance_;
-
-
 }
 
 void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {

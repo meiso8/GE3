@@ -12,11 +12,11 @@ public:
         UV_CHECKER,
         NUMBERS,
         PLAYER,
-        TEXTURE_MAX
+        TEXTURES
     };
     static void Load();
     static uint32_t GetHandle(TAG tag) {
-        if (tag > TEXTURE_MAX) {
+        if (tag > TEXTURES) {
             return 0;
         }
         return textureHandle_
