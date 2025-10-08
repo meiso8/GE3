@@ -11,7 +11,7 @@ class Camera;
 class Player
 {
 public:
-    Player(const ModelData& modelData);
+    Player();
     void Init();
     void Draw(Camera& camera, uint32_t lightType);
     void Update();
@@ -19,7 +19,6 @@ public:
 private:
     Vector3 velocity_ = { 0.0f,0.0f,0.0f };
     float kSpeed_ = 0.0f;
-    const ModelData* modelData_;
     std::unique_ptr<Model>model_ = nullptr;
     WorldTransform worldTransform_;
 };

@@ -15,11 +15,12 @@
 #include"Texture.h"
 
 #include"ShaderResourceView.h"
-//#include"Model.h"
 #include"Sprite.h"
 #include"SphereMesh.h"
 #include"LineMesh.h"
 #include"Cube.h"
+#include"ModelManager.h"
+
 
 #include"SoundManager.h"
 #include"Sound.h"

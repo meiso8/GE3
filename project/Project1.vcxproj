@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Mesh\ModelManager.cpp" />
     <ClCompile Include="Source\Engine\Sound\Sound.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
     <ClCompile Include="Source\Application\Player.cpp" />
@@ -265,6 +266,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Mesh\ModelManager.h" />
     <ClInclude Include="Source\Engine\Sound\Sound.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />

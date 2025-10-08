@@ -49,10 +49,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         sprites.push_back(sprite);
     }
 
-    const ModelData modelData = LoadObjeFile("resources/player", "player.obj");
+    //const ModelData modelData = LoadObjeFile("resources/player", "player.obj");
+    ModelManager::LoadAllModel();
 
     std::unique_ptr<Player>player;
-    player = std::make_unique<Player>(modelData);
+    player = std::make_unique<Player>();
     player->Init();
 
     Cube cube[2];

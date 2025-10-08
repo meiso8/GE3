@@ -3,16 +3,14 @@
 #include"Input.h"
 #include"Normalize.h"
 #include"Model.h"
+#include"ModelManager.h"
 
-Player::Player(const ModelData& modelData) {
+Player::Player() {
 
     kSpeed_ = 0.0f;
     velocity_ = { 0.0f };
-    modelData_ = &modelData;
     model_ = std::make_unique<Model>();
-
-    model_->Create(*modelData_);
-
+    model_->Create(ModelManager::PLAYER);
 }
 
 void Player::Init()
