@@ -12,7 +12,6 @@
 #include"CompileShader.h"
 #include"BlendState.h"
 #include"RasterizerState.h"
-#include "TextureManager.h"
 #include"Texture.h"
 
 #include"ShaderResourceView.h"
@@ -22,6 +21,7 @@
 #include"LineMesh.h"
 #include"Cube.h"
 
+#include"SoundManager.h"
 #include"Sound.h"
 
 #include"Camera/DebugCamera.h"

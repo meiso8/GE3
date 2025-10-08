@@ -54,8 +54,5 @@ private:
     /// @brief テクスチャファイルの読み込み
 /// @param filePath テクスチャファイルのパス
     static void LoadTexture(const std::string& filePath);
-
-;
-
 };
 

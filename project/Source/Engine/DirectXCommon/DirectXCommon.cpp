@@ -13,6 +13,7 @@ ComPtr<ID3D12DescriptorHeap> DirectXCommon::rtvDescriptorHeap = nullptr;
 ComPtr<ID3D12DescriptorHeap> DirectXCommon::dsvDescriptorHeap = nullptr;
 
 const uint32_t DirectXCommon::kMaxSRVCount = 512;
+const uint32_t DirectXCommon::kMaxSoundCount = 128;
 uint32_t DirectXCommon::descriptorSizeRTV = 0;
 uint32_t DirectXCommon::descriptorSizeDSV = 0;
 uint32_t DirectXCommon::descriptorSizeSRV = 0;

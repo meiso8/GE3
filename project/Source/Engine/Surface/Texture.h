@@ -1,12 +1,9 @@
 #pragma once
 #include<vector>
-#include<stdint.h>
 
 class Texture {
 public:
     static Texture* GetInstance();
-    
-
     enum TAG {
         WHITE_1X1,
         UV_CHECKER,

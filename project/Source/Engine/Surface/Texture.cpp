@@ -15,9 +15,9 @@ Texture* Texture::GetInstance()
 void Texture::Load()
 {
     TextureManager* textureManager = TextureManager::GetInstance();
+    textureManager->Initialize();
     textureHandle_.resize(TEXTURES);
     textureHandle_[WHITE_1X1] = textureManager->Load("resources/white1x1.png");
-
     textureHandle_[UV_CHECKER] = textureManager->Load("resources/uvChecker.png");
     textureHandle_[NUMBERS] = textureManager->Load("resources/numbers.png");
     textureHandle_[PLAYER] = textureManager->Load("resources/player.png");

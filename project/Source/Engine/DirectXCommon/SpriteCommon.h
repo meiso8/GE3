@@ -5,10 +5,10 @@
 #include"VertexData.h"
 class PSO;
 
-class SpriteC
+class SpriteCommon
 {
 private:
-    static SpriteC* instance_;
+    static SpriteCommon* instance_;
     DirectXCommon* directXCommon_;
     ModelConfig* modelConfig_ = nullptr;
 
@@ -18,7 +18,7 @@ private:
 
 public:
 
-    static SpriteC* GetInstance();
+    static SpriteCommon* GetInstance();
      void Initialize();
      void SetIndexBuffer(ID3D12GraphicsCommandList* commandList);
      void LightDraw(ID3D12GraphicsCommandList* commandList);

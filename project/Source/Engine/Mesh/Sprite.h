@@ -12,7 +12,7 @@
 #include"Balloon.h"
 #include"Wave.h"
 #include<d3d12.h>
-#include"SpriteC.h"
+#include"SpriteCommon.h"
 
 class Sprite
 {
@@ -56,7 +56,7 @@ private:
 private:
     uint32_t textureIndex = 0;
 
-    static SpriteC* spriteCommon;
+    static SpriteCommon* spriteCommon;
     ID3D12GraphicsCommandList* commandList;
 
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};

@@ -270,7 +270,7 @@
     <ClCompile Include="Source\Engine\Math\ShericalCoordinate.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Sound\Sound.cpp">
+    <ClCompile Include="Source\Engine\Sound\SoundManager.cpp">
       <Filter>ソース ファイル\Engine\Sound</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\Sprite.cpp">
@@ -318,7 +318,7 @@
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\SpriteC.cpp">
+    <ClCompile Include="Source\Engine\DirectXCommon\SpriteCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\ModelConfig.cpp">
@@ -328,6 +328,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Surface\Texture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Sound\Sound.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -511,7 +514,7 @@
     <ClInclude Include="Source\Engine\Mesh\VertexData.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Sound\Sound.h">
+    <ClInclude Include="Source\Engine\Sound\SoundManager.h">
       <Filter>ヘッダー ファイル\Engine\Sound</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Normalize.h">
@@ -637,7 +640,7 @@
     <ClInclude Include="Source\Engine\DirectXCommon\Window.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\SpriteC.h">
+    <ClInclude Include="Source\Engine\DirectXCommon\SpriteCommon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Surface\TextureManager.h">
@@ -647,6 +650,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Surface\Texture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Sound\Sound.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

@@ -3,11 +3,9 @@
 #include"Player.h"
 #include"Particle/Particle.h"
 #include"Lerp.h"
-#include"SpriteC.h"
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
-
 
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -16,16 +14,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     myEngine->Create(L"2102", WIN_WIDTH, WIN_HEIGHT);
 
 #pragma region//XAudio全体の初期化と音声の読み込み
-
     //音声読み込み SoundDataの変数を増やせばメモリが許す限りいくつでも読み込める。
-    SoundData bgmData[2] = {
-        Sound::Load(L"resources/Sounds/dreamcore.mp3"),
-        Sound::Load(L"resources/Sounds/kiritan.mp3") };
-
-    SoundData seData[2] = {
-        Sound::Load(L"resources/Sounds/poppo.mp3"),
-        Sound::Load(L"resources/Sounds/broken.mp3") };
-
+    Sound::GetInstance()->Load();
 #pragma endregion
 
     bool isDebug = false;
@@ -43,9 +33,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma endregion
 
-    Texture::GetInstance();
-    Texture::Load();
-
+    Texture::GetInstance()->Load();
     DrawGrid grid = DrawGrid(Texture::GetHandle(Texture::WHITE_1X1));
 
     std::vector<Sprite*>sprites;
@@ -113,15 +101,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         }
 
         if (Input::GetInstance()->IsTriggerKey(DIK_A)) {
-            Sound::Play(seData[0], 1.0f, false);
+            SoundManager::Play(Sound::GetHandle(Sound::SE1), 1.0f, false);
         }
 
         if (Input::GetInstance()->IsTriggerKey(DIK_S)) {
-            Sound::Play(seData[1], 1.0f, false);
+            SoundManager::Play(Sound::GetHandle(Sound::SE2), 1.0f, false);
         }
 
-        if (!Sound::IsPlaying()) {
-            Sound::Play(bgmData[1], 0.0625f, true);
+        if (!SoundManager::IsPlaying()) {
+            SoundManager::Play(Sound::GetHandle(Sound::BGM1), 0.0625f, true);
         }
 
         if (isDebug) {
@@ -135,8 +123,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             debugUI.CheckBlendMode(blendMode);
             debugUI.CheckSprite(*sprites[0]);
 
-            //デバッグカメラに切り替え
-                   //視点操作
+            //視点操作
             Input::GetInstance()->EyeOperation(camera);
 
         } else {
