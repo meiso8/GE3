@@ -34,6 +34,14 @@ SoundManager::SoundManager() {
     assert(SUCCEEDED(result));
 }
 
+SoundManager::~SoundManager()
+{
+    for (int i = 0; i < soundDatas.size(); ++i) {
+        Unload(&soundDatas[i]);
+    }
+
+}
+
 
 SoundManager* SoundManager::GetInstance()
 {

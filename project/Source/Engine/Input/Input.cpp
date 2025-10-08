@@ -7,6 +7,19 @@
 #include"math/Normalize.h"
 
 Input* Input::instance_ = nullptr;
+BYTE Input::key_[256];
+BYTE Input::preKey_[256];
+bool Input::foundJoystick_ = false;
+DIJOYSTATE Input::joyState_;
+float Input::deadZone_ = 0.1f;
+BYTE Input::preJoyButtons_[32];
+DIMOUSESTATE Input::mouseState_;
+float Input::mouseWheelVol_ = 0;
+bool Input::isDragging_ = false;
+Vector2 Input::offset_ = { 0.0f,0.0f };
+Vector2 Input::currentPos_ = { 0.0f };
+Vector3 Input::pos_ = { 0.0f };
+ShericalCoordinate Input::shericalCoordinate_ = { 0.0f,0.0f,0.0f };
 
 Input* Input::GetInstance() {
 

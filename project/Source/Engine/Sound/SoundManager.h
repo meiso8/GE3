@@ -26,7 +26,7 @@ class SoundManager {
 public:
 
     SoundManager();
-    ~SoundManager() = default;
+    ~SoundManager();
     SoundManager(SoundManager&) = delete;
 
     static SoundManager* GetInstance();

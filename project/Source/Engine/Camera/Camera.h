@@ -15,6 +15,7 @@ private:
     //射影行列
     Matrix4x4 projectionMatrix_ = {};
     float farZ_ = 100.0f;
+    float nearZ_ = 0.1f;
     float width_{};
     float height_{};
     bool isOrthographic_ = false;
@@ -22,6 +23,7 @@ private:
 public:
     /// @brief 初期化
     void Initialize(const float& width, const float& height, const bool& isOrthographic);
+    void InitializeTransform();
     /// @brief 更新
     void Update();
 
@@ -40,6 +42,9 @@ public:
     Vector3& GetRotate() { return rotation_; };
     Vector3& GetScale() { return scale_; };
     Vector2& GetOffset() { return offset_; };
+    float& GetFarZ() { return farZ_; };
+    float& GetNearZ() { return nearZ_; };
+    bool GetIsOrthographic() {return isOrthographic_;}
 
     void SetRotate(const Vector3& rotate) { rotation_ = rotate; };
     void SetRotateY(const float& rotateY) { rotation_.y = rotateY; };

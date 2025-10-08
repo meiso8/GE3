@@ -14,7 +14,7 @@ class Camera;
 
 class Input {
 public:
-    bool foundJoystick_ = false;
+    static bool foundJoystick_;
     GUID joystickGUID = GUID_NULL;
 public:
 
@@ -29,65 +29,64 @@ public:
 
     HRESULT Initialize(Window& window);
     /// @brief キーを押した状態 
-    bool IsPushKey(const uint8_t& key);
+    static bool IsPushKey(const uint8_t& key);
     /// @briefキーを押した瞬間
-    bool IsTriggerKey(const uint8_t& key);
+    static bool IsTriggerKey(const uint8_t& key);
     /// @briefキーを離した状態
-    bool IsReleaseStateKey(const uint8_t& key);
+    static bool IsReleaseStateKey(const uint8_t& key);
     /// @briefキーを離した瞬間
-    bool IsReleaseKey(const uint8_t& key);
+    static bool IsReleaseKey(const uint8_t& key);
 
     /// @brief キーの情報を取得する
     void Update();
 
-    bool IsPressMouse(uint32_t index);
+    static bool IsPressMouse(uint32_t index);
 
-    bool IsJoyStickPressButton(uint32_t index);
-    bool IsJoyStickTrigger(uint32_t index);
-  
-    bool GetJoyStickPos(float* x, float* y, ButtonType buttonType);
-    bool GetJoyStickDPadButton(float* x, float* y);
+    static bool IsJoyStickPressButton(uint32_t index);
+    static bool IsJoyStickTrigger(uint32_t index);
+
+    static bool GetJoyStickPos(float* x, float* y, ButtonType buttonType);
+    static bool GetJoyStickDPadButton(float* x, float* y);
 
     DIJOYSTATE& GetJoyState() { return joyState_; };
 
-    Vector2& GetMousePos();
-    float GetMouseWheel();
+    static Vector2& GetMousePos();
+    static float GetMouseWheel();
 
-    void EyeOperation(Camera& camera);
+    static void EyeOperation(Camera& camera);
 
-    Vector2& GetOffset() { return offset_; }
-    Vector2& GetCurrentPos() { return currentPos_; }
-    Vector3& GetPos() { return pos_; }
+    static Vector2& GetOffset() { return offset_; }
+    static Vector2& GetCurrentPos() { return currentPos_; }
+    static Vector3& GetPos() { return pos_; }
     ShericalCoordinate& GetSc() { return shericalCoordinate_; }
 private:
-    static Input*instance_;
+    static Input* instance_;
     Window* window_ = nullptr;
 
     IDirectInputDevice8* keyboard_ = nullptr;
     //全キー入力状態を取得する
-    BYTE key_[256] = {};
-    BYTE preKey_[256] = {};
+    static BYTE key_[256];
+    static BYTE preKey_[256];
     //マウス
     IDirectInputDevice8* mouse_ = nullptr;
-    DIMOUSESTATE mouseState_ = {};
+    static DIMOUSESTATE mouseState_;
     DIMOUSESTATE mouseState_bak_ = {};	// マウス情報(変化検知用)
-    float mouseWheelVol_ = 0;
-    bool isDragging_ = false;
+    static float mouseWheelVol_;
+    static bool isDragging_;
 
-
-    Vector2 offset_ = { 0.0f,0.0f };
-    Vector2 currentPos_ = { 0.0f };
-    Vector3 pos_ = { 0.0f };
-    ShericalCoordinate shericalCoordinate_ = { 0.0f,0.0f,0.0f };
+    static Vector2 offset_;
+    static Vector2 currentPos_;
+    static Vector3 pos_;
+    static ShericalCoordinate shericalCoordinate_;
 
     //ゲームパッド
     IDirectInputDevice8* gamePad_ = nullptr;
-    DIJOYSTATE joyState_{};
-    float deadZone_ = 0.1f;
-    BYTE preJoyButtons_[32];
+    static DIJOYSTATE joyState_;
+    static float deadZone_;
+    static BYTE preJoyButtons_[32];
 
 private:
-    bool NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& buttonLY);
+    static bool NormalizeButtonCount(float* x, float* y, LONG& buttonLX, LONG& buttonLY);
     Input& operator=(Input&) = delete;
     ~Input();
 };

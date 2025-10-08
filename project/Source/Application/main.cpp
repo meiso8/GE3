@@ -13,11 +13,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     MyEngine* myEngine = MyEngine::GetInstance();
     myEngine->Create(L"2102", WIN_WIDTH, WIN_HEIGHT);
 
-#pragma region//XAudio全体の初期化と音声の読み込み
-    //音声読み込み SoundDataの変数を増やせばメモリが許す限りいくつでも読み込める。
+    //音声の読み込み
     Sound::GetInstance()->Load();
-#pragma endregion
 
+    //デバック用
     bool isDebug = false;
     DebugUI debugUI;
 
@@ -62,6 +61,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     WorldTransform cubeWorldTransform;
     cubeWorldTransform.Initialize();
+    cubeWorldTransform.scale_ = { 10.0f,10.0f,10.0f };
     cubeWorldTransform.SetRotationY(std::numbers::pi_v<float> / 4.0f);
     WorldTransformUpdate(cubeWorldTransform);
 
@@ -91,20 +91,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef _DEBUG
 
-        if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) || Input::GetInstance()->IsJoyStickTrigger(1)) {
+        if (Input::IsTriggerKey(DIK_SPACE) || Input::IsJoyStickTrigger(1)) {
             //デバッグの切り替え
             isDebug = (isDebug) ? false : true;
         }
 
-        if (Input::GetInstance()->IsTriggerKey(DIK_O)) {
-            camera.SetOrthographic(true);
+        if (Input::IsTriggerKey(DIK_O)) {
+            camera.SetOrthographic(camera.GetIsOrthographic() ? false : true);
         }
 
-        if (Input::GetInstance()->IsTriggerKey(DIK_A)) {
+        if (Input::IsTriggerKey(DIK_A)) {
             SoundManager::Play(Sound::GetHandle(Sound::SE1), 1.0f, false);
         }
 
-        if (Input::GetInstance()->IsTriggerKey(DIK_S)) {
+        if (Input::IsTriggerKey(DIK_S)) {
             SoundManager::Play(Sound::GetHandle(Sound::SE2), 1.0f, false);
         }
 
@@ -124,14 +124,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             debugUI.CheckSprite(*sprites[0]);
 
             //視点操作
-            Input::GetInstance()->EyeOperation(camera);
+            Input::EyeOperation(camera);
 
         } else {
 
             Vector3 cameraPos = player->GetTranslate();
 
             Vector2 delta = { 0.0f,0.0f };
-            if (Input::GetInstance()->GetJoyStickPos(&delta.x, &delta.y, Input::BUTTON_RIGHT)) {
+            if (Input::GetJoyStickPos(&delta.x, &delta.y, Input::BUTTON_RIGHT)) {
                 camera.SetRotateY(delta.x);
             }
             cameraPos.y += 1.0f + delta.y;

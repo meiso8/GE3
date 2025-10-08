@@ -17,6 +17,8 @@ void Sound::Load()
     SoundManager* soundManager = SoundManager::GetInstance();
     soundManager->Initialize();
     soundHandle_.resize(SOUNDS);
+
+    //サウンドの読み込み
     soundHandle_[BGM1] = soundManager->Load(L"resources/Sounds/dreamcore.mp3");
     soundHandle_[BGM2] = soundManager->Load(L"resources/Sounds/kiritan.mp3");
     soundHandle_[SE1] = soundManager->Load(L"resources/Sounds/poppo.mp3");

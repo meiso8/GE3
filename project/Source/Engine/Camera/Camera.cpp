@@ -25,17 +25,28 @@ void Camera::Initialize(const float& width, const float& height, const bool& isO
     }
 }
 
+void Camera::InitializeTransform()
+{
+    scale_ = { 1.0f,1.0f,1.0f };
+    rotation_ = { 0.0f,0.0f,0.0f };
+    translate_ = { 0.0f,0.0f,0.0f };
+}
+
 void Camera::Update() {
 
     viewMatrix_ = Inverse(MakeAffineMatrix(scale_, rotation_, translate_));
 
     if (isOrthographic_) {
         //平行投影
-        projectionMatrix_ = MakeOrthographicMatrix(0.0f, 0.0f, width_, height_, 0.0f, farZ_);
+        float halfWidth = width_ * 0.5f;
+        float halfHeight = height_ * 0.5f;
+        projectionMatrix_ = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, nearZ_, farZ_);
+        projectionMatrix_.m[3][0] += offset_.x;
+        projectionMatrix_.m[3][1] -= offset_.y;
 
     } else {
         //投資投影
-        projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, 0.1f, farZ_);
+        projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, width_ / height_, nearZ_, farZ_);
         projectionMatrix_.m[3][0] += offset_.x;
         projectionMatrix_.m[3][1] -= offset_.y;
     }
@@ -43,5 +54,6 @@ void Camera::Update() {
 }
 
 Matrix4x4 Camera::GetViewProjectionMatrix() {
+
     return Multiply(viewMatrix_, projectionMatrix_);
 }

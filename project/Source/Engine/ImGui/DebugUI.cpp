@@ -69,10 +69,23 @@ void DebugUI::CheckInt(int& value) {
 
 void DebugUI::CheckCamera(Camera& camera) {
     ImGui::Begin("Camera");
+    ImGui::SliderFloat3("translate", &camera.GetTranslate().x, -1000.0f, 1000.0f);
+    ImGui::SliderFloat3("rotate", &camera.GetRotate().x, -1000.0f, 1000.0f);
+    ImGui::SliderFloat3("scale", &camera.GetScale().x, -1000.0f, 1000.0f);
+    ImGui::SliderFloat2("ofsset", &camera.GetOffset().x, -1000.0f, 1000.0f);
+    ImGui::SliderFloat("nearZ", &camera.GetNearZ(), 0.0f, 1000.0f);
+    ImGui::SliderFloat("farZ", &camera.GetFarZ(), 0.0f, 1000.0f);
+    if (ImGui::Button("InitTransform")) {
+        camera.InitializeTransform();
+    }
+    ImGui::Text("Orthographic : %d", camera.GetIsOrthographic());
+    if (ImGui::Button("Orthographic")) {
+        camera.SetOrthographic(camera.GetIsOrthographic() ? false : true);
+    }
 
-    ImGui::SliderFloat3("translate", &camera.GetTranslate().x, -100.0f, 100.0f);
-    ImGui::SliderFloat3("rotate", &camera.GetRotate().x, -100.0f, 100.0f);
-    ImGui::SliderFloat3("scale", &camera.GetScale().x, -100.0f, 100.0f);
+
+
+
 
     ImGui::End();
 
@@ -94,7 +107,7 @@ void DebugUI::CheckModel(Model& model) {
 
     }
 
- 
+
 
     if (ImGui::TreeNode("Wave2")) {
         Wave waveData2 = model.GetWaveData(1);
@@ -151,7 +164,7 @@ void DebugUI::CheckInput(Input& input) {
     float dX = 100;
     float dY = 100;
     input.GetJoyStickDPadButton(&dX, &dY);
-  
+
     ImGui::Text("Dpad:%f %f", dX, dY);
 
     ImGui::Text("joyStateLX: %ld", input.GetJoyState().lX);//x軸位置
