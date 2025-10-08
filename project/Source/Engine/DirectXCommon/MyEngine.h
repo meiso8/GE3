@@ -12,6 +12,7 @@
 #include"CompileShader.h"
 #include"BlendState.h"
 #include"RasterizerState.h"
+#include "TextureManager.h"
 #include"Texture.h"
 
 #include"ShaderResourceView.h"
@@ -53,6 +54,8 @@
 
 #include"DebugUI.h"
 
+
+
 #pragma endregion
 
 
@@ -80,7 +83,7 @@ public:
     static void SetBlendMode(uint32_t blendMode = BlendMode::kBlendModeNormal);
 
 public:
-    static const uint32_t kMaxSRVCount;
+
 private:
     D3DResourceLeakChecker leakCheck = {};
     static MyEngine* instance_;
@@ -91,7 +94,6 @@ private:
 
     Input* input = nullptr;
     //音声クラスの作成
-    Sound* sound = nullptr;
 
     Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource = nullptr;
     static DirectionalLight* directionalLightData;

@@ -1,17 +1,137 @@
 #include "SphereMesh.h"
 #include"DirectXCommon.h"
-#include"Texture.h"
 #include"TransformationMatrix.h"
 #include"MakeAffineMatrix.h"
 #include"Multiply.h"
 #include"Transform.h"
 #include"MakeIdentity4x4.h"
 #include<numbers>
+#include"TextureManager.h"
+
+void SphereMesh::Create(uint32_t textureHandle) {
+
+    textureIndex = textureHandle;
+
+    commandList_ = DirectXCommon::GetCommandList();
+    modelConfig_ = ModelConfig::GetInstance();
+
+    //マテリアルの作成
+    CreateMaterial();
+
+    CreateWorldVPResource();
+
+    //頂点リソースを作る
+    CreateVertex();
+
+    //CreateIndexResource(device);
+
+    transform_ = {
+    {1.0f,1.0f,1.0f },
+    {0.0f,0.0f,0.0f},
+    {0.0f,0.0f,0.0f}
+    };
+    worldMatrix_ = MakeIdentity4x4();
+
+    uvTransform_ = {
+          {1.0f,1.0f,1.0f},
+          {0.0f,0.0f,0.0f},
+          {0.0f,0.0f,0.0f},
+    };
+
+    uvTransformMatrix_ = MakeIdentity4x4();
+
+}
+
+//void Sphere::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
+//
+//#pragma region//IndexResourceを作成
+//    indexResource_ = CreateBufferResource(device, sizeof(uint32_t) * 6);
+//    //Viewを作成する IndexBufferView(IBV)
+//
+//    //リソースの先頭アドレスから使う
+//    indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
+//    //使用するリソースのサイズはインデックス6つ分のサイズ
+//    indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6;
+//    //インデックスはuint32_tとする
+//    indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+//#pragma endregion
+//
+//#pragma region//IndexResourceにデータを書き込む
+//    //インデックスリーソースにデータを書き込む
+//    indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+//
+//    //頂点数を削減
+//    indexData_[0] = 0;
+//    indexData_[1] = 1;
+//    indexData_[2] = 2;
+//
+//    indexData_[3] = 1;
+//    indexData_[4] = 3;
+//    indexData_[5] = 2;
+//
+//#pragma endregion
+//}
+
+void SphereMesh::UpdateUV() {
+
+    uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
+    materialResource_.SetUV(uvTransformMatrix_);
+}
+
+
+void SphereMesh::CreateWorldVPResource() {
+    //WVP用のリソースを作る。Matrix3x3 1つ分のサイズを用意する。
+    wvpResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix));
+    //データを書き込む
+    //書き込むためのアドレスを取得
+    wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpDate_));
+};
+
+void SphereMesh::SetColor(const Vector4& color) {
+    materialResource_.SetColor(color);
+};
+
+void SphereMesh::PreDraw(PSO& pso, PSO::PSOType type) {
+
+    commandList_->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
+    commandList_->SetPipelineState(pso.GetGraphicsPipelineState(type).Get());//PSOを設定
+    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void SphereMesh::Draw(Camera& camera, uint32_t lightType
+) {
+
+
+    materialResource_.SetLightType(lightType);
+
+    worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+    worldViewProjectionMatrix_ = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
+    //データを書き込む
+    *wvpDate_ = { worldViewProjectionMatrix_,worldMatrix_ };
+
+    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+    //wvp用のCBufferの場所を設定
+    commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+    //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
+    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex));
+    //LightのCBufferの場所を設定
+    commandList_->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
+    //timeのSRVの場所を設定
+    commandList_->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+    //expansionのCBufferの場所を設定
+    commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+    //描画!(DrawCall/ドローコール)。
+    commandList_->DrawInstanced(6 * kSubdivision_ * kSubdivision_, 1, 0, 0);
+
+}
 
 void SphereMesh::CreateVertex() {
 
     //VertexResourceとVertexBufferViewを用意 矩形を表現するための三角形を二つ(頂点4つ)
-    vertexResource_ = DirectXCommon::CreateBufferResource( sizeof(VertexData) * 6 * kSubdivision_ * kSubdivision_);
+    vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 6 * kSubdivision_ * kSubdivision_);
 
     //頂点バッファビューを作成する
     //リソースの先頭アドレスから使う
@@ -137,124 +257,5 @@ void SphereMesh::CreateMaterial() {
 
     //マテリアルリソースを作成 //ライトなし
     materialResource_.CreateMaterial(MaterialResource::LIGHTTYPE::NONE);
-
-}
-
-void SphereMesh::Create() {
-
-    //マテリアルの作成
-    CreateMaterial();
-
-    CreateWorldVPResource();
-
-    //頂点リソースを作る
-    CreateVertex();
-
-    //CreateIndexResource(device);
-
-    transform_ = {
-    {1.0f,1.0f,1.0f },
-    {0.0f,0.0f,0.0f},
-    {0.0f,0.0f,0.0f}
-    };
-    worldMatrix_ = MakeIdentity4x4();
-
-    uvTransform_ = {
-          {1.0f,1.0f,1.0f},
-          {0.0f,0.0f,0.0f},
-          {0.0f,0.0f,0.0f},
-    };
-
-    uvTransformMatrix_ = MakeIdentity4x4();
-    modelConfig_ = ModelConfig::GetInstance();
-}
-
-//void Sphere::CreateIndexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device) {
-//
-//#pragma region//IndexResourceを作成
-//    indexResource_ = CreateBufferResource(device, sizeof(uint32_t) * 6);
-//    //Viewを作成する IndexBufferView(IBV)
-//
-//    //リソースの先頭アドレスから使う
-//    indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
-//    //使用するリソースのサイズはインデックス6つ分のサイズ
-//    indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6;
-//    //インデックスはuint32_tとする
-//    indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-//#pragma endregion
-//
-//#pragma region//IndexResourceにデータを書き込む
-//    //インデックスリーソースにデータを書き込む
-//    indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
-//
-//    //頂点数を削減
-//    indexData_[0] = 0;
-//    indexData_[1] = 1;
-//    indexData_[2] = 2;
-//
-//    indexData_[3] = 1;
-//    indexData_[4] = 3;
-//    indexData_[5] = 2;
-//
-//#pragma endregion
-//}
-
-void SphereMesh::UpdateUV() {
-
-    uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
-    materialResource_.SetUV(uvTransformMatrix_);
-}
-
-
-void SphereMesh::CreateWorldVPResource() {
-    //WVP用のリソースを作る。Matrix3x3 1つ分のサイズを用意する。
-    wvpResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrix));
-    //データを書き込む
-    //書き込むためのアドレスを取得
-    wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpDate_));
-};
-
-void SphereMesh::SetColor(const Vector4& color) {
-    materialResource_.SetColor(color);
-};
-
-void SphereMesh::PreDraw(PSO& pso, PSO::PSOType type) {
-
-    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
-
-    commandList->SetGraphicsRootSignature(modelConfig_->rootSignature->GetRootSignature(0));
-    commandList->SetPipelineState(pso.GetGraphicsPipelineState(type).Get());//PSOを設定
-    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-void SphereMesh::Draw(Camera& camera, ShaderResourceView& srv, uint32_t lightType
-) {
-
-    ID3D12GraphicsCommandList* commandList = DirectXCommon::GetCommandList();
-
-
-    materialResource_.SetLightType(lightType);
-
-    worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-    worldViewProjectionMatrix_ = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
-    //データを書き込む
-    *wvpDate_ = { worldViewProjectionMatrix_,worldMatrix_ };
-
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-    //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
-    //wvp用のCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-    //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
-    //LightのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
-    //timeのSRVの場所を設定
-    commandList->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
-    //expansionのCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
-    //描画!(DrawCall/ドローコール)。
-    commandList->DrawInstanced(6 * kSubdivision_ * kSubdivision_, 1, 0, 0);
 
 }

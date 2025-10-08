@@ -22,11 +22,10 @@
 class LineMesh
 {
 public:
-    void Create();
+    void Create(uint32_t textureIndex);
 
     void PreDraw();
-    void Draw(
-        ShaderResourceView& srv ,Camera& camera
+    void Draw(Camera& camera
     );
 
     void SetColor(const Vector4& color);
@@ -49,6 +48,7 @@ private:
     void CreateTransformationMatrix();
     void CreateMaterial();
 private:
+    ID3D12GraphicsCommandList* commandList_ = nullptr;
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     VertexData* vertexData_ = nullptr;
@@ -73,5 +73,7 @@ private:
 
     ModelConfig* modelConfig_ = nullptr;
     PSO* pso_ = { nullptr };
+
+    uint32_t textureIndex = 0;
 };
 

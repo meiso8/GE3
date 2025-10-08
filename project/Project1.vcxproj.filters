@@ -285,9 +285,6 @@
     <ClCompile Include="Source\Engine\Mesh\ModelData.cpp">
       <Filter>ソース ファイル\Engine\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Surface\Texture.cpp">
-      <Filter>ソース ファイル\Engine\Surface</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Math\TransformVector.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
@@ -325,6 +322,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\ModelConfig.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Surface\TextureManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Surface\Texture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -532,9 +535,6 @@
     <ClInclude Include="Source\Engine\Mesh\SphereMesh.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Surface\Texture.h">
-      <Filter>ヘッダー ファイル\Engine\Surface</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\Sprite.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
@@ -641,6 +641,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Surface\TextureManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\hlslTypeToCpp.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Surface\Texture.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

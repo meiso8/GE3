@@ -176,6 +176,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\DirectXCommon\InputLayout.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp" />
     <ClCompile Include="Source\Engine\ImGui\ImGuiClass.cpp" />
+    <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
     <ClCompile Include="Source\Engine\Surface\MaterialResource.cpp" />
     <ClCompile Include="Source\Engine\Math\Easing.cpp" />
     <ClCompile Include="Source\Engine\Math\Lerp.cpp" />
@@ -238,11 +239,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\DirectXCommon\SwapChain.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\TransitionBarrier.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Viewport.cpp" />
-    <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Sprite.cpp" />
     <ClCompile Include="Source\Engine\Mesh\SphereMesh.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\SpriteC.cpp" />
+    <ClCompile Include="Source\Engine\Surface\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl">
@@ -273,6 +274,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Source\Application\Player.h" />
+    <ClInclude Include="Source\Engine\hlslTypeToCpp.h" />
     <ClInclude Include="Source\Engine\Particle\Particle.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h" />
     <ClInclude Include="Source\Engine\Mesh\Balloon.h" />
@@ -299,6 +301,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\InputLayout.h" />
     <ClInclude Include="Source\Engine\Mesh\LineMesh.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Log.h" />
+    <ClInclude Include="Source\Engine\Surface\Texture.h" />
     <ClInclude Include="Source\Engine\Surface\Material.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialData.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialResource.h" />
@@ -355,7 +358,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\Mesh\SphereMesh.h" />
     <ClInclude Include="Source\Engine\Mesh\Sprite.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\SwapChain.h" />
-    <ClInclude Include="Source\Engine\Surface\Texture.h" />
     <ClInclude Include="Source\Engine\Math\TransformationMatrix.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\TransitionBarrier.h" />
     <ClInclude Include="Source\Engine\Mesh\VertexData.h" />

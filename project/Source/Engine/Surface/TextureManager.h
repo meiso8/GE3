@@ -18,23 +18,32 @@ class TextureManager
 public:
     //SRVインデックスの開始番号
     static uint32_t kSRVIndexTop;
+    struct TextureData {
+        std::string filePath;
+        DirectX::TexMetadata metadata;
+        Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+        Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource;
+        D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
+        D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
+    };
 public:
     //シングルトンインスタンスの取得
     static TextureManager* GetInstance();
     //終了
-    void Finalize();
+    static void Finalize();
     //初期化
-    void Initialize();
-    /// @brief テクスチャファイルの読み込み
-    /// @param filePath テクスチャファイルのパス
-    void LoadTexture(const std::string& filePath);
+    static void Initialize();
+
+    static uint32_t Load(const std::string& filePath);
     //SRVインデックスの開始番号
-    uint32_t GetTextureIndexByFilePath(const std::string& filePath);
+    static uint32_t GetTextureIndexByFilePath(const std::string& filePath);
     //テクスチャ番号からGPUハンドルを取得
-    D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(uint32_t textureIndex);
+    static D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(uint32_t textureIndex);
 private:
     static TextureManager* instance;
 
+    static std::vector<TextureData> textureDatas;
+private:
     //コンストラク・タデストラクタの隠ぺい
     TextureManager() = default;
     ~TextureManager() = default;
@@ -42,17 +51,11 @@ private:
     TextureManager(TextureManager&) = delete;
     //コピー代入演算子の封印
     TextureManager& operator=(TextureManager&) = delete;
+    /// @brief テクスチャファイルの読み込み
+/// @param filePath テクスチャファイルのパス
+    static void LoadTexture(const std::string& filePath);
 
-    struct TextureData {
-        std::string filePath;
-        DirectX::TexMetadata metadata;
-        Microsoft::WRL::ComPtr<ID3D12Resource> resource;
-        D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
-        D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
-    };
-
-    std::vector<TextureData> textureDatas;
-
+;
 
 };
 

@@ -2,10 +2,10 @@
 #include<numbers>
 #include"MakeIdentity4x4.h"
 
-DrawGrid::DrawGrid() {
+DrawGrid::DrawGrid(uint32_t textureHandle) {
 
     for (int i = 0; i < 102; ++i) {
-        line_[i].Create();
+        line_[i].Create(textureHandle);
     }
 
     for (int i = 0; i < 51; ++i) {
@@ -24,8 +24,8 @@ DrawGrid::DrawGrid() {
         }
     }
 
-    cube_[0].Create();
-    cube_[1].Create();
+    cube_[0].Create(textureHandle);
+    cube_[1].Create(textureHandle);
 
     cube_[0].SetMinMax({ -1.0f / 128.0f,-1.0f / 128.0f,-25.0f }, { 1.0f / 128.0f,1.0f / 128.0f,25.0f });
     cube_[1].SetMinMax({ -25.0f,-1.0f / 128.0f,-1.0f / 128.0f }, { 25.0f,1.0f / 128.0f,1.0f / 128.0f });
@@ -35,17 +35,17 @@ DrawGrid::DrawGrid() {
 
 }
 
-void DrawGrid::Draw(ShaderResourceView& srv, Camera& camera) {
+void DrawGrid::Draw(Camera& camera) {
 
     line_[0].PreDraw();
 
     for (int i = 0; i < 102; ++i) {
-        line_[i].Draw(srv, camera);
+        line_[i].Draw(camera);
     }
     cube_[0].PreDraw();
 
     for (int i = 0; i < 2; ++i) {
-        cube_[i].Draw(srv, camera, MakeIdentity4x4());
+        cube_[i].Draw(camera, MakeIdentity4x4());
     }
 
 }

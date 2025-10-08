@@ -131,7 +131,7 @@ void DirectXCommon::PostDraw()
     swapChainClass.GetSwapChain()->Present(1, 0);
 
     //画面の更新が終わった直後GPUにシグナルを送る
-    fence.Update(commandQueue);
+    fence.SendSignal(commandQueue);
 
     UpdateFixFPS();
 

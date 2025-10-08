@@ -5,12 +5,13 @@
 #include"MakeIdentity4x4.h"
 #include"Multiply.h"
 #include"MyEngine.h"
+#include"TextureManager.h"
 
 SpriteC* Sprite::spriteCommon = nullptr;
 
-void Sprite::Initialize(const Vector2& size)
+void Sprite::Initialize(uint32_t textureHandle, const Vector2& size)
 {
-
+    textureIndex = textureHandle;
     spriteCommon = SpriteC::GetInstance();
 
     commandList = DirectXCommon::GetCommandList();
@@ -22,6 +23,11 @@ void Sprite::Initialize(const Vector2& size)
     CreateBalloonData();
 
     materialResource_.CreateMaterial();
+}
+
+void Sprite::ChangeTexture(uint32_t textureHandle)
+{
+    textureIndex = textureHandle;
 }
 
 void Sprite::ResetSize(const Vector2& size) {
@@ -51,8 +57,7 @@ void Sprite::PreDraw(uint32_t blendMode) {
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void Sprite::Draw(
-    ShaderResourceView& srv, Camera& camera, uint32_t lightType
+void Sprite::Draw(Camera& camera, uint32_t lightType
 ) {
 
     materialResource_.SetLightType(lightType);
@@ -65,13 +70,13 @@ void Sprite::Draw(
     //頂点バッファビューを設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     spriteCommon->SetIndexBuffer(commandList);
-
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList->SetGraphicsRootDescriptorTable(2, srv.GetTextureSrvHandleGPU());
+    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex));
+
 
     spriteCommon->LightDraw(commandList);
 

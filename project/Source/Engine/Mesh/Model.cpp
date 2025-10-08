@@ -1,19 +1,15 @@
 #include "Model.h"
 #include"DirectXCommon.h"
-#include"Texture.h"
+
 #include"TransformationMatrix.h"
 #include"MakeAffineMatrix.h"
 #include"Multiply.h"
 #include"Transform.h"
 #include"MakeIdentity4x4.h"
 #include<numbers>
+#include"TextureManager.h"
 
-Model::~Model()
-{
-    delete texture_;
-}
-
-void Model::Create(const ModelData& modelData, uint32_t index) {
+void Model::Create(const ModelData& modelData) {
 
     modelData_ = &modelData;
     modelConfig_ = ModelConfig::GetInstance();
@@ -36,11 +32,7 @@ void Model::Create(const ModelData& modelData, uint32_t index) {
     std::memcpy(vertexData_, modelData_->vertices.data(), sizeof(VertexData) * modelData_->vertices.size());//頂点データをリソースにコピー
 
     //モデルのテクスチャを読む
-    texture_ = new Texture();
-    texture_->Load(modelData_->material.textureFilePath);
-
-    //これだとダメだわ
-    srv_.Create(*texture_, index);
+    textureIndex = TextureManager::GetInstance()->Load(modelData_->material.textureFilePath);
 
     uvTransform_ = {
         {1.0f,1.0f,1.0f},
@@ -132,7 +124,7 @@ void Model::Draw(const Matrix4x4& worldMatrix, Camera& camera, uint32_t lightTyp
     //wvp用のCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    commandList_->SetGraphicsRootDescriptorTable(2, srv_.GetTextureSrvHandleGPU());
+    commandList_->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex));
     //LightのCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(3, modelConfig_->directionalLightResource->GetGPUVirtualAddress());
     //timeのSRVの場所を設定

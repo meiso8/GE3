@@ -1,38 +1,12 @@
 #include "TextureManager.h"
-#include"MyEngine.h"
+#include"DirectXCommon.h"
 #include"StringUtility.h"
 #include<cassert>
 
 using namespace StringUtility;
 
 uint32_t TextureManager::kSRVIndexTop = 1;
-
-//テクスチャの読み込み関数
-DirectX::ScratchImage LoadTextureFile(const std::string& filePath) {
-
-    //テクスチャファイルを読んでプログラムで扱えるようにする
-    DirectX::ScratchImage image{};
-    std::wstring filePathW = ConvertString(filePath);
-    //sRBG空間で作られた物として読む。
-    HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
-    assert(SUCCEEDED(hr));
-
-    const DirectX::TexMetadata metadata = image.GetMetadata();
-
-    //ミニマップの作成
-    DirectX::ScratchImage mipImages{};
-
-    if (metadata.width > 1 || metadata.height > 1) {
-        hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-
-        assert(SUCCEEDED(hr));
-    } else {
-        mipImages = std::move(image); // そのまま使う
-    }
-
-    //ミニマップ付きのデータを返す
-    return mipImages;
-}
+std::vector<TextureManager::TextureData> TextureManager::textureDatas;
 TextureManager* TextureManager::instance = nullptr;
 
 TextureManager* TextureManager::GetInstance()
@@ -52,7 +26,7 @@ void TextureManager::Finalize()
 void TextureManager::Initialize()
 {
     //SRVの和と同数
-    textureDatas.reserve(MyEngine::kMaxSRVCount);
+    textureDatas.reserve(DirectXCommon::kMaxSRVCount);
 
 }
 
@@ -66,7 +40,7 @@ void TextureManager::LoadTexture(const std::string& filePath)
     );
 
     //テクスチャ枚数上限チェック
-    assert(textureDatas.size() + kSRVIndexTop < MyEngine::kMaxSRVCount);
+    assert(textureDatas.size() + kSRVIndexTop < DirectXCommon::kMaxSRVCount);
 
     if (it != textureDatas.end()) {
         return;
@@ -99,13 +73,14 @@ void TextureManager::LoadTexture(const std::string& filePath)
 
     textureData.filePath = filePath;
     textureData.metadata = mipImages.GetMetadata();
-    textureData.resource = CreateTextureResource(textureData.metadata);
+    textureData.resource = DirectXCommon::CreateTextureResource(textureData.metadata);
+    textureData.intermediateResource = DirectXCommon::UploadTextureData(textureData.resource, mipImages);
 
     //テクスチャデータの要素数番号をSRVのインデックスとする
-    uint32_t srvIndex = static_cast<uint32_t>(textureDatas.size() - 1) /*+ kSRVIndexTop*/;
+    uint32_t srvIndex = static_cast<uint32_t>(textureDatas.size() - 1) + kSRVIndexTop;
 
-    textureData.srvHandleCPU = GetCPUDescriptorHandle(srvIndex);
-    textureData.srvHandleGPU = GetGPUDescriptorHandle(srvIndex);
+    textureData.srvHandleCPU = DirectXCommon::GetSRVCPUDescriptorHandle(srvIndex);
+    textureData.srvHandleGPU = DirectXCommon::GetSRVGPUDescriptorHandle(srvIndex);
 
     //metaDataを基にSRVの設定
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -115,9 +90,15 @@ void TextureManager::LoadTexture(const std::string& filePath)
     srvDesc.Texture2D.MipLevels = UINT(textureData.metadata.mipLevels);
 
     //SRVの生成
-    device->CreateShaderResourceView(textureData.resource.Get(), &srvDesc, textureData.srvHandleCPU);
+    DirectXCommon::GetDevice()->CreateShaderResourceView(textureData.resource.Get(), &srvDesc, textureData.srvHandleCPU);
+    assert(textureData.resource);
+    assert(textureData.srvHandleCPU.ptr != 0);
+}
 
-
+uint32_t TextureManager::Load(const std::string& filePath)
+{
+    LoadTexture(filePath);
+    return GetTextureIndexByFilePath(filePath);
 }
 
 uint32_t TextureManager::GetTextureIndexByFilePath(const std::string& filePath)
@@ -142,7 +123,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(uint32_t textureInde
 {
 
     //テクスチャ番号が正常範囲内にある
-    assert(textureIndex + kSRVIndexTop < MyEngine::kMaxSRVCount);
+    assert(textureIndex + kSRVIndexTop < DirectXCommon::kMaxSRVCount);
 
     //テクスチャデータの参照を取得
     TextureData& textureData = textureDatas[textureIndex];
