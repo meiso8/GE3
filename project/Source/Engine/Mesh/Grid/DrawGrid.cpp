@@ -4,8 +4,8 @@
 #include"Texture.h"
 #include"AABB.h"
 
-std::array<std::unique_ptr<LineMesh>, 102> DrawGrid::line_;
-std::array <std::unique_ptr<CubeMesh>, 2>  DrawGrid::cube_;
+std::array<std::unique_ptr<Primitive>, 102> DrawGrid::line_;
+std::array <std::unique_ptr<Primitive>, 2>  DrawGrid::cube_;
 
 std::array< std::unique_ptr<Object3d>, 102>  DrawGrid::lineTransforms_;
 
@@ -27,29 +27,26 @@ void DrawGrid::Finalize()
 void DrawGrid::Create()
 {
     for (int i = 0; i < line_.size(); ++i) {
-        line_[i] = std::make_unique< LineMesh>();
-        line_[i]->Create();
+        line_[i] = std::make_unique<Primitive>();  
     }
 
     for (int i = 0; i < 51; ++i) {
-        line_[i]->SetVertexData(Vector3(-25.0f, 0.0f, static_cast<float>(i - 25)), Vector3(25.0f, 0.0f, static_cast<float>(i - 25)));
-        line_[i + 51]->SetVertexData(Vector3(static_cast<float>(i - 25), 0.0f, -25.0f), Vector3(static_cast<float>(i - 25), 0.0f, 25.0f));
+        line_[i]->Create(PrimitiveGenerator::CreateLine(Vector3(-25.0f, 0.0f, static_cast<float>(i - 25)), Vector3(25.0f, 0.0f, static_cast<float>(i - 25))));
+        line_[i+51]->Create(PrimitiveGenerator::CreateLine(Vector3(static_cast<float>(i - 25), 0.0f, -25.0f), Vector3(static_cast<float>(i - 25), 0.0f, 25.0f)));
     }
 
     for (int i = 0; i < cube_.size(); ++i) {
-        cube_[i] = std::make_unique <CubeMesh>();
-        cube_[i]->Create(TextureFactory::WHITE_1X1);
+        cube_[i] = std::make_unique <Primitive>();
     }
 
     AABB aabb0 = { { -2.0f / 128.0f,-2.0f / 128.0f,-25.0f }, { 2.0f / 128.0f,2.0f / 128.0f,25.0f } };
     AABB aabb1 = { { -25.0f,-2.0f / 128.0f,-2.0f / 128.0f }, { 25.0f,2.0f / 128.0f,2.0f / 128.0f } };
 
-    cube_[0]->SetMinMax(aabb0);
-    cube_[1]->SetMinMax(aabb1);
-
+    cube_[0]->Create(PrimitiveGenerator::CreateCube(aabb0));
+    cube_[1]->Create(PrimitiveGenerator::CreateCube(aabb1));
 
     for (size_t i = 0; i < lineTransforms_.size(); ++i) {
-        lineTransforms_[i] = std::make_unique< Object3d>();
+        lineTransforms_[i] = std::make_unique<Object3d>();
         lineTransforms_[i]->Create();
         lineTransforms_[i]->Update();
         lineTransforms_[i]->SetLightMode(kLightModeNone);
@@ -82,7 +79,6 @@ void DrawGrid::Create()
 }
 
 void DrawGrid::Draw(Camera& camera) {
-
 
     for (int i = 0; i < lineTransforms_.size(); ++i) {
         lineTransforms_[i]->Draw(camera, kBlendModeNone);

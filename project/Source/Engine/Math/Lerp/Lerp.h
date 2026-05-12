@@ -1,8 +1,7 @@
 #pragma once
 
 #include"Vector3.h"
-#include"Vector4.h"
-#include"LineMesh.h"
+
 #include<vector>
 
 class Camera;

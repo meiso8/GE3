@@ -3,7 +3,6 @@
 #include"Collider.h"
 #include <memory>
 #include"Object3d.h"
-#include"CubeMesh.h"
 class PuzzleObj : public Collider {
 public:
     PuzzleObj();
@@ -17,5 +16,5 @@ public:
     }
 private:
     std::unique_ptr<Object3d> object_ = nullptr;
-    std::unique_ptr<CubeMesh> cubeMesh_ = nullptr;
+    std::unique_ptr<Primitive> cubeMesh_ = nullptr;
 };

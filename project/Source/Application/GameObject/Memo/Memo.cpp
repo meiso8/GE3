@@ -7,9 +7,8 @@ Memo::Memo() {
     SetCollisionMask(kCollisionPlayer);
 
     SetAABB({ .min = {-0.5f,-0.5f,-0.5f}, .max = {0.5f,0.5f,0.5f} });
-    cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_->Create();
-    cubeMesh_->SetMinMax(GetAABB());
+    cubeMesh_ = std::make_unique<Primitive>();
+    cubeMesh_->Create(PrimitiveGenerator::CreateCube(GetAABB()));
     object_ = std::make_unique<Object3d>();
     object_->Create();
     object_->SetMesh(cubeMesh_.get());

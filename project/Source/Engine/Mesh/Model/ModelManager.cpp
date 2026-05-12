@@ -159,7 +159,8 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
     modelData->material.textureSrvIndex = Texture::AddTextureHandle(modelData->material.textureFilePath);
 
     model->SetModelData(std::move(modelData));
-    model->Create();
+    //モデルを作成する
+    model->CreateModel();
 
     //ハンドルとモデルをセットにする
     models_.insert(std::make_pair(tag, std::move(model)));

@@ -7,8 +7,10 @@
 #include<optional>
 #include<map>
 #include"Node.h"
-#include"LineMesh.h"
+
 #include"Object3d.h"
+#include "Mesh/LineMesh/LineMesh.h"
+
 #include<tuple>
 #include<memory>
 

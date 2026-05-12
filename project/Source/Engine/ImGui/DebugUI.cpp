@@ -12,7 +12,6 @@
 #include"Object3d.h"
 #include"Sound.h"
 
-#include"SphereMesh.h"
 #include"Lights/Light.h"
 #include"Lights/DirectionalLightManager.h"
 #include"Lights/SpotLightManager.h"
@@ -265,20 +264,16 @@ void DebugUI::CheckSpotLight()
 #endif
 }
 
-void DebugUI::CheckMesh(MeshCommon& mesh, const char* label) {
-#ifdef USE_IMGUI
-    ImGui::Begin("Mesh");
-
-    ImGui::End();
-#endif
-}
-
 void DebugUI::CheckModel(Model& model, const char* label) {
 #ifdef USE_IMGUI
     ImGui::Begin("Model");
-
-    CheckMesh(model, label);
-
+    auto* modelData = model.GetModelData();
+    ImGui::Text("filePath : %s",modelData->filePath.c_str());
+    ImGui::Text("indices : Size : %d", modelData->indices.size());
+    ImGui::Text("vertices : Size : %d", modelData->vertices.size());
+    ImGui::Text("material : TextureFilePath : %s", modelData->material.textureFilePath);
+    ImGui::Text("material : textureSrvIndex : %d", modelData->material.textureSrvIndex);
+    ImGui::Text("textureSrvIndex : %d", model.GetSrvIndex()); 
     ImGui::End();
 #endif
 }

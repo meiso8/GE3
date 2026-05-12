@@ -32,12 +32,11 @@ FreeTypeScene::FreeTypeScene()
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
 
-    cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_->Create(TextureFactory::WHITE_1X1);
+    cubeMesh_ = std::make_unique<Primitive>();
+    cubeMesh_->Create(PrimitiveGenerator::CreateCube());
 
-    ringMesh_ = std::make_unique<RingMesh>();
-    ringMesh_->Create(TextureFactory::GRADATION_LINE);
-    ringMesh_->SetVertex(0.1f, 1.3f);
+    ringMesh_ = std::make_unique<Primitive>();
+    ringMesh_->Create(PrimitiveGenerator::CreateRing(0.1f, 1.3f), TextureFactory::GRADATION_LINE);
 
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();

@@ -4,6 +4,7 @@
 #include"NodeAnimation.h"
 #include"Lerp.h"
 #include<unordered_map>
+#include<cassert>
 struct Skeleton;
 struct Animation {
     float duration;//アニメーション全体の尺

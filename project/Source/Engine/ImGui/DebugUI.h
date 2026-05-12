@@ -50,9 +50,6 @@ public:
 /// @param CheckSpotLight 
 /// @param lightType 
     static void CheckSpotLight();
-    /// @brief メッシュ
-    /// @param mesh 
-    static void CheckMesh(MeshCommon& mesh, const char* label);
     /// @brief モデル
     /// @param model
     /// @param label 

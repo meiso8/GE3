@@ -5,8 +5,8 @@
 #include"Texture.h"
 #include"TimeManager.h"
 World::World() {
-    sphereMesh_ = std::make_unique<SphereMesh>();
-    sphereMesh_->Create(TextureFactory::WORLD);
+    sphereMesh_ = std::make_unique<Primitive>();
+    sphereMesh_->Create(PrimitiveGenerator::CreateSphere({ .center = {0.0f},.radius = {0.5f} }, TextureFactory::WORLD));
 
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();

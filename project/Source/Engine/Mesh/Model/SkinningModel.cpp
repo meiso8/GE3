@@ -7,10 +7,6 @@ SkinningModel::SkinningModel()
     skinCluster_ = std::make_unique<SkinCluster>();
 }
 
-SkinningModel::~SkinningModel()
-{
-    Finalize();
-}
 
 void SkinningModel::SetModel(Model* model)
 {
@@ -65,9 +61,4 @@ void SkinningModel::Draw(ID3D12GraphicsCommandList* commandList)
 void SkinningModel::ResetTextureHandle()
 {
     textureHandle_ = modelData_->material.textureSrvIndex;
-}
-
-void SkinningModel::CreateVertex()
-{
-
 }

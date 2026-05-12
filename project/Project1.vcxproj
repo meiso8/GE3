@@ -163,9 +163,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Mesh\LineMesh\LineMesh.cpp" />
     <ClCompile Include="Source\Engine\Math\Structs\AABB.cpp" />
     <ClCompile Include="Source\Engine\LevelEditor\LevelEditor.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\Ring\RingMesh.cpp" />
     <ClCompile Include="Source\Engine\RenderTexture\RenderTexture.cpp" />
     <ClCompile Include="Source\Engine\Mesh\SkyBox\Skybox.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Font\Font.cpp" />
@@ -231,7 +231,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Player\Player.cpp" />
     <ClCompile Include="Source\Application\System\Collider.cpp" />
     <ClCompile Include="Source\Engine\JsonFile\JsonFile.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\Circle\CircleMesh.cpp" />
     <ClCompile Include="Source\Engine\Particle\ParticleEmitter.cpp" />
     <ClCompile Include="Source\Engine\Object3d\Object3d.cpp" />
     <ClCompile Include="Source\Engine\SceneManager\SceneChange.cpp" />
@@ -241,13 +240,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\SceneManager\SceneManager.cpp" />
     <ClCompile Include="Source\Application\Scene\SampleScene.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Model\ModelManager.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\Plane\PlaneMesh.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
     <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp" />
     <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\Cube\CubeMesh.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\Line\LineMesh.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Grid\DrawGrid.cpp" />
     <ClCompile Include="Source\Engine\Math\Collision\Collision.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector\Vector2.cpp" />
@@ -294,7 +290,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\DirectXCommon\TransitionBarrier.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Viewport.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Sprite\Sprite.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\Sphere\SphereMesh.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Sprite\SpriteCommon.cpp" />
     <ClCompile Include="Source\Engine\Surface\Texture.cpp" />
@@ -313,8 +308,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\FreeTypeManager\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Mesh\LineMesh\LineMesh.h" />
     <ClInclude Include="Source\Engine\LevelEditor\LevelEditor.h" />
-    <ClInclude Include="Source\Engine\Mesh\Ring\RingMesh.h" />
     <ClInclude Include="Source\Engine\RenderTexture\RenderTexture.h" />
     <ClInclude Include="Source\Engine\Mesh\SkyBox\Skybox.h" />
     <ClInclude Include="Source\Engine\Mesh\Font\Font.h" />
@@ -386,7 +381,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\Player\Player.h" />
     <ClInclude Include="Source\Engine\JsonFile\JsonFile.h" />
     <ClInclude Include="Source\Engine\Math\Structs\Circle.h" />
-    <ClInclude Include="Source\Engine\Mesh\Circle\CircleMesh.h" />
     <ClInclude Include="Source\Engine\Particle\ParticleEmitter.h" />
     <ClInclude Include="Source\Engine\Object3d\Object3d.h" />
     <ClInclude Include="Source\Engine\SceneManager\SceneChange.h" />
@@ -400,7 +394,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\SceneManager\SceneManager.h" />
     <ClInclude Include="Source\Application\Scene\SampleScene.h" />
     <ClInclude Include="Source\Engine\Mesh\Model\ModelManager.h" />
-    <ClInclude Include="Source\Engine\Mesh\Plane\PlaneMesh.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h" />
     <ClInclude Include="Source\Engine\hlslTypeToCpp.h" />
     <ClInclude Include="Source\Engine\Particle\Particle.h" />
@@ -412,7 +405,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\CommandQueue.h" />
     <ClInclude Include="Source\Engine\PSO\CompileShader.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\CrashHandler.h" />
-    <ClInclude Include="Source\Engine\Mesh\Cube\CubeMesh.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\D3DResourceLeakChecker.h" />
     <ClInclude Include="Source\Engine\Camera\DebugCamera.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\DebugError.h" />
@@ -425,7 +417,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\ImGui\ImGuiClass.h" />
     <ClInclude Include="Source\Engine\Input\Input.h" />
     <ClInclude Include="Source\Engine\PSO\InputLayout.h" />
-    <ClInclude Include="Source\Engine\Mesh\Line\LineMesh.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Log.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialData.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialResource.h" />
@@ -460,7 +451,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\PSO\RootSignature.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\ScissorRect.h" />
     <ClInclude Include="Source\Engine\Sound\Sound.h" />
-    <ClInclude Include="Source\Engine\Mesh\Sphere\SphereMesh.h" />
     <ClInclude Include="Source\Engine\Mesh\Sprite\Sprite.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\SwapChain.h" />
     <ClInclude Include="Source\Engine\Math\Matrix\TransformationMatrix.h" />

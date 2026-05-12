@@ -5,11 +5,10 @@
 #include"MeshCommon.h"
 #include<memory>
 class Model;
-class SkinningModel :public MeshCommon
+class SkinningModel :public Primitive
 {
 public:
     SkinningModel();
-    ~SkinningModel();
     void SetModel(Model* model);
     void SetBoneModel(Model* boneModel);
     void CreateDatas(Model* model,Model* boneData);
@@ -31,7 +30,6 @@ public:
     }
 
 private:
-    void CreateVertex()override;
     std::unique_ptr< Skeleton> skeleton_;
     std::unique_ptr< SkinCluster> skinCluster_;
     ModelData* modelData_ = nullptr;

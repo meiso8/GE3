@@ -12,14 +12,9 @@ Collider::Collider()
 {
 #ifdef _DEBUG
     object3d_.Create();
-
-    sphereMesh_ = std::make_unique<SphereMesh>();
-    sphereMesh_->Create(TextureFactory::WHITE_1X1);
-    object3d_.SetMesh(sphereMesh_.get());
-
-    cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_->Create(TextureFactory::WHITE_1X1);
-
+    debugMesh_ = std::make_unique<Primitive>();
+    debugMesh_->Create(PrimitiveGenerator::CreateSphere({ .center = {0.0f,0.0f,0.0f}, .radius = 0.5f }));
+    object3d_.SetMesh(debugMesh_.get());
 #endif // _DEBUG
 
     collisionInfo_.collided = false;
