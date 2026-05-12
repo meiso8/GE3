@@ -118,6 +118,7 @@ void FreeTypeScene::Update()
 
     DebugUI::CheckObject3d(*object3d_, "Ring");
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
+    DebugUI::CheckParticle(*particleEmitters_[1], "Emitter1");
     DebugUI::CheckSRVIndex();
 
 #endif //_DEVELOP
@@ -172,7 +173,7 @@ void FreeTypeScene::DrawModel()
     object3d_->Draw(*currentCamera_);
     object3d2_->Draw(*currentCamera_);
     for (auto& obj : objects_) {
-        
+
         obj->obj_->Draw(*currentCamera_);
     }
 
@@ -212,4 +213,29 @@ void FreeTypeScene::CreateParticle()
     group->accelerationField.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
 
 
+
+
+
+
+    particleEmitters_[1]->SetName("ring");
+
+    auto& emitter1 = particleEmitters_[1]->GetEmitter();
+
+    emitter1.count = 3;
+    emitter1.color = { 1.0f,1.0f,1.0f,1.0f };
+    emitter1.transform.scale_ = { 0.5f,0.5f,0.5f };
+    emitter1.transform.rotate_ = { 0.0f,0.0f,0.0f };
+    emitter1.transform.translate_ = { 0.5f,0.5f,-0.5f };
+
+    emitter1.frequencyTime = 0.0f;
+    emitter1.frequency = 2.0f;
+    emitter1.lifeTime = 2.0f;
+    emitter1.blendMode = kBlendModeScreen;
+    emitter1.movement = ParticleMovements::kParticleNormal;
+    emitter1.rotateAABB_ = { .min = {0.0f,-3.14f,0.0f},.max = {0.0f,3.14f,0.0f} };
+    
+    auto& group1 = ParticleManager::GetInstance()->GetParticleGroup(emitter1.name);
+    group1->accelerationField.acceleration.y = 0.0f;
+    group1->accelerationField.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
+    group1->useBillboard = false;
 }

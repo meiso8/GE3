@@ -22,10 +22,10 @@ std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager
 
 void ParticleManager::CreateAll()
 {
-    CreateParticleGroup("particle1", TextureFactory::CIRCLE, false);
-    CreateParticleGroup("people", TextureFactory::UV_CHECKER, true, "people");
-    CreateParticleGroup("uvChecker", TextureFactory::UV_CHECKER);
-    CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, true, "people");
+    CreateParticleGroup("particle1", TextureFactory::CIRCLE,kPlane, false);
+    CreateParticleGroup("people", TextureFactory::UV_CHECKER, kPlane, true, "people");
+    CreateParticleGroup("ring", TextureFactory::GRADATION_LINE, kRing);
+    CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, kPlane, true, "people");
 }
 
 // ==========================================================================================================
@@ -49,9 +49,6 @@ void ParticleManager::Create()
     //マテリアルリソースを作成 //ライトなし
     materialResource = std::make_unique<MaterialResource>();
     materialResource->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, LightMode::kLightModeNone);
-    CreateModelData();
-
-    CreateVertexBufferResource();
 }
 
 Particle MakeNewParticle(const AABB& velocityAABB, const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const AABB& rotateAABB, const AABB& scaleAABB)
@@ -121,7 +118,7 @@ SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, 
     return spherical;
 }
 
-void ParticleManager::CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle, const bool& useModel, const std::string& modelTag)
+void ParticleManager::CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle, const TopologyType& topologyType, const bool& useModel, const std::string& modelTag)
 {
 
     assert(!particleGroups.contains(name));
@@ -134,6 +131,7 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
 
     newParticleGroup->useModel = useModel;
     newParticleGroup->textureSize = { 100.0f,100.0f };
+
     if (newParticleGroup->useModel) {
         newParticleGroup->model = ModelManager::GetModel(modelTag);
         newParticleGroup->materialData.textureSrvIndex = newParticleGroup->model->GetModelData()->material.textureSrvIndex;
@@ -142,6 +140,28 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
         newParticleGroup->materialData.textureSrvIndex = Texture::GetHandle(textureHandle);
         newParticleGroup->materialData.textureFilePath = Texture::GetFilePath(textureHandle);
     }
+
+    newParticleGroup->primitive = std::make_unique<Primitive>();
+    assert(newParticleGroup->primitive);
+
+    MeshData meshData;
+    switch (topologyType)
+    {
+    case TopologyType::kPlane:
+        meshData = PrimitiveGenerator::CreatePlane({2.0f,2.0f});
+        break;
+    case TopologyType::kCube:
+        meshData = PrimitiveGenerator::CreateCircle();
+        break;
+    case TopologyType::kSphere:
+        meshData = PrimitiveGenerator::CreateSphere();
+        break;
+    case TopologyType::kRing:
+        meshData = PrimitiveGenerator::CreateRing();
+        break;
+    }
+
+    newParticleGroup->primitive->Create(meshData);
 
     //Instancing用のTransformationMatrixリソースを作成
     newParticleGroup->instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
@@ -394,14 +414,12 @@ void ParticleManager::Draw()
             //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
 
             if (group->model != nullptr && group->useModel) {
+      
                 commandList_->IASetVertexBuffers(0, 1, &group->model->GetVBV());
                 commandList_->DrawInstanced(UINT(group->model->GetModelData()->vertices.size()), group->numInstance, 0, 0);
             } else {
-                commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
-                commandList_->DrawInstanced(UINT(modelData_->vertices.size()), group->numInstance, 0, 0);
+                group->primitive->DrawCall(commandList_);
             }
-
-
         }
 
     }
@@ -548,28 +566,3 @@ void ParticleManager::UpdateWorldMatrix(Particle& particleItr, ParticleGroup& gr
 }
 
 // ==========================================================================================================
-
-void ParticleManager::CreateModelData()
-{
-    modelData_ = std::make_unique<ModelData>();
-    modelData_->vertices.push_back({ .position = {1.0f,1.0f,0.0f,1.0f},.texcoord = {0.0f,0.0f},.normal = {0.0f,0.0f,1.0f} });//左上
-    modelData_->vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
-    modelData_->vertices.push_back({ .position = {1.0f,-1.0f,0.0f,1.0f}, .texcoord = {0.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//左下
-    modelData_->vertices.push_back({ .position = {1.0f,-1.0f,0.0f,1.0f}, .texcoord = {0.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//左下
-    modelData_->vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f}, .normal = {0.0f,0.0f,1.0f} });//右上
-    modelData_->vertices.push_back({ .position = {-1.0f,-1.0f,0.0f,1.0f}, .texcoord = {1.0f,1.0f}, .normal = {0.0f,0.0f,1.0f} });//右下
-}
-
-void ParticleManager::CreateVertexBufferResource()
-{
-    vertexBufferResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * modelData_->vertices.size());
-    vertexBufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexBufferData_));
-    std::copy(modelData_->vertices.begin(), modelData_->vertices.end(), vertexBufferData_);
-
-    vertexBufferView_.BufferLocation = vertexBufferResource_->GetGPUVirtualAddress();
-    vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_->vertices.size());
-    vertexBufferView_.StrideInBytes = sizeof(VertexData);
-
-    vertexBufferResource_->Unmap(0, nullptr);
-
-}

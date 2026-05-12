@@ -734,6 +734,19 @@ void Primitive::Draw(ID3D12GraphicsCommandList* commandList)
     }
 }
 
+void Primitive::DrawCall(ID3D12GraphicsCommandList* commandList)
+{
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
+    //SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
+
+    if (indexCount_ > 0) {
+        commandList->IASetIndexBuffer(&indexBufferView_);
+        commandList->DrawIndexedInstanced(indexCount_, 1, 0, 0, 0);
+    } else {
+        commandList->DrawInstanced(vertexCount_, 1, 0, 0); // ラインなどインデックスが無い場合
+    }
+}
+
 void Primitive::SetTextureHandle(const TextureFactory::Handle& textureHandle)
 {
     textureHandle_ = Texture::GetHandle(textureHandle);

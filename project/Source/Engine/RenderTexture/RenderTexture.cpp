@@ -189,7 +189,7 @@ void RenderTexture::Update()
     if (ImGui::TreeNode("RadialBulr")) {
 
         ImGui::DragFloat2("center", &materialForRadialBlur_->center.x, 0.01f, 0.0f, 1.0f);
-        ImGui::DragInt("numSamples", &materialForRadialBlur_->numSamples);
+        ImGui::DragInt("numSamples", &materialForRadialBlur_->numSamples,1.0f,1);
         ImGui::DragFloat("center", &materialForRadialBlur_->blurWidth);
         ImGui::TreePop();
     }
@@ -276,7 +276,7 @@ void RenderTexture::CreateMaterialBufferForGaussianFilter()
 
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectGaussianFilter]->Map(0, nullptr, reinterpret_cast<void**>(&materialForGaussianFilter_));
-    materialForGaussianFilter_->sigma = 2.0f;
+    materialForGaussianFilter_->sigma = 1.0f;
     materialForGaussianFilter_->kernel = 1;
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale");
@@ -320,7 +320,7 @@ void RenderTexture::CreateMaterialRadialBlur()
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectRadialBlur]->Map(0, nullptr, reinterpret_cast<void**>(&materialForRadialBlur_));
     materialForRadialBlur_->center = { 0.5f,0.5f };
-    materialForRadialBlur_->numSamples = 10;
+    materialForRadialBlur_->numSamples = 1;
     materialForRadialBlur_->blurWidth = 0.01f;
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : RadialBlur");

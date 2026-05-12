@@ -29,7 +29,7 @@ private:
 
     std::unique_ptr<Primitive> cubeMesh_ = nullptr;
     std::unique_ptr<Primitive>ringMesh_ = nullptr;
-    std::array<std::unique_ptr<ParticleEmitter>, 1>particleEmitters_;
+    std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
 
    /* std::unique_ptr<Player>player_ = nullptr;*/
     std::vector<std::unique_ptr<Object3d>> enemies_;
