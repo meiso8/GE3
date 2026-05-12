@@ -11,8 +11,7 @@
 Block::Block()
 {
     SetCollisionAttribute(kCollisionFloor);
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);
-  
+    SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);  
     SetAABB({ {-1.0f,-1.0f,-1.0f} ,{1.0f,1.0f,1.0f} });
 }
 

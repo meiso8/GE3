@@ -19,7 +19,7 @@ public:
     std::unique_ptr<Primitive>cubeMesh_ = nullptr;
     void SetCubeAABB(const AABB& aabb) {
         SetAABB(aabb);
-        object_->worldTransform_.scale_ = aabb.max - aabb.min;
+        cubeMesh_->Create(PrimitiveGenerator::CreateCube(aabb));
     };
 protected:
     std::unique_ptr<Object3d> object_;
