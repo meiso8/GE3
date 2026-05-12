@@ -15,6 +15,8 @@
 #include<list>
 #include<memory>
 #include<cstdint>
+#include<memory>
+#include"MeshCommon.h"
 
 class Camera;
 class ShaderResourceView;
@@ -66,6 +68,7 @@ struct ParticleGroup {
     bool useBillboard = true;
     bool useSpriteCamera = false;
     Model* model = nullptr;
+    std::unique_ptr<Primitive> primitive = nullptr;
     const WorldTransform* parentPos_ = nullptr;
     ParticleMovements movement;
     AccelerationField accelerationField;
@@ -86,6 +89,12 @@ class ParticleManager
 {
 public:
     static const uint32_t kNumMaxInstance = 100;//インスタンス数
+    enum TopologyType {
+        kPlane,
+        kCube,
+        kSphere,
+        kRing, 
+    };
 
 private:
 
@@ -93,11 +102,6 @@ private:
     static ID3D12GraphicsCommandList* commandList_;
     static std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>particleGroups;
 
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
-    Microsoft::WRL::ComPtr<ID3D12Resource> vertexBufferResource_;
-    VertexData* vertexBufferData_ = nullptr;
-
-    std::unique_ptr<ModelData> modelData_ = nullptr;
 
     std::unique_ptr < MaterialResource> materialResource;
 
@@ -130,7 +134,7 @@ public:
         assert(particleGroups.contains(name));
         return particleGroups[name];
     };
-    void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle, const bool& useModel = false, const std::string& modelFileName = "Box.obj");
+    void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle,const TopologyType& topoligyType, const bool& useModel = false, const std::string& modelFileName = "Box.obj");
 
     void Update(Camera& camera);
     void Draw();
@@ -146,9 +150,6 @@ private:
     void Normal(ParticleGroup& group);
     void Sphere(ParticleGroup& group);
     void Shock(ParticleGroup& group);
-
-    void CreateModelData();
-    void CreateVertexBufferResource();
 
     void IsCollisionFieldArea(Particle& particleItr, ParticleGroup& group);
     void UpdateWorldMatrixForBillBord(Particle& particleItr, ParticleGroup& group);

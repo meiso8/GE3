@@ -30,7 +30,8 @@ public:
 
     virtual void Create(const MeshData& meshData, const TextureFactory::Handle& textureHandle = TextureFactory::WHITE_1X1);
     virtual void PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode);
-    virtual void Draw(ID3D12GraphicsCommandList* commandList);   
+    virtual void Draw(ID3D12GraphicsCommandList* commandList);  
+    void DrawCall(ID3D12GraphicsCommandList* commandList);
     void SetTextureHandle(const TextureFactory::Handle& textureHandle);
     uint32_t GetSrvIndex() { return textureHandle_; }
 protected:
