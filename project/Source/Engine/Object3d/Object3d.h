@@ -41,7 +41,7 @@ protected:
     Wave* waveData_ = nullptr;
 private:
     //メッシュ情報
-    MeshCommon* meshCommon_ = nullptr;
+    Primitive* meshCommon_ = nullptr;
 
 public:
     ~Object3d();
@@ -76,6 +76,7 @@ public:
     void SetLightMode(const LightMode& lightMode) { materialResource_->SetLightMode(lightMode); }
 
     void Create();
+    
     virtual void Initialize();
     virtual void Update();
     virtual void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
@@ -84,7 +85,8 @@ public:
     void InitWaveDataIndex(const uint32_t& index);
     void InitBalloonData();
 
-    void SetMesh(MeshCommon* mesh) { meshCommon_ = mesh; };
+    void SetMesh(Primitive* mesh) { meshCommon_ = mesh; };
+
     virtual void SetTextureHandle(const TextureFactory::Handle& textureHandle) { meshCommon_->SetTextureHandle(textureHandle); };
 private:
     void CreateUV();

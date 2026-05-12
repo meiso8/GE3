@@ -17,9 +17,8 @@ PuzzleObj::PuzzleObj() {
     // memoのサイズに合わせる
     SetAABB(aabb);
 
-    cubeMesh_ = std::make_unique<CubeMesh>();
-    cubeMesh_->Create();
-    cubeMesh_->SetMinMax(aabb);
+    cubeMesh_ = std::make_unique<Primitive>();
+    cubeMesh_->Create(PrimitiveGenerator::CreateCube(aabb));
     cubeMesh_->SetTextureHandle(TextureFactory::PUZZLE_NUM);
 
     object_ = std::make_unique<Object3d>();

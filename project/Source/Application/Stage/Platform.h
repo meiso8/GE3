@@ -1,7 +1,7 @@
 #pragma once
 #include "Collider.h"
 #include <memory>
-#include"CubeMesh.h"
+
 #include"Texture.h"
 class Platform : public Collider {
 public:
@@ -16,8 +16,11 @@ public:
     virtual void Draw(Camera& camera);
     WorldTransform& GetWorldTransform() { return object_->worldTransform_; };
     void OnCollision(Collider* collider) override;
-    std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
-    void SetCubeAABB(const AABB& aabb) { SetAABB(aabb); cubeMesh_->SetMinMax(aabb); };
+    std::unique_ptr<Primitive>cubeMesh_ = nullptr;
+    void SetCubeAABB(const AABB& aabb) {
+        SetAABB(aabb);
+        object_->worldTransform_.scale_ = aabb.max - aabb.min;
+    };
 protected:
     std::unique_ptr<Object3d> object_;
 };

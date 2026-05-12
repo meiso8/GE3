@@ -123,9 +123,6 @@
     <ClCompile Include="Source\Engine\Math\Lerp\Lerp.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Cube\CubeMesh.cpp">
-      <Filter>ソース ファイル\Engine\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\DebugError.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
@@ -143,9 +140,6 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Input\Input.cpp">
       <Filter>ソース ファイル\Engine\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Line\LineMesh.cpp">
-      <Filter>ソース ファイル\Engine\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\Matrix\MakeMatrix.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
@@ -204,9 +198,6 @@
     <ClCompile Include="Source\Engine\Mesh\Sprite\Sprite.cpp">
       <Filter>ソース ファイル\Engine\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Sphere\SphereMesh.cpp">
-      <Filter>ソース ファイル\Engine\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\Model\Model.cpp">
       <Filter>ソース ファイル\Engine\Mesh</Filter>
     </ClCompile>
@@ -252,9 +243,6 @@
     <ClCompile Include="Source\Engine\Mesh\MeshCommon\MeshCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Plane\PlaneMesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Application\System\CollisionManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -280,9 +268,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\BackGround\Field.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Circle\CircleMesh.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Medjed\Enemy.cpp">
@@ -504,13 +489,13 @@
     <ClCompile Include="Source\Engine\RenderTexture\RenderTexture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Ring\RingMesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\LevelEditor\LevelEditor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\Structs\AABB.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Mesh\LineMesh\LineMesh.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -532,9 +517,6 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Cotangent\cotangent.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Cube\CubeMesh.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Camera\DebugCamera.h">
       <Filter>ヘッダー ファイル\Engine\Camera</Filter>
@@ -559,9 +541,6 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Structs\Line.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Line\LineMesh.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Matrix\MakeMatrix.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
@@ -616,9 +595,6 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Matrix\TransformationMatrix.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Sphere\SphereMesh.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\Sprite\Sprite.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
@@ -731,9 +707,6 @@
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\MeshCommon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Plane\PlaneMesh.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Math\Random\Random.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -780,9 +753,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\BackGround\Field.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Circle\CircleMesh.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Structs\Circle.h">
@@ -1022,10 +992,10 @@
     <ClInclude Include="Source\Engine\RenderTexture\RenderTexture.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Ring\RingMesh.h">
+    <ClInclude Include="Source\Engine\LevelEditor\LevelEditor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\LevelEditor\LevelEditor.h">
+    <ClInclude Include="Source\Engine\Mesh\LineMesh\LineMesh.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

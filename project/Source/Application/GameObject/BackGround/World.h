@@ -2,14 +2,14 @@
 #include<memory>
 #include"Object3d.h"
 #include<functional>
-#include"SphereMesh.h"
+
 class Camera;
 class Model;
 
 class World
 {
 private:
-    std::unique_ptr <SphereMesh> sphereMesh_;
+    std::unique_ptr <Primitive> sphereMesh_;
     std::unique_ptr <Object3d> object3d_;
     enum Tex {
         NORMAL,

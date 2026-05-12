@@ -7,8 +7,6 @@
 #include"Easing.h"
 #include<algorithm>
 #include"Collision.h"
-#include"CircleMesh.h"
-#include"CubeMesh.h"
 #include"JsonFile.h"
 #include"LightingManager.h"
 #include"MakeMatrix.h"

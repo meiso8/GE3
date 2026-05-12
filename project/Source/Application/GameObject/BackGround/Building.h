@@ -3,7 +3,7 @@
 #include<memory>
 #include"Object3d.h"
 #include<unordered_map>
-#include "CubeMesh.h"
+
 #include"Collider.h"
 class Camera;
 class Model;
@@ -21,7 +21,7 @@ public:
 
 private:
     std::unique_ptr <Object3d> object_;
-    std::unique_ptr < CubeMesh > cube_;
+    std::unique_ptr < Primitive > cube_;
 };
 
 class Building

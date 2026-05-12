@@ -64,7 +64,7 @@ void DebugBone::Draw(Camera& camera)
 void DebugBone::Create(Skeleton& skeleton)
 {
 
-    bones_.clear();   
+    bones_.clear();
     assert(!skeleton.joints.empty());
 
     for (Joint& joint : skeleton.joints) {
@@ -73,9 +73,9 @@ void DebugBone::Create(Skeleton& skeleton)
         value->object3d = std::make_unique<Object3d>();
         value->lineMesh = std::make_unique<LineMesh>();
         value->object3d->Create();
-        value->lineMesh->Create();
-        value->lineMesh->SetVertexData({ 0.0f,0.0f,0.0f }, joint.transform.translate);
-
+        std::unique_ptr<MeshData> meshData = std::make_unique<MeshData>();
+        *meshData = PrimitiveGenerator::CreateLine(Vector3{ 0.0f,0.0f,0.0f }, joint.transform.translate);
+        value->lineMesh->CreateLineMesh(std::move(meshData));
         value->object3d->Initialize();
         value->object3d->worldTransform_.matWorld_ = joint.skeletonSpaceMatrix;
 
@@ -94,7 +94,8 @@ void DebugBone::Create(Skeleton& skeleton)
 void DebugBone::Update(const Matrix4x4& parentMatrix)
 {
     for (auto& [joint, value] : bones_) {
-        value->lineMesh->SetVertexData({ 0.0f,0.0f,0.0f }, joint->transform.translate);
+        //ここどうするか…
+        value->lineMesh->SetVertex({ 0.0f,0.0f,0.0f }, joint->transform.translate);
         value->object3d->worldTransform_.matWorld_ = joint->skeletonSpaceMatrix * parentMatrix;
     }
 
@@ -103,9 +104,9 @@ void DebugBone::Update(const Matrix4x4& parentMatrix)
 
     ImGui::Begin("Bone");
     for (auto& [joint, value] : bones_) {
-        if (ImGui::TreeNode("bone")) {
+        if (ImGui::TreeNode(joint->name.c_str())) {
             DebugUI::CheckQuaternionTransform(joint->transform, joint->name.c_str());
-            ImGui::TreePop();   
+            ImGui::TreePop();
         }
     }
     ImGui::End();

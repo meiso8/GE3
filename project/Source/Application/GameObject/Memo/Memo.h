@@ -2,13 +2,13 @@
 
 #include "Collider.h"
 #include <memory>
-#include"CubeMesh.h"
+
 #include"Texture.h"
 
 class Memo : public Collider {
 
 private:
-    std::unique_ptr<CubeMesh>cubeMesh_ = nullptr;
+    std::unique_ptr<Primitive>cubeMesh_ = nullptr;
     std::unique_ptr<Object3d> object_;
 public:
     Memo();
@@ -25,7 +25,7 @@ public:
     }
     void SetCubeSize(const AABB& aabb) {
         SetAABB(aabb);
-        cubeMesh_->SetMinMax(GetAABB()); 
+        object_->worldTransform_.scale_ = aabb.max - aabb.min;
         object_->SetMesh(cubeMesh_.get());
     };
     void SetColor(const Vector4& color) { object_->SetColor(color); }

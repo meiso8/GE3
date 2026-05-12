@@ -1,11 +1,9 @@
 #pragma once
 #include "Vector3.h"
 #include <cstdint>
-#include"SphereMesh.h"
-#include"CubeMesh.h"
 #include"AABB.h"
 #include"Object3d.h"
-
+#include"MeshCommon.h"
 class Camera;
 
 struct CollisionInfo {
@@ -42,9 +40,7 @@ private:
 	bool isCalculatedThisFrame_ = false; // 今フレーム計算済みかどうかのフラグ
 #ifdef _DEBUG
 	//デバック用
-	std::unique_ptr<SphereMesh>sphereMesh_;
-	//デバック用
-	std::unique_ptr<CubeMesh>cubeMesh_;
+	std::unique_ptr<Primitive>debugMesh_;
 	//位置
 	Object3d object3d_;
 #endif // DEBUG
@@ -80,9 +76,9 @@ public:
 		type_ = ColliderType::kSphere;
 #ifdef _DEBUG
 
-		if (sphereMesh_) {
-			sphereMesh_->SetVertex(Sphere{ {0.0f,0.0f,0.0f }, radius });
-			object3d_.SetMesh(sphereMesh_.get());
+		if (debugMesh_) {
+			debugMesh_->Create(PrimitiveGenerator::CreateSphere({ .center = {0.0f,0.0f,0.0f}, .radius = radius }));
+			object3d_.SetMesh(debugMesh_.get());
 		}
 
 #endif // DEBUG
@@ -94,9 +90,9 @@ public:
 		type_ = ColliderType::kAABB;
 
 #ifdef _DEBUG
-		if (cubeMesh_) {
-			cubeMesh_->SetMinMax(aabb);
-			object3d_.SetMesh(cubeMesh_.get());
+		if (debugMesh_) {
+			debugMesh_->Create(PrimitiveGenerator::CreateCube(aabb));
+			object3d_.SetMesh(debugMesh_.get());
 		}
 #endif // DEBUG
 

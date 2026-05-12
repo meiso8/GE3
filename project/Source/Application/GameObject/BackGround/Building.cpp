@@ -44,7 +44,7 @@ void Building::Init()
     }
 
     SetWallAABB();
-    
+
     SetWallPos();
 }
 
@@ -106,15 +106,15 @@ void Building::Draw(Camera& camera)
 
 FieldCollider::FieldCollider()
 {
-    cube_ = std::make_unique<CubeMesh>();
-    cube_->Create();
+    cube_ = std::make_unique<Primitive>();
+    cube_->Create(PrimitiveGenerator::CreateCube());
 
     object_ = std::make_unique<Object3d>();
     object_->Create();
     object_->SetMesh(cube_.get());
 
     SetCollisionAttribute(kCollisionWall);
-    SetCollisionMask(kCollisionPlayer | kCollisionPlayerEye|kCollisionEnemy|kCollisionMedjed|kCollisionMummy);
+    SetCollisionMask(kCollisionPlayer | kCollisionPlayerEye | kCollisionEnemy | kCollisionMedjed | kCollisionMummy);
     SetWorldMatrix(object_->worldTransform_.matWorld_);
 }
 
@@ -130,14 +130,14 @@ void FieldCollider::Update()
 void FieldCollider::Draw(Camera& camera)
 {
     object_->Draw(camera);
-   
+
     ColliderDraw(camera);
 }
 
 void FieldCollider::Initialize()
 {
     object_->Initialize();
-    object_->GetUVScale().x =  4.0f ;
+    object_->GetUVScale().x = 4.0f;
 }
 
 void FieldCollider::OnCollision(Collider* collider)
@@ -148,8 +148,7 @@ void FieldCollider::OnCollision(Collider* collider)
 void FieldCollider::SettingAABB(const AABB& aabb)
 {
     SetAABB(aabb);
-    cube_->SetMinMax(aabb);
-
+    object_->worldTransform_.scale_ = aabb.max - aabb.min;
 }
 
 void FieldCollider::SetPos(const Vector3& pos)
