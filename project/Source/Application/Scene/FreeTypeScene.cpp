@@ -35,12 +35,12 @@ FreeTypeScene::FreeTypeScene()
     cubeMesh_ = std::make_unique<Primitive>();
     cubeMesh_->Create(PrimitiveGenerator::CreateCube());
 
-    ringMesh_ = std::make_unique<Primitive>();
-    ringMesh_->Create(PrimitiveGenerator::CreateRing(0.1f, 1.3f), TextureFactory::GRADATION_LINE);
+    cylinder_ = std::make_unique<Primitive>();
+    cylinder_->Create(PrimitiveGenerator::CreateCylinder(),TextureFactory::GRADATION_LINE);
 
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
-    object3d_->SetMesh(cubeMesh_.get());
+    object3d_->SetMesh(cylinder_.get());
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
 
 
@@ -116,7 +116,8 @@ void FreeTypeScene::Update()
 
     DebugUI::CheckCamera(*currentCamera_);
 
-    DebugUI::CheckObject3d(*object3d_, "Ring");
+    DebugUI::CheckObject3d(*object3d_, "Cylinder");
+    DebugUI::CheckObject3d(*object3d2_, "Cube");
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
     DebugUI::CheckParticle(*particleEmitters_[1], "Emitter1");
     DebugUI::CheckSRVIndex();
@@ -171,7 +172,7 @@ void FreeTypeScene::DrawModel()
     }
 
     object3d_->Draw(*currentCamera_);
-    object3d2_->Draw(*currentCamera_);
+    //object3d2_->Draw(*currentCamera_);
     for (auto& obj : objects_) {
 
         obj->obj_->Draw(*currentCamera_);

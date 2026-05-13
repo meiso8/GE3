@@ -653,6 +653,60 @@ MeshData PrimitiveGenerator::CreateSphere(const Sphere& sphere, const uint32_t k
 
 }
 
+MeshData PrimitiveGenerator::CreateCylinder(const bool isFlip, const float topRadius, const float bottomRadius, const float height, const uint32_t cylinderDivide)
+{
+    MeshData data;
+
+    const float radianPreDivide = 2.0f * std::numbers::pi_v<float> / float(cylinderDivide);
+
+    data.vertices.resize(cylinderDivide * 6);
+
+    for (uint32_t index = 0; index < cylinderDivide; ++index) {
+        float sin = std::sin(index * radianPreDivide);
+        float cos = std::cos(index * radianPreDivide);
+        float sinNext = std::sin((index + 1) * radianPreDivide);
+        float cosNext = std::cos((index + 1) * radianPreDivide);
+        float u = float(index) / float(cylinderDivide);
+        float uNext = float(index + 1) / float(cylinderDivide);
+
+        uint32_t i = index * 6;
+        //上辺左
+        data.vertices[i].position = { -sin * topRadius,height,cos * topRadius,1.0f };
+        data.vertices[i].texcoord = { u,0.0f };
+        data.vertices[i].normal = { -sin,0.0f,cos };
+        //上辺右
+        data.vertices[i + 1].position = { -sinNext * topRadius,height,cosNext * topRadius,1.0f };
+        data.vertices[i + 1].texcoord = { uNext,0.0f };
+        data.vertices[i + 1].normal = { -sinNext,0.0f,cosNext };
+        //底辺左
+        data.vertices[i + 2].position = { -sin * bottomRadius,0.0f,cos * bottomRadius,1.0f };
+        data.vertices[i + 2].texcoord = { u,1.0f };
+        data.vertices[i + 2].normal = { -sin,0.0f,cos };
+
+        //前のインデックスと同じ
+        data.vertices[i + 3] = data.vertices[i + 2];
+
+        //i+1のインデックスと同じ
+        data.vertices[i + 4] = data.vertices[i + 1];
+        //底辺右
+        data.vertices[i + 5].position = { -sinNext * bottomRadius,0.0f,cosNext * bottomRadius,1.0f };
+        data.vertices[i + 5].texcoord = { uNext,1.0f };
+        data.vertices[i + 5].normal = { -sinNext,0.0f,cosNext };
+
+    }
+
+    if (isFlip) {
+        //ｙ反転させる
+        for (uint32_t i = 0; i < data.vertices.size(); ++i) {
+            data.vertices[i].texcoord.y = 1.0f-data.vertices[i].texcoord.y;
+        }
+    }
+
+    //三角トポロジ
+    data.topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    return data;
+}
+
 void Primitive::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode) {
 
     commandList->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::NORMAL));
