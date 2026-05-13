@@ -80,6 +80,7 @@ public:
     virtual void Initialize();
     virtual void Update();
     virtual void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack);
+    void DrawForEffect(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeAdd);
 
     void InitWaveData();
     void InitWaveDataIndex(const uint32_t& index);

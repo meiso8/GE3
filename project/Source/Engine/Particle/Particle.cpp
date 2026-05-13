@@ -396,6 +396,7 @@ void ParticleManager::IsCollisionFieldArea(Particle& particleItr, ParticleGroup&
 
 void ParticleManager::Draw()
 {
+    int drawCallCount = 0;
     for (const auto& [name, group] : particleGroups) {
 
         if (group->numInstance > 0) {
@@ -418,7 +419,8 @@ void ParticleManager::Draw()
                 commandList_->IASetVertexBuffers(0, 1, &group->model->GetVBV());
                 commandList_->DrawInstanced(UINT(group->model->GetModelData()->vertices.size()), group->numInstance, 0, 0);
             } else {
-                group->primitive->DrawCall(commandList_);
+                drawCallCount++;
+                group->primitive->DrawCallForParticle(commandList_, group->numInstance);
             }
         }
 

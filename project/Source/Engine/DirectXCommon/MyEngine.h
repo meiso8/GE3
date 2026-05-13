@@ -33,7 +33,6 @@ private:
     static std::unique_ptr<Window> wc;
    static std::unique_ptr <Input> input;
 
-    static std::unique_ptr<PSO> pso;
     static std::unique_ptr<SrvManager> srvManager;
     static std::unique_ptr<ParticleManager> particleManager_;
     bool endRequest_ = false;

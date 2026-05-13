@@ -788,16 +788,16 @@ void Primitive::Draw(ID3D12GraphicsCommandList* commandList)
     }
 }
 
-void Primitive::DrawCall(ID3D12GraphicsCommandList* commandList)
+void Primitive::DrawCallForParticle(ID3D12GraphicsCommandList* commandList, const uint32_t numInstance)
 {
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
     //SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
 
     if (indexCount_ > 0) {
         commandList->IASetIndexBuffer(&indexBufferView_);
-        commandList->DrawIndexedInstanced(indexCount_, 1, 0, 0, 0);
+        commandList->DrawIndexedInstanced(indexCount_, numInstance, 0, 0, 0);
     } else {
-        commandList->DrawInstanced(vertexCount_, 1, 0, 0); // ラインなどインデックスが無い場合
+        commandList->DrawInstanced(vertexCount_, numInstance, 0, 0); // ラインなどインデックスが無い場合
     }
 }
 

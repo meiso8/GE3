@@ -43,19 +43,14 @@ FreeTypeScene::FreeTypeScene()
     object3d_->SetMesh(cylinder_.get());
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
 
-
     object3d2_ = std::make_unique<Object3d>();
     object3d2_->Create();
     object3d2_->SetMesh(cubeMesh_.get());
 
-    //object3d_->SetTextureHandle(TextureFactory::WHITE_1X1);
     levelEditor_ = std::make_unique<LevelEditor>();
     levelEditor_->Load("test");
     //オブジェクトをセットする
     levelEditor_->CreateObject(objects_);
-
-
-    //player_ = std::make_unique<Player>();
 
 }
 
@@ -126,6 +121,9 @@ void FreeTypeScene::Update()
 
 
     object3d_->Update();
+ 
+    object3d_->GetUVTranslate().x += 0.1f;
+    object3d_->UpdateUV();
     object3d2_->Update();
 
     for (auto& enemy : enemies_) {
@@ -161,7 +159,7 @@ void FreeTypeScene::DrawSprite() {
 
 void FreeTypeScene::DrawModel()
 {
-    skyBoxObj_->Draw(*currentCamera_);
+
 #ifdef _DEVELOP
     // デバッグカメラ
     DrawGrid::Draw(*currentCamera_);
@@ -171,14 +169,18 @@ void FreeTypeScene::DrawModel()
         enemy->Draw(*currentCamera_);
     }
 
-    object3d_->Draw(*currentCamera_);
+
+
+
     //object3d2_->Draw(*currentCamera_);
     for (auto& obj : objects_) {
 
         obj->obj_->Draw(*currentCamera_);
     }
 
+    skyBoxObj_->Draw(*currentCamera_);
 
+    object3d_->DrawForEffect(*currentCamera_);
     ParticleManager::GetInstance()->Draw();
 }
 
@@ -204,7 +206,7 @@ void FreeTypeScene::CreateParticle()
     emitter0.frequencyTime = 0.0f;
     emitter0.frequency = 2.0f;
     emitter0.lifeTime = 2.0f;
-    emitter0.blendMode = kBlendModeScreen;
+    emitter0.blendMode = kBlendModeAdd;
     emitter0.movement = ParticleMovements::kParticleNormal;
     emitter0.rotateAABB_ = { .min = {0.0f,0.0f,-3.14f},.max = {0.0f,0.0f,3.14f} };
     emitter0.scaleAABB_ = { .min = {0.0f,0.4f,0.0f},.max = {0.0f,1.5f,1.0f} };
@@ -212,26 +214,22 @@ void FreeTypeScene::CreateParticle()
     auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
     group->accelerationField.acceleration.y = 0.0f;
     group->accelerationField.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
-
-
-
-
-
+    group->useBillboard = true;
 
     particleEmitters_[1]->SetName("ring");
 
     auto& emitter1 = particleEmitters_[1]->GetEmitter();
 
-    emitter1.count = 3;
+    emitter1.count = 1;
     emitter1.color = { 1.0f,1.0f,1.0f,1.0f };
     emitter1.transform.scale_ = { 0.5f,0.5f,0.5f };
     emitter1.transform.rotate_ = { 0.0f,0.0f,0.0f };
-    emitter1.transform.translate_ = { 0.5f,0.5f,-0.5f };
+    emitter1.transform.translate_ = { 0.5f,0.5f,0.0f };
 
     emitter1.frequencyTime = 0.0f;
     emitter1.frequency = 2.0f;
     emitter1.lifeTime = 2.0f;
-    emitter1.blendMode = kBlendModeScreen;
+    emitter1.blendMode = kBlendModeAdd;
     emitter1.movement = ParticleMovements::kParticleNormal;
     emitter1.rotateAABB_ = { .min = {0.0f,-3.14f,0.0f},.max = {0.0f,3.14f,0.0f} };
     

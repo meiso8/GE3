@@ -135,6 +135,51 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
     }
 }
 
+void Object3d::DrawForEffect(Camera& camera, const BlendMode& blendMode)
+{
+    SetLightMode(kLightModeNone);
+    //データを書き込む
+    transformationMatrixData_->World = worldTransform_.matWorld_;
+    transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
+    transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
+
+    if (meshCommon_) {
+        commandList_->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::NORMAL));
+        
+        PSO::PSOKey key{};
+        key.rootSignatureType = RootSignature::NORMAL;
+        key.vsShaderType = DxcCompiler::VS_Normal;
+        key.psShaderType = DxcCompiler::PS_Normal;
+        key.blendMode = blendMode;
+        key.cullMode = kCullModeNone;
+        key.depthMode = kZero; // 追加した設定
+        key.topologyType = PSO::kTriangle;
+        key.inputLayoutType = InputLayout::kInputLayoutTypeNormal;
+
+        auto pso = PSO::GetOrCreatePSO(key);
+        commandList_->SetPipelineState(pso.Get());
+
+        //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
+        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
+        //wvp用のCBufferの場所を設定
+        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        //timeのSRVの場所を設定
+        commandList_->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+        //expansionのCBufferの場所を設定
+        commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+        //cameraのCBufferの場所を設定
+        commandList_->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
+        //ライトのCBufferの場所を設定
+        DirectionalLightManager::SetGraphicsRootConstantBufferView();
+        PointLightManager::SetGraphicsRootDescriptorTable();
+        SpotLightManager::SetGraphicsRootDescriptorTable();
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(TextureFactory::SKYBOX_TEX));
+        meshCommon_->Draw(commandList_);
+    }
+
+
+}
+
 void Object3d::Create()
 {
     commandList_ = DirectXCommon::GetCommandList();
