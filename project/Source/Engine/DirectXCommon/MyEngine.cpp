@@ -16,8 +16,6 @@
 #include"Application/Loader/TextureFactory.h"
 #include"Engine/FreeTypeManager/FreeTypeManager.h"
 
-
-std::unique_ptr<PSO> MyEngine::pso = nullptr;
 std::unique_ptr <Input> MyEngine::input = nullptr;
 std::unique_ptr<Window> MyEngine::wc = nullptr;
 
@@ -64,11 +62,10 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     directXCommon->InitializeRenderTexture();
     directXCommon->CreateDepthStencilResourceSRV();
 
-    pso = std::make_unique<PSO>();
+    auto* pso = PSO::GetInstance();
     pso->CreateALLPSO();
 
     LogFile::Log("CreatePSO");
-
 
     DirectionalLightManager::Create();
     LogFile::Log("CreateDirectionalLightResource");
@@ -152,8 +149,6 @@ void MyEngine::Debug()
     DebugUI::CheckDirectionalLight();
     DebugUI::CheckSpotLight();
     DebugUI::CheckPointLightData();
-
-    ImGui::ShowStyleEditor();
 
     SceneManager::Debug();
 
@@ -243,8 +238,6 @@ void MyEngine::Finalize() {
     SpotLightManager::Finalize();
     PointLightManager::Finalize();
     DirectionalLightManager::Finalize();
-
-    pso.reset();
 
 #ifdef USE_IMGUI
     //ImGuiの終了処理 ゲームループが終わったら行う
