@@ -18,6 +18,9 @@ std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::
 std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode>PSO::graphicsPipelineStatesSkinning_;
 std::unordered_map<PSO::PSOKey, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSO::PSOKeyHasher> PSO::psoCache_;
 
+Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::computePipelineStatesForSkinning_;
+
+
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     const BlendMode& blendMode,
     const CullMode& cullMode,
@@ -33,7 +36,8 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
 
     graphicsPipelineStateDesc.pRootSignature = rootSignature->GetRootSignature(rootSignatureType);//RootSignature
     graphicsPipelineStateDesc.InputLayout = inputLayout->GetDescs(inputLayoutType);//InputLayout
-    graphicsPipelineStateDesc.VS = { DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(vsShaderType)->GetBufferPointer(),
+    graphicsPipelineStateDesc.VS = {
+    DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(vsShaderType)->GetBufferPointer(),
     DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(vsShaderType)->GetBufferSize() };//VertexShader
     graphicsPipelineStateDesc.PS = { DirectXCommon::GetDxcCompiler()->GetPixelShaderBlob(psShaderType)->GetBufferPointer(),
     DirectXCommon::GetDxcCompiler()->GetPixelShaderBlob(psShaderType)->GetBufferSize() };//PixelShader
@@ -84,6 +88,25 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
 
     return graphicsPipelineState;
 
+}
+
+Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::CreateComputeShaderPSO(const RootSignature::TYPE& rootSignatureType, const DxcCompiler::CS_TYPE& csShaderType)
+{
+    //ComputeShaderStateDescを作成する
+    D3D12_COMPUTE_PIPELINE_STATE_DESC computePipelineStateDesc{};
+    //RootSignatureを代入
+    computePipelineStateDesc.pRootSignature = rootSignature->GetRootSignature(rootSignatureType);//RootSignature
+    //CSを入れる
+    computePipelineStateDesc.CS = {
+        .pShaderBytecode = DirectXCommon::GetDxcCompiler()->GetComputeShaderBlob(csShaderType)->GetBufferPointer(),
+        .BytecodeLength = DirectXCommon::GetDxcCompiler()->GetVertexShaderBlob(csShaderType)->GetBufferSize() };
+    //PSOの作成
+    Microsoft::WRL::ComPtr <ID3D12PipelineState>computePipelineState = nullptr;
+    //ComputePipelineStateの作成
+    HRESULT hr = DirectXCommon::GetDevice()->CreateComputePipelineState(&computePipelineStateDesc,IID_PPV_ARGS(&computePipelineState));
+    assert(SUCCEEDED(hr));
+
+    return computePipelineState;
 }
 
 void PSO::CreateALLPSO()
