@@ -39,17 +39,27 @@ public:
         PS_Shaders,
     };
 
+    enum CS_TYPE {
+        CS_Skinning,
+        CS_Shaders,
+    };
+
     void Initialize();
     void ShaderSetting();
     Microsoft::WRL::ComPtr <IDxcBlob>& GetVertexShaderBlob(uint32_t index) { return vertexShaderBlobs_[index]; };
     Microsoft::WRL::ComPtr <IDxcBlob>& GetPixelShaderBlob(uint32_t index) { return pixelShaderBlobs_[index]; };
+
+    Microsoft::WRL::ComPtr <IDxcBlob>& GetComputeShaderBlob(uint32_t index) { return computeShaderBlobs_[index]; };
 private:
     IDxcUtils* dxcUtils_ = nullptr;
     IDxcCompiler3* dxcCompiler_ = nullptr;
     IDxcIncludeHandler* includeHandler_ = nullptr;
 
-    std::array<Microsoft::WRL::ComPtr<IDxcBlob>,VS_Shaders> vertexShaderBlobs_;
-    std::array<Microsoft::WRL::ComPtr<IDxcBlob>,PS_Shaders>pixelShaderBlobs_;
+    std::array<Microsoft::WRL::ComPtr<IDxcBlob>, VS_Shaders> vertexShaderBlobs_;
+    std::array<Microsoft::WRL::ComPtr<IDxcBlob>, PS_Shaders>pixelShaderBlobs_;
+
+    //ComputeShader用を作成
+    std::array<Microsoft::WRL::ComPtr<IDxcBlob>, CS_Shaders>computeShaderBlobs_;
 
 private:
     Microsoft::WRL::ComPtr<IDxcBlob>CompileShader(

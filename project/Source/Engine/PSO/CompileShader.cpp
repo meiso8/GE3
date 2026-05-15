@@ -67,6 +67,11 @@ void DxcCompiler::ShaderSetting() {
     //Random         
     pixelShaderBlobs_[PS_Random] = CompileShader(L"Resource/shader/PixelShader/Random.PS.hlsl", L"ps_6_0");
 
+    //===================ComputeShader====================
+    
+    //ComputeShader
+    computeShaderBlobs_[CS_Skinning] = CompileShader(L"Resource/shader/ComputeShader/Skinning.CS.hlsl", L"cs_6_0");
+
 }
 
 //CompileShader関数
