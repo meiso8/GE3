@@ -74,7 +74,7 @@ public:
     }
 
     void SetLightMode(const LightMode& lightMode) { materialResource_->SetLightMode(lightMode); }
-
+    void SetTemperature(const float temp) { materialResource_->SetTemperature(temp); }
     void Create();
     
     virtual void Initialize();
@@ -92,7 +92,7 @@ public:
 private:
     void CreateUV();
     void CreateTransformationMatrix();
-    void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const uint32_t& lightType = LightMode::kLightModeHalfL);
+    void CreateMaterial(const float temperature = 0.0f,const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const uint32_t& lightType = LightMode::kLightModeHalfL);
     void CreateWaveData();
     void CreateBalloonData();
 

@@ -17,7 +17,7 @@ void MaterialResource::UnMap()
     materialResource_.Reset();
 }
 
-void MaterialResource::CreateMaterial(const Vector4& color, uint32_t lightType) {
+void MaterialResource::CreateMaterial(const float temperature, const Vector4& color, uint32_t lightType) {
 
     //マテリアル用のリソースを作る。
     materialResource_ = DirectXCommon::CreateBufferResource(sizeof(Material));
@@ -30,6 +30,8 @@ void MaterialResource::CreateMaterial(const Vector4& color, uint32_t lightType) 
     material_->uvTransform = MakeIdentity4x4();
     material_->shininess = 50.0f;
     material_->environmentCoefficient = 0.0f;
+    //人の体温
+    material_->temperature = temperature;
 };
 
 
@@ -51,4 +53,9 @@ void MaterialResource::SetLightMode(uint32_t lightType)
 void MaterialResource::SetShininess(const float32_t& shininess)
 {
     material_->shininess = shininess;
+}
+
+void MaterialResource::SetTemperature(const float32_t& temperature)
+{
+    material_->temperature = temperature;
 }

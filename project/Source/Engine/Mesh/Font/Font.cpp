@@ -206,7 +206,7 @@ void Font::CreateTransformationMatrix() {
 void Font::CreateMaterial(const Vector4& color) {
 
     //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial(color, LightMode::kLightModeNone);
+    materialResource_.CreateMaterial(1.0f,color, LightMode::kLightModeNone);
 
 }
 

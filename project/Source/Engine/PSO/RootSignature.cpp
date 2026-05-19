@@ -35,9 +35,6 @@ void RootSignature::Create() {
     descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
     descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
 
-
-
-
     //Instancing用
     D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing[1] = {};
     descriptorRangeForInstancing[0].BaseShaderRegister = 3; // gTransformationMatrices : register(t3)
@@ -319,6 +316,21 @@ void RootSignature::Create() {
 
 #pragma endregion
 
+#pragma region//Thermography
+
+    D3D12_ROOT_PARAMETER rootParameterForThermography[2] = {};
+    //Material b0
+    rootParameterForThermography[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParameterForThermography[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParameterForThermography[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+
+    //Texture2D<float4> gTemperatureTexture : register(t2);
+    rootParameterForThermography[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParameterForThermography[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParameterForThermography[1].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
+    rootParameterForThermography[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
+
+#pragma endregion
 
     descriptionRootSignature[NORMAL].pParameters = rootParameters;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[NORMAL].NumParameters = _countof(rootParameters);//配列の長さ
@@ -363,6 +375,8 @@ void RootSignature::Create() {
     descriptionRootSignature[RANDOM].pParameters = rootParametersForRandom;
     descriptionRootSignature[RANDOM].NumParameters = _countof(rootParametersForRandom);//配列の長さ
 
+    descriptionRootSignature[THERMOGRAPHY].pParameters = rootParameterForThermography;
+    descriptionRootSignature[THERMOGRAPHY].NumParameters = _countof(rootParameterForThermography);//配列の長さ
 
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;

@@ -8,10 +8,10 @@
 #include"SRVmanager/SrvManager.h"
 ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
 
-void Object3d::CreateMaterial(const Vector4& color, const uint32_t& lightType) {
+void Object3d::CreateMaterial(const float temperature, const Vector4& color, const uint32_t& lightType) {
     //マテリアルリソースを作成
     materialResource_ = std::make_unique<MaterialResource>();
-    materialResource_->CreateMaterial(color, lightType);
+    materialResource_->CreateMaterial(temperature,color, lightType);
 }
 
 void Object3d::CreateUV()

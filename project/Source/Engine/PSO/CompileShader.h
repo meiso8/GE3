@@ -36,6 +36,7 @@ public:
         PS_RadialBlur,
         PS_Dissolve,
         PS_Random,
+        PS_Thermography,
         PS_Shaders,
     };
 

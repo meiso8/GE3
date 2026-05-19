@@ -8,7 +8,7 @@ struct Material
     int32_t lightMode;
     float32_t shininess;
     float32_t environmentCoefficient;
-    float padding;
+    float temperature;
     float32_t4x4 uvTransform;
 };
 
@@ -26,6 +26,7 @@ TextureCube<float4> gEnvironmentTexture : register(t7);
 struct PixelShaderOutput
 {
     float4 color : SV_TARGET0;
+    float4 temperature : SV_TARGET1;//AddTemperature
 };
 
 float GetCosin(float NdotL, int lightMode)
@@ -96,18 +97,18 @@ float3 CalculateDirectionalSpecular(float3 normal, float3 dir, float3 toEye, flo
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
- 
+    PixelShaderOutput output;
+    //SetTemperature
+    output.temperature = float4(gMaterial.temperature, 0.0, 0.0, 1.0);
+   
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
-    
-
+   
     if (textureColor.a <= 0.1)
     {
         discard;
     }
     
-    PixelShaderOutput output;
-
     if (gMaterial.lightMode == 0)
     {
         output.color = gMaterial.color * textureColor;
@@ -194,6 +195,6 @@ PixelShaderOutput main(VertexShaderOutput input)
     {
         discard;
     }
-    
+      
     return output;
 }

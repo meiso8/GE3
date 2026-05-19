@@ -51,10 +51,10 @@ void Medjed::MoveStart()
 Medjed::Medjed() {
 
     model_ = ModelManager::GetModel("normalMed");
-
+   
     aniObj_ = std::make_unique<AnimationObject3d>();
     aniObj_->Create();
-
+    aniObj_->SetTemperature(1.0f);
     skinningModel = std::make_unique<SkinningModel>();
     skinningModel->CreateDatas(model_, model_);
     aniObj_->SetMeshAndData(skinningModel.get());

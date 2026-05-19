@@ -39,6 +39,7 @@ public:
         kEffectRadialBlur,
         kEffectDissolve,
     /*    kEffectRandom,*/
+        kEffectThermography,
         kCountOfEffect,
 
     };

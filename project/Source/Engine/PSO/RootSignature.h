@@ -26,16 +26,19 @@ public:
         RADIAL_BLUR,
         DISSOLVE,
         RANDOM,
+        //サーモグラフィー
+        THERMOGRAPHY,
         TYPES,
     };
 
-   void Create();
-   ID3D12RootSignature* GetRootSignature(TYPE index) {
-       assert(index < rootSignatures_.size());
-       return
-       rootSignatures_[index].Get(); };
+    void Create();
+    ID3D12RootSignature* GetRootSignature(TYPE index) {
+        assert(index < rootSignatures_.size());
+        return
+            rootSignatures_[index].Get();
+    };
 
 private:
-    std::array<Microsoft::WRL::ComPtr <ID3D12RootSignature>, TYPES> rootSignatures_ = {nullptr};
+    std::array<Microsoft::WRL::ComPtr <ID3D12RootSignature>, TYPES> rootSignatures_ = { nullptr };
 };
 
