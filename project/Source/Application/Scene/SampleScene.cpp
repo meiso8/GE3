@@ -54,8 +54,8 @@ SampleScene::SampleScene()
         uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
     }
 
-
-
+    skyboxObject3d_ = std::make_unique<SkyboxObject3d>();
+    skyboxObject3d_->Create();
 }
 
 void SampleScene::Initialize() {
@@ -411,6 +411,7 @@ void SampleScene::DrawModel() {
 
     player_->Draw(*currentCamera_, kLightModeHalfL);
 
+    skyboxObject3d_->Draw(*currentCamera_);
     ParticleManager::GetInstance()->Draw();
   
 }

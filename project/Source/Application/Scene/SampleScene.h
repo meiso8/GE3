@@ -6,6 +6,7 @@
 
 #include"Object3d.h"
 
+#include"Mesh/Skybox/Skybox.h"
 #pragma region//ゲームオブジェクト
 #include"Player/Player.h"
 #include"UI/UIManager.h"
@@ -56,6 +57,10 @@ private:
     std::shared_ptr<ItemManager> itemManager_;
     std::unique_ptr<UIManager> uIManager_ = nullptr;
     std::unique_ptr<MemoManager>memoManager_ = nullptr;
+#pragma endregion
+
+#pragma region//SkyBox
+    std::unique_ptr<SkyboxObject3d>skyboxObject3d_ = nullptr;
 #pragma endregion
 
 #pragma region//ステージ
