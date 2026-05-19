@@ -2,13 +2,13 @@
 #include "../Hlsli/Camera.hlsli"
 #include "../Hlsli/Light.hlsli"
 
-
 struct Material
 {
     float4 color;
     int32_t lightMode;
     float32_t shininess;
     float32_t environmentCoefficient;
+    float padding;
     float32_t4x4 uvTransform;
 };
 
