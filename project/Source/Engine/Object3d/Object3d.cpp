@@ -107,7 +107,7 @@ void Object3d::UpdateUV() {
 }
 
 
-void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode)
+void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const TextureFactory::Handle skyBoxTexture)
 {
     //データを書き込む
     transformationMatrixData_->World = worldTransform_.matWorld_;
@@ -130,12 +130,12 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         SpotLightManager::SetGraphicsRootDescriptorTable();
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(TextureFactory::SKYBOX_TEX));
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(skyBoxTexture));
         meshCommon_->Draw(commandList_);
     }
 }
 
-void Object3d::DrawForEffect(Camera& camera, const BlendMode& blendMode)
+void Object3d::DrawForEffect(Camera& camera, const BlendMode& blendMode, const TextureFactory::Handle skyBoxTexture)
 {
     SetLightMode(kLightModeNone);
     //データを書き込む
@@ -173,7 +173,7 @@ void Object3d::DrawForEffect(Camera& camera, const BlendMode& blendMode)
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         SpotLightManager::SetGraphicsRootDescriptorTable();
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(TextureFactory::SKYBOX_TEX));
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(skyBoxTexture));
         meshCommon_->Draw(commandList_);
     }
 

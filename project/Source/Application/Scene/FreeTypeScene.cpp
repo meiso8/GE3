@@ -182,6 +182,8 @@ void FreeTypeScene::DrawModel()
 
     object3d_->DrawForEffect(*currentCamera_);
     ParticleManager::GetInstance()->Draw();
+
+   
 }
 
 void FreeTypeScene::CreateParticle()
