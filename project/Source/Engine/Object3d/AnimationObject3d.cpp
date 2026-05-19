@@ -104,7 +104,7 @@ void AnimationObject3d::SetTextureHandle(const TextureFactory::Handle& textureHa
 }
 
 
-void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode)
+void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode,const TextureFactory::Handle skyBoxTexture)
 {
     transformationMatrixData_->World = worldMatrix_;
     transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
@@ -126,7 +126,7 @@ void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const C
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         SpotLightManager::SetGraphicsRootDescriptorTable();
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(TextureFactory::SKYBOX_TEX));
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(skyBoxTexture));
         skinningModel_->Draw(commandList_);
     }
 

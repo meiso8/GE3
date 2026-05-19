@@ -24,7 +24,7 @@ public:
     bool IsAnimEnd() {
         return  animationTime_ == animation_.duration;
     }
-    void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack)override;
+    void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack, const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX)override;
     void SetSkinning(const bool& flag) { isSkinning_ = flag; }
 private:
     void UpdateAnimation();
