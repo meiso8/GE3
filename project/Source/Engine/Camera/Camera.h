@@ -65,6 +65,8 @@ public:
     virtual void UpdateWorldMatrix();
 
     virtual void UpdateViewProjectionMatrix();
+    Matrix4x4& GetViewMatrix() { return viewMat_; }
+    Matrix4x4& GetProjectionMatrix() { return projectionMat_; };
     Matrix4x4& GetViewProjectionMatrix();
     void SetTransform(const EulerTransform& transform) {
         scale_ = transform.scale;
