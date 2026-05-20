@@ -18,7 +18,7 @@ public:
     void SettingAABB(const AABB& aabb);
     void SetPos(const Vector3& pos);
     void SetTexture(const TextureFactory::Handle& handle) { object_->SetTextureHandle(handle); }
-
+    void SetTemperature(const float temp) { object_->SetTemperature(temp); }
 private:
     std::unique_ptr <Object3d> object_;
     std::unique_ptr < Primitive > cube_;

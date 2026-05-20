@@ -23,6 +23,7 @@ PuzzleObj::PuzzleObj() {
 
     object_ = std::make_unique<Object3d>();
     object_->Create();
+    object_->SetTemperature(0.75f);
     object_->SetMesh(cubeMesh_.get());
     SetWorldMatrix(object_->worldTransform_.matWorld_);
 
