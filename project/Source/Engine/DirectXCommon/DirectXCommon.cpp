@@ -113,6 +113,13 @@ void DirectXCommon::RenderTexturePreDraw()
     //指定した深度で画面全体をクリアする
     commandList->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
+    // ★ 2. 温度バッファ(Index 1)のクリア処理を追加！
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvTemp = renderTexture_.GetRenderTextureData(RenderTexture::kThermography).rtvHandleCPU;
+    // 温度の初期値は「0.0（熱源なし）」にリセットしたいので、すべて 0.0f にします
+    float clearTemp[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    commandList->GetCommandList()->ClearRenderTargetView(rtvTemp, clearTemp, 0, nullptr);
+
+
     SrvManager::PreDraw();
 
     //ビューポート領域の設定
@@ -197,7 +204,8 @@ void DirectXCommon::DrawRenderTexture()
     renderTexture_.DrawThermo(renderTextureDataA.rtvHandleCPU);
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
-
+    //サーモグラフィーを戻す
+    barrier.SettingBarrierRTVforSRV(renderTexture_.GetRenderTextureData(RenderTexture::kThermography).resource);
 
      // 4. 【重要】描画先を画面(バックバッファ)のRTVにする
     // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています

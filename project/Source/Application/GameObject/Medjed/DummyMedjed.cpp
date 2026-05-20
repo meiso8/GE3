@@ -39,8 +39,8 @@ DummyMedjed::DummyMedjed()
 
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
+    object3d_->SetTemperature(0.1f);
     object3d_->SetMesh(model_);
-
     SetAABB(localAABB_);
     SetCollisionAttribute(kCollisionDummyMedjed);
     SetCollisionMask(kCollisionPlayer | kCollisionMedjed);

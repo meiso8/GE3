@@ -18,6 +18,7 @@ Block::Block()
 void Block::Initialize()
 {
     object_->Initialize();
+    object_->SetTemperature(0.1f);
     aniTimer_ = 0.0f;
     isPush_ = false;
     SetWorldMatrix(object_->worldTransform_.matWorld_);

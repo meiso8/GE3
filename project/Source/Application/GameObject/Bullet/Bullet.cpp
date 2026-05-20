@@ -11,7 +11,7 @@ Bullet::Bullet() {
     body_.Create();
     body_.SetMesh(model_);
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
-
+    body_.SetTemperature(1.0f);
     SetAABB({ {-1.0f,-1.0f,-1.0f} ,{1.0f,1.0f,1.0f} });
     SetBulletType(kEnemy);
     SetWorldMatrix(body_.worldTransform_.matWorld_);

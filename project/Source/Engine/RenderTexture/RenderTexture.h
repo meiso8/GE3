@@ -68,7 +68,10 @@ struct MaterialForRandom
 };
 struct MaterialForThermography
 {
-    float32_t4 color;
+    float alpha;
+    int32_t kernel;
+    float sigma;
+    float padding[1];
 };
 
 class RenderTexture

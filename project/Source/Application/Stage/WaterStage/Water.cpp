@@ -21,6 +21,7 @@ Water::Water() {
     object_->GetWaveData(1).amplitude = 0.1f;
     object_->GetWaveData(1).direction = { 1.0f,0.0f,0.0f };
     object_->GetWaveData(1).frequency = 4.0f;
+    object_->SetTemperature(0.1f);
 
     AABB aabb = { .min = {-12.5f,-0.5f,-12.5f},.max = {12.5f,0.5f,12.5f} };
     SetCollisionAttribute(kCollisionWater);

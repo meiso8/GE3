@@ -190,11 +190,18 @@ PixelShaderOutput main(VertexShaderOutput input)
         output.color.a = gMaterial.color.a * textureColor.a;
     }
 
-    //output.color discard
-    if (output.color.a == 0.0)
+    
+    if (output.temperature.r <= 0.0)
     {
-        discard;
+        //if temperature over 0
+        
+        //output.color discard
+        if (output.color.a == 0.0)
+        {
+            discard;
+        }
     }
+
       
     return output;
 }

@@ -11,7 +11,7 @@ DummyMummy::DummyMummy()
 {
     object_ = std::make_unique<AnimationObject3d>();
     object_->Create();
-
+    object_->SetTemperature(1.0f);
     model_ = ModelManager::GetModel("dummyMummy");
 
     skinningModel_ = std::make_unique<SkinningModel>();

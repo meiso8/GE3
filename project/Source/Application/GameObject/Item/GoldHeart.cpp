@@ -9,6 +9,8 @@ void GoldHeart::Init()
     aniTimer_ = 0.0f;
     object_->Initialize();
     object_->worldTransform_.translate_.y = -1.2f;
+    //熱々
+    object_->SetTemperature(1.0f);
     startPos_ = { 0.0f };
     endPos_ = { 0.0f };
 }

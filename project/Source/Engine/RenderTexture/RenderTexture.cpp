@@ -197,7 +197,7 @@ void RenderTexture::Update()
     }
 
     if (ImGui::TreeNode("LuminanceBasedOutline")) {
- 
+
         ImGui::DragFloat("weightVal", &materialForLuminanceBasedOutline_->weightVal, 0.1f);
         ImGui::TreePop();
     }
@@ -210,7 +210,7 @@ void RenderTexture::Update()
     if (ImGui::TreeNode("RadialBulr")) {
 
         ImGui::DragFloat2("center", &materialForRadialBlur_->center.x, 0.01f, 0.0f, 1.0f);
-        ImGui::DragInt("numSamples", &materialForRadialBlur_->numSamples,1.0f,1);
+        ImGui::DragInt("numSamples", &materialForRadialBlur_->numSamples, 1.0f, 1);
         ImGui::DragFloat("center", &materialForRadialBlur_->blurWidth);
         ImGui::TreePop();
     }
@@ -229,7 +229,9 @@ void RenderTexture::Update()
     }
 
     if (ImGui::TreeNode("Thermography")) {
-        DebugUI::CheckColor(materialForThermography_->color, "color");
+        ImGui::DragFloat("alpha", &materialForThermography_->alpha);
+        ImGui::DragInt("kernel", &materialForThermography_->kernel, 1, 1);
+        ImGui::DragFloat("sigma", &materialForThermography_->sigma);
         ImGui::TreePop();
     }
 
@@ -385,7 +387,8 @@ void RenderTexture::CreateMaterialThermography()
 
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectThermography]->Map(0, nullptr, reinterpret_cast<void**>(&materialForThermography_));
-    materialForThermography_->color = { 1.0f,1.0f,1.0f,1.0f };
-
+    materialForThermography_->alpha = { 1.0f };
+    materialForThermography_->sigma = 10.0f;
+    materialForThermography_->kernel = 14;
     LogFile::Log("Rendertexture : Create : MaterialBuffer : Thermography");
 };

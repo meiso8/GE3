@@ -130,6 +130,7 @@ void FreeTypeScene::Update()
         enemy->Update();
     }
     for (auto& obj : objects_) {
+        obj->obj_->SetTemperature(1.0f);
         obj->obj_->Update();
     }
 
