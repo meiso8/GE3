@@ -85,8 +85,8 @@ void DirectXCommon::RenderTexturePreDraw()
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
-    auto& renderTextureDataNormal = renderTexture_.GetRenderTextureData(RenderTexture::kNormal0);
-    auto& renderTextureDataThermography = renderTexture_.GetRenderTextureData(RenderTexture::kThermography);
+    auto& renderTextureDataNormal = renderTexture_->GetRenderTextureData(RenderTexture::kNormal0);
+    auto& renderTextureDataThermography = renderTexture_->GetRenderTextureData(RenderTexture::kThermography);
     // 2つのレンダーターゲットハンドルを入れる配列を用意
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
 
@@ -106,7 +106,7 @@ void DirectXCommon::RenderTexturePreDraw()
     //commandList->GetCommandList()->OMSetRenderTargets(1, &renderTextureData.rtvHandleCPU, false, &dsvHandle);
 
     //3.指定した色で画面全体をクリアする
-    Vector4 color = renderTexture_.GetColor();
+    Vector4 color = renderTexture_->GetColor();
     float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
     commandList->GetCommandList()->ClearRenderTargetView(renderTextureDataNormal.rtvHandleCPU, clearColor, 0, nullptr);
 
@@ -114,7 +114,7 @@ void DirectXCommon::RenderTexturePreDraw()
     commandList->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
     // ★ 2. 温度バッファ(Index 1)のクリア処理を追加！
-    D3D12_CPU_DESCRIPTOR_HANDLE rtvTemp = renderTexture_.GetRenderTextureData(RenderTexture::kThermography).rtvHandleCPU;
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvTemp = renderTexture_->GetRenderTextureData(RenderTexture::kThermography).rtvHandleCPU;
     // 温度の初期値は「0.0（熱源なし）」にリセットしたいので、すべて 0.0f にします
     float clearTemp[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
     commandList->GetCommandList()->ClearRenderTargetView(rtvTemp, clearTemp, 0, nullptr);
@@ -152,7 +152,7 @@ void DirectXCommon::DrawRenderTexture()
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
     auto backBufferRTV = GetRTVCPUDescriptorHandle(backBufferIndex);
 
-    ppm.Execute(&renderTexture_, backBufferRTV, &barrier, depthTextureData_.srvIndex,kBlendModeMultiply);
+    ppm.Execute(renderTexture_, backBufferRTV, &barrier, depthTextureData_.srvIndex, kBlendModeMultiply);
 }
 
 void DirectXCommon::RenderTexturePostDraw()
@@ -162,10 +162,15 @@ void DirectXCommon::RenderTexturePostDraw()
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    auto& renderTextureData = renderTexture_.GetRenderTextureData(RenderTexture::kNormal0);
+    auto& renderTextureData = renderTexture_->GetRenderTextureData(RenderTexture::kNormal0);
     barrier.SettingBarrierRTVforSRV(renderTextureData.resource);
 
     LogFile::Log("Rendertexture : PosDraw : SettingBarrier");
+}
+
+void DirectXCommon::SetRenderTextureCamera(Camera* camera)
+{
+    renderTexture_->SetCamera(camera);
 }
 
 void DirectXCommon::PreDraw()
@@ -191,7 +196,7 @@ void DirectXCommon::PreDraw()
 
     commandList->GetCommandList()->OMSetRenderTargets(1, &rtvClass.GetHandle(backBufferIndex), false, nullptr);
     //3.指定した色で画面全体をクリアする
-    Vector4 color = renderTexture_.GetColor();
+    Vector4 color = renderTexture_->GetColor();
     float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
     commandList->GetCommandList()->ClearRenderTargetView(rtvClass.GetHandle(backBufferIndex), clearColor, 0, nullptr);
 
@@ -432,12 +437,13 @@ void DirectXCommon::UpdateFixFPS()
 
 void DirectXCommon::InitializeRenderTexture()
 {
-    renderTexture_.Create();
+    renderTexture_ = RenderTexture::GetInstance();
+    renderTexture_->Create();
 }
 
 void DirectXCommon::UpdateRenderTexture()
 {
-    renderTexture_.Update();
+    renderTexture_->Update();
 #ifdef USE_IMGUI
     ImGui::Begin("SRVTexture");
     // 例：表示したいSRVのインデックス番号

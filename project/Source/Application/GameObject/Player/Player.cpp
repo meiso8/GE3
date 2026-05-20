@@ -15,14 +15,16 @@
 #include"CollisionConfig.h"
 #include"InputBind.h"
 #include"TimeManager.h"
+#include"RenderTexture/RenderTexture.h"
+
 void Player::OnCollision(Collider* collider)
 {
 
-    if (collider->GetCollisionAttribute() == kCollisionEnemy 
-        ||collider->GetCollisionAttribute() == kCollisionEnemyBullet 
+    if (collider->GetCollisionAttribute() == kCollisionEnemy
+        || collider->GetCollisionAttribute() == kCollisionEnemyBullet
         || collider->GetCollisionAttribute() == kCollisionMedjed
         || collider->GetCollisionAttribute() == kCollisionMummy
-        
+
         ) {
         OnCollisionEnemy();
     }
@@ -94,6 +96,10 @@ void Player::Init()
     lookBackTime_ = 1.0f;
     isLookBackEnd_ = true;
 
+    isThermography_ = false;
+    isThermographyEnd_ = false;
+    thermography_ = 0.0f;
+
     Json file = JsonFile::GetJsonFiles("config");
 
     characterState_.hps.hp = file["CharacterState"]["hp"];
@@ -107,7 +113,7 @@ void Player::Init()
 
 void Player::UpdateRay()
 {
-    raySprite_->UpdateRay(Ray{ .origin = eyeCollider_->GetWorldTransform().GetWorldPosition(),.diff = GetForward()});
+    raySprite_->UpdateRay(Ray{ .origin = eyeCollider_->GetWorldTransform().GetWorldPosition(),.diff = GetForward() });
 }
 
 void Player::Draw(Camera& camera, const LightMode& lightType)
@@ -140,7 +146,8 @@ void Player::Update()
     Move();
     Jump();
     Zoom();
-    LookBack();
+    /*   LookBack();*/
+    Thermography();
     MouseLook();
     UpdateRay();
     //クリックしたらサウンド
@@ -288,6 +295,7 @@ Vector3& Player::GetForward()
 
 void Player::LookBack()
 {
+
     if (InputBind::IsClickR()) {
         isLookBack_ = true;
 
@@ -331,6 +339,47 @@ void Player::LookBack()
 
 }
 
+void Player::Thermography()
+{
+
+    RenderTexture::GetInstance()->GetMaterialDissolve()->maskVal = 1.0f - thermography_;
+
+    if (InputBind::IsClickR()) {
+        isThermography_ = true;
+
+        if (isThermographyEnd_) {
+            isThermographyEnd_ = false;
+            thermography_ = 0.0f;
+        }
+    }
+
+    if (!isThermography_) {
+        return;
+    }
+
+    if (InputBind::IsClickPressR()) {
+
+        if (!isThermographyEnd_) {
+            if (thermography_ < 1.0f) {
+                thermography_ += kInverseFPS * 2.0f;
+            } else {
+                thermography_ = 1.0f;
+                isThermographyEnd_ = true;
+            }
+        }
+
+    } else {
+        if (thermography_ > 0.0f) {
+            thermography_ -= kInverseFPS * 2.0f;
+        } else {
+            thermography_ = 0.0f;
+            isThermography_ = false;
+        }
+    }
+
+
+}
+
 void Player::MouseLook()
 {
 
@@ -341,8 +390,8 @@ void Player::MouseLook()
     Vector2 controllerPos = { cameraRotateY_ ,cameraRotateX_ };
 
     if (Input::IsControllerStickPosMove(BUTTON_RIGHT, 0, &controllerPos)) {
-        cameraRotateY_ += controllerPos.x * kInverseFPS * cameraSpeed_*2.0f;
-        cameraRotateX_ -= controllerPos.y * kInverseFPS * cameraSpeed_*2.0f;
+        cameraRotateY_ += controllerPos.x * kInverseFPS * cameraSpeed_ * 2.0f;
+        cameraRotateX_ -= controllerPos.y * kInverseFPS * cameraSpeed_ * 2.0f;
     }
 
 

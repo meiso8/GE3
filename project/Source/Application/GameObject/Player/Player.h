@@ -35,6 +35,7 @@ public:
     void Zoom();
 
     void LookBack();
+    void Thermography();
     void MouseLook();
 
     Vector3& GetForward();
@@ -77,6 +78,12 @@ private:
     float startRotateY = 0.0f;
     float lookBackTime_ = 1.0f;
     bool isLookBackEnd_ = false;
+
+    bool isThermography_ = false;
+
+    bool isThermographyEnd_ = false;
+    float thermography_ = 0.0f;
+
 
     bool isLookBack_ = false;
     bool isJump_ = false;

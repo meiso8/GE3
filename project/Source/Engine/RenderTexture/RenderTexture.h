@@ -115,6 +115,11 @@ private:
     Microsoft::WRL::ComPtr <ID3D12Resource>materialResourceRandom_;
     MaterialForRandom* materialForRandom_ = nullptr;
 public:
+    static RenderTexture* GetInstance() {
+        static RenderTexture instance;
+        return &instance;
+    };
+
     Microsoft::WRL::ComPtr<ID3D12Resource>& GetMaterialResouce(const PSO::EffectType& effectType);
     void Create();
     void CreateResource(const uint32_t index);
@@ -135,6 +140,7 @@ public:
     void Update();
     void SetCamera(Camera* camera);
     MaterialForThermography* GetMaterialThermography() { return materialForThermography_; };
+    MaterialForDissolve* GetMaterialDissolve() { return materialForDissolve_; };
 protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
