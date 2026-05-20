@@ -60,7 +60,7 @@ private:
     DebugError debugError = {};
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, 2> swapChainResources;
     RenderTargetView rtvClass = {};
-    RenderTexture renderTexture_ = {};
+    RenderTexture* renderTexture_ = nullptr;
     Fence fence = {};
 
     DepthTextureData depthTextureData_;
@@ -100,7 +100,7 @@ public:
     void RenderTexturePreDraw();
     void DrawRenderTexture();
     void RenderTexturePostDraw();
-    void SetRenderTextureCamera(Camera* camera) { renderTexture_.SetCamera(camera); }
+    void SetRenderTextureCamera(Camera* camera);
     /// @brief 描画前処理
     void PreDraw();
     /// @brief 描画後処理
