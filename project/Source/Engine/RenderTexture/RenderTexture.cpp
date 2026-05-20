@@ -363,7 +363,7 @@ void RenderTexture::CreateMaterialDissolve() {
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectDissolve]->Map(0, nullptr, reinterpret_cast<void**>(&materialForDissolve_));
     materialForDissolve_->maskVal = 0.5f;
-    materialForDissolve_->rgb = { 1.0f,0.4f,0.3f };
+    materialForDissolve_->rgb = { 8.0f/255.0f, 16.0f / 255.0f,0.0f };
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve");
 
