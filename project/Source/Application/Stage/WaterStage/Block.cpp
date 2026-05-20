@@ -11,14 +11,13 @@
 Block::Block()
 {
     SetCollisionAttribute(kCollisionFloor);
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);  
+    SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);
     SetAABB({ {-1.0f,-1.0f,-1.0f} ,{1.0f,1.0f,1.0f} });
 }
 
 void Block::Initialize()
 {
     object_->Initialize();
-    object_->SetTemperature(0.1f);
     aniTimer_ = 0.0f;
     isPush_ = false;
     SetWorldMatrix(object_->worldTransform_.matWorld_);
@@ -103,6 +102,8 @@ BlockMap::BlockMap()
         for (int x = 0; x < kMapWidth; ++x) {
             map_[y][x] = std::make_unique<Block>();
             map_[y][x]->SetCubeAABB(aabb);
+
+            map_[y][x]->SetTemperature(0.2f);
             if (rand() % 2 == 0) {
                 map_[y][x]->SetTextureHandle(TextureFactory::PUZZLE);
             } else {
@@ -113,16 +114,25 @@ BlockMap::BlockMap()
     }
 
     // ヒエログリフ付きブロックを配置（例：中央付近）
-    map_[4][2]->SetTextureHandle(TextureFactory::HIERO_S);
-    map_[1][5]->SetTextureHandle(TextureFactory::HIERO_T);
-    map_[2][1]->SetTextureHandle(TextureFactory::HIERO_D);
-    map_[3][3]->SetTextureHandle(TextureFactory::HIERO_P);
+    auto& mapS = map_[4][2];
+    auto& mapT = map_[1][5];
+    auto& mapD = map_[2][1];
+    auto& mapP = map_[3][3];
+    mapS->SetTextureHandle(TextureFactory::HIERO_S);
+    mapT->SetTextureHandle(TextureFactory::HIERO_T);
+    mapD->SetTextureHandle(TextureFactory::HIERO_D);
+    mapP->SetTextureHandle(TextureFactory::HIERO_P);
 
     Vector4 color = { 1.0f,1.0f,0.0f,1.0f };
-    map_[4][2]->SetColor(color);
-    map_[1][5]->SetColor(color);
-    map_[2][1]->SetColor(color);
-    map_[3][3]->SetColor(color);
+    mapS->SetColor(color);
+    mapT->SetColor(color);
+    mapD->SetColor(color);
+    mapP->SetColor(color);
+
+    mapS->SetTemperature(0.75f);
+    mapT->SetTemperature(0.75f);
+    mapD->SetTemperature(0.75f);
+    mapP->SetTemperature(0.75f);
 
     centerBlocks_[0] = map_[3][3].get(); // 左上
     centerBlocks_[1] = map_[4][3].get(); // 右上
@@ -212,7 +222,7 @@ void BlockMap::Update() {
                 // 間違った順番ならリセット
                 if (steppedOrder_.size() >= correctOrder_.size() ||
                     steppedOrder_[steppedOrder_.size() - 1] != correctOrder_[steppedOrder_.size() - 1]) {
-      
+
                     isReset = true;
                 }
 
@@ -243,14 +253,14 @@ void BlockMap::Draw(Camera& camera)
 
 void BlockMap::ResetPushMap()
 {
-  
+
     for (auto& y : map_) {
         for (auto& block : y) {
             if (block->GetIsPush()) {
                 block->Reset();
                 block->SetEndPos(); // ← 戻す位置を設定
             }
-    
+
         }
     }
 
@@ -260,7 +270,7 @@ void BlockMap::RayCastHit(RaySprite& raySprite)
 {
     for (auto& y : map_) {
         for (auto& block : y) {
-            if (!block->GetIsPush()&&block->CanPushBlock()) {
+            if (!block->GetIsPush() && block->CanPushBlock()) {
                 AABB aabb = GetAABBWorldPos(block.get());
                 if (raySprite.IntersectsAABB(aabb, block->GetWorldTransform().GetWorldPosition())) {
 

@@ -12,6 +12,7 @@ private:
     float aniTimer_ = 0.0f;
 
 public:
+    void SetTemperature(const float temp) { object_->SetTemperature(temp); };
     Block();
     void SetIsPush(const bool& isPush) { isPush_ = isPush; }
     const bool& GetIsPush() { return isPush_; };
