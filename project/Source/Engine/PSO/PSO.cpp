@@ -363,6 +363,17 @@ void PSO::CreateALLPSO()
         );
     }
 
+    graphicsPipelineStateOffScreen_[kEffectThermography] = Create(
+        kBlendModeNone,
+        kCullModeBack,
+        kNone,
+        false,
+        RootSignature::THERMOGRAPHY,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_Thermography,
+        kTriangle,
+        InputLayout::kInputLayoutTypeOffScreen);
+
 }
 
 PSO::~PSO()

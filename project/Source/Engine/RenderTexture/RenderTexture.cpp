@@ -21,6 +21,8 @@ void RenderTexture::Create()
 
     CreateResource(0);
     CreateResource(1);
+    //サーモグラフィー用テクスチャ
+    CreateResource(kThermography);
 
     CreateMaterialBUfferForFullScreen();
     CreateMaterialBufferForGrayScale();
@@ -32,6 +34,7 @@ void RenderTexture::Create()
     CreateMaterialRadialBlur();
     CreateMaterialDissolve();
     CreateMaterialRandom();
+    CreateMaterialThermography();
 }
 
 void RenderTexture::CreateResource(const uint32_t index)
@@ -137,7 +140,25 @@ void RenderTexture::DrawOutLine(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, 
 
     commandList->DrawInstanced(3, 1, 0, 0);
 }
+// RenderTexture.cpp にサーモグラフィー用の描画関数を追加する例
+void RenderTexture::DrawThermo(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle)
+{
+    auto* commandList = DirectXCommon::GetCommandList();
 
+    // 書き込み先はスワップチェーン（画面出力用）など
+    commandList->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
+
+    // ★ サーモグラフィー用のPSOやRootSignatureを設定
+    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::THERMOGRAPHY));
+    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(PSO::kEffectThermography).Get());
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    // 温度テクスチャ(t2)をシェーダーに渡す
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectThermography]->GetGPUVirtualAddress());
+    SrvManager::SetGraphicsRootDescriptorTable(1, renderTextureDatas_[kThermography].srvIndex); // 温度用
+
+    commandList->DrawInstanced(3, 1, 0, 0);
+}
 void RenderTexture::Update()
 {
     assert(camera_);
@@ -176,7 +197,7 @@ void RenderTexture::Update()
     }
 
     if (ImGui::TreeNode("LuminanceBasedOutline")) {
- 
+
         ImGui::DragFloat("weightVal", &materialForLuminanceBasedOutline_->weightVal, 0.1f);
         ImGui::TreePop();
     }
@@ -189,7 +210,7 @@ void RenderTexture::Update()
     if (ImGui::TreeNode("RadialBulr")) {
 
         ImGui::DragFloat2("center", &materialForRadialBlur_->center.x, 0.01f, 0.0f, 1.0f);
-        ImGui::DragInt("numSamples", &materialForRadialBlur_->numSamples,1.0f,1);
+        ImGui::DragInt("numSamples", &materialForRadialBlur_->numSamples, 1.0f, 1);
         ImGui::DragFloat("center", &materialForRadialBlur_->blurWidth);
         ImGui::TreePop();
     }
@@ -204,6 +225,13 @@ void RenderTexture::Update()
     if (ImGui::TreeNode("Random")) {
         //ImGui::Checkbox("useRandom", &materialForRandom_->useRandom);
         ImGui::DragFloat("time", &materialForRandom_->time, 0.01f);
+        ImGui::TreePop();
+    }
+
+    if (ImGui::TreeNode("Thermography")) {
+        ImGui::DragFloat("alpha", &materialForThermography_->alpha);
+        ImGui::DragInt("kernel", &materialForThermography_->kernel, 1, 1);
+        ImGui::DragFloat("sigma", &materialForThermography_->sigma);
         ImGui::TreePop();
     }
 
@@ -351,4 +379,16 @@ void RenderTexture::CreateMaterialRandom()
     materialForRandom_->time = 1.0f;
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve");
+}
+void RenderTexture::CreateMaterialThermography()
+{//マテリアル用のリソースを作る。
+    materialResource_[PSO::kEffectThermography] = DirectXCommon::CreateBufferResource(sizeof(MaterialForThermography));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = materialResource_[PSO::kEffectThermography]->Map(0, nullptr, reinterpret_cast<void**>(&materialForThermography_));
+    materialForThermography_->alpha = { 1.0f };
+    materialForThermography_->sigma = 10.0f;
+    materialForThermography_->kernel = 14;
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : Thermography");
 };

@@ -85,22 +85,40 @@ void DirectXCommon::RenderTexturePreDraw()
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
-    auto& renderTextureData = renderTexture_.GetRenderTextureData(0);
+    auto& renderTextureDataNormal = renderTexture_.GetRenderTextureData(RenderTexture::kNormal0);
+    auto& renderTextureDataThermography = renderTexture_.GetRenderTextureData(RenderTexture::kThermography);
+    // 2つのレンダーターゲットハンドルを入れる配列を用意
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
+
+    // SV_TARGET0 用 (メインカラー)
+    rtvHandles[0] = renderTextureDataNormal.rtvHandleCPU;
+    // SV_TARGET1 用 (温度バッファ) 
+    rtvHandles[1] = renderTextureDataThermography.rtvHandleCPU;
+   
     //TransitionBarrierの設定
-    barrier.SettingBarrierSRVforRTV(renderTextureData.resource);
+    barrier.SettingBarrierSRVforRTV(renderTextureDataNormal.resource);
+    barrier.SettingBarrierSRVforRTV(renderTextureDataThermography.resource);
 
     //2.描画用のRTVとDSVを設定する 
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-
-    commandList->GetCommandList()->OMSetRenderTargets(1, &renderTextureData.rtvHandleCPU, false, &dsvHandle);
+    // ★ 第1引数を 2 にし、第3引数を FALSE (連続したメモリ配列として渡す) にする
+    commandList->GetCommandList()->OMSetRenderTargets(2, rtvHandles, false, &dsvHandle);
+    //commandList->GetCommandList()->OMSetRenderTargets(1, &renderTextureData.rtvHandleCPU, false, &dsvHandle);
     
     //3.指定した色で画面全体をクリアする
     Vector4 color = renderTexture_.GetColor();
     float clearColor[] = { color.x,color.y,color.z,color.w };//青っぽい色。RGBAの順
-    commandList->GetCommandList()->ClearRenderTargetView(renderTextureData.rtvHandleCPU, clearColor, 0, nullptr);
+    commandList->GetCommandList()->ClearRenderTargetView(renderTextureDataNormal.rtvHandleCPU, clearColor, 0, nullptr);
 
     //指定した深度で画面全体をクリアする
     commandList->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+    // ★ 2. 温度バッファ(Index 1)のクリア処理を追加！
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvTemp = renderTexture_.GetRenderTextureData(RenderTexture::kThermography).rtvHandleCPU;
+    // 温度の初期値は「0.0（熱源なし）」にリセットしたいので、すべて 0.0f にします
+    float clearTemp[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    commandList->GetCommandList()->ClearRenderTargetView(rtvTemp, clearTemp, 0, nullptr);
+
 
     SrvManager::PreDraw();
 
@@ -115,9 +133,11 @@ void DirectXCommon::RenderTexturePreDraw()
 void DirectXCommon::DrawRenderTexture()
 {
 
+    //サーモグラフィーのテクスチャを作成。
+    barrier.SettingBarrierRTVforSRV(renderTexture_.GetRenderTextureData(RenderTexture::kThermography).resource);
 
-    auto& renderTextureDataA = renderTexture_.GetRenderTextureData(0);
-    auto& renderTextureDataB = renderTexture_.GetRenderTextureData(1);
+    auto& renderTextureDataA = renderTexture_.GetRenderTextureData(RenderTexture::kNormal0);
+    auto& renderTextureDataB = renderTexture_.GetRenderTextureData(RenderTexture::kNormal1);
 
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureDataB.resource);
@@ -179,12 +199,21 @@ void DirectXCommon::DrawRenderTexture()
     //TransitionBarrierの設定
     barrier.SettingBarrierRTVforSRV(renderTextureDataB.resource);
 
+    //TransitionBarrierの設定
+    barrier.SettingBarrierSRVforRTV(renderTextureDataA.resource);
+    renderTexture_.DrawThermo(renderTextureDataA.rtvHandleCPU);
+    //TransitionBarrierの設定
+    barrier.SettingBarrierRTVforSRV(renderTextureDataA.resource);
+    //サーモグラフィーを戻す
+    barrier.SettingBarrierRTVforSRV(renderTexture_.GetRenderTextureData(RenderTexture::kThermography).resource);
+
      // 4. 【重要】描画先を画面(バックバッファ)のRTVにする
     // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
     auto backBufferRTV = GetRTVCPUDescriptorHandle(backBufferIndex);
 
-    renderTexture_.Draw(PSO::kEffectNone, backBufferRTV, 1);
+    renderTexture_.Draw(PSO::kEffectNone, backBufferRTV, 0);
+
 }
 
 void DirectXCommon::RenderTexturePostDraw()
@@ -194,7 +223,7 @@ void DirectXCommon::RenderTexturePostDraw()
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    auto& renderTextureData = renderTexture_.GetRenderTextureData(0);
+    auto& renderTextureData = renderTexture_.GetRenderTextureData(RenderTexture::kNormal0);
     barrier.SettingBarrierRTVforSRV(renderTextureData.resource);
 
     LogFile::Log("Rendertexture : PosDraw : SettingBarrier");
@@ -219,6 +248,7 @@ void DirectXCommon::PreDraw()
     barrier.SettingBarrier(swapChainResources[backBufferIndex],
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET);
+
 
     commandList->GetCommandList()->OMSetRenderTargets(1, &rtvClass.GetHandle(backBufferIndex), false, nullptr);
     //3.指定した色で画面全体をクリアする

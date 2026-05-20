@@ -66,7 +66,8 @@ void DxcCompiler::ShaderSetting() {
     pixelShaderBlobs_[PS_Dissolve] = CompileShader(L"Resource/shader/PixelShader/Dissolve.PS.hlsl", L"ps_6_0");
     //Random         
     pixelShaderBlobs_[PS_Random] = CompileShader(L"Resource/shader/PixelShader/Random.PS.hlsl", L"ps_6_0");
-
+    //PS_Thermography
+    pixelShaderBlobs_[PS_Thermography] = CompileShader(L"Resource/shader/PixelShader/Thermography.PS.hlsl", L"ps_6_0");
     //===================ComputeShader====================
     
     //ComputeShader

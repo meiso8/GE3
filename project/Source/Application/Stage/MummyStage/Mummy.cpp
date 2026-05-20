@@ -9,10 +9,11 @@ Mummy::Mummy() {
     object_ = std::make_unique<Object3d>();
     object_->Create();
     object_->SetMesh(ModelManager::GetModel("mummy"));
+    object_->SetTemperature(0.2f);
     coffinModel_ = ModelManager::GetModel("coffin");
     aniObj_ = std::make_unique<AnimationObject3d>();
     aniObj_->Create();
-
+    aniObj_->SetTemperature(0.1f);
     //ペアレント
     object_->worldTransform_.Parent(platform_->GetWorldTransform());
     aniObj_->worldTransform_.Parent(platform_->GetWorldTransform());

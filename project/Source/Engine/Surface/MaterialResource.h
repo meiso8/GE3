@@ -19,7 +19,8 @@ struct Material
     int32_t lightMode;
     float32_t shininess;
     float32_t environmentCoefficient;
-    float padding[1];
+    //温度を追加してみる
+    float temperature;
     float32_t4x4 uvTransform;
 };
 
@@ -32,7 +33,7 @@ public:
     ~MaterialResource();
     void UnMap();
 
-    void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = LightMode::kLightModeNone);
+    void CreateMaterial(const float temperature = 0.0f, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = LightMode::kLightModeNone);
     Material* GetMaterial() {
         return material_;
     };
@@ -51,6 +52,9 @@ public:
     void SetUV(const Matrix4x4& transform);
     void SetLightMode(uint32_t lightType);
     void SetShininess(const float32_t& shininess);
+    /// @brief 温度の設定
+    /// @param temperature 温度
+    void SetTemperature(const float32_t& temperature);
     void SetEnvironmentCoefficient(const float& environmentCoefficient) {
         material_->environmentCoefficient = environmentCoefficient;
     }

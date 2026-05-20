@@ -48,7 +48,7 @@ void ParticleManager::Create()
 
     //マテリアルリソースを作成 //ライトなし
     materialResource = std::make_unique<MaterialResource>();
-    materialResource->CreateMaterial({ 1.0f,1.0f,1.0f,1.0f }, LightMode::kLightModeNone);
+    materialResource->CreateMaterial(1.0f,{ 1.0f,1.0f,1.0f,1.0f }, LightMode::kLightModeNone);
 }
 
 Particle MakeNewParticle(const AABB& velocityAABB, const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const AABB& rotateAABB, const AABB& scaleAABB)

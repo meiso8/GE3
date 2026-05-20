@@ -13,6 +13,7 @@ AmenRa::AmenRa() {
     object_->Create();
     object_->SetMesh(ModelManager::GetModel("AmenRa"));
     object_->SetLightMode(kLightModeLReflectance);
+    object_->SetTemperature(0.1f);
     AABB aabb = { .min = {-1.0f,0.0f,-1.0f},.max = {1.0f,6.01f,1.0f} };
     SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突

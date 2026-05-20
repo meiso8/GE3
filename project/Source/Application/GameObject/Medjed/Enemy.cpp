@@ -32,7 +32,7 @@ Enemy::Enemy()
     skinningModel_->CreateDatas(model_, dancingModel_);
     bodyPos_.SetMeshAndData(skinningModel_.get());
     bodyPos_.Create();
-
+    bodyPos_.SetTemperature(1.0f);
     float halfScale = kScale_ * 0.25f;
     Init();
     SetAABB({ { -halfScale -halfScale*1.5f ,-halfScale }, { halfScale ,halfScale * 1.5f ,halfScale } });
