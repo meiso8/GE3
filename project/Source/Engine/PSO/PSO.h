@@ -38,7 +38,7 @@ public:
         kEffectDepthBasedOutline,
         kEffectRadialBlur,
         kEffectDissolve,
-    /*    kEffectRandom,*/
+        kEffectRandom,
         kEffectThermography,
         kCountOfEffect,
 

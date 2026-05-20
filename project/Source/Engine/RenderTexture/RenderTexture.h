@@ -96,12 +96,12 @@ public:
 
 private:
     Camera* camera_ = nullptr;
-    Vector4 kRenderTargetClearValue_ = {1.0f,1.0f,1.0f,1.0f};
+    Vector4 kRenderTargetClearValue_ = { 1.0f,1.0f,1.0f,1.0f };
     const Vector4 sepiaColor_ = { 1.0f,74.0f / 107.0f,43.0f / 107.0f,1.0f };
     std::array< RenderTextureData, kMaxRenderTexutre> renderTextureDatas_;
     RenderTextureData thermographyTextureData_;
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, PSO::kCountOfEffect> materialResource_;
-    
+
     MaterialForRenderTexture* materialForGrayScale_ = nullptr;
     MaterialForVignette* materialForVignette_ = nullptr;
     MaterialForBoxFilter* materialForBoxFilter_ = nullptr;
@@ -129,11 +129,12 @@ public:
     void Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
     void DrawOutLine(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex);
     void DrawDissolve(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const TextureFactory::Handle& textureHandle);
-    void DrawRandom(const BlendMode& blendMode,const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
+    void DrawRandom(const BlendMode& blendMode, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
     // サーモグラフィー用
     void DrawThermo(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle);
     void Update();
     void SetCamera(Camera* camera);
+    MaterialForThermography* GetMaterialThermography() { return materialForThermography_; };
 protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;

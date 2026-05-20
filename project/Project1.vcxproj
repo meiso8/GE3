@@ -163,6 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\PostProcessManager\PostProcessManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\LineMesh\LineMesh.cpp" />
     <ClCompile Include="Source\Engine\Math\Structs\AABB.cpp" />
     <ClCompile Include="Source\Engine\LevelEditor\LevelEditor.cpp" />
@@ -308,6 +309,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\FreeTypeManager\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\PostProcessManager\PostProcessManager.h" />
     <ClInclude Include="Source\Engine\Mesh\LineMesh\LineMesh.h" />
     <ClInclude Include="Source\Engine\LevelEditor\LevelEditor.h" />
     <ClInclude Include="Source\Engine\RenderTexture\RenderTexture.h" />
