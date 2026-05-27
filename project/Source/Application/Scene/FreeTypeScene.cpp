@@ -32,20 +32,24 @@ FreeTypeScene::FreeTypeScene()
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
 
-    cubeMesh_ = std::make_unique<Primitive>();
-    cubeMesh_->Create(PrimitiveGenerator::CreateCube());
+    //cubeMesh_ = std::make_unique<Primitive>();
+    //cubeMesh_->Create(PrimitiveGenerator::CreateCube());
 
     cylinder_ = std::make_unique<Primitive>();
-    cylinder_->Create(PrimitiveGenerator::CreateCylinder(),TextureFactory::GRADATION_LINE);
+    cylinder_->Create(PrimitiveGenerator::CreateCylinder());
 
     object3d_ = std::make_unique<Object3d>();
+
     object3d_->Create();
-    object3d_->SetMesh(cylinder_.get());
+    object3d_->SetMeshAndMaterial(cylinder_.get());
+
+    object3d_->SetTextureHandle(TextureFactory::GRADATION_LINE);
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
+
 
     object3d2_ = std::make_unique<Object3d>();
     object3d2_->Create();
-    object3d2_->SetMesh(cubeMesh_.get());
+    object3d2_->SetMeshAndMaterial(ModelManager::GetModel("playerGirl"));
 
     levelEditor_ = std::make_unique<LevelEditor>();
     levelEditor_->Load("test");
@@ -76,8 +80,8 @@ void FreeTypeScene::Initialize()
     for (auto& enemyData : levelData->enemies) {
         std::unique_ptr<Object3d> enemy = std::make_unique<Object3d>();
         enemy->Create();
+        enemy->SetMeshAndMaterial(ModelManager::GetModel(enemyData.fileName));
         enemy->Initialize();
-        enemy->SetMesh(ModelManager::GetModel(enemyData.fileName));
         enemy->worldTransform_.translate_ = enemyData.transform.translate;
         enemy->worldTransform_.rotate_ = enemyData.transform.rotate;
         enemy->worldTransform_.scale_ = enemyData.transform.scale;
@@ -110,9 +114,20 @@ void FreeTypeScene::Update()
     }
 
     DebugUI::CheckCamera(*currentCamera_);
+    DebugUI::CheckModel(*ModelManager::GetModel("AmenRa"), "AmenRa");
+    DebugUI::CheckModel(*ModelManager::GetModel("medjed"),"medjed");
+    DebugUI::CheckModel(*ModelManager::GetModel("coffin"), "coffin");
+
+    DebugUI::CheckModel(*ModelManager::GetModel("playerGirl"), "playerGirl");
+
+
+
+   ;
 
     DebugUI::CheckObject3d(*object3d_, "Cylinder");
-    DebugUI::CheckObject3d(*object3d2_, "Cube");
+    DebugUI::CheckObject3d(*object3d2_, "playerGirlObj");
+
+
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
     DebugUI::CheckParticle(*particleEmitters_[1], "Emitter1");
     DebugUI::CheckSRVIndex();
@@ -173,7 +188,7 @@ void FreeTypeScene::DrawModel()
 
 
 
-    //object3d2_->Draw(*currentCamera_);
+    object3d2_->Draw(*currentCamera_);
     for (auto& obj : objects_) {
 
         obj->obj_->Draw(*currentCamera_);

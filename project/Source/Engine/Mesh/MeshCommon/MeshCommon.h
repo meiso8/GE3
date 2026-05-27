@@ -31,17 +31,15 @@ public:
         kLine    // ライン
     };
 
-    virtual void Create(const MeshData& meshData, const TextureFactory::Handle& textureHandle = TextureFactory::WHITE_1X1);
+    virtual void Create(const MeshData& meshData);
     virtual void PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode);
     virtual void Draw(ID3D12GraphicsCommandList* commandList);  
-    void DrawCallForParticle(ID3D12GraphicsCommandList* commandList, const uint32_t numInstance);
-    void SetTextureHandle(const TextureFactory::Handle& textureHandle);
-    uint32_t GetSrvIndex() { return textureHandle_; }
+    virtual void DrawCallForParticle(ID3D12GraphicsCommandList* commandList, const uint32_t numInstance);
 protected:
-    /// @brief テクスチャハンドル
-    uint32_t textureHandle_ = 0;
+
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     D3D12_INDEX_BUFFER_VIEW  indexBufferView_{};
+    D3D_PRIMITIVE_TOPOLOGY topology_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     Microsoft::WRL::ComPtr <ID3D12Resource> indexResource_{};
@@ -49,7 +47,7 @@ protected:
     UINT vertexCount_ = 0;
 private:
 
-    D3D_PRIMITIVE_TOPOLOGY topology_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
     MeshType meshType_ = MeshType::kNormal; // デフォルトはNormal
     UINT indexCount_ = 0;
 };

@@ -22,7 +22,7 @@
                 ]
             },
             "disabled": false,
-            "file_name": "normalMed"
+            "file_name": "medjed"
         },
         {
             "type": "MESH",
@@ -44,7 +44,7 @@
                     1.0
                 ]
             },
-            "file_name": "normalMed"
+            "file_name": "medjed"
         },
         {
             "type": "MESH",
@@ -67,50 +67,7 @@
                 ]
             },
             "disabled": false,
-            "file_name": "normalMed"
-        },
-        {
-            "type": "PlayerSpawn",
-            "name": "PlayerSpawn",
-            "transform": {
-                "translation": [
-                    0.021793782711029053,
-                    -2.7299704551696777,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    3.064385414123535
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "EnemySpawn",
-            "transform": {
-                "translation": [
-                    0.12423133850097656,
-                    -0.09766411781311035,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    -0.751417875289917
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "coffin"
+            "file_name": "medjed"
         }
     ]
 }

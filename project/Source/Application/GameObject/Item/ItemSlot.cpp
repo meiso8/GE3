@@ -22,10 +22,13 @@ Item::Item()
     SetCollisionAttribute(kCollisionItem);
     SetCollisionMask(!kCollisionItem);
     SetWorldMatrix(object_->worldTransform_.matWorld_);
+  
 }
 void Item::SetModel(const std::string& fileName)
 {
-    object_->SetMesh(ModelManager::GetModel(fileName));
+
+ 
+    object_->SetMeshAndMaterial(ModelManager::GetModel(fileName));
 }
 void Item::Init()
 {

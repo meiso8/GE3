@@ -51,7 +51,7 @@ void DrawGrid::Create()
         lineTransforms_[i]->Update();
         lineTransforms_[i]->SetLightMode(kLightModeNone);
         if (i != 25 && i != 76) {
-            lineTransforms_[i]->SetMesh(line_[i].get());
+            lineTransforms_[i]->SetMeshAndMaterial(line_[i].get());
         }
 
         if (i < 50) {
@@ -72,9 +72,9 @@ void DrawGrid::Create()
 
     }
 
-    lineTransforms_[27]->SetMesh(cube_[0].get());
+    lineTransforms_[27]->SetMeshAndMaterial(cube_[0].get());
     lineTransforms_[27]->SetColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-    lineTransforms_[76]->SetMesh(cube_[1].get());
+    lineTransforms_[76]->SetMeshAndMaterial(cube_[1].get());
     lineTransforms_[76]->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 }
 

@@ -58,15 +58,16 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
     for (auto& objectData : levelData_->objects) {
 
         std::unique_ptr<ObjectSet> newObjctData = std::make_unique<ObjectSet>();
+        Model* model = ModelManager::GetModel(objectData.fileName);
 
         newObjctData->obj_ = std::make_unique<Object3d>();
+
         newObjctData->obj_->Create();
+        newObjctData->obj_->SetMeshAndMaterial(model);
         auto& transform = newObjctData->obj_->worldTransform_;
         transform.translate_ = objectData.transform.translate;
         transform.scale_ = objectData.transform.scale;
         transform.rotate_ = objectData.transform.rotate;
-        Model* model = ModelManager::GetModel(objectData.fileName);
-        newObjctData->obj_->SetMesh(model);
 
         //コライダーの設定
         newObjctData->collider_ = std::make_unique<Collider>();
@@ -136,7 +137,7 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LevelData::PlayerSpawnData& playerData = levelData->players.back();
         //トランスフォームのパラメータ読み込み
         LoadTransform(object, playerData.transform);
- 
+
 
     } else if (type.compare("EnemySpawn") == 0) {
         //要素追加
@@ -173,7 +174,7 @@ void LevelEditor::LoadTransform(nlohmann::json& object, EulerTransform& transfor
     transform.translate.z = (float)loadTransform["translation"][1];
     //回転角 軸回転方向を変換しておく
     transform.rotate.x = -(float)loadTransform["rotation"][0];
-    transform.rotate.y = -(float)loadTransform["rotation"][2];
+    transform.rotate.y = (float)loadTransform["rotation"][2];//ここは反転しないでおく
     transform.rotate.z = -(float)loadTransform["rotation"][1];
     //スケーリング
     transform.scale.x = (float)loadTransform["scaling"][0];

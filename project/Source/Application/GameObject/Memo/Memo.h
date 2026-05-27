@@ -26,7 +26,7 @@ public:
     void SetCubeSize(const AABB& aabb) {
         SetAABB(aabb);
         object_->worldTransform_.scale_ = aabb.max - aabb.min;
-        object_->SetMesh(cubeMesh_.get());
+        object_->SetMeshAndMaterial(cubeMesh_.get());
     };
     void SetColor(const Vector4& color) { object_->SetColor(color); }
 };

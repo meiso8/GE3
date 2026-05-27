@@ -31,7 +31,6 @@ private:
     Vector3 GetWorldPos();
     static Vector3* targetPos_;
     std::unique_ptr<AnimationObject3d> object_;
-   std::unique_ptr<SkinningModel>skinningModel_ = nullptr;
     bool isOpen_ = false;
     static Model* model_;
     void Look(const Vector3& target);

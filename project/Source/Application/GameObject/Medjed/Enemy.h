@@ -56,14 +56,8 @@ private:
     float attackTime_ = 10.0f;
     //目標地点
     Vector3* target_ = nullptr;
-
     //モデル
     Model* model_;
-    //モデル
-    Model* dancingModel_;
-    //モデル
-    Model* moveModel_;
-    std::unique_ptr<SkinningModel>skinningModel_ = nullptr;
 
     Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,10.0f};
     Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };

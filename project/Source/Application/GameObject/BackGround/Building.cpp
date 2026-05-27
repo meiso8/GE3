@@ -12,9 +12,8 @@ Building::Building() {
 
     buildingPos_ = std::make_unique<Object3d>();
     buildingPos_->Create();
-    buildingPos_->SetMesh(model_);
+    buildingPos_->SetMeshAndMaterial(model_);
     buildingPos_->SetLightMode(kLightModeNone);
-
 
     fieldPoses_[Wall0] = std::make_unique<FieldCollider>();
     fieldPoses_[Wall1] = std::make_unique<FieldCollider>();
@@ -41,7 +40,6 @@ Building::Building() {
 void Building::Init()
 {
     buildingPos_->Initialize();
-    model_->ResetTextureHandle();
 
     for (const auto& [type, pos] : fieldPoses_) {
         pos->Initialize();
@@ -114,8 +112,9 @@ FieldCollider::FieldCollider()
     cube_->Create(PrimitiveGenerator::CreateCube());
 
     object_ = std::make_unique<Object3d>();
+ 
     object_->Create();
-    object_->SetMesh(cube_.get());
+    object_->SetMeshAndMaterial(cube_.get());
 
     SetCollisionAttribute(kCollisionWall);
     SetCollisionMask(kCollisionPlayer | kCollisionPlayerEye | kCollisionEnemy | kCollisionMedjed | kCollisionMummy);

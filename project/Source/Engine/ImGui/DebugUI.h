@@ -22,12 +22,14 @@ class Model;
 class ParticleManager;
 class ParticleEmitter;
 class Object3d;
+class AnimationObject3d;
 struct Material;
 struct PointLight;
 struct QuaternionTransform;
 class MeshCommon;
 //struct Damage;
 struct CharacterState;
+
 
 class DebugUI
 {
@@ -67,6 +69,10 @@ public:
     /// @param object3d Object3d
     /// @param label 
     static void CheckObject3d(Object3d& object3d, const char* label);
+    /// @brief AnimationObject3d
+    /// @param aniObject3d 
+    /// @param label 
+    static void CheckAnimation(AnimationObject3d& aniObject3d, const char* label);
     /// @brief ワールドトランスフォーム
     /// @param worldTransform 
     static void CheckWorldTransform(WorldTransform& worldTransform, const char* label);

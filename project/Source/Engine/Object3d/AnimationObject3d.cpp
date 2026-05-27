@@ -10,11 +10,14 @@
 #include"Bone.h"
 #include<algorithm>
 #include"SRVmanager/SrvManager.h"
+#include"DirectXCommon.h"
+#include"Log.h"
 
 AnimationObject3d::AnimationObject3d() {
     animationTime_ = 0.0f;
     worldMatrix_ = MakeIdentity4x4();
-
+    //スキニングモデルを内部で宣言する
+    skinningModel_ = std::make_unique<SkinningModel>();
 #ifdef _DEBUG
     debugBone_ = std::make_unique<DebugBone>();
 #endif
@@ -39,25 +42,44 @@ void AnimationObject3d::InitTime()
 
 void AnimationObject3d::UpdateAnimation()
 {
-    ModelData* boneModelData = skinningModel_->GetBoneModelData();
+    ModelData* modelData = skinningModel_->GetModelData();
     Skeleton* skeleton = skinningModel_->GetSkeleton();
     SkinCluster* skinCluster = skinningModel_->GetSkinCluster();
 
-    assert(boneModelData);
+    assert(modelData);
     assert(skeleton);
     assert(skinCluster);
 
-    //アニメーションの更新を行って、骨ごとのLocal情報を更新する
-    ApplyAnimation(*skeleton, animation_, animationTime_);
-    //現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
-    UpdateSkeleton(*skeleton);
-    //SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
-    UpdateSkinCluster(*skinCluster, *skeleton);
+    Animation* animation = nullptr;
+    if (animations_.contains(currentAnimation_)) {
+        animation = &animations_.at(currentAnimation_);
+    } else {
+
+        for (auto& [name, findAnimation] : animations_) {
+            animation = &findAnimation;
+            //最新のアニメーションの名前を入れる
+            currentAnimation_ = name;
+            break;
+        }
+    }
+  
+
+    if (animation) {
+        //アニメーションがあったら
+
+        //アニメーションの更新を行って、骨ごとのLocal情報を更新する
+        ApplyAnimation(*skeleton, *animation, animationTime_);
+        //現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
+        UpdateSkeleton(*skeleton);
+        //SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
+        UpdateSkinCluster(*skinCluster, *skeleton);
+    }
+
 
     if (isSkinning_) {
         worldMatrix_ = worldTransform_.matWorld_;
     } else {
-        worldMatrix_ = boneModelData->rootNode.localMatrix * worldTransform_.matWorld_;
+        worldMatrix_ = modelData->rootNode.localMatrix * worldTransform_.matWorld_;
     }
 
 #ifdef _DEBUG
@@ -67,67 +89,79 @@ void AnimationObject3d::UpdateAnimation()
 void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
 {
     animationTime_ += kInverseFPS;
-    if (isLoop) {
-        animationTime_ = std::fmod(animationTime_, animation_.duration);
+
+    Animation* animation = nullptr;
+
+    if (animations_.contains(currentAnimation_)) {
+        animation = &animations_.at(currentAnimation_);
     } else {
-        animationTime_ = std::clamp(animationTime_, 0.0f, animation_.duration);
+
+        for (auto& [name, findAnimation] : animations_) {
+            animation = &findAnimation;
+            //最新のアニメーションの名前を入れる
+            currentAnimation_ = name;
+            break;
+        }
+    }
+
+    if (isLoop) {
+        animationTime_ = std::fmod(animationTime_, animation->duration);
+    } else {
+        animationTime_ = std::clamp(animationTime_, 0.0f, animation->duration);
     }
 }
-void AnimationObject3d::SetMeshAndData(SkinningModel* skinningModel)
+bool AnimationObject3d::IsAnimEnd()
 {
-    skinningModel_ = skinningModel;
-#ifdef _DEBUG
-    debugBone_->Create(*skinningModel_->GetSkeleton());
-#endif
-    //試しにここでセットしてみる　
-    animation_ = AnimationManager::GetAnimation(skinningModel_->GetBoneModelData()->filePath);
-}
 
-void AnimationObject3d::SetAnimation(Model* model)
-{
-    skinningModel_->SetBoneModel(model);
-#ifdef _DEBUG
-    debugBone_->Create(*skinningModel_->GetSkeleton());
-#endif
-    //試しにここでセットしてみる　
-    animation_ = AnimationManager::GetAnimation(skinningModel_->GetBoneModelData()->filePath);
+    if (animations_.contains(currentAnimation_)) {
+        return  animationTime_ == animations_.at(currentAnimation_).duration;
+    }
+    //もしアニメーションが見つからなかったらfalseで返す
+    LogFile::Log("not found animetion : IsAnimEnd return false");
+    return false;
 }
-
-void AnimationObject3d::SetModel(Model* model)
+void AnimationObject3d::SetModelAndLoadAnimation(Model* model)
 {
+    assert(model);
+
     skinningModel_->SetModel(model);
+
+#ifdef _DEBUG
+    debugBone_->Create(*skinningModel_->GetSkeleton());
+#endif
+    //試しにここでセットしてみる　
+    animations_ = AnimationManager::GetAnimations(model->GetModelData()->filePath);
 }
 
-void AnimationObject3d::SetTextureHandle(const TextureFactory::Handle& textureHandle)
-{
-    skinningModel_->SetTextureHandle(textureHandle);
-}
-
-
-void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode,const TextureFactory::Handle skyBoxTexture)
+void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const TextureFactory::Handle skyBoxTexture)
 {
     transformationMatrixData_->World = worldMatrix_;
     transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
     transformationMatrixData_->WVP = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
 
     if (skinningModel_) {
-        skinningModel_->PreDraw(commandList_, blendMode, cullMode);
+
+        auto* commandlist = DirectXCommon::GetCommandList();
+        skinningModel_->PreDraw(commandlist, blendMode, cullMode);
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+
+        ////拡散反射テクスチャ
+        //SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
         //timeのSRVの場所を設定
-        commandList_->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
         //expansionのCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
         //cameraのCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
         //ライトのCBufferの場所を設定
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         SpotLightManager::SetGraphicsRootDescriptorTable();
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(skyBoxTexture));
-        skinningModel_->Draw(commandList_);
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
+        skinningModel_->Draw(commandlist);
     }
 
 #ifdef _DEBUG

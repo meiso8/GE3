@@ -7,11 +7,14 @@ Field::Field()
 
     circle_ = { {0.0f,0.0f,0.0f},25.0f };
     circleMesh_ = std::make_unique<Primitive>();
-    circleMesh_->Create(PrimitiveGenerator::CreateCircle(circle_), TextureFactory::NUMBERS);
+    circleMesh_->Create(PrimitiveGenerator::CreateCircle(circle_));
 
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
-    object3d_->SetMesh(circleMesh_.get());
+
+    object3d_->SetMeshAndMaterial(circleMesh_.get());
+    object3d_->SetTextureHandle(TextureFactory::NUMBERS);
+
     object3d_->SetLightMode(kLightModeNone);
 }
 

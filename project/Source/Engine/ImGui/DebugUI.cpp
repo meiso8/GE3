@@ -10,6 +10,7 @@
 #include"Particle/Particle.h"
 #include"Particle/ParticleEmitter.h"
 #include"Object3d.h"
+#include"AnimationObject3d.h"
 #include"Sound.h"
 
 #include"Lights/Light.h"
@@ -216,7 +217,7 @@ void DebugUI::CheckSRVIndex() {
     ImGui::Begin("SRVTexture");
     // 例：表示したいSRVのインデックス番号
     // （テクスチャを読み込んだ時のインデックスや、RenderTextureのsrvIndexなど）
-    ImGui::SliderInt("srvIndex", &index,0,SrvManager::kMaxSRVCount-1);
+    ImGui::SliderInt("srvIndex", &index, 0, SrvManager::kMaxSRVCount - 1);
 
     // SrvManager から GPUハンドルを取得
     D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = SrvManager::GetGPUDescriptorHandle(index);
@@ -238,7 +239,6 @@ void DebugUI::CheckSpotLight()
     ImGui::Begin("SpotLight");
 
     for (int i = 0; i < SpotLightManager::kMaxData_; ++i) {
-
 
         if (ImGui::TreeNode(("light " + std::to_string(i)).c_str())) {
             SpotLight& spotLight = SpotLightManager::GetData(i);
@@ -268,12 +268,27 @@ void DebugUI::CheckModel(Model& model, const char* label) {
 #ifdef USE_IMGUI
     ImGui::Begin("Model");
     auto* modelData = model.GetModelData();
-    ImGui::Text("filePath : %s",modelData->filePath.c_str());
+    std::string string = "filePath :" + modelData->filePath;
+    ImGui::Text(string.c_str());
     ImGui::Text("indices : Size : %d", modelData->indices.size());
     ImGui::Text("vertices : Size : %d", modelData->vertices.size());
-    ImGui::Text("material : TextureFilePath : %s", modelData->material.textureFilePath);
-    ImGui::Text("material : textureSrvIndex : %d", modelData->material.textureSrvIndex);
-    ImGui::Text("textureSrvIndex : %d", model.GetSrvIndex()); 
+
+    if (ImGui::TreeNode("material")) {
+        for (auto& [name, materials] : modelData->materials) {
+            if (ImGui::TreeNode(name.c_str())) {
+                for (int i = 0; i < materials.textureData_.size(); ++i) {
+                    std::string textureFilePath = "material : FilePath :" + materials.textureData_[i].textureFilePath;
+                    ImGui::Text(textureFilePath.c_str());
+                    ImGui::Text("material : SrvIndex : %d", materials.textureData_[i].textureSrvIndex);
+                }
+                ImGui::TreePop();
+            }
+        }
+
+        ImGui::TreePop();
+    }
+    
+
     ImGui::End();
 #endif
 }
@@ -527,7 +542,7 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
         emitter.movement = static_cast<ParticleMovements>(movement);
         ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
         ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
-        
+
         ImGui::SliderFloat3("scaleAABBMin", &emitter.scaleAABB_.min.x, -20.0f, 0.0f);
         ImGui::SliderFloat3("scaleAABBMax", &emitter.scaleAABB_.max.x, 0.0f, 20.0f);
 
@@ -623,6 +638,29 @@ void DebugUI::CheckTransform(EulerTransform& transform, const char* label)
     CheckTransforms(transform.scale, transform.rotate, transform.translate, label);
 }
 
+
+void DebugUI::CheckAnimation(AnimationObject3d& aniObject3d, const char* label)
+{
+#ifdef USE_IMGUI
+
+    CheckObject3d(aniObject3d, label);
+
+    ImGui::Begin("AnimationObject3d");
+
+    if (ImGui::TreeNode(label)) {
+        
+        for (auto& [name, animation] : aniObject3d.GetAnimations()) {
+
+            if (ImGui::TreeNode(name.c_str())) {  
+                ImGui::SliderFloat("duration", &animation.duration, 0.0f, 1000000.0f);
+                ImGui::TreePop();
+            }
+        }
+        ImGui::TreePop();
+    }
+    ImGui::End();
+#endif
+}
 
 void DebugUI::CheckWorldTransform(WorldTransform& worldTransform, const char* label) {
 

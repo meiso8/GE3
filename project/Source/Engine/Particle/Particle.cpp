@@ -22,7 +22,7 @@ std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager
 
 void ParticleManager::CreateAll()
 {
-    CreateParticleGroup("particle1", TextureFactory::CIRCLE,kPlane, false);
+    CreateParticleGroup("particle1", TextureFactory::CIRCLE, kPlane, false);
     CreateParticleGroup("people", TextureFactory::UV_CHECKER, kPlane, true, "people");
     CreateParticleGroup("ring", TextureFactory::GRADATION_LINE, kRing);
     CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, kPlane, true, "people");
@@ -48,54 +48,54 @@ void ParticleManager::Create()
 
     //マテリアルリソースを作成 //ライトなし
     materialResource = std::make_unique<MaterialResource>();
-    materialResource->CreateMaterial(1.0f,{ 1.0f,1.0f,1.0f,1.0f }, LightMode::kLightModeNone);
+    materialResource->CreateMaterial(1.0f, { 1.0f,1.0f,1.0f,1.0f }, LightMode::kLightModeNone);
 }
 
 Particle MakeNewParticle(const AABB& velocityAABB, const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const AABB& rotateAABB, const AABB& scaleAABB)
 {
 
     Particle particle;
-    Random random(0.0f,1.0f);
+    Random random(0.0f, 1.0f);
     random.SetMinMax(0.0f, 1.0f);
     particle.lifeTime = (lifeTime < 0.0f) ? random.Get() : lifeTime;
 
-     random.SetMinMax(velocityAABB.min.x, velocityAABB.max.x);
-    particle.velocity.x =  random.Get();
-     random.SetMinMax(velocityAABB.min.y, velocityAABB.max.y);
-    particle.velocity.y =  random.Get();
-     random.SetMinMax(velocityAABB.min.z, velocityAABB.max.z);
-    particle.velocity.z =  random.Get();
+    random.SetMinMax(velocityAABB.min.x, velocityAABB.max.x);
+    particle.velocity.x = random.Get();
+    random.SetMinMax(velocityAABB.min.y, velocityAABB.max.y);
+    particle.velocity.y = random.Get();
+    random.SetMinMax(velocityAABB.min.z, velocityAABB.max.z);
+    particle.velocity.z = random.Get();
 
-     random.SetMinMax(scaleAABB.min.x, scaleAABB.max.x);
-    float scaleX =  random.Get();
-     random.SetMinMax(scaleAABB.min.y, scaleAABB.max.y);
-    float scaleY =  random.Get();
-     random.SetMinMax(scaleAABB.min.z, scaleAABB.max.z);
-    float scaleZ =  random.Get();
+    random.SetMinMax(scaleAABB.min.x, scaleAABB.max.x);
+    float scaleX = random.Get();
+    random.SetMinMax(scaleAABB.min.y, scaleAABB.max.y);
+    float scaleY = random.Get();
+    random.SetMinMax(scaleAABB.min.z, scaleAABB.max.z);
+    float scaleZ = random.Get();
 
     particle.transform.scale = transform.scale_ + Vector3{ scaleX ,scaleY, scaleZ };
-    
+
     Vector3 newTransform = transform.GetWorldPosition();
-     random.SetMinMax(translateAABB.min.x, translateAABB.max.x);
-    particle.transform.translate.x =   random.Get()+ newTransform.x;
-     random.SetMinMax(translateAABB.min.y, translateAABB.max.y);
-    particle.transform.translate.y =  random.Get() + newTransform.y;
-     random.SetMinMax(translateAABB.min.z, translateAABB.max.z);
-    particle.transform.translate.z =  random.Get() + newTransform.z;
+    random.SetMinMax(translateAABB.min.x, translateAABB.max.x);
+    particle.transform.translate.x = random.Get() + newTransform.x;
+    random.SetMinMax(translateAABB.min.y, translateAABB.max.y);
+    particle.transform.translate.y = random.Get() + newTransform.y;
+    random.SetMinMax(translateAABB.min.z, translateAABB.max.z);
+    particle.transform.translate.z = random.Get() + newTransform.z;
 
 
-     random.SetMinMax(rotateAABB.min.x, rotateAABB.max.x);
-    float rotateX =  random.Get();
-     random.SetMinMax(rotateAABB.min.y, rotateAABB.max.y);
-    float rotateY =  random.Get();
-     random.SetMinMax(rotateAABB.min.z, rotateAABB.max.z);
-    float rotateZ =  random.Get();
+    random.SetMinMax(rotateAABB.min.x, rotateAABB.max.x);
+    float rotateX = random.Get();
+    random.SetMinMax(rotateAABB.min.y, rotateAABB.max.y);
+    float rotateY = random.Get();
+    random.SetMinMax(rotateAABB.min.z, rotateAABB.max.z);
+    float rotateZ = random.Get();
     particle.transform.rotate = Vector3{ rotateX,rotateY, rotateZ } + transform.rotate_;
     particle.currentTime = 0;
 
     if (color == Vector4{ 0.0f,0.0f,0.0f,0.0f }) {
-         random.SetMinMax(0.0f, 1.0f);
-        particle.color = {  random.Get(), random.Get(), random.Get(),1.0f };
+        random.SetMinMax(0.0f, 1.0f);
+        particle.color = { random.Get(), random.Get(), random.Get(),1.0f };
     } else {
         particle.color = color;
     }
@@ -132,13 +132,24 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
     newParticleGroup->useModel = useModel;
     newParticleGroup->textureSize = { 100.0f,100.0f };
 
+    std::map<std::string,MaterialData> materials;
+
     if (newParticleGroup->useModel) {
         newParticleGroup->model = ModelManager::GetModel(modelTag);
-        newParticleGroup->materialData.textureSrvIndex = newParticleGroup->model->GetModelData()->material.textureSrvIndex;
-        newParticleGroup->materialData.textureFilePath = newParticleGroup->model->GetModelData()->material.textureFilePath;
+        materials = newParticleGroup->model->GetModelData()->materials;
+    }
+
+    //モデルのマテリアルがあれば
+    if (!materials.empty()) {
+
+        for (auto& [name,material] : materials) {
+            newParticleGroup->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex = material.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex;
+            newParticleGroup->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureFilePath = material.textureData_[TEXTURE_USAGE_DIFFUSE].textureFilePath;
+        }
+
     } else {
-        newParticleGroup->materialData.textureSrvIndex = Texture::GetHandle(textureHandle);
-        newParticleGroup->materialData.textureFilePath = Texture::GetFilePath(textureHandle);
+        newParticleGroup->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex = Texture::GetSRVHandle(textureHandle);
+        newParticleGroup->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureFilePath = Texture::GetFilePath(textureHandle);
     }
 
     newParticleGroup->primitive = std::make_unique<Primitive>();
@@ -148,7 +159,7 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
     switch (topologyType)
     {
     case TopologyType::kPlane:
-        meshData = PrimitiveGenerator::CreatePlane({2.0f,2.0f});
+        meshData = PrimitiveGenerator::CreatePlane({ 2.0f,2.0f });
         break;
     case TopologyType::kCube:
         meshData = PrimitiveGenerator::CreateCircle();
@@ -206,13 +217,13 @@ std::list<Particle> EmitParticles(const AABB& velocityAABB, const WorldTransform
 {
     std::list<Particle>particles;
     for (uint32_t i = 0; i < count; ++i) {
-        particles.push_back(MakeNewParticle(velocityAABB,transform, color, lifeTime, translateAABB, rotateAABB, scaleAABB));
+        particles.push_back(MakeNewParticle(velocityAABB, transform, color, lifeTime, translateAABB, rotateAABB, scaleAABB));
     }
     return particles;
 }
 
 
-std::list<SphericalMove> EmitCoordinate(uint32_t count ,const float& radius, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax)
+std::list<SphericalMove> EmitCoordinate(uint32_t count, const float& radius, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax)
 {
     std::list<SphericalMove>sphericalCoordinates;
 
@@ -228,19 +239,18 @@ void ParticleManager::Emit(Emitter& emitter)
 {
     assert(particleGroups.contains(emitter.name));
 
-    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityAABB,emitter.transform, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateAABB_, emitter.scaleAABB_));
+    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityAABB, emitter.transform, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateAABB_, emitter.scaleAABB_));
 
     particleGroups[emitter.name]->movement = emitter.movement;
     particleGroups[emitter.name]->parentPos_ = &emitter.transform;
 
     particleGroups[emitter.name]->blendMode = emitter.blendMode;
 
-
     particleGroups[emitter.name]->startAlpha_ = emitter.startAlpha_;
     particleGroups[emitter.name]->endAlpha_ = emitter.endAlpha_;
 
 
-    if (emitter.movement == kParticleSphere|| emitter.movement == kParticleShock) {
+    if (emitter.movement == kParticleSphere || emitter.movement == kParticleShock) {
         particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.count, emitter.radius, emitter.radiusSpeed, emitter.polarSpeed, emitter.polarSpeedMinMax, emitter.radiusSpeedMinMax));
     }
 }
@@ -411,11 +421,11 @@ void ParticleManager::Draw()
             //粒ごとのトランスフォーム
             SrvManager::SetGraphicsRootDescriptorTable(1, group->instanceSrvIndex);
             //テスクチャ
-            SrvManager::SetGraphicsRootDescriptorTable(2, group->materialData.textureSrvIndex);
+            SrvManager::SetGraphicsRootDescriptorTable(2, group->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex);
             //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
 
             if (group->model != nullptr && group->useModel) {
-      
+
                 commandList_->IASetVertexBuffers(0, 1, &group->model->GetVBV());
                 commandList_->DrawInstanced(UINT(group->model->GetModelData()->vertices.size()), group->numInstance, 0, 0);
             } else {

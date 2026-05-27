@@ -19,12 +19,16 @@ PuzzleObj::PuzzleObj() {
 
     cubeMesh_ = std::make_unique<Primitive>();
     cubeMesh_->Create(PrimitiveGenerator::CreateCube(aabb));
-    cubeMesh_->SetTextureHandle(TextureFactory::PUZZLE_NUM);
+
 
     object_ = std::make_unique<Object3d>();
+
     object_->Create();
+    object_->SetMeshAndMaterial(cubeMesh_.get());
+
+    object_->SetTextureHandle(TextureFactory::PUZZLE_NUM);
     object_->SetTemperature(0.75f);
-    object_->SetMesh(cubeMesh_.get());
+
     SetWorldMatrix(object_->worldTransform_.matWorld_);
 
 }

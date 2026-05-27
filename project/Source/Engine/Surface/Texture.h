@@ -22,7 +22,7 @@ public:
     static void Load(const std::string& filePath, const TextureFactory::Handle& handle);
     static uint32_t AddTextureHandle(const std::string& filePath);
     static void AddTextureHandleByIndex(const uint32_t& srvIndex);
-    static uint32_t GetHandle(const TextureFactory::Handle& handle) { return srvIndexes_[handle]; }
+    static uint32_t GetSRVHandle(const TextureFactory::Handle& handle) { return srvIndexes_[handle]; }
     static std::string& GetFilePath(const TextureFactory::Handle& handle) { return handleToPath_[srvIndexes_[handle]]; }
     static TextureFactory::Handle GetTextureHandle(const uint32_t& srvIndex);
     //SRVインデックスの開始番号

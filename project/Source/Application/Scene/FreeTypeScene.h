@@ -27,7 +27,7 @@ private:
     std::unique_ptr<Object3d> object3d_ = nullptr;
     std::unique_ptr<Object3d> object3d2_ = nullptr;
 
-    std::unique_ptr<Primitive> cubeMesh_ = nullptr;
+  /*  std::unique_ptr<Primitive> cubeMesh_ = nullptr;*/
     std::unique_ptr<Primitive>cylinder_ = nullptr;
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;

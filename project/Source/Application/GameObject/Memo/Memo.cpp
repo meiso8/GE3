@@ -11,8 +11,8 @@ Memo::Memo() {
     cubeMesh_->Create(PrimitiveGenerator::CreateCube(GetAABB()));
     object_ = std::make_unique<Object3d>();
     object_->Create();
+    object_->SetMeshAndMaterial(cubeMesh_.get());
     object_->SetTemperature(0.5f);
-    object_->SetMesh(cubeMesh_.get());
     SetWorldMatrix(object_->worldTransform_.matWorld_);
 }
 

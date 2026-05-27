@@ -88,7 +88,7 @@ void RenderTexture::DrawDissolve(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle,
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectDissolve]->GetGPUVirtualAddress());
-    SrvManager::SetGraphicsRootDescriptorTable(1, Texture::GetHandle(textureHandle));
+    SrvManager::SetGraphicsRootDescriptorTable(1, Texture::GetSRVHandle(textureHandle));
     SrvManager::SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex);
     commandList->DrawInstanced(3, 1, 0, 0);
 

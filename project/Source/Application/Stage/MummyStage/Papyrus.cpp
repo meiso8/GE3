@@ -9,7 +9,7 @@ Papyrus::Papyrus() {
 
     object_ = std::make_unique<Object3d>();
     object_->Create();
-    object_->SetMesh(ModelManager::GetModel("Papyrus"));
+    object_->SetMeshAndMaterial(ModelManager::GetModel("Papyrus"));
 
     Json file = JsonFile::GetJsonFiles("memo");
     std::string sizeKeys = "bookSize";

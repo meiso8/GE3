@@ -17,8 +17,8 @@ public:
     void SetIsPush(const bool& isPush) { isPush_ = isPush; }
     const bool& GetIsPush() { return isPush_; };
     bool CanPushBlock(){     // 通常ブロックなら無視 
-        if (cubeMesh_->GetSrvIndex() == Texture::GetHandle(TextureFactory::PUZZLE) ||
-            cubeMesh_->GetSrvIndex() == Texture::GetHandle(TextureFactory::NONE)) {
+        if (GetSrvIndex() == Texture::GetSRVHandle(TextureFactory::PUZZLE) ||
+            GetSrvIndex() == Texture::GetSRVHandle(TextureFactory::NONE)) {
             return false;
         };
         return true;

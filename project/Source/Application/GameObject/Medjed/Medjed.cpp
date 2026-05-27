@@ -45,19 +45,19 @@ void Medjed::GoToTarget(const Vector3& target)
 void Medjed::MoveStart()
 {
     aniObj_->InitTime();
-    aniObj_->SetAnimation(ModelManager::GetModel("medjedAnimation"));
+    //アニメーションをセットするよ
+    aniObj_->SetAnimation("Swing");
 }
 
 Medjed::Medjed() {
 
-    model_ = ModelManager::GetModel("normalMed");
+    model_ = ModelManager::GetModel("medjed");
    
     aniObj_ = std::make_unique<AnimationObject3d>();
     aniObj_->Create();
+    aniObj_->SetMeshAndMaterial(model_);
     aniObj_->SetTemperature(1.0f);
-    skinningModel = std::make_unique<SkinningModel>();
-    skinningModel->CreateDatas(model_, model_);
-    aniObj_->SetMeshAndData(skinningModel.get());
+    aniObj_->SetModelAndLoadAnimation(model_);
 
     SetAABB(localAABB_);
     SetCollisionAttribute(kCollisionMedjed);
@@ -100,7 +100,7 @@ void Medjed::Init()
     isHit_ = false;
     isFind_ = false;
     aniObj_->Initialize();
-    aniObj_->SetAnimation(model_);
+    aniObj_->SetAnimation("Idle");
     aniObj_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
 }
 

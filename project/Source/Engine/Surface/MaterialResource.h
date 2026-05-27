@@ -33,7 +33,13 @@ public:
     ~MaterialResource();
     void UnMap();
 
-    void CreateMaterial(const float temperature = 0.0f, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, uint32_t lightType = LightMode::kLightModeNone);
+    void CreateMaterial(
+        const float temperature = 0.0f,
+        const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, 
+        uint32_t lightType = LightMode::kLightModeNone, 
+        const float shininess = 50.0f,
+        const float  environmentCoefficient = 0.0f
+        );
     Material* GetMaterial() {
         return material_;
     };

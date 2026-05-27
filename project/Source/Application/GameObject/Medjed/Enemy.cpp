@@ -22,16 +22,12 @@ Enemy::Enemy()
          {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
     };
 
-    model_ = ModelManager::GetModel("normalMed");
-    //モデル
-    dancingModel_ = ModelManager::GetModel("medjedDance");
-    //モデル
-    moveModel_ = ModelManager::GetModel("medjedAnimation");
+    model_ = ModelManager::GetModel("medjed");
 
-    skinningModel_ = std::make_unique<SkinningModel>();
-    skinningModel_->CreateDatas(model_, dancingModel_);
-    bodyPos_.SetMeshAndData(skinningModel_.get());
+    bodyPos_.SetModelAndLoadAnimation(model_);
     bodyPos_.Create();
+    bodyPos_.SetMeshAndMaterial(model_);
+
     bodyPos_.SetTemperature(1.0f);
     float halfScale = kScale_ * 0.25f;
     Init();
@@ -95,6 +91,7 @@ void Enemy::Update()
     DebugUI::CheckCaracterState(characterState_, "enemy");
 #endif // _DEBUG  
 
+    DebugUI::CheckAnimation(bodyPos_,"EnemyAnimation");
 
     UpdateTimer();
 
@@ -148,14 +145,28 @@ void Enemy::SetPhase(PHASE phase)
     bodyPos_.InitTime();
 
     if (phase_ == ROUND||phase_ == APPEAR) {
-        bodyPos_.SetAnimation(dancingModel_);
+        //ここを変更する
+        bodyPos_.SetAnimation("Round");
     }
 
     if (phase_ == FIREBALL) {
         startRotateY_ = bodyPos_.worldTransform_.rotate_.y;
         endRotateY_ = startRotateY_ + std::numbers::pi_v<float>*2.0f;
-
-        bodyPos_.SetAnimation(moveModel_);
+        //ここを変更する
+        int randNum = 0;
+        randNum = rand() % 5;
+        if (randNum == 0) {
+            bodyPos_.SetAnimation("Swing");
+        } else if (randNum == 1) {
+            bodyPos_.SetAnimation("Nod");
+        } else if (randNum == 2) {
+            bodyPos_.SetAnimation("Walk");
+        } else if (randNum == 3) {
+            bodyPos_.SetAnimation("Step");
+        } else if (randNum == 4) {
+            bodyPos_.SetAnimation("Jump");
+        }
+   
     }
 }
 

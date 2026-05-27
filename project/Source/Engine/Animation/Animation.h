@@ -5,6 +5,8 @@
 #include"Lerp.h"
 #include<unordered_map>
 #include<cassert>
+#include<map>
+
 struct Skeleton;
 struct Animation {
     float duration;//アニメーション全体の尺
@@ -45,10 +47,12 @@ void ApplyAnimation(Skeleton& skeleton, const Animation& animation, const float 
 
 class AnimationManager {
 public:
-    static Animation LoadAnimationFile(const std::string& directoryPath, const std::string& fliename);
-    static  Animation LoadAnimationFileForFilePath(const std::string& filePath);
+    static std::map<std::string, Animation>& LoadAnimationFile(const std::string& directoryPath, const std::string& fliename);
+    static  std::map<std::string, Animation>& LoadAnimationFileForFilePath(const std::string& filePath);
     ~AnimationManager();
-    static Animation GetAnimation(const std::string& filePath);
+
+    static std::map<std::string, Animation>& GetAnimations(const std::string& filePath);
 private:
-    static std::unordered_map<std::string, Animation> animations_;
+    //ファイルpathとアニメーション名を指定するよ
+    static std::unordered_map < std::string, std::map<std::string, Animation>> animations_;
 };

@@ -13,7 +13,6 @@ class Medjed :public DummyMedjed
 {
 private:
     std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
-    std::unique_ptr <SkinningModel> skinningModel = nullptr;
     bool isFind_ = false;
     bool isHit_ = false;
     Vector3 velocity_ = { 0.0f};

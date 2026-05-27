@@ -720,10 +720,9 @@ void Primitive::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode&
     }
 }
 
-void Primitive::Create(const MeshData& meshData, const TextureFactory::Handle& textureHandle)
+void Primitive::Create(const MeshData& meshData)
 {
 
-    textureHandle_ = Texture::GetHandle(textureHandle);
 
     // dataからトポロジーを保存し、それに基づいてmeshTypeを決定する
     if (meshData.topology == D3D_PRIMITIVE_TOPOLOGY_LINELIST) {
@@ -778,7 +777,6 @@ void Primitive::Draw(ID3D12GraphicsCommandList* commandList)
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList->IASetPrimitiveTopology(topology_);
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
 
     if (indexCount_ > 0) {
         commandList->IASetIndexBuffer(&indexBufferView_);
@@ -801,7 +799,4 @@ void Primitive::DrawCallForParticle(ID3D12GraphicsCommandList* commandList, cons
     }
 }
 
-void Primitive::SetTextureHandle(const TextureFactory::Handle& textureHandle)
-{
-    textureHandle_ = Texture::GetHandle(textureHandle);
-}
+

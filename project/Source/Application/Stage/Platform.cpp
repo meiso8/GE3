@@ -14,8 +14,8 @@ Platform::Platform() {
     cubeMesh_->Create(PrimitiveGenerator::CreateCube(GetAABB()));
 
     object_ = std::make_unique<Object3d>();
-    object_->Create();
-    object_->SetMesh(cubeMesh_.get()); // 台座用モデル
+    object_->Create();// 台座用モデル
+    object_->SetMeshAndMaterial(cubeMesh_.get());
     object_->SetTextureHandle(TextureFactory::PUZZLE);
     SetWorldMatrix(object_->worldTransform_.matWorld_);
 
