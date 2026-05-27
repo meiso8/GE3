@@ -1,11 +1,11 @@
 #include "LineMesh.h"
 #include"DirectXCommon.h"
 
-void LineMesh::CreateLineMesh(std::unique_ptr<MeshData> meshData, const TextureFactory::Handle& textureHandle)
+void LineMesh::CreateLineMesh(std::unique_ptr<MeshData> meshData)
 {
     meshData_ = std::move(meshData);
 
-    Primitive::Create(*meshData_, textureHandle);
+    Primitive::Create(*meshData_);
 
 }
 void LineMesh::SetVertex(const Vector3& start, const Vector3& end)

@@ -6,14 +6,15 @@
 #include"Bone.h"
 #include<iostream>
 
-std::unordered_map<std::string, Animation> AnimationManager::animations_;
+std::unordered_map < std::string,std::map<std::string, Animation>> AnimationManager::animations_;
+
 AnimationManager::~AnimationManager()
 {
     animations_.clear();
-}
+};
 
-Animation AnimationManager::GetAnimation(const std::string& filePath)
-{
+
+std::map<std::string, Animation>& AnimationManager::GetAnimations(const std::string& filePath) {
 
     if (animations_.contains(filePath)) {
         return animations_.at(filePath);
@@ -23,70 +24,81 @@ Animation AnimationManager::GetAnimation(const std::string& filePath)
 }
 
 
-Animation AnimationManager::LoadAnimationFile(const std::string& directoryPath, const std::string& filename)
+std::map<std::string, Animation>& AnimationManager::LoadAnimationFile(const std::string& directoryPath, const std::string& filename)
 {
     std::string filePath = directoryPath + "/" + filename;
     return LoadAnimationFileForFilePath(filePath);
 }
 
-Animation AnimationManager::LoadAnimationFileForFilePath(const std::string& filePath)
+std::map<std::string, Animation>& AnimationManager::LoadAnimationFileForFilePath(const std::string& filePath)
 {
 
     if (animations_.contains(filePath)) {
         return animations_.at(filePath);
     }
 
-    Animation animation;
+    std::map<std::string, Animation> modelAnimations;
+
+
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
     assert(scene->mNumAnimations != 0);//アニメーションがない
-    aiAnimation* animationAssimp = scene->mAnimations[0];//最初のアニメーションだけ採用。自分へ複数対応は後程検討します。
-    //mDuration : mTicksPerSecondで指定された周波数における長さ、mTicksPerSecond : 周波数
-    animation.duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);//時間の単位を秒に変換　
 
-    {
-        //NodeAnimatioinの解析
-         //assimpでは個々のNodeのAnimationをchannelと読んでいるのでchannelを回してnodeAnimetionの情報を取ってくる
-        for (uint32_t channelIndex = 0; channelIndex < animationAssimp->mNumChannels; ++channelIndex) {
-            aiNodeAnim* nodeAnimationAssimp = animationAssimp->mChannels[channelIndex];
-            NodeAnimation& nodeAnimation = animation.nodeAnimations[nodeAnimationAssimp->mNodeName.C_Str()];
+    for (int i = 0; i < scene->mNumAnimations;++i) {
+        
+        Animation animation;
+        //複数対応をしていく
+        aiAnimation* animationAssimp = scene->mAnimations[i];
+        //mDuration : mTicksPerSecondで指定された周波数における長さ、mTicksPerSecond : 周波数
+        animation.duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);//時間の単位を秒に変換　
+    
+        {
+            //NodeAnimatioinの解析
+             //assimpでは個々のNodeのAnimationをchannelと読んでいるのでchannelを回してnodeAnimetionの情報を取ってくる
+            for (uint32_t channelIndex = 0; channelIndex < animationAssimp->mNumChannels; ++channelIndex) {
+                aiNodeAnim* nodeAnimationAssimp = animationAssimp->mChannels[channelIndex];
+                NodeAnimation& nodeAnimation = animation.nodeAnimations[nodeAnimationAssimp->mNodeName.C_Str()];
 
-            //translate
-            for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumPositionKeys; ++keyIndex) {
-                aiVectorKey& keyAssimp = nodeAnimationAssimp->mPositionKeys[keyIndex];
-                KeyframeVector3 keyframe;
-                keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond);//ここも秒に変換
-                keyframe.value = { -keyAssimp.mValue.x,keyAssimp.mValue.y,keyAssimp.mValue.z };//右手->左手
-                nodeAnimation.translate.keyframes.push_back(keyframe);
-            }
+                //translate
+                for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumPositionKeys; ++keyIndex) {
+                    aiVectorKey& keyAssimp = nodeAnimationAssimp->mPositionKeys[keyIndex];
+                    KeyframeVector3 keyframe;
+                    keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond);//ここも秒に変換
+                    keyframe.value = { -keyAssimp.mValue.x,keyAssimp.mValue.y,keyAssimp.mValue.z };//右手->左手
+                    nodeAnimation.translate.keyframes.push_back(keyframe);
+                }
 
-            //rotate
-            for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumRotationKeys; ++keyIndex) {
-                aiQuatKey keyAssimp = nodeAnimationAssimp->mRotationKeys[keyIndex];
-                KeyframeQuaternion keyframe;
-                keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond);//ここも秒に変換
-                keyframe.value = { keyAssimp.mValue.x,-keyAssimp.mValue.y,-keyAssimp.mValue.z ,keyAssimp.mValue.w };//右手->左手
-                nodeAnimation.rotate.keyframes.push_back(keyframe);
-            }
+                //rotate
+                for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumRotationKeys; ++keyIndex) {
+                    aiQuatKey keyAssimp = nodeAnimationAssimp->mRotationKeys[keyIndex];
+                    KeyframeQuaternion keyframe;
+                    keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond);//ここも秒に変換
+                    keyframe.value = { keyAssimp.mValue.x,-keyAssimp.mValue.y,-keyAssimp.mValue.z ,keyAssimp.mValue.w };//右手->左手
+                    nodeAnimation.rotate.keyframes.push_back(keyframe);
+                }
 
-            //scale
-            for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumScalingKeys; ++keyIndex) {
-                aiVectorKey& keyAssimp = nodeAnimationAssimp->mScalingKeys[keyIndex];
-                KeyframeVector3 keyframe;
-                keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond);//ここも秒に変換
-                keyframe.value = { keyAssimp.mValue.x,keyAssimp.mValue.y,keyAssimp.mValue.z };//右手->左手
-                nodeAnimation.scale.keyframes.push_back(keyframe);
+                //scale
+                for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumScalingKeys; ++keyIndex) {
+                    aiVectorKey& keyAssimp = nodeAnimationAssimp->mScalingKeys[keyIndex];
+                    KeyframeVector3 keyframe;
+                    keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond);//ここも秒に変換
+                    keyframe.value = { keyAssimp.mValue.x,keyAssimp.mValue.y,keyAssimp.mValue.z };//右手->左手
+                    nodeAnimation.scale.keyframes.push_back(keyframe);
+                }
+
             }
 
         }
 
+
+        //ハンドルとモデルをセットにする
+        modelAnimations.insert(std::make_pair(scene->mAnimations[i]->mName.C_Str(), animation));
     }
 
-
     //ハンドルとモデルをセットにする
-    animations_.insert(std::make_pair(filePath, animation));
+    animations_.insert(std::make_pair(filePath, modelAnimations));
 
-    return animation;
+    return animations_.at(filePath);
 }
 
 

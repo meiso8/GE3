@@ -72,14 +72,16 @@ void DebugBone::Create(Skeleton& skeleton)
         std::unique_ptr<BoneValue> value = std::make_unique<BoneValue>();
         value->object3d = std::make_unique<Object3d>();
         value->lineMesh = std::make_unique<LineMesh>();
-        value->object3d->Create();
+    
         std::unique_ptr<MeshData> meshData = std::make_unique<MeshData>();
         *meshData = PrimitiveGenerator::CreateLine(Vector3{ 0.0f,0.0f,0.0f }, joint.transform.translate);
         value->lineMesh->CreateLineMesh(std::move(meshData));
+   
+        value->object3d->Create();
+        value->object3d->SetMeshAndMaterial(std::move(value->lineMesh).get());
+
         value->object3d->Initialize();
         value->object3d->worldTransform_.matWorld_ = joint.skeletonSpaceMatrix;
-
-        value->object3d->SetMesh(std::move(value->lineMesh).get());
         value->object3d->SetLightMode(kLightModeNone);
         value->object3d->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 

@@ -68,8 +68,7 @@ Player::Player() {
 
     //それぞれのObject3d（WorldTransform）を作る
     bodyPos_.Create();
-    //モデルやメッシュをセットする
-    bodyPos_.SetMesh(model_);
+    bodyPos_.SetMeshAndMaterial(model_);
     SetWorldMatrix(bodyPos_.worldTransform_.matWorld_);
 
 

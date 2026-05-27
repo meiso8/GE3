@@ -9,15 +9,15 @@ Model* DummyMummy::model_ = nullptr;
 #include"Sound.h"
 DummyMummy::DummyMummy()
 {
-    object_ = std::make_unique<AnimationObject3d>();
-    object_->Create();
-    object_->SetTemperature(1.0f);
     model_ = ModelManager::GetModel("dummyMummy");
 
-    skinningModel_ = std::make_unique<SkinningModel>();
-    skinningModel_->CreateDatas(model_, model_);
-    object_->SetMeshAndData(skinningModel_.get());
+    object_ = std::make_unique<AnimationObject3d>();
 
+    object_->Create();
+    object_->SetMeshAndMaterial(model_);
+    object_->SetTemperature(1.0f);
+    object_->SetModelAndLoadAnimation(model_);
+    
     SetWorldMatrix(object_->worldTransform_.matWorld_);
     // ミイラのサイズに合わせてAABBを設定（仮のサイズ）
     SetAABB({ {-0.75f, 0.0f, -0.75f}, {0.75f, 2.0f, 0.75f} });
@@ -51,9 +51,7 @@ void DummyMummy::Update()
             if (!isHitCollision_) {
                 Sound::PlayOriginSE(SoundFactory::WOO);
             }
-
         }
-
 
         //ループアニメーション
         object_->UpdateAniTimer();

@@ -3,11 +3,14 @@
 void ModelFactory::Load() {
 
     //モデルのロード
+
+    ModelManager::LoadModel("Resource/Models/playerGirl", "playerGirl.gltf");
+
+
+
     ModelManager::LoadModel("Resource/Models/Box", "Box.obj");
     ModelManager::LoadModel("Resource/Models/AmenRa", "AmenRa.obj");
-    ModelManager::LoadModel("Resource/Models/medjed", "normalMed.gltf");
-    ModelManager::LoadModel("Resource/Models/medjed", "medjedAnimation.gltf");
-    ModelManager::LoadModel("Resource/Models/medjed", "medjedDance.gltf");
+    ModelManager::LoadModel("Resource/Models/Medjed", "medjed.gltf");
     ModelManager::LoadModel("Resource/Models/player", "player.obj");
     ModelManager::LoadModel("Resource/Models/people", "people.obj");
     ModelManager::LoadModel("Resource/Models/mummy", "mummy.obj");

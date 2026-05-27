@@ -34,6 +34,7 @@ private:
     std::unique_ptr<Primitive> skyBox_ = nullptr;
     Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
     MaterialForSkyBox* material_ = nullptr;
+    int32_t textureHandle_ = -1;
 public:
     ~SkyboxObject3d();
 
@@ -41,12 +42,13 @@ public:
     void SetColor(const Vector4& color) {
         material_->color = color;
     }
-
+    virtual void SetTextureHandle(const TextureFactory::Handle& textureHandle) {
+        textureHandle_ = Texture::GetSRVHandle(textureHandle);
+    };
     void Create();
     virtual void Initialize();
     virtual void Update();
     virtual void Draw(Camera& camera);
-    virtual void SetTextureHandle(const TextureFactory::Handle& textureHandle) { skyBox_->SetTextureHandle(textureHandle); };
 private:
     void CreateTransformationMatrix();
     void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });

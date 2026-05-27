@@ -27,7 +27,8 @@ void SkyboxObject3d::Create()
 
     skyBox_ = std::make_unique<Primitive>();
     AABB aabb = { { -1.0f,-1.0f,-1.0f },{ 1.0f,1.0f,1.0f } };
-    skyBox_->Create(PrimitiveGenerator::CreateSkyBox(aabb), TextureFactory::SKYBOX_TEX);
+    skyBox_->Create(PrimitiveGenerator::CreateSkyBox(aabb));
+    SetTextureHandle(TextureFactory::SKYBOX_TEX);
 }
 
 
@@ -61,6 +62,8 @@ void SkyboxObject3d::Draw(Camera& camera)
         commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        //拡散反射テクスチャ
+        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
         skyBox_->Draw(commandList_);
     }
 }

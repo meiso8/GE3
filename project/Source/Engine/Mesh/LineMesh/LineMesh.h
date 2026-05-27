@@ -4,7 +4,7 @@
 class LineMesh : public Primitive
 {
 public:
-   void CreateLineMesh(std::unique_ptr<MeshData> meshData, const TextureFactory::Handle& textureHandle = TextureFactory::WHITE_1X1);
+   void CreateLineMesh(std::unique_ptr<MeshData> meshData);
    void SetVertex(const Vector3& start, const Vector3& end);
 private:
 

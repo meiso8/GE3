@@ -9,15 +9,17 @@ World::World() {
     sphereMesh_->Create(PrimitiveGenerator::CreateSphere({ .center = {0.0f},.radius = {0.5f} }, TextureFactory::WORLD));
 
     object3d_ = std::make_unique<Object3d>();
+
     object3d_->Create();
+    object3d_->SetMeshAndMaterial(sphereMesh_.get());
     object3d_->SetLightMode(kLightModeNone);
-    object3d_->SetMesh(sphereMesh_.get());
+
 };
 
 void World::Init()
 {
-    sphereMesh_->SetTextureHandle(TextureFactory::WORLD);
 
+    object3d_->SetTextureHandle(TextureFactory::WORLD);
     object3d_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
     object3d_->Initialize();
     object3d_->worldTransform_.scale_ = { 500.0f,500.0f,500.0f };
@@ -39,9 +41,9 @@ void World::Draw(Camera& camera)
 void World::SetTexture(const uint32_t& texture)
 {
     if (texture == NORMAL) {
-        sphereMesh_->SetTextureHandle(TextureFactory::WORLD);
+        object3d_->SetTextureHandle(TextureFactory::WORLD);
     } else {
-        sphereMesh_->SetTextureHandle(TextureFactory::Handle(texture));
+        object3d_->SetTextureHandle(TextureFactory::Handle(texture));
     }
 }
 

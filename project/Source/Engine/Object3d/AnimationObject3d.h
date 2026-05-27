@@ -2,6 +2,7 @@
 #include"Object3d.h"
 #include"Quaternion/Quaternion.h"
 #include"Animation/Animation.h"
+#include<memory>
 
 class DebugBone;
 struct SkinCluster;
@@ -14,25 +15,28 @@ public:
     AnimationObject3d();
     void Initialize()override;
     void InitTime();
-    void SetMeshAndData(SkinningModel* skinningModel);
-    void SetAnimation(Model* model);
-    void SetModel(Model* model);
-    void SetTextureHandle(const TextureFactory::Handle& textureHandle)override;
+    void SetModelAndLoadAnimation(Model* model);
+
     //オーバーライド
     void Update()override;
     void UpdateAniTimer(const bool& isLoop = true);
-    bool IsAnimEnd() {
-        return  animationTime_ == animation_.duration;
-    }
+    bool IsAnimEnd();
     void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack, const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX)override;
     void SetSkinning(const bool& flag) { isSkinning_ = flag; }
+    void SetAnimation(const std::string animName) {
+        currentAnimation_ = animName;
+    };
+    
+    std::map<std::string, Animation>& GetAnimations() { return animations_; };
+   
 private:
     void UpdateAnimation();
     float animationTime_ = 0.0f;
-    Animation animation_;
+    std::string currentAnimation_ = "Idle";
+    std::map <std::string, Animation> animations_;
     Matrix4x4 worldMatrix_ = { 0.0f };
     bool isSkinning_ = true;
-    SkinningModel* skinningModel_ = nullptr;
+    std::unique_ptr<SkinningModel> skinningModel_ = nullptr;
 #ifdef _DEBUG
     std::unique_ptr< DebugBone> debugBone_;
 #endif

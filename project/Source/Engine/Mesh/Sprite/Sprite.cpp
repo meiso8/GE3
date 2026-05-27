@@ -26,7 +26,7 @@ void Sprite::Create(const TextureFactory::Handle& textureHandle, const Vector2& 
 {
     commandList = DirectXCommon::GetCommandList();
     position_ = position;
-    textureHandle_ = Texture::GetHandle(textureHandle);
+    textureHandle_ = Texture::GetSRVHandle(textureHandle);
 
     CreateMaterial(color);
     CreateVertex();
@@ -89,7 +89,7 @@ void Sprite::SetColor(const Vector4& color) {
 
 void Sprite::SetTexture(const TextureFactory::Handle& textureHandle)
 {
-    textureHandle_ = Texture::GetHandle(textureHandle);
+    textureHandle_ = Texture::GetSRVHandle(textureHandle);
 
 }
 

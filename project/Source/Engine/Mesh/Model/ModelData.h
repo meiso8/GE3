@@ -23,10 +23,17 @@ struct MeshData {
     D3D_PRIMITIVE_TOPOLOGY topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 };
 
+struct MeshSection {
+    uint32_t indexStart;    // このマテリアルの描画を開始するインデックス位置
+    uint32_t indexCount;    // 描画するインデックス数
+    std::string materialName; // ★追加：このセクションが使用するマテリアル名
+};
+
 struct ModelData :public MeshData {
 
     std::map<std::string, JointWeightData> skinClusterData;
-    MaterialData material;
+    std::vector<MeshSection> sections; // ★追加：マテリアルごとの範囲情報
+    std::map<std::string, MaterialData>materials;
     std::string filePath;
     Node rootNode;
 };

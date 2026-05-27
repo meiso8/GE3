@@ -31,7 +31,7 @@ void Font::Create(const TextureFactory::Handle& textureHandle, const Vector2& po
 {
 
     position_ = position;
-    textureHandle_ = Texture::GetHandle(textureHandle);
+    textureHandle_ = Texture::GetSRVHandle(textureHandle);
     anchorPoint_ = anchorPoint;
 
     CreateMaterial(color);
@@ -94,7 +94,7 @@ void Font::SetColor(const Vector4& color) {
 
 void Font::SetTexture(const TextureFactory::Handle& textureHandle)
 {
-    textureHandle_ = Texture::GetHandle(textureHandle);
+    textureHandle_ = Texture::GetSRVHandle(textureHandle);
 
 }
 

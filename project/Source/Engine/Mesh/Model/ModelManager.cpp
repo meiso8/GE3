@@ -89,6 +89,8 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
         // 現在の頂点数を記録（インデックスのオフセット用） 
         uint32_t vertexOffset = static_cast<uint32_t>(modelData->vertices.size());
+        // ★ここが重要：このメッシュのインデックスが始まる位置を記録
+        uint32_t indexStart = static_cast<uint32_t>(modelData->indices.size());
 
         for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; ++vertexIndex) {
 
@@ -111,6 +113,13 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
             }
         }
 
+        MeshSection section;
+        section.indexStart = indexStart;
+        section.indexCount = static_cast<uint32_t>(modelData->indices.size()) - indexStart;
+        aiMaterial* meshMaterial = scene->mMaterials[mesh->mMaterialIndex];
+        section.materialName = meshMaterial->GetName().C_Str();
+
+        modelData->sections.push_back(section);
 
         //SkinCluster骨の解析
         for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
@@ -140,24 +149,29 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
     //マテリアルの解析
     for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
+
         aiMaterial* material = scene->mMaterials[materialIndex];
-
-        //MultiMaterialに対応していく場合などは改造が必要である
-        if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
-            aiString textureFilePath;
-            material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-            modelData->material.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
-        }
-
+        //マテリアルの名前をマッピングする
+        modelData->materials[material->GetName().C_Str()] = LoadMaterial::LoadMaterialFromAssimp(material, directoryPath);
     }
 
+    //モデルのテクスチャを読む
+    for (auto& [name,material] : modelData->materials) {
+        for (auto& textureData : material.textureData_) {
+            if (!textureData.textureFilePath.empty()) {
+                textureData.textureSrvIndex = Texture::AddTextureHandle(textureData.textureFilePath);
+            }
+        }
+    }
 
     //モデルのNodeを読む
     modelData->rootNode = ReadNode(scene->mRootNode);
 
-    //モデルのテクスチャを読む
-    modelData->material.textureSrvIndex = Texture::AddTextureHandle(modelData->material.textureFilePath);
+    //アニメーションがあったら
+    if (scene->HasAnimations()) {
 
+    }
+   
     model->SetModelData(std::move(modelData));
     //モデルを作成する
     model->CreateModel();

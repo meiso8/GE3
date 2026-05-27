@@ -64,13 +64,13 @@ struct ParticleGroup {
     uint32_t numInstance;//インスタンス数
     ParticleForGPU* instancingData;
     Vector3 textureSize;
-    bool useModel;
+    bool useModel = false;
     bool useBillboard = true;
     bool useSpriteCamera = false;
     Model* model = nullptr;
     std::unique_ptr<Primitive> primitive = nullptr;
     const WorldTransform* parentPos_ = nullptr;
-    ParticleMovements movement;
+    ParticleMovements movement = kParticleNormal;
     AccelerationField accelerationField;
     BlendMode blendMode = BlendMode::kBlendModeAdd;
     float startAlpha_ = 1.0f;

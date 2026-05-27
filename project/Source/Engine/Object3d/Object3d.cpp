@@ -6,12 +6,21 @@
 #include"Lights/SpotLightManager.h"
 #include"Model.h"
 #include"SRVmanager/SrvManager.h"
-ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
 
 void Object3d::CreateMaterial(const float temperature, const Vector4& color, const uint32_t& lightType) {
+
+    for (auto& textureHandle : textureHandles_) {
+        textureHandle = -1;
+    }
+
     //マテリアルリソースを作成
     materialResource_ = std::make_unique<MaterialResource>();
-    materialResource_->CreateMaterial(temperature,color, lightType);
+    materialResource_->CreateMaterial(temperature, color, lightType);
+
+    //白色にしておく
+    textureHandles_[TEXTURE_USAGE_DIFFUSE] = Texture::GetSRVHandle(TextureFactory::WHITE_1X1);
+
+
 }
 
 void Object3d::CreateUV()
@@ -114,24 +123,30 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
     transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
     transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
 
+
+    auto* commandlist = DirectXCommon::GetCommandList();
+
     if (meshCommon_) {
-        meshCommon_->PreDraw(commandList_, blendMode, cullMode);
+        meshCommon_->PreDraw(commandlist, blendMode, cullMode);
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+
+        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
+
         //timeのSRVの場所を設定
-        commandList_->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
         //expansionのCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
         //cameraのCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
         //ライトのCBufferの場所を設定
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         SpotLightManager::SetGraphicsRootDescriptorTable();
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(skyBoxTexture));
-        meshCommon_->Draw(commandList_);
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
+        meshCommon_->Draw(commandlist);
     }
 }
 
@@ -144,8 +159,11 @@ void Object3d::DrawForEffect(Camera& camera, const BlendMode& blendMode, const T
     transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
 
     if (meshCommon_) {
-        commandList_->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::NORMAL));
-        
+
+        auto* commandlist = DirectXCommon::GetCommandList();
+
+        commandlist->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::NORMAL));
+
         PSO::PSOKey key{};
         key.rootSignatureType = RootSignature::NORMAL;
         key.vsShaderType = DxcCompiler::VS_Normal;
@@ -157,32 +175,66 @@ void Object3d::DrawForEffect(Camera& camera, const BlendMode& blendMode, const T
         key.inputLayoutType = InputLayout::kInputLayoutTypeNormal;
 
         auto pso = PSO::GetOrCreatePSO(key);
-        commandList_->SetPipelineState(pso.Get());
+        commandlist->SetPipelineState(pso.Get());
 
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
         //timeのSRVの場所を設定
-        commandList_->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
         //expansionのCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
         //cameraのCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
         //ライトのCBufferの場所を設定
         DirectionalLightManager::SetGraphicsRootConstantBufferView();
         PointLightManager::SetGraphicsRootDescriptorTable();
         SpotLightManager::SetGraphicsRootDescriptorTable();
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetHandle(skyBoxTexture));
-        meshCommon_->Draw(commandList_);
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
+        
+        //拡散反射テクスチャ
+        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
+  
+
+        meshCommon_->Draw(commandlist);
     }
 
 
 }
 
+void Object3d::SetMeshAndMaterial(Primitive* mesh)
+{
+    meshCommon_ = mesh;
+    assert(meshCommon_);
+    assert(materialResource_);
+
+    if (auto model = dynamic_cast<Model*>(meshCommon_)) {
+        //一旦マテリアル0
+        for (auto& [name,material] : model->GetModelData()->materials) {
+            for (int i = 0; i < material.textureData_.size(); ++i) {
+
+                textureHandles_[i] = material.textureData_[i].textureSrvIndex;
+            }
+
+            materialResource_->SetShininess(material.shininess);
+
+            if (textureHandles_[TEXTURE_USAGE_DIFFUSE] == -1) {
+                //Vector4 modelColor = { material.diffuse.x,  material.diffuse.y,  material.diffuse.z,material.alpha };
+                //materialResource_->SetColor(modelColor);
+                textureHandles_[TEXTURE_USAGE_DIFFUSE] = Texture::GetSRVHandle(TextureFactory::WHITE_1X1);
+            }
+
+
+        }
+
+    }
+
+}
+
 void Object3d::Create()
 {
-    commandList_ = DirectXCommon::GetCommandList();
+
     CreateTransformationMatrix();
     CreateMaterial();
     Initialize();
