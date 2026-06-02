@@ -40,9 +40,9 @@ PixelShaderOutput main(VertexShaderOutput input)
     output.color.rgb = float3(0.0f, 0.0f, 0.0f);
     output.color.a = 1.0f;
     
-    for (int x = -gMaterial.kernel; x < gMaterial.kernel; ++x)
+    for (int x = -gMaterial.kernel; x <= gMaterial.kernel; ++x)
     {
-        for (int y = -gMaterial.kernel; y < gMaterial.kernel; ++y)
+        for (int y = -gMaterial.kernel; y <= gMaterial.kernel; ++y)
         {
             float2 offset = float2((float) x, (float) y);
             float kernel = gauss(offset.x, offset.y, gMaterial.sigma);
