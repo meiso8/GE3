@@ -211,7 +211,7 @@ void RenderTexture::Update()
 
         ImGui::DragFloat2("center", &materialForRadialBlur_->center.x, 0.01f, 0.0f, 1.0f);
         ImGui::DragInt("numSamples", &materialForRadialBlur_->numSamples, 1.0f, 1);
-        ImGui::DragFloat("center", &materialForRadialBlur_->blurWidth);
+        ImGui::DragFloat("blurWidth", &materialForRadialBlur_->blurWidth,0.01f);
         ImGui::TreePop();
     }
 
