@@ -46,7 +46,10 @@ struct MaterialForLuminanceBasedOutline
 struct MaterialForDepthBasedOutline
 {
     float32_t4x4 projectionInverse;
+    float32_t lineWidth;
+    float32_t3 color;
 };
+
 
 struct MaterialForRadialBlur
 {

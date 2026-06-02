@@ -3,6 +3,9 @@
 struct Material
 {
     float32_t4x4 projectionInverse;
+    float32_t lineWidth;
+    float32_t3 color;
+   
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);
@@ -57,7 +60,7 @@ PixelShaderOutput main(VertexShaderOutput input)
             
             float32_t ndcDepth = gDepthTexture.Sample(gSamplerPoint, texcoord).r;
             float32_t4 viewSpace = mul(float32_t4(0.0f, 0.0f, ndcDepth, 1.0f), gMaterial.projectionInverse);
-            float32_t viewZ = viewSpace.z/ viewSpace.w;
+            float32_t viewZ = viewSpace.z / viewSpace.w;
             diffrence.x += viewZ * kPrewittHorizontalKernel[x][y];
             diffrence.y += viewZ * kPrewittVerticalKernel[x][y];
    
@@ -66,9 +69,11 @@ PixelShaderOutput main(VertexShaderOutput input)
     }
     
     float32_t weight = length(diffrence);
-    weight = saturate(weight*100.0f);
-    
-    output.color.rgb = (1.0f - weight) * gTexture.Sample(gSampler, input.texcoord).rgb;
+    weight = saturate(weight * gMaterial.lineWidth);    
+    //output.color.rgb = (1 - weight) * gTexture.Sample(gSampler, input.texcoord).rgb + weight *gMaterial.color;
+    //This　is Lerp
+    output.color.rgb = lerp(gTexture.Sample(gSampler, input.texcoord).rgb, gMaterial.color, weight);
+
     output.color.a = 1.0f;
     
     return output;
