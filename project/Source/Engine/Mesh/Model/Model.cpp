@@ -32,7 +32,7 @@ void Model::Draw(ID3D12GraphicsCommandList* commandList) {
         commandList->DrawIndexedInstanced(
             section.indexCount,  // 描画するインデックス数
             1,
-            section.indexStart,  // ★開始インデックス位置（ここが重要！）
+            section.indexStart,  // ★開始インデックス位置
             0,
             0
         );
