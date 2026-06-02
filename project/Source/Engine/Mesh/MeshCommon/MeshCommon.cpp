@@ -723,7 +723,6 @@ void Primitive::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode&
 void Primitive::Create(const MeshData& meshData)
 {
 
-
     // dataからトポロジーを保存し、それに基づいてmeshTypeを決定する
     if (meshData.topology == D3D_PRIMITIVE_TOPOLOGY_LINELIST) {
         meshType_ = MeshType::kLine;

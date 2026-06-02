@@ -41,10 +41,7 @@ public:
                 renderTexture->DrawOutLine(renderTextureData.rtvHandleCPU, srcIndex, depthSrvIndex);
             } else if (effect == PSO::EffectType::kEffectThermography) {
                 //サーモグラフィーのターゲットを戻す
-                auto& renderTextureDataForThermography = renderTexture->GetRenderTextureData(RenderTexture::kThermography);
                 renderTexture->DrawThermo(renderTextureData.rtvHandleCPU);
-                barrier->SettingBarrierRTVforSRV(renderTextureDataForThermography.resource);
-
             } else if (effect == PSO::kEffectRandom) {
                 renderTexture->DrawRandom(randomBlendMode, renderTextureData.rtvHandleCPU, srcIndex);
             } else {

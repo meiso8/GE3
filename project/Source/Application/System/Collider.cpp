@@ -14,7 +14,7 @@ Collider::Collider()
     object3d_.Create();
     debugMesh_ = std::make_unique<Primitive>();
     debugMesh_->Create(PrimitiveGenerator::CreateSphere({ .center = {0.0f,0.0f,0.0f}, .radius = 0.5f }));
-    object3d_.SetMesh(debugMesh_.get());
+    object3d_.SetMeshAndMaterial(debugMesh_.get());
 #endif // _DEBUG
 
     collisionInfo_.collided = false;

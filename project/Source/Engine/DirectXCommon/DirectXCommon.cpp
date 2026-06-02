@@ -116,8 +116,9 @@ void DirectXCommon::RenderTexturePreDraw()
     // ★ 2. 温度バッファ(Index 1)のクリア処理を追加！
     D3D12_CPU_DESCRIPTOR_HANDLE rtvTemp = renderTexture_->GetRenderTextureData(RenderTexture::kThermography).rtvHandleCPU;
     // 温度の初期値は「0.0（熱源なし）」にリセットしたいので、すべて 0.0f にします
-    float clearTemp[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-    commandList->GetCommandList()->ClearRenderTargetView(rtvTemp, clearTemp, 0, nullptr);
+    //renderTexture_->GetColor();
+
+    commandList->GetCommandList()->ClearRenderTargetView(rtvTemp, clearColor, 0, nullptr);
 
 
     SrvManager::PreDraw();
@@ -164,6 +165,9 @@ void DirectXCommon::RenderTexturePostDraw()
 
     auto& renderTextureData = renderTexture_->GetRenderTextureData(RenderTexture::kNormal0);
     barrier.SettingBarrierRTVforSRV(renderTextureData.resource);
+   
+    auto& renderTextureDataThermography = renderTexture_->GetRenderTextureData(RenderTexture::kThermography);
+    barrier.SettingBarrierRTVforSRV(renderTextureDataThermography.resource);
 
     LogFile::Log("Rendertexture : PosDraw : SettingBarrier");
 }
