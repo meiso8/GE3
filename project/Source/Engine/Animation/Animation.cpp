@@ -44,7 +44,7 @@ std::map<std::string, Animation>& AnimationManager::LoadAnimationFileForFilePath
     const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
     assert(scene->mNumAnimations != 0);//アニメーションがない
 
-    for (int i = 0; i < scene->mNumAnimations;++i) {
+    for (uint32_t i = 0; i < scene->mNumAnimations;++i) {
         
         Animation animation;
         //複数対応をしていく

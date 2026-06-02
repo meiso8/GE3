@@ -30,9 +30,10 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     const DxcCompiler::VS_TYPE& vsShaderType,
     const  DxcCompiler::PS_TYPE& psShaderType,
     const TopologyType topologyType,
-    const InputLayout::InputLayoutType inputLayoutType) {
+    const InputLayout::InputLayoutType inputLayoutType,
+    const uint32_t RTVnum) {
 
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc = {};
 
     graphicsPipelineStateDesc.pRootSignature = rootSignature->GetRootSignature(rootSignatureType);//RootSignature
     graphicsPipelineStateDesc.InputLayout = inputLayout->GetDescs(inputLayoutType);//InputLayout
@@ -44,15 +45,26 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     graphicsPipelineStateDesc.BlendState = blendStates[blendMode].GetDesc();//BlendState
     graphicsPipelineStateDesc.RasterizerState = rasterizerStates[cullMode].GetDesc();//RasterizerState
     //書き込むRTVの情報
-    graphicsPipelineStateDesc.NumRenderTargets = 1;
-    graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    //graphicsPipelineStateDesc.NumRenderTargets = 1;
+    //graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+    // レンダーターゲットの数を設定する
+    graphicsPipelineStateDesc.NumRenderTargets = RTVnum;
+
+    for (uint32_t i = 0; i < RTVnum; ++i) {
+        // スロット0とスロット1、両方のフォーマットを正しく指定する
+        graphicsPipelineStateDesc.RTVFormats[i] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 例
+    }
 
     //どのように画面に色を打ち込むかの設定（気にしなくていい）
     graphicsPipelineStateDesc.SampleDesc.Count = 1;
     graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+
+
+
+
+
     //DepthStencilの設定   
-
-
     graphicsPipelineStateDesc.DepthStencilState = depthStencils[maskMode].GetDesc();
     if (useDepthFormat) {
         graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
@@ -103,7 +115,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::CreateComputeShaderPSO(const Ro
     //PSOの作成
     Microsoft::WRL::ComPtr <ID3D12PipelineState>computePipelineState = nullptr;
     //ComputePipelineStateの作成
-    HRESULT hr = DirectXCommon::GetDevice()->CreateComputePipelineState(&computePipelineStateDesc,IID_PPV_ARGS(&computePipelineState));
+    HRESULT hr = DirectXCommon::GetDevice()->CreateComputePipelineState(&computePipelineStateDesc, IID_PPV_ARGS(&computePipelineState));
     assert(SUCCEEDED(hr));
 
     return computePipelineState;
@@ -156,7 +168,8 @@ void PSO::CreateALLPSO()
                 DxcCompiler::VS_Normal,
                 DxcCompiler::PS_Normal,
                 kTriangle,
-                InputLayout::kInputLayoutTypeNormal
+                InputLayout::kInputLayoutTypeNormal,
+                2
             );
         }
     }

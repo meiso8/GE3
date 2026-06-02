@@ -78,7 +78,7 @@ public:
 
 		if (debugMesh_) {
 			debugMesh_->Create(PrimitiveGenerator::CreateSphere({ .center = {0.0f,0.0f,0.0f}, .radius = radius }));
-			object3d_.SetMesh(debugMesh_.get());
+			object3d_.SetMeshAndMaterial(debugMesh_.get());
 		}
 
 #endif // DEBUG
@@ -92,7 +92,7 @@ public:
 #ifdef _DEBUG
 		if (debugMesh_) {
 			debugMesh_->Create(PrimitiveGenerator::CreateCube(aabb));
-			object3d_.SetMesh(debugMesh_.get());
+			object3d_.SetMeshAndMaterial(debugMesh_.get());
 		}
 #endif // DEBUG
 
