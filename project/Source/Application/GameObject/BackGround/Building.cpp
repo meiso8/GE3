@@ -123,7 +123,7 @@ FieldCollider::FieldCollider()
 
 void FieldCollider::Update()
 {
-    object_->GetUVTransform().translate.x -= std::numbers::pi_v<float> *0.0625f * 0.125f * kInverseFPS;
+    object_->GetUVTransform().translate.x -= std::numbers::pi_v<float> *0.0625f * 0.125f * Time::DeltaTime();
     object_->UpdateUV();
 
     object_->Update();

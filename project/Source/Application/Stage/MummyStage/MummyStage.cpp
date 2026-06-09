@@ -18,12 +18,15 @@ MummyStage::MummyStage()
 
 void MummyStage::TimerUpdate()
 {
-    medjedApperTime_ -= kInverseFPS;
+    medjedApperTime_ -= Time::DeltaTime();
     medjedApperTime_ = std::clamp(medjedApperTime_, 0.0f, maxTime_);
 
 }
 
 void MummyStage::Initialize() {
+
+
+    memoManager_->GenerateMemos({ TextureFactory::BOOK,TextureFactory::MEMO5 });
 
     DummyMummy::SetTargetPosPtr(&player_->GetBodyPos());
 

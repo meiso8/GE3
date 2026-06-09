@@ -18,7 +18,7 @@ void RhythmManager::Initialize() {
 
 void RhythmManager::Update() {
 
-    timer_ += kInverseFPS;
+    timer_ += Time::DeltaTime();
     if (timer_ >= kEndSoundTime_) {
         Initialize();
     }

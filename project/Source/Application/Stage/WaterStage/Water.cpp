@@ -65,7 +65,7 @@ void Water::Update() {
 
 
 
-    object_->GetWaveData(0).time += kInverseFPS;
+    object_->GetWaveData(0).time += Time::DeltaTime();
     object_->GetWaveData(1).time = object_->GetWaveData(0).time + 1.5f;
     object_->Update();
     DebugUI::CheckObject3d(*object_, "Water");

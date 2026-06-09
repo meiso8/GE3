@@ -501,6 +501,9 @@
     <ClCompile Include="Source\Engine\PostProcessManager\PostProcessManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\TimeManager\TimeManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Math\Structs\AABB.h">

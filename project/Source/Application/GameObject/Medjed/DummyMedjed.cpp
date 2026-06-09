@@ -9,7 +9,7 @@
 void DummyMedjed::Look(const Vector3& target)
 {
 
-    aniTimer_ += kInverseFPS * 0.25f;
+    aniTimer_ += Time::DeltaTime() * 0.25f;
     aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
     Vector3 direction = target - object3d_->worldTransform_.GetWorldPosition();
     float targetAngle = std::atan2(direction.x, direction.z);
@@ -27,7 +27,7 @@ void DummyMedjed::GoToTarget(const Vector3& target)
 void DummyMedjed::Hide()
 {
 
-    hideTimer_ += kInverseFPS*1.2f;
+    hideTimer_ += Time::DeltaTime()*1.2f;
     hideTimer_ = std::clamp(hideTimer_, 0.0f, 1.0f);
     /*  object3d_->worldTransform_.translate_.y = Easing::EaseInCubic(startPosY_, -2.0f, hideTimer_);*/
 

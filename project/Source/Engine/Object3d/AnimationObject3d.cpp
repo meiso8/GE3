@@ -88,7 +88,7 @@ void AnimationObject3d::UpdateAnimation()
 }
 void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
 {
-    animationTime_ += kInverseFPS;
+    animationTime_ += Time::DeltaTime();
 
     Animation* animation = nullptr;
 

@@ -217,6 +217,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Lights\DirectionalLightManager.cpp" />
     <ClCompile Include="Source\Engine\Lights\PointLightManager.cpp" />
     <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp" />
+    <ClCompile Include="Source\Engine\TimeManager\TimeManager.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\Building.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\DummyMedjed.cpp" />
