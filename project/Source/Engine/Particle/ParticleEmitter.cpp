@@ -31,9 +31,9 @@ void ParticleEmitter::Initialize()
     emitter_.movement = ParticleMovements::kParticleNormal;
     emitter_.lifeTime = -1.0f;
     emitter_.radius = 5.0f;
-
-    emitter_.radiusSpeed = kInverseFPS;
-    emitter_.polarSpeed = std::numbers::pi_v<float>*kInverseFPS;
+    const float deltaTime = Time::DeltaTime();
+    emitter_.radiusSpeed = deltaTime;
+    emitter_.polarSpeed = deltaTime;
     emitter_.polarSpeedMinMax = { 0.0f,0.0f };
     emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
 
@@ -87,7 +87,7 @@ void ParticleEmitter::SetEmitterParam(
 }
 void ParticleEmitter::UpdateTimer()
 {
-    emitter_.frequencyTime += kInverseFPS;
+    emitter_.frequencyTime += Time::DeltaTime();
 
     if (emitter_.frequency <= emitter_.frequencyTime) {
         emitter_.frequencyTime -= emitter_.frequency;

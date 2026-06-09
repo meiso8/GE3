@@ -87,7 +87,7 @@ void Item::UpdateAniTimer(const float& endTime)
         return;
     }
 
-    aniTimer_ += kInverseFPS;
+    aniTimer_ += Time::DeltaTime();
     aniTimer_ = std::clamp(aniTimer_, 0.0f, endTime);
 }
 

@@ -11,7 +11,7 @@ MedjedStage::MedjedStage()
 
 void MedjedStage::Initialize()
 {
-
+    memoManager_->GenerateMemos({ TextureFactory::BOOK3 });
     SoundManager::InitMedjedScene();
     backGround_->Initialize();
     backGround_->Update();

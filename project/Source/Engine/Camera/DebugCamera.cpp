@@ -13,7 +13,7 @@ void DebugCamera::Initialize(const PROJECTION_TYPE& type)
     nearZ_ = 0.1f;
     offset_ = { 0.0f };
 
-    rotateSpeed_ = std::numbers::pi_v<float> / 20.0f * kInverseFPS;
+    rotateSpeed_ = std::numbers::pi_v<float> / 20.0f;
     speed_ = 1.0f;
 
     scale_ = { 1.0f,1.0f,1.0f };
@@ -116,16 +116,18 @@ void DebugCamera::InputRotate() {
             rotateSpeed_ *= -1.0f;
         }
 
+        const float deltaTime = Time::DeltaTime();
+
         if (Input::IsPushKey(DIK_X)) {
-            deltaRotate_.x = rotateSpeed_;
+            deltaRotate_.x = rotateSpeed_* deltaTime;
         }
 
         if (Input::IsPushKey(DIK_Y)) {
-            deltaRotate_.y = rotateSpeed_;
+            deltaRotate_.y = rotateSpeed_ * deltaTime;
         }
 
         if (Input::IsPushKey(DIK_Z)) {
-            deltaRotate_.z = rotateSpeed_;
+            deltaRotate_.z = rotateSpeed_ * deltaTime;
         }
     }
 
@@ -151,7 +153,8 @@ void DebugCamera::MouseInputMove() {
         //後でoffsetをくわえる
         Vector2 deltaOffset = { 0.0f,0.0f };
         deltaOffset += Input::GetMousePos();
-        offset_ += { deltaOffset.x* kInverseFPS, deltaOffset.y* kInverseFPS * 2.0f };
+        const float deltaTime = Time::DeltaTime();
+        offset_ += { deltaOffset.x* deltaTime, deltaOffset.y* deltaTime * 2.0f };
     } else if (Input::IsPressMouse(2)) {
         //視点の回転
         //中ボタン押し込み&&ドラッグ
@@ -167,8 +170,9 @@ void DebugCamera::MouseInputMove() {
 
     if (Input::isDragging_) {
         Vector2 currentPos = Input::GetMousePosFiltered();
-        sphericalCoordinate_.polar += currentPos.x * kInverseFPS*0.5f;
-        sphericalCoordinate_.azimuthal -= currentPos.y * kInverseFPS*0.25f;
+        const float deltaTime = Time::DeltaTime();
+        sphericalCoordinate_.polar += currentPos.x * deltaTime *0.5f;
+        sphericalCoordinate_.azimuthal -= currentPos.y * deltaTime *0.25f;
         rotate_.y = sphericalCoordinate_.polar;
         rotate_.z = sphericalCoordinate_.azimuthal;
     }

@@ -403,7 +403,7 @@ Vector2& Input::GetMousePosFiltered()
 }
 
 float Input::GetMouseWheel() {
-    return  static_cast<float>(mouseState_.lZ) * kInverseFPS;
+    return  static_cast<float>(mouseState_.lZ) * Time::DeltaTime();
 }
 
 

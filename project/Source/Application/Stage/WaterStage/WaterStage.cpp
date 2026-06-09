@@ -16,7 +16,7 @@ WaterStage::WaterStage()
 
 void WaterStage::Initialize()
 {
-    
+    memoManager_->GenerateMemos({ TextureFactory::MEMO2, TextureFactory::BOOK2 });
     water_->Initialize();
     papyrusWall_->Init();
     papyrusWall_->Update();

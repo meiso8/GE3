@@ -16,7 +16,7 @@ private:
     std::unique_ptr<SlidePuzzleSystem>slidePuzzleSystem_ = nullptr;
     std::unique_ptr<BackGround>backGround_ = nullptr;
     std::unique_ptr<AmenRa>amenRa_ = nullptr;
-    Vector2* screenPos_ = nullptr;
+
 public:
     const bool IsClear();
     AmenStage();
@@ -25,6 +25,6 @@ public:
     void Draw(Camera& camera)override;
     void DrawUI();
     void CheckCollision(CollisionManager& collisionManager)override;
-    void SetCurPos(Vector2& pos) { screenPos_ = &pos; };
+
 };
 

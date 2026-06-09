@@ -135,7 +135,7 @@ void Player::Update()
 
     if (characterState_.isHit) {
         if (hitTimer_ > 0.0f) {
-            hitTimer_ -= kInverseFPS;
+            hitTimer_ -= Time::DeltaTime();
         } else {
             hitTimer_ = 0.0f;
             characterState_.isHit = false;
@@ -251,15 +251,19 @@ void Player::Jump()
     velocity_.y = std::clamp(velocity_.y, -1.0f, kJumpSpeed_);
 
 
-    velocity_.y -= kInverseFPS * 0.98f;
+    velocity_.y -= Time::DeltaTime() * 0.98f;
     bodyPos_.worldTransform_.translate_.y += velocity_.y;
 }
 
 void Player::Zoom()
 {
+    const float deltaTime = Time::DeltaTime();
+
     if (InputBind::IsClickPress()) {
 
-        zoomStartTimer_ += kInverseFPS;
+   
+
+        zoomStartTimer_ += deltaTime;
         zoomStartTimer_ = std::clamp(zoomStartTimer_, 0.0f, 0.2f);
 
 
@@ -270,7 +274,7 @@ void Player::Zoom()
                 Sound::PlaySE(SoundFactory::FALL);
             }
 
-            zoomTimer_ += kInverseFPS * 2.0f;
+            zoomTimer_ += deltaTime * 2.0f;
 
         }
 
@@ -279,7 +283,7 @@ void Player::Zoom()
         zoomStartTimer_ = 0.0f;
 
         if (zoomTimer_ > 0.0f) {
-            zoomTimer_ -= kInverseFPS * 2.0f;
+            zoomTimer_ -= deltaTime * 2.0f;
         } else {
             isZoom_ = false;
         }
@@ -311,11 +315,15 @@ void Player::LookBack()
         return;
     }
 
+
+    const float deltaTime = Time::DeltaTime();
+
+
     if (InputBind::IsClickPressR()) {
 
         if (!isLookBackEnd_) {
             if (lookBackTime_ < 1.0f) {
-                lookBackTime_ += kInverseFPS * 2.0f;
+                lookBackTime_ += deltaTime * 2.0f;
             } else {
                 lookBackTime_ = 1.0f;
                 isLookBackEnd_ = true;
@@ -325,7 +333,7 @@ void Player::LookBack()
 
     } else {
         if (lookBackTime_ > 0.0f) {
-            lookBackTime_ -= kInverseFPS * 2.0f;
+            lookBackTime_ -= deltaTime * 2.0f;
         } else {
             lookBackTime_ = 0.0f;
             isLookBack_ = false;
@@ -356,11 +364,14 @@ void Player::Thermography()
         return;
     }
 
+
+    const float deltaTime = Time::DeltaTime();
+
     if (InputBind::IsClickPressR()) {
 
         if (!isThermographyEnd_) {
             if (thermography_ < 1.0f) {
-                thermography_ += kInverseFPS * 2.0f;
+                thermography_ += deltaTime * 2.0f;
             } else {
                 thermography_ = 1.0f;
                 isThermographyEnd_ = true;
@@ -369,7 +380,7 @@ void Player::Thermography()
 
     } else {
         if (thermography_ > 0.0f) {
-            thermography_ -= kInverseFPS * 2.0f;
+            thermography_ -= deltaTime * 2.0f;
         } else {
             thermography_ = 0.0f;
             isThermography_ = false;
@@ -388,14 +399,16 @@ void Player::MouseLook()
 
     Vector2 controllerPos = { cameraRotateY_ ,cameraRotateX_ };
 
+    const float kDeltaTime = Time::DeltaTime();
+
     if (Input::IsControllerStickPosMove(BUTTON_RIGHT, 0, &controllerPos)) {
-        cameraRotateY_ += controllerPos.x * kInverseFPS * cameraSpeed_ * 2.0f;
-        cameraRotateX_ -= controllerPos.y * kInverseFPS * cameraSpeed_ * 2.0f;
+        cameraRotateY_ += controllerPos.x * kDeltaTime * cameraSpeed_ * 2.0f;
+        cameraRotateX_ -= controllerPos.y * kDeltaTime * cameraSpeed_ * 2.0f;
     }
 
 
-    cameraRotateY_ += Input::GetMousePosFiltered().x * kInverseFPS / cameraSpeed_;
-    cameraRotateX_ += Input::GetMousePosFiltered().y * kInverseFPS / cameraSpeed_;
+    cameraRotateY_ += Input::GetMousePosFiltered().x *kDeltaTime / cameraSpeed_;
+    cameraRotateX_ += Input::GetMousePosFiltered().y *kDeltaTime / cameraSpeed_;
 
     cameraRotateX_ = std::clamp(
         cameraRotateX_,

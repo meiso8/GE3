@@ -115,7 +115,7 @@ void PauseScreen::TimerUpdate()
         return;
     }
 
-    pauseTimer_ += kInverseFPS;
+    pauseTimer_ += Time::DeltaTime();
     pauseTimer_ = std::clamp(pauseTimer_, 0.0f, 1.0f);
 }
 

@@ -66,6 +66,7 @@ private:
         APPEAR,
         ROUND,
         FIREBALL,
+        ALPHA_WALK,
         EXIT,
         MAX_PHASE
     };
@@ -85,13 +86,17 @@ private:
     const float kApperTime_ = 7.0f;
     const float kApperEndTime_ = 9.0f;
     Vector3 startScale_ = { 0.0f,0.0f,0.0f };
+
+    const float kAlphaWalkTime_ = 5.0f;
+    const float kAlphaWalkEndTime_ = 15.0f;
+
 private:
     void SetPhase(PHASE phase);
     void Appear();
     void Round();
     void Fireball();
     void Exit();
-
+    void AlphaWalk();
     void UpdateTimer();
     void Look();
     void PoyoPoyo(const float& endTimer = 0.25f);

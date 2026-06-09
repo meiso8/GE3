@@ -33,7 +33,7 @@ void VibrateManager::Update()
         leftMotor_ = 0;
         rightMotor_ = 0;
     } else {
-        timer_ -= kInverseFPS;
+        timer_ -= Time::DeltaTime();
     }
 
     Input::VibrateController(0, leftMotor_, rightMotor_);

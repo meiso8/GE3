@@ -21,34 +21,35 @@ SampleScene::SampleScene()
     // 現在のカメラを設定
     currentCamera_ = camera_.get();
 
+    //プレイヤーのインスタンスを生成
     player_ = std::make_unique<Player>();
-
+    //ライトマネージャーのインスタンスを生成
     lightingManager_ = std::make_unique<LightingManager>();
     lightingManager_->playerHandPos_.Parent(player_->GetEyeWorldTransform());
     lightingManager_->direction_ = &player_->GetForward();
 
+    //衝突判定
     collisionManager_ = std::make_unique<CollisionManager>();
-
+    //アイテム管理
     itemManager_ = std::make_unique<ItemManager>();
+    //UI管理
     uIManager_ = std::make_unique<UIManager>();
+    //メモ管理
     memoManager_ = std::make_unique<MemoManager>();
 
+    //ステージにセットする
     Stage::SetPlayer(player_.get());
+    Stage::SetMemoManager(memoManager_.get());
+    Stage::SetItemManager(itemManager_.get());
+    //カーソルのポジションをセットする
+    Stage::SetCurPos(*uIManager_->GetCurPosPtr());
 
+    //ステージのインスタンスの生成だが、
     amenStage_ = std::make_unique<AmenStage>();
     waterStage_ = std::make_unique<WaterStage>();
     medjedStage_ = std::make_unique<MedjedStage>();
     mummyStage_ = std::make_unique<MummyStage>();
 
-    // 各ステージに渡す
-    amenStage_->SetItemManager(itemManager_);
-    amenStage_->SetCurPos(*uIManager_->GetCurPosPtr());
-
-    waterStage_->SetItemManager(itemManager_);
-    mummyStage_->SetItemManager(itemManager_);
-
-
-    medjedStage_->SetItemManager(itemManager_);
     if (medjedStage_) {
         CreateParticle();
         uIManager_->CreateHpGage(*medjedStage_->GetEnemy()->GetHpsPtr(), *player_->GetHpsPtr());
@@ -60,32 +61,33 @@ SampleScene::SampleScene()
 
 void SampleScene::Initialize() {
 
+    //パーティクルのリセット
     ParticleManager::ResetAll();
-
+    //ライト管理の初期化
     lightingManager_->Initialize();
-
+    //シーン遷移をセットする
     SetSceneChange();
-
+    //カメラを初期化する
     camera_->Initialize();
-    //camera_->nearZ_ = 1.0f;
     camera_->UpdateMatrix();
-
+    //UI管理の初期化
     uIManager_->Initialize();
+    //アイテム管理の初期化
     itemManager_->Init();
     //メモマネージャー
     memoManager_->Initialize();
-
+    //現在のフェーズをセットする
     currentPhase_ = StagePhase::Amen;
-
+    //アメンステージにする
     InitAmenScene();
 }
 
 void SampleScene::InitAmenScene()
 {
+
     //メモマネージャー
     memoManager_->Initialize();
     SetSceneChange();
-    memoManager_->GenerateMemos({ TextureFactory::MEMO1, TextureFactory::MEMO3,TextureFactory::MEMO4,TextureFactory::BOOK4 });
     amenStage_->Initialize();
 }
 
@@ -94,7 +96,6 @@ void SampleScene::InitWaterScene()
     //メモマネージャー
     memoManager_->Initialize();
     SetSceneChange();
-    memoManager_->GenerateMemos({ TextureFactory::MEMO2, TextureFactory::BOOK2 });
     waterStage_->Initialize();
 }
 
@@ -103,25 +104,23 @@ void SampleScene::InitMummyScene()
     //メモマネージャー
     memoManager_->Initialize();
     SetSceneChange();
-    memoManager_->GenerateMemos({ TextureFactory::BOOK,TextureFactory::MEMO5 });
     mummyStage_->Initialize();
 }
 
 void SampleScene::InitMedjedScene()
 {
+    //メモマネージャー
+    memoManager_->Initialize();
+
     if (medjedStage_) {
         particleEmitters_[0]->GetEmitter().transform.Parent(medjedStage_->GetMedjed()->GetWorldTransform());
     }
-    //メモマネージャー
-    memoManager_->Initialize();
+
     SetSceneChange();
     ParticleManager::ResetAll();
     SoundManager::InitMedjedScene();
     lightingManager_->Initialize();
-
-    memoManager_->GenerateMemos({ TextureFactory::BOOK3 });
     medjedStage_->Initialize();
-
 }
 
 void SampleScene::Update() {
@@ -420,17 +419,13 @@ void SampleScene::DrawModel() {
 void SampleScene::DrawSprite() {
 
 
-
-
     Sprite::PreDraw();
-    
+
     itemManager_->DrawUI();
 
     uIManager_->DrawPauseScreen();
     if (amenStage_) amenStage_->DrawUI();
 
-
-    
     memoManager_->DrawUI();
     uIManager_->DrawCurPos();
     player_->DrawRaySprite();

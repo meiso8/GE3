@@ -4,7 +4,7 @@
 void TransformAni::RotateY(WorldTransform& worldTransform, const float& rotateSpeed)
 {
     worldTransform.rotate_.x = 1.0f;
-    worldTransform.rotate_.y += kInverseFPS * std::numbers::pi_v<float>*rotateSpeed;
+    worldTransform.rotate_.y += Time::DeltaTime() * std::numbers::pi_v<float>*rotateSpeed;
 }
 
 void TransformAni::PoyoPoyo(WorldTransform& worldTransform,const float& timer,const float&defaultScale)

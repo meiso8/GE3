@@ -42,7 +42,7 @@ void ResultScene::Initialize()
 
     currentIndex_ = 0;
     timer_ = 0.0f;
-    fadeSpeed_ = kInverseFPS * 2.0f;
+    fadeSpeed_ = 2.0f;
     Sound::StopAllSound();
     lookTimer_ = 0.0f;
 
@@ -72,8 +72,9 @@ void ResultScene::Update()
 
 
     symbolSprite_->Update();
-    lookTimer_ +=kInverseFPS;
-    timer_ += kInverseFPS;
+    const float deltaTime = Time::DeltaTime();
+    lookTimer_ += deltaTime;
+    timer_ += deltaTime;
 
     if (timer_ >= switchInterval_) {
         timer_ = 0.0f;
@@ -84,12 +85,12 @@ void ResultScene::Update()
 
     if (timer_ <= 0.5f) {
         // αを徐々に増やす 
-        alpha_ += fadeSpeed_;
+        alpha_ += fadeSpeed_* deltaTime;
     }
 
     if (timer_ >= 4.5f) {
         // αを徐々に 減らす
-        alpha_ -= fadeSpeed_;
+        alpha_ -= fadeSpeed_ * deltaTime;
     }
 
     alpha_ = std::clamp(alpha_, 0.0f, 0.5f);
