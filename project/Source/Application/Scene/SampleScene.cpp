@@ -83,7 +83,7 @@ void SampleScene::Initialize() {
     itemManager_->Init();
     //メモマネージャー
     memoManager_->Initialize();
-   //アメンステージにする
+    //アメンステージにする
     stageManager_->SetNestStage("AmenStage");
 
 }
@@ -120,7 +120,7 @@ void SampleScene::Update() {
 
     // 共通更新
     ParticleManager::GetInstance()->Update(*currentCamera_);
-  
+
     itemManager_->Update();
     uIManager_->UpdatePauseScreen();
     memoManager_->Update();
@@ -148,6 +148,19 @@ void SampleScene::Debug()
     DebugUI::CheckCamera(*currentCamera_);
     DebugUI::Button("ChangeCamera", func);
 
+
+
+    if (ImGui::TreeNode("StageManager")) {
+
+        const char* stages[] = { "AmenStage", "WaterStage", "MedjedStage","MummyStage"};
+        int stageCurrent = 0;
+
+        if (ImGui::Combo("CurrentStage", &stageCurrent, stages, IM_ARRAYSIZE(stages))) {
+            stageManager_->SetNestStage(stages[stageCurrent % 4]);
+        };
+
+        ImGui::TreePop();
+    }
 #endif // !USE_IMGUI
 }
 
@@ -210,7 +223,7 @@ void SampleScene::DrawModel() {
     //プレイヤーの描画
     player_->Draw(*currentCamera_, kLightModeHalfL);
 
-   
+
     ParticleManager::GetInstance()->Draw();
     //アイテムを手前に描画する
     itemManager_->DrawGetItem();
