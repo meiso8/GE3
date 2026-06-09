@@ -20,9 +20,11 @@ private:
     std::array<std::unique_ptr<DummyMummy>, kMaxMummy_> dummyMummies_;
 public:
     const float maxTime_ = 2.0f;
-    float medjedApperTime_ = maxTime_;
+    float heartSetEndTime_ = maxTime_;
     void TimerUpdate();
-    bool IsEndTime() { return medjedApperTime_ <= 0.0f; };
+
+    const bool IsClear() const;
+
     MummyStage();
     void Initialize()override;
     void Update()override;

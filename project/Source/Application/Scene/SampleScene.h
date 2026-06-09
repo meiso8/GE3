@@ -12,22 +12,18 @@
 #include"UI/UIManager.h"
 #include"LightingManager.h"
 #include"Item/ItemManager.h"
-
+#include "Memo/MemoManager.h" 
 #pragma endregion
 #include"CollisionManager.h"
 
-#include "Memo/MemoManager.h" 
+#include"../Stage/StageManager.h"
 
-#include"../Stage/MummyStage/MummyStage.h"
-#include"../Stage/WaterStage/WaterStage.h"
-#include"../Stage/MedjedStage/MedjedStage.h"
-#include"../Stage/AmenStage/AmenStage.h"
 class Sprite;
 class PlaneMesh;
 class SphereMesh;
 class CubeMesh;
 class Model;
-class ParticleEmitter;
+
 
 class SampleScene :public BaseScene {
 
@@ -35,11 +31,6 @@ public:
     SampleScene();
     ~SampleScene() override;
     void Initialize()override;
-    void InitAmenScene();
-    void InitWaterScene();
-    void InitMummyScene();
-    void InitMedjedScene();
-
     void Update()override;
     void DrawModel()override;
     void DrawSprite()override;
@@ -48,9 +39,6 @@ public:
     void BackToTitle();
     void SetSceneChange();
 private:
-    void CreateParticle();
-    enum class StagePhase {Amen, Water, Mummy, Medjed }; 
-    StagePhase currentPhase_ = StagePhase::Amen;
 #pragma region//ゲームオブジェクト
     std::unique_ptr<Player>player_ = nullptr;
     std::unique_ptr<LightingManager>lightingManager_ = nullptr;
@@ -64,14 +52,9 @@ private:
 #pragma endregion
 
 #pragma region//ステージ
-    std::unique_ptr<AmenStage> amenStage_ = nullptr;
-    std::unique_ptr<MummyStage> mummyStage_ = nullptr;
-    std::unique_ptr<WaterStage> waterStage_ = nullptr;
-    std::unique_ptr<MedjedStage> medjedStage_ = nullptr;
+    StageManager* stageManager_ = nullptr;
 #pragma endregion
-
-    std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
-
+    //衝突判定
     std::unique_ptr<CollisionManager>collisionManager_ = nullptr;
 
 };

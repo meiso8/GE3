@@ -308,6 +308,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\Stage.cpp" />
     <ClCompile Include="Source\Application\Loader\TextureFactory.cpp" />
     <ClCompile Include="Source\Engine\FreeTypeManager\Text.cpp" />
+    <ClCompile Include="Source\Application\Stage\StageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\PostProcessManager\PostProcessManager.h" />
@@ -477,6 +478,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\Stage\Stage.h" />
     <ClInclude Include="Source\Application\Loader\TextureFactory.h" />
     <ClInclude Include="Source\Engine\FreeTypeManager\Text.h" />
+    <ClInclude Include="Source\Application\Stage\StageManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

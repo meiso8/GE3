@@ -51,6 +51,7 @@ public:
     static void SetMap(const std::string& name, std::unique_ptr<BaseScene> scene);
     static void SetNestScene(const std::string& name);
     static void InitScene();
+
 private:
 
     static BaseScene* currentScene_;
