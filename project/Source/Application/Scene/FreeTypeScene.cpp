@@ -63,7 +63,6 @@ void FreeTypeScene::Initialize()
     ParticleManager::ResetAll();
 
     camera_->Initialize();
-    camera_->nearZ_ = 1.0f;
 
     currentCamera_ = camera_.get();
 
@@ -120,9 +119,6 @@ void FreeTypeScene::Update()
 
     DebugUI::CheckModel(*ModelManager::GetModel("playerGirl"), "playerGirl");
 
-
-
-   ;
 
     DebugUI::CheckObject3d(*object3d_, "Cylinder");
     DebugUI::CheckObject3d(*object3d2_, "playerGirlObj");
@@ -185,12 +181,9 @@ void FreeTypeScene::DrawModel()
         enemy->Draw(*currentCamera_);
     }
 
-
-
-
     object3d2_->Draw(*currentCamera_);
-    for (auto& obj : objects_) {
 
+    for (auto& obj : objects_) {
         obj->obj_->Draw(*currentCamera_);
     }
 

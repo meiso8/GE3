@@ -251,16 +251,13 @@ void ItemSlot::DrawUI()
 
 }
 
-void ItemSlot::Draw(Camera& camera)
+void ItemSlot::Draw()
 {
-
     for (auto& item : slots_) {
         if (item && !item->isUsed_) {
             item->Draw(*itemCamera_);
         }
     }
-
-
 }
 
 void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos)

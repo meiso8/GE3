@@ -67,7 +67,7 @@ void SampleScene::Initialize() {
     SetSceneChange();
 
     camera_->Initialize();
-    camera_->nearZ_ = 1.0f;
+    //camera_->nearZ_ = 1.0f;
     camera_->UpdateMatrix();
 
     uIManager_->Initialize();
@@ -413,10 +413,14 @@ void SampleScene::DrawModel() {
 
     skyboxObject3d_->Draw(*currentCamera_);
     ParticleManager::GetInstance()->Draw();
-  
+    //アイテムを手前に描画する
+    itemManager_->DrawGetItem();
 }
 
 void SampleScene::DrawSprite() {
+
+
+
 
     Sprite::PreDraw();
     

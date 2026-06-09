@@ -49,12 +49,17 @@ void ItemManager::Update() {
     itemSlot_.Update();
 }
 
+void ItemManager::DrawGetItem()
+{
+    itemSlot_.Draw();
+}
+
 void ItemManager::Draw(Camera& camera) {
   
     for (auto& [name, item] : items_) {
         item->Draw(camera);
     }
-    itemSlot_.Draw(camera);
+
 }
 
 void ItemManager::DrawUI() {
