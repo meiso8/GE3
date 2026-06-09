@@ -74,7 +74,7 @@ void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handl
     for (const auto& handle : handles) {
         auto memo = std::make_unique<Memo>();
         memo->SetTexture(handle);
-
+       
         std::string key;
         switch (handle) {
         case TextureFactory::MEMO1: key = "memo1"; break;
@@ -107,6 +107,7 @@ void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handl
         } else {
             memo->SetCubeSize(memoAABB["memoSize"]);
         }
+
 
         memos_[handle] = std::move(memo);
     }
