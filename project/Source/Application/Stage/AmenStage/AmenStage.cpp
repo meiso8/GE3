@@ -2,11 +2,14 @@
 
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
+#include"../StageManager.h"
+
 
 const bool AmenStage::IsClear()
 {
     return slidePuzzleSystem_->GetIsGameEnd();
 }
+
 AmenStage::AmenStage()
 {
     slidePuzzleSystem_ = std::make_unique<SlidePuzzleSystem>();
@@ -33,9 +36,14 @@ void AmenStage::Initialize()
 void AmenStage::Update()
 {
     Sound::PlayBGM(SoundFactory::BGM_Sun);
-    slidePuzzleSystem_->Update(*screenPos_);
+    slidePuzzleSystem_->Update(*uiManager_->GetCurPosPtr());
     amenRa_->Update();
     backGround_->Update();
+
+    if (IsClear()) {
+        //ステージを水にする
+        StageManager::GetInstance()->SetNestStage("WaterStage");
+    }
 }
 
 void AmenStage::Draw(Camera& camera)
@@ -45,10 +53,11 @@ void AmenStage::Draw(Camera& camera)
     slidePuzzleSystem_->Draw(camera);
 }
 
-void AmenStage::DrawUI()
+void AmenStage::DrawSprite()
 {
     slidePuzzleSystem_->DrawUI();
 }
+
 
 void AmenStage::CheckCollision(CollisionManager& collisionManager)
 {

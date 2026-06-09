@@ -5,6 +5,8 @@
 #include<algorithm>
 #include"TimeManager.h"
 #include"Sound.h"
+#include"../StageManager.h"
+
 MummyStage::MummyStage()
 {
     papyrus_ = std::make_unique<Papyrus>();
@@ -16,10 +18,18 @@ MummyStage::MummyStage()
     }
 }
 
+
+
+const bool MummyStage::IsClear() const
+{
+    //ハートタイムが0以下になったら。
+    return heartSetEndTime_ <= 0.0f;;
+}
+
 void MummyStage::TimerUpdate()
 {
-    medjedApperTime_ -= Time::DeltaTime();
-    medjedApperTime_ = std::clamp(medjedApperTime_, 0.0f, maxTime_);
+    heartSetEndTime_ -= Time::DeltaTime();
+    heartSetEndTime_ = std::clamp(heartSetEndTime_, 0.0f, maxTime_);
 
 }
 
@@ -32,7 +42,7 @@ void MummyStage::Initialize() {
 
     Sound::Stop(SoundFactory::BGM_Sea);
     Sound::PlaySE(SoundFactory::HORROR1);
-    medjedApperTime_ = maxTime_;
+    heartSetEndTime_ = maxTime_;
     papyrus_->Initialize();
     mummy_->Initialize();
     mummyRoom_->Init();
@@ -52,15 +62,15 @@ void MummyStage::Initialize() {
 
         if (i < 5) {
             // 北壁
-            pos = { -spacing*2.0f + i * spacing, 0.0f, -distance };
+            pos = { -spacing * 2.0f + i * spacing, 0.0f, -distance };
             rotate = 0.0f;
         } else if (i < 9) {
             // 東壁
-            pos = { distance, 0.0f, -distance + (i - 5) * spacing+ spacing };
+            pos = { distance, 0.0f, -distance + (i - 5) * spacing + spacing };
             rotate = -1.57f;
         } else if (i < 13) {
             // 西壁
- 
+
             pos = { -distance, 0.0f, -distance + (i - 9) * spacing + spacing };
             rotate = 1.57f;
         }
@@ -76,9 +86,16 @@ void MummyStage::Update() {
 
 
     auto item = itemManager_->GetItem("GoldHeart");
+
     if (itemManager_ && item && item->isUsed_) {
         //メジェドあらわる
         TimerUpdate();
+
+        if (IsClear()) {
+            //クリアしたらメジェドステージに行く
+            StageManager::GetInstance()->SetNestStage("MedjedStage");
+        }
+
     };
 
 
@@ -109,7 +126,7 @@ bool MummyStage::IsRayCastHit(RaySprite& raySprite)
     AABB aabb = GetAABBWorldPos(mummy_.get());
 
     if (raySprite.IntersectsAABB(aabb, mummy_->GetWorldTransform().GetWorldPosition())) {
-       
+
         if (InputBind::IsClick()) {
             //Openしていなかったらmummyをあける
             if (!mummy_->GetIsOpen()) {
@@ -117,7 +134,7 @@ bool MummyStage::IsRayCastHit(RaySprite& raySprite)
                 mummy_->SetIsOpen(true);
             }
         }
-           
+
 
         return true;
     }
@@ -140,8 +157,8 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager)
 
 
     for (auto& dummyMummy : dummyMummies_) {
-        if(!dummyMummy->GetIsHitCollision())
-        collisionManager.AddCollider(dummyMummy.get());
+        if (!dummyMummy->GetIsHitCollision())
+            collisionManager.AddCollider(dummyMummy.get());
     }
 
     //ミイラの台も一緒に

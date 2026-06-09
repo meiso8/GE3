@@ -23,8 +23,7 @@ public:
     void Initialize()override;
     void Update()override;
     void Draw(Camera& camera)override;
-    void DrawUI();
+    void DrawSprite()override;
     void CheckCollision(CollisionManager& collisionManager)override;
-
 };
 

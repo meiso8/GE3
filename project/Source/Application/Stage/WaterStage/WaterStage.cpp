@@ -1,6 +1,8 @@
 #include "WaterStage.h"
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
+#include"../StageManager.h"
+
 const bool WaterStage::IsClear()
 {
     //金の心臓を手に入れたとき
@@ -47,6 +49,10 @@ void WaterStage::Update()
     water_->Update();
     papyrusWall_->Update();
 
+    if (IsClear()) {
+        //クリアしていたらミイラステージになる
+        StageManager::GetInstance()->SetNestStage("MummyStage");
+    }
 
 }
 
