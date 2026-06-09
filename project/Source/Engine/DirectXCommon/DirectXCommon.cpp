@@ -20,6 +20,7 @@ uint32_t DirectXCommon::descriptorSizeDSV = 0;
 std::unique_ptr< DxcCompiler> DirectXCommon::dxcCompiler = nullptr;
 std::unique_ptr<CommandList> DirectXCommon::commandList = nullptr;
 
+float DirectXCommon::deltaTime_ = 1.0f / 60.0f;
 
 DirectXCommon::~DirectXCommon()
 {
@@ -165,7 +166,7 @@ void DirectXCommon::RenderTexturePostDraw()
 
     auto& renderTextureData = renderTexture_->GetRenderTextureData(RenderTexture::kNormal0);
     barrier.SettingBarrierRTVforSRV(renderTextureData.resource);
-   
+
     auto& renderTextureDataThermography = renderTexture_->GetRenderTextureData(RenderTexture::kThermography);
     barrier.SettingBarrierRTVforSRV(renderTextureDataThermography.resource);
 
@@ -424,6 +425,7 @@ void DirectXCommon::UpdateFixFPS()
     std::chrono::microseconds elapsed =
         std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
 
+
     if (elapsed < kMinCheckTime) {
         //1/60秒経過するまで微小なスリープを繰り返す
         while (std::chrono::steady_clock::now() - reference_ < kMinTime) {
@@ -432,9 +434,18 @@ void DirectXCommon::UpdateFixFPS()
         }
     }
 
-    //現在の時間を記録する
-    reference_ = std::chrono::steady_clock::now();
 
+    // スリープを抜けた現在時間を確定させる
+    std::chrono::steady_clock::time_point frame_end = std::chrono::steady_clock::now();
+
+    // 実際に1フレームにかかった時間を「秒単位のfloat」で取得
+    deltaTime_ = std::chrono::duration<float>(frame_end - reference_).count();
+
+    //現在の時間を記録する
+    reference_ = frame_end;
+
+    std::string message = "DeltaTime : " + std::to_string(deltaTime_);
+    LogFile::Log(message.c_str());
     LogFile::Log("UpdateFixFPS");
 
 }

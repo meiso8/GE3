@@ -73,7 +73,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     //output.color.rgb = (1 - weight) * gTexture.Sample(gSampler, input.texcoord).rgb + weight *gMaterial.color;
     //This　is Lerp
     output.color.rgb = lerp(gTexture.Sample(gSampler, input.texcoord).rgb, gMaterial.color, weight);
-
+    
     output.color.a = 1.0f;
     
     return output;
