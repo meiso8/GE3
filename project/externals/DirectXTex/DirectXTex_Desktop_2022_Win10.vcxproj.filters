@@ -21,9 +21,6 @@
     <ClCompile Include="BC4BC5.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClInclude Include="BCDirectCompute.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <CLInclude Include="DDS.h">
       <Filter>Source Files</Filter>
     </CLInclude>
@@ -45,9 +42,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BC6HBC7.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BCDirectCompute.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DirectXTexCompress.cpp">
