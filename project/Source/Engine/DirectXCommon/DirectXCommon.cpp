@@ -465,9 +465,11 @@ void DirectXCommon::UpdateRenderTexture()
     // （テクスチャを読み込んだ時のインデックスや、RenderTextureのsrvIndexなど）
     // ImGui::Imageに渡すために ImTextureID (void* 型) にキャストする
     ImTextureID texID = reinterpret_cast<ImTextureID>(depthTextureData_.srvHandleGPU.ptr);
+    ImTextureID texIDTemp = reinterpret_cast<ImTextureID>(renderTexture_->GetRenderTextureData(RenderTexture::kThermography).srvHandleGPU.ptr);
+
     // 画像の表示 (引数: テクスチャID, 表示サイズ(横, 縦))
     ImGui::Image(texID, ImVec2(128.0f, 72.0f));
-
+    ImGui::Image(texIDTemp, ImVec2(128.0f, 72.0f));
     ImGui::End();
 #endif
 }

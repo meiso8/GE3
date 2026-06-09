@@ -8,6 +8,8 @@
 #include"TimeManager.h"
 #include<algorithm>
 #include"Easing.h"
+#include"DebugUI.h"
+
 void Medjed::OnCollision(Collider* collider)
 {
 
@@ -90,6 +92,10 @@ void Medjed::Update()
     aniObj_->UpdateAniTimer();
     aniObj_->Update();
     ColliderUpdate();
+
+#ifdef USE_IMGUI
+    DebugUI::CheckAnimation(*aniObj_,"Medjed");
+#endif
 }
 void Medjed::Init()
 {

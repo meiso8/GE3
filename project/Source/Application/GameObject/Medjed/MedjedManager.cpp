@@ -95,9 +95,17 @@ void MedjedManager::Initialize()
 
 void MedjedManager::Draw(Camera& camera)
 {
-    for (auto& medjed : dummyMedjeds_) {
-        medjed->Draw(camera);
+    for (auto& dummyMedjed : dummyMedjeds_) {
+
+
+        if (auto medjed = dynamic_cast<Medjed*>(dummyMedjed.get())) {
+            continue;
+        }
+
+        dummyMedjed->Draw(camera);
     }
+
+    GetMedjed()->Draw(camera);
 
     enemy_->Draw(camera, kLightModeHalfL);
 
@@ -158,6 +166,9 @@ void MedjedManager::Update()
     for (auto& locker : dummyMedjeds_) {
         locker->Update();
     }
+
+
+  
 
 }
 

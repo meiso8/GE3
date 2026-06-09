@@ -11,6 +11,9 @@ struct Material
 ConstantBuffer<Material> gMaterial : register(b0);
 Texture2D<float> gDepthTexture : register(t1);
 Texture2D<float4> gTexture : register(t2);
+//empty thread is t8?
+Texture2D<float4> gTemperatureTexture : register(t8);
+
 SamplerState gSampler : register(s0);
 SamplerState gSamplerPoint : register(s1);
 
@@ -28,10 +31,6 @@ static const float32_t kPrewittVerticalKernel[3][3] =
     { 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f },
 };
 
-float32_t Luminance(float32_t3 v)
-{
-    return dot(v, float32_t3(0.2125f, 0.7154f, 0.0721f));
-}
 
 struct PixelShaderOutput
 {
@@ -48,6 +47,8 @@ PixelShaderOutput main(VertexShaderOutput input)
     float32_t2 uvStepSize = float32_t2(rcp(width), rcp(height));
     float32_t2 diffrence = float32_t2(0.0f, 0.0f);
     
+    float outlineMask = 0.0f;
+    
     for (int32_t x = 0; x < 3; ++x)
     {
         for (int32_t y = 0; y < 3; ++y)
@@ -59,21 +60,32 @@ PixelShaderOutput main(VertexShaderOutput input)
             float32_t2 texcoord = input.texcoord + index * uvStepSize;
             
             float32_t ndcDepth = gDepthTexture.Sample(gSamplerPoint, texcoord).r;
-            float32_t4 viewSpace = mul(float32_t4(0.0f, 0.0f, ndcDepth, 1.0f), gMaterial.projectionInverse);
+            float32_t4 viewSpace = mul(float32_t4(0.0f,0.0f, ndcDepth, 1.0f), gMaterial.projectionInverse);
             float32_t viewZ = viewSpace.z / viewSpace.w;
             diffrence.x += viewZ * kPrewittHorizontalKernel[x][y];
             diffrence.y += viewZ * kPrewittVerticalKernel[x][y];
    
+            float m = gTemperatureTexture.Sample(gSamplerPoint, texcoord).g;
+            outlineMask = max(outlineMask, m);
+            
         }
 
     }
     
+
+ 
     float32_t weight = length(diffrence);
-    weight = saturate(weight * gMaterial.lineWidth);    
+    weight = saturate(weight * gMaterial.lineWidth);  
+
+    
+    if (outlineMask > 0.5f)
+    {
+        weight =  0.0f;
+    }
+ 
     //output.color.rgb = (1 - weight) * gTexture.Sample(gSampler, input.texcoord).rgb + weight *gMaterial.color;
     //This　is Lerp
     output.color.rgb = lerp(gTexture.Sample(gSampler, input.texcoord).rgb, gMaterial.color, weight);
-    
     output.color.a = 1.0f;
     
     return output;

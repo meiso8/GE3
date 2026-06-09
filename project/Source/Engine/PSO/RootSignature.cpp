@@ -72,6 +72,14 @@ void RootSignature::Create() {
     descriptorRangeForSkyBox[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
 
 
+
+    //DescriptorRange
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForTemperature[1] = {};
+    descriptorRangeForTemperature[0].BaseShaderRegister = 8;//8から始める Texture2D<float32_t4> gTexture : register(t8); 
+    descriptorRangeForTemperature[0].NumDescriptors = 1;//1つ
+    descriptorRangeForTemperature[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
+    descriptorRangeForTemperature[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
+
     //D3D12_DESCRIPTOR_RANGE waveDescriptorRange[1] = {};
     //waveDescriptorRange[0].BaseShaderRegister = 1; // StructuredBuffer<Wave> gWave : register(t1);
     //waveDescriptorRange[0].NumDescriptors = 1;
@@ -286,7 +294,7 @@ void RootSignature::Create() {
 #pragma endregion
 
 #pragma region//DepthBasedOutline
-    D3D12_ROOT_PARAMETER rootParametersForDepthBasedOutline[3] = {};
+    D3D12_ROOT_PARAMETER rootParametersForDepthBasedOutline[4] = {};
 
     //Material b0
     rootParametersForDepthBasedOutline[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
@@ -303,7 +311,11 @@ void RootSignature::Create() {
     rootParametersForDepthBasedOutline[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParametersForDepthBasedOutline[2].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
     rootParametersForDepthBasedOutline[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
-
+    //Texture t3
+    rootParametersForDepthBasedOutline[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForDepthBasedOutline[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForDepthBasedOutline[3].DescriptorTable.pDescriptorRanges = descriptorRangeForTemperature;//Tableの中身の配列を指定
+    rootParametersForDepthBasedOutline[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForTemperature);//Tableで利用する数
 
 #pragma endregion
 #pragma region//RandomParam
