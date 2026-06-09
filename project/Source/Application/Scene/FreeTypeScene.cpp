@@ -135,7 +135,7 @@ void FreeTypeScene::Update()
  
     object3d_->GetUVTranslate().x += 0.1f;
     object3d_->UpdateUV();
-    object3d2_->Update();
+
 
     for (auto& enemy : enemies_) {
         enemy->Update();
@@ -151,6 +151,8 @@ void FreeTypeScene::Update()
         particleEmitters_[i]->UpdateEmitter();
 
     }
+
+    object3d2_->Update();
 
     // 共通更新
     ParticleManager::GetInstance()->Update(*currentCamera_);

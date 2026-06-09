@@ -625,8 +625,10 @@ void DebugUI::CheckMaterial(Material& material, const char* label) {
         CheckColor(material.color, "color");
         CheckLightMode(material.lightMode, "lightMode");
         ImGui::SliderFloat("shininess", &material.shininess, 0.0f, 100.0f);
+        ImGui::SliderFloat("temperature", &material.temperature, 0.0f, 1.0f);
         ShowMatrix4x4(material.uvTransform, "uvMatrix");
         ImGui::SliderFloat("environmentCoefficient", &material.environmentCoefficient, 0.0f, 1.0f);
+
         ImGui::TreePop();
     }
 #endif

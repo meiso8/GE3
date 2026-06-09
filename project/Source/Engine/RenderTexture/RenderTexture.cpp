@@ -137,7 +137,8 @@ void RenderTexture::DrawOutLine(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, 
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectDepthBasedOutline]->GetGPUVirtualAddress());
     SrvManager::SetGraphicsRootDescriptorTable(1, depthSrvIndex);
     SrvManager::SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex);
-
+    //サーモグラフィー用のテクスチャを利用してマスク処理をかける
+    SrvManager::SetGraphicsRootDescriptorTable(3, renderTextureDatas_[kThermography].srvIndex);
     commandList->DrawInstanced(3, 1, 0, 0);
 }
 // RenderTexture.cpp にサーモグラフィー用の描画関数を追加する例
