@@ -215,7 +215,6 @@
     <ClCompile Include="BC.cpp" />
     <ClCompile Include="BC4BC5.cpp" />
     <ClCompile Include="BC6HBC7.cpp" />
-    <ClInclude Include="BCDirectCompute.h" />
     <ClInclude Include="d3dx12.h" />
     <CLInclude Include="DDS.h" />
     <ClInclude Include="filters.h" />
@@ -223,7 +222,6 @@
     <CLInclude Include="DirectXTex.h" />
     <CLInclude Include="DirectXTexP.h" />
     <CLInclude Include="DirectXTex.inl" />
-    <ClCompile Include="BCDirectCompute.cpp" />
     <ClCompile Include="DirectXTexCompress.cpp" />
     <ClCompile Include="DirectXTexCompressGPU.cpp" />
     <ClCompile Include="DirectXTexConvert.cpp" />

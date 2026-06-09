@@ -20,9 +20,8 @@ public:
     static bool IsActive() { return isActive_; };
     static void SetActive(bool active) { isActive_ = active; };
     PuzzleObj* GetPuzzleObj() {
-        return puzzleObj_.get()
-            ;
-    }
+        return puzzleObj_.get();
+    };
     static Puzzle* GetPuzzle() { return puzzle_.get(); };
 
 private:

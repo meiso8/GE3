@@ -4,8 +4,10 @@
 #include"CollisionManager.h"
 #include"InputBind.h"
 #include"TimeManager.h"
+
 bool SlidePuzzleSystem::isActive_ = false;
-bool SlidePuzzleSystem::isEnd_ = false;;
+bool SlidePuzzleSystem::isEnd_ = false;
+
 std::unique_ptr<Puzzle>SlidePuzzleSystem::puzzle_ = nullptr;
 SlidePuzzleSystem::SlidePuzzleSystem()
 {
