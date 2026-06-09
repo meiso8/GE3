@@ -144,7 +144,7 @@ void DirectXCommon::DrawRenderTexture()
     ppm.AddEffect(PSO::kEffectGaussianFilter);
     ppm.AddEffect(PSO::kEffectRadialBlur);
     ppm.AddEffect(PSO::kEffectVignette);
-    ppm.AddEffect(PSO::kEffectRandom);
+    //ppm.AddEffect(PSO::kEffectRandom);
     ppm.AddEffect(PSO::kEffectThermography);
     ppm.AddEffect(PSO::kEffectDissolve);
 

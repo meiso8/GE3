@@ -12,6 +12,7 @@ public:
     ItemManager();
     void Init();
     void Update();
+    void DrawGetItem();
     void Draw(Camera& camera);
     void DrawUI();
     bool HasItem(const std::string& name);

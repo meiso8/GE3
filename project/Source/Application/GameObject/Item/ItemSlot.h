@@ -67,7 +67,7 @@ public:
     void UseItem(int index);
     void CombineItems(int indexA, int indexB);
     void DrawUI();
-    void Draw(Camera& camera);
+    void Draw();
     void GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos);
     std::array<std::shared_ptr<Item>, kMaxSlots_>& GetItemInSlot() {return  slots_; };
 private:

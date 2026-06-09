@@ -335,8 +335,8 @@ void RenderTexture::CreateMaterialDepthBasedOutline()
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectDepthBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForDepthBasedOutline_));
     materialForDepthBasedOutline_->projectionInverse = MakeIdentity4x4();
-    materialForDepthBasedOutline_->lineWidth = 100.0f;
-    materialForDepthBasedOutline_->color = { 1.0f,1.0f,1.0f};
+    materialForDepthBasedOutline_->lineWidth = 10000.0f;
+    materialForDepthBasedOutline_->color = { 0.0f,0.0f,0.0f};
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : DepthBasedOutline");
 }
