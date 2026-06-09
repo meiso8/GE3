@@ -54,6 +54,8 @@ private:
     static std::unique_ptr< DxcCompiler> dxcCompiler;
     static std::unique_ptr<CommandList> commandList;
 
+    static float deltaTime_;
+
     CommandQueue commandQueue = {};
     SwapChain swapChainClass;
     GPU gpu = {};
@@ -204,7 +206,7 @@ public:
     /// @param index ヒープ内の取得対象ディスクリプタのインデックス。
     /// @return 指定したインデックスに対応するD3D12_GPU_DESCRIPTOR_HANDLE。
     static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
+    static float GetDeltaTime() { return deltaTime_; };
 private:
     void InitializeDevice();
     void InitializeCommand();

@@ -743,11 +743,11 @@ void DebugUI::CheckCaracterState(CharacterState& characterState, const char* lab
 void DebugUI::CheckFPS() {
 #ifdef USE_IMGUI
 
-    if (ImGui::GetIO().Framerate < 55.0f) {
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "FPS : %0.1f", ImGui::GetIO().Framerate);
-    } else {
-        ImGui::TextColored(ImVec4(0, 1, 0, 1), "FPS : %0.1f", ImGui::GetIO().Framerate);
-    }
+    ImVec4 color = (ImGui::GetIO().Framerate < 55.0f)? ImVec4(1, 0, 0, 1) :ImVec4(0, 1, 0, 1);
+
+    ImGui::TextColored(color, "FPS : %0.1f", ImGui::GetIO().Framerate);
+    ImGui::TextColored(color, "DeltaTime : %f", DirectXCommon::GetDeltaTime());
+    ImGui::TextColored(ImVec4(1, 1, 1, 1), "kDeltaTime : %f", 1.0f/60.0f);
 
 #endif
 }
