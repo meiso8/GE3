@@ -172,6 +172,7 @@ void Enemy::SoundFootStep(const SoundFactory::TAG tag)
 
     soundTimer_ -= Time::DeltaTime();
 
+
     bool isCollided = false;
 
     for (auto& [name, collider] : colliders_) {
@@ -185,7 +186,12 @@ void Enemy::SoundFootStep(const SoundFactory::TAG tag)
     if (isCollided&& !isFootPreCollided_) {
    
         if (soundTimer_ <= 0.0f) {
-            Sound::PlaySE(tag,1.0f);
+
+            //距離によって変化させる
+            float distance = Distance(*target_, bodyPos_.worldTransform_.translate_);
+            distance /= 100.0f;
+            distance = std::clamp(distance, 0.0f, 1.0f);
+            Sound::PlaySE(tag, distance);
             soundTimer_ = kWalkFootstepInterval_;
         }
     }
@@ -354,8 +360,6 @@ void Enemy::AlphaWalk()
 
     if (target_) {
 
-        //距離によって変化させる
-        float distance = Distance(*target_, bodyPos_.worldTransform_.translate_);
 
         velocity_ = GetToTarget();
         const float deltaTime = Time::DeltaTime();
