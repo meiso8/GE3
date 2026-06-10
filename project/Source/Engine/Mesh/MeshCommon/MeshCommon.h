@@ -19,7 +19,7 @@ public:
     static MeshData CreateRing(const float innerRadius = 0.2f, const float outerRadius = 1.0f, const uint32_t kRingDivide = 32);
     static MeshData CreateSphere(const Sphere& sphere = { .center = {0.0f,0.0f,0.0f },.radius = 0.5f }, const uint32_t kSubdivision = 16);
     static MeshData CreateCylinder(const bool isFlip = false, const float topRadius = 1.0f, const float bottomRadius = 1.0f, const float height = 3.0f, const uint32_t cylinderDivide = 32);
-    static MeshData CreateBeam();
+    static MeshData CreateBeam(const float firstSize = 0.1f);
 
 };
 

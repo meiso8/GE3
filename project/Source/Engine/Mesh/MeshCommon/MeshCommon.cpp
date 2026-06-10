@@ -707,7 +707,7 @@ MeshData PrimitiveGenerator::CreateCylinder(const bool isFlip, const float topRa
     return data;
 }
 
-MeshData PrimitiveGenerator::CreateBeam()
+MeshData PrimitiveGenerator::CreateBeam(const float firstSize)
 {
     MeshData data;
 
@@ -723,19 +723,25 @@ MeshData PrimitiveGenerator::CreateBeam()
 
     for (int i = 0; i < 3; ++i) {
 
-        const float localPi1 = firstPi +i* stepPi;
+        const float localPi1 = firstPi + i * stepPi;
         const float localPi2 = localPi1 + pi;
         const int index = i * 4;
 
-        data.vertices[index + 0].position = { std::cosf(localPi1),std::sinf(localPi1),1.0f,1.0f };//奥
-        data.vertices[index + 1].position = { std::cosf(localPi1),std::sinf(localPi1),-1.0f,1.0f };//手前
+        const float localCosf1 = std::cosf(localPi1) * firstSize;
+        const float localCosf2 = std::cosf(localPi2) * firstSize;
+
+        const float localSinf1 = std::sinf(localPi1) * firstSize;
+        const float localSinf2 = std::sinf(localPi2) * firstSize;
+
+        data.vertices[index + 0].position = { localCosf1,localSinf1,firstSize,1.0f };//奥
+        data.vertices[index + 1].position = { localCosf1,localSinf1,-firstSize,1.0f };//手前
         //１80度移動した値。
-        data.vertices[index + 2].position = { std::cosf(localPi2),std::sinf(localPi2),1.0f,1.0f };//奥
-        data.vertices[index + 3].position = { std::cosf(localPi2),std::sinf(localPi2),-1.0f,1.0f };//手前
+        data.vertices[index + 2].position = { localCosf2,localSinf2,firstSize,1.0f };//奥
+        data.vertices[index + 3].position = { localCosf2,localSinf2,-firstSize,1.0f };//手前
 
         data.vertices[index + 0].texcoord = { 0.0f, 1.0f };
-        data.vertices[index + 1].texcoord = { 0.0f,0.0f };
-        data.vertices[index + 2].texcoord = { 1.0f,1.0f };
+        data.vertices[index + 1].texcoord = { 1.0f,1.0f };
+        data.vertices[index + 2].texcoord = { 0.0f,0.0f };
         data.vertices[index + 3].texcoord = { 1.0f,0.0f };
 
         Vector4 pos1 = data.vertices[index + 0].position;
@@ -743,10 +749,10 @@ MeshData PrimitiveGenerator::CreateBeam()
         Vector4 pos3 = data.vertices[index + 2].position;
         Vector4 pos4 = data.vertices[index + 3].position;
 
-        data.vertices[index +0].normal = { pos1.x,pos1.y,pos1.z };//法線
-        data.vertices[index +1].normal = { pos2.x,pos2.y,pos2.z };//法線
-        data.vertices[index +2].normal = { pos3.x,pos3.y,pos3.z };//法線
-        data.vertices[index +3].normal = { pos4.x,pos4.y,pos4.z };//法線
+        data.vertices[index + 0].normal = { pos1.x,pos1.y,pos1.z };//法線
+        data.vertices[index + 1].normal = { pos2.x,pos2.y,pos2.z };//法線
+        data.vertices[index + 2].normal = { pos3.x,pos3.y,pos3.z };//法線
+        data.vertices[index + 3].normal = { pos4.x,pos4.y,pos4.z };//法線
     }
 
     //　=========================//インデックスの作成//==================================
@@ -757,13 +763,13 @@ MeshData PrimitiveGenerator::CreateBeam()
         int indicesIndex = i * 6;
         int index = i * 4;
 
-        data.indices[indicesIndex +0] = index+0;
-        data.indices[indicesIndex +1] = index+2;
-        data.indices[indicesIndex +2] = index+1;
+        data.indices[indicesIndex + 0] = index + 0;
+        data.indices[indicesIndex + 1] = index + 2;
+        data.indices[indicesIndex + 2] = index + 1;
 
-        data.indices[indicesIndex +3] =index+ 3;
-        data.indices[indicesIndex +4] =index+ 1;
-        data.indices[indicesIndex +5] =index+ 2;
+        data.indices[indicesIndex + 3] = index + 3;
+        data.indices[indicesIndex + 4] = index + 1;
+        data.indices[indicesIndex + 5] = index + 2;
     }
 
 

@@ -150,7 +150,7 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
     }
 }
 
-void Object3d::DrawForEffect(Camera& camera, const BlendMode& blendMode, const TextureFactory::Handle skyBoxTexture)
+void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode,const TextureFactory::Handle skyBoxTexture)
 {
     SetLightMode(kLightModeNone);
     //データを書き込む
@@ -169,8 +169,8 @@ void Object3d::DrawForEffect(Camera& camera, const BlendMode& blendMode, const T
         key.vsShaderType = DxcCompiler::VS_Normal;
         key.psShaderType = DxcCompiler::PS_Normal;
         key.blendMode = blendMode;
-        key.cullMode = kCullModeNone;
-        key.depthMode = kZero; // 追加した設定
+        key.cullMode = cullMode;
+        key.depthMode = maskMode; // 追加した設定
         key.topologyType = PSO::kTriangle;
         key.inputLayoutType = InputLayout::kInputLayoutTypeNormal;
 

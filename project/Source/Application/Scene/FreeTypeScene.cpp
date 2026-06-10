@@ -46,7 +46,7 @@ FreeTypeScene::FreeTypeScene()
     object3d_->Create();
     object3d_->SetMeshAndMaterial(beam_.get());
 
-    object3d_->SetTextureHandle(TextureFactory::GRADATION_LINE);
+    object3d_->SetTextureHandle(TextureFactory::BEAM);
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
 
 
@@ -193,7 +193,7 @@ void FreeTypeScene::DrawModel()
     //}
 
     skyBoxObj_->Draw(*currentCamera_);
-    object3d_->Draw(*currentCamera_,BlendMode::kBlendModeAdd,CullMode::kCullModeNone);
+    object3d_->Draw(*currentCamera_,BlendMode::kBlendModeAdd,CullMode::kCullModeNone,MaskMode::kZero);
 
  /*   object3d_->DrawForEffect(*currentCamera_);*/
     ParticleManager::GetInstance()->Draw();
