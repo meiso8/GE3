@@ -3,8 +3,6 @@
 #include "Collision.h"
 #include"Sound.h"
 
-
-
 AABB GetAABBWorldPos(Collider* aabb)
 {
     //中心点を考慮した座標を取得してくる
@@ -29,6 +27,7 @@ void CollisionManager::CheckAllCollisions() {
     for (auto& collider : colliders_) {
         //計算フラグをfalseにする
         collider->InitCalcuatedTisFrameFlag();
+  /*      collider->GetCollisionInfo().collided = false;*/
     }
 
     // リスト内のペアを総当たり
@@ -48,12 +47,26 @@ void CollisionManager::CheckAllCollisions() {
     }
 }
 
+void CollisionManager::DrawAllCollider(Camera* camera)
+{
+    for (auto& collider : colliders_) {
+        collider->ColliderDraw(*camera);
+    }
+}
+
+void CollisionManager::UpdateAllCollider()
+{
+    for (auto& collider : colliders_) {
+        collider->ColliderUpdate();
+    }
+}
+
 void CollisionManager::CheckCollisionSpherePair(Collider* colliderA, Collider* colliderB)
 {
     // 衝突判定
     if (IsCollision(GetSphereWorldPos(colliderA), GetSphereWorldPos(colliderB))) {
-        colliderA->OnCollision(colliderB);
-        colliderB->OnCollision(colliderA);
+        
+        OnCollision(colliderA, colliderB);
     }
 }
 
@@ -67,23 +80,41 @@ void CollisionManager::CheckCollisionAABBPair(Collider* colliderA, Collider* col
 
     // 衝突判定
     if (colliderA->GetCollisionInfo().collided && colliderB->GetCollisionInfo().collided) {
-        colliderA->OnCollision(colliderB);
-        colliderB->OnCollision(colliderA);
-
+        OnCollision(colliderA, colliderB);
     }
 }
 
 void CollisionManager::CheckCollisionSphereAABBPair(Collider* sphereC, Collider* aabbC)
 {
+
+
+    Sphere worldSphereC = GetSphereWorldPos(sphereC);
+    AABB worldAABBC = GetAABBWorldPos(aabbC);
+
+    CollisionInfo info = GetCollisionInfo(worldSphereC, worldAABBC);
+
     // 衝突判定
-    if (IsCollision(GetAABBWorldPos(aabbC), GetSphereWorldPos(sphereC))) {
-        sphereC->OnCollision(aabbC);
-        aabbC->OnCollision(sphereC);
+    if (info.collided) {
+        // Sphere側にはそのままセット
+
+        sphereC->SetCollisionInfo(info);
+        // AABB側には法線を逆向きにしてセット
+        CollisionInfo aabbInfo = info;
+        aabbInfo.normal = { -info.normal.x, -info.normal.y, -info.normal.z };
+        aabbC->SetCollisionInfo(aabbInfo);
+
+        OnCollision(aabbC, sphereC);
     }
+
+    //// 衝突判定
+    //if (IsCollision(GetAABBWorldPos(aabbC), GetSphereWorldPos(sphereC))) {
+    //    OnCollision(sphereC, aabbC);
+    //}
 }
 
 
 void CollisionManager::CheckCollisionPair(Collider* a, Collider* b) {
+
     auto typeA = a->GetType();
     auto typeB = b->GetType();
 
@@ -96,4 +127,10 @@ void CollisionManager::CheckCollisionPair(Collider* a, Collider* b) {
     } else if (typeA == Collider::kAABB && typeB == Collider::kAABB) {
         CheckCollisionAABBPair(a, b);
     }
+}
+
+void CollisionManager::OnCollision(Collider* a,Collider* b)
+{
+    a->OnCollision(b);
+    b->OnCollision(a);
 }

@@ -12,7 +12,7 @@ struct CollisionInfo {
 	float penetration;//めり込み量
 };
 
-
+CollisionInfo GetCollisionInfo(const Sphere& sphere, const AABB& AABB);
 CollisionInfo GetCollisionInfo(const AABB& a, const AABB& b);
 void ResolveCollision(Vector3& pos, Vector3& velocity, const CollisionInfo& info);
 

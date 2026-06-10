@@ -57,6 +57,6 @@ private:
     //壁の座標を設定する
     const float kWallPosXZ_ = 26.0f;
     const float kWallOriginPos_ = 0.0f;
-    const float kFloorPosY_ = -0.6f;
+    const float kFloorPosY_ = -0.75f;
 };
 

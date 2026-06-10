@@ -5,7 +5,7 @@
 #include"AABB.h"
 
 class Collider;
-
+class Camera;
 Sphere GetSphereWorldPos(Collider* sphere);
 AABB GetAABBWorldPos(Collider* aabb);
 
@@ -29,12 +29,13 @@ public:
 
     /// @brief 衝突判定と応答
     void CheckAllCollisions();
-
+    void DrawAllCollider(Camera* camera);
+    void UpdateAllCollider();
 private:
     std::list<Collider*> colliders_; // コライダーのリスト
 
     void  CheckCollisionPair(Collider* a, Collider* b);
-
+    void OnCollision(Collider* a, Collider* b);
     /// @brief コライダー2つの衝突判定と応答
     /// @param colliderA コライダーA
     /// @param colliderB コライダーB

@@ -87,11 +87,11 @@ private:
     const float kApperEndTime_ = 9.0f;
     Vector3 startScale_ = { 0.0f,0.0f,0.0f };
 
-    const float kAlphaWalkTime_ = 5.0f;
-    const float kAlphaWalkEndTime_ = 15.0f;
+    const float kAlphaWalkTime_ = 10.0f;
+    const float kAlphaWalkEndTime_ = kAlphaWalkTime_+1.0f;
 
 private:
-    void SetPhase(PHASE phase);
+    void SetPhase(const PHASE phase);
     void Appear();
     void Round();
     void Fireball();
