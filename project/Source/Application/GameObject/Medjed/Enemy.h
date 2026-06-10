@@ -9,6 +9,7 @@
 
 #include"AnimationObject3d.h"
 #include"Model/SkinningModel.h"
+#include"Sound.h"
 
 class Model;
 class Camera;
@@ -49,6 +50,8 @@ public:
     void Draw(Camera& camera, const LightMode& lightMode);
     //更新
     void Update();
+
+    void SoundFootStep(const SoundFactory::TAG tag);
 
     //フラグのカプセル化
     void SetIsApper(const bool& flag) { isAppear_ = flag; }
