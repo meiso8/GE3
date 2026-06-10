@@ -116,7 +116,7 @@ void Object3d::UpdateUV() {
 }
 
 
-void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const TextureFactory::Handle skyBoxTexture)
+void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey = false, const TextureFactory::Handle skyBoxTexture)
 {
     //データを書き込む
     transformationMatrixData_->World = worldTransform_.matWorld_;

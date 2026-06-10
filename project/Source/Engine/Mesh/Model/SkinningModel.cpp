@@ -18,7 +18,7 @@ void SkinningModel::SetModel(Model* model)
     *skinCluster_ = CreateSkinCluster(*skeleton_, *modelData_);
 }
 
-void SkinningModel::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode)
+void SkinningModel::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode,  const MaskMode maskMode, const bool usePSOKey = false)
 {
     commandList->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::SKINNING));
     commandList->SetPipelineState(PSO::GetGraphicsPipelineStatesSkinning(blendMode, cullMode).Get());//PSOを設定
