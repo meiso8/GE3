@@ -28,6 +28,8 @@ public:
         RANDOM,
         //サーモグラフィー
         THERMOGRAPHY,
+        //ビーム用
+        BEAM,
         TYPES,
     };
 

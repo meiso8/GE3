@@ -96,7 +96,7 @@ public:
 
     /// @brief カメラ
     /// @param camera 
-    static void CheckCamera(Camera& camera);
+    static void CheckCamera(Camera& camera, const std::string label = "Camera");
 
     static void CheckParticle(ParticleEmitter& particleEmitter, const char* label);
     /// @brief 色

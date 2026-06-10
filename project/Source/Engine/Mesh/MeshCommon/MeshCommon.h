@@ -32,7 +32,7 @@ public:
     };
 
     virtual void Create(const MeshData& meshData);
-    virtual void PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode);
+    virtual void PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode,const bool usePSOKey = false);
     virtual void Draw(ID3D12GraphicsCommandList* commandList);  
     virtual void DrawCallForParticle(ID3D12GraphicsCommandList* commandList, const uint32_t numInstance);
 protected:

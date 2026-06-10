@@ -25,6 +25,7 @@ public:
         ROUND,
         FIREBALL,
         ALPHA_WALK,
+        BEAM,
         EXIT,
         MAX_PHASE
     };
@@ -120,6 +121,7 @@ private:
     void Fireball();
     void Exit();
     void AlphaWalk();
+    void Beam();
 
     void UpdateTimer();
     void Look();

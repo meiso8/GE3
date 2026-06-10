@@ -22,7 +22,7 @@ PapyrusWall::PapyrusWall()
 void PapyrusWall::Draw(Camera& camera)
 {
     buildingPos_->SetLightMode(kLightModeHalfL);
-    buildingPos_->Draw(camera, kBlendModeNormal);
+    buildingPos_->Draw(camera);
 
     /* for (const auto& [type, pos] : fieldPoses_) {
          pos->Draw(camera);

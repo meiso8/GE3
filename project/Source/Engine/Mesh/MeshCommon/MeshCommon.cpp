@@ -779,17 +779,44 @@ MeshData PrimitiveGenerator::CreateBeam(const float firstSize)
     return data;
 }
 
-void Primitive::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode) {
+void Primitive::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey) {
 
     commandList->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::NORMAL));
-
-    if (meshType_ == MeshType::kLine) {
-        //ライン用のPSO
-        commandList->SetPipelineState(PSO::GetGraphicsPipelineStateLine().Get());//PSOを設定
-    } else {
+ 
+    if (usePSOKey) {
         //普通のPSO
-        commandList->SetPipelineState(PSO::GetGraphicsPipelineState(blendMode, cullMode).Get());//PSOを設定
+        PSO::PSOKey key{};
+        key.rootSignatureType = RootSignature::NORMAL;
+        key.vsShaderType = DxcCompiler::VS_Normal;
+        key.psShaderType = DxcCompiler::PS_Normal;
+
+        key.blendMode = blendMode;
+        key.cullMode = cullMode;
+        key.depthMode = maskMode;
+        key.topologyType = PSO::kTriangle;
+        key.inputLayoutType = InputLayout::kInputLayoutTypeNormal;
+
+        if (meshType_ == MeshType::kLine) {
+            key.topologyType = PSO::kLine;
+
+        } else {
+            key.topologyType = PSO::kTriangle;
+     
+        }
+
+        auto pso = PSO::GetOrCreatePSO(key);
+        commandList->SetPipelineState(pso.Get());
+    } else {
+
+        if (meshType_ == MeshType::kLine) {
+            commandList->SetPipelineState(PSO::GetGraphicsPipelineStateLine().Get());
+        } else {
+            commandList->SetPipelineState(PSO::GetGraphicsPipelineState(blendMode, cullMode).Get());
+        }
+
     }
+
+
 }
 
 void Primitive::Create(const MeshData& meshData)

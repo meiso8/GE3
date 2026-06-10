@@ -61,9 +61,6 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
 
-
-
-
     //DepthStencilの設定   
     graphicsPipelineStateDesc.DepthStencilState = depthStencils[maskMode].GetDesc();
     if (useDepthFormat) {
@@ -247,7 +244,6 @@ void PSO::CreateALLPSO()
             );
         }
     }
-
     graphicsPipelineStateSkyBox_ =
         Create(
             kBlendModeNone,
@@ -388,7 +384,7 @@ void PSO::CreateALLPSO()
         kTriangle,
         InputLayout::kInputLayoutTypeOffScreen);
 
-}
+};
 
 PSO::~PSO()
 {
@@ -416,7 +412,6 @@ PSO::~PSO()
     if (graphicsPipelineStatesLine_) {
         graphicsPipelineStatesLine_.Reset();
     }
-
 
     for (auto& pso : graphicsPipelineStatesParticle_) {
         if (pso) {

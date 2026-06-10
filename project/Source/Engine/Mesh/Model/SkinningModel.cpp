@@ -1,6 +1,7 @@
 #include "SkinningModel.h"
 #include"SRVmanager/SrvManager.h"
 #include"Model.h"
+
 SkinningModel::SkinningModel()
 {
     skeleton_ = std::make_unique<Skeleton>();
@@ -18,8 +19,11 @@ void SkinningModel::SetModel(Model* model)
     *skinCluster_ = CreateSkinCluster(*skeleton_, *modelData_);
 }
 
-void SkinningModel::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode,  const MaskMode maskMode, const bool usePSOKey = false)
+void SkinningModel::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode,  const MaskMode maskMode, const bool usePSOKey)
 {
+    (void)maskMode;
+    (void)usePSOKey;
+
     commandList->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::SKINNING));
     commandList->SetPipelineState(PSO::GetGraphicsPipelineStatesSkinning(blendMode, cullMode).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。

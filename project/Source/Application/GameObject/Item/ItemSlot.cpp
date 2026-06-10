@@ -59,6 +59,11 @@ void Item::Draw(Camera& camera)
     //ColliderDraw(camera);
 }
 
+void Item::DrawForSlotItem(Camera& camera)
+{
+    object_->Draw(camera,kBlendModeNormal,kCullModeBack, kZero,true);
+}
+
 void Item::OnCollision(Collider* collider)
 {
     object_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
@@ -69,6 +74,13 @@ void Item::Rotate()
 {
 
     TransformAni::RotateY(object_->worldTransform_, 1.0f);
+}
+
+void Item::Scale(const Vector3 start,const Vector3 end)
+{
+    float localTime = (aniTimer_ - 2.0f) / 2.0f;
+
+    object_->worldTransform_.scale_ = Lerp(start, end, localTime);
 }
 
 void Item::SetScreenStartPos()
@@ -96,8 +108,9 @@ void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVP
 
     float localTime = (aniTimer_ - 2.0f) / 2.0f;
     // スクリーン座標 → ワールド座標に変換（Z=0.5f くらいがちょうど中間）
-    Vector3 screenPoint = { screenPos.x, screenPos.y, -0.92f };
+    Vector3 screenPoint = { screenPos.x, screenPos.y, 0.0f};
     Vector3 worldPos = CoordinateTransform(screenPoint, matInverseVPV);
+
     // アイテムの位置を更新！ Trigger時に格納したstartPos
     object_->worldTransform_.translate_ = Lerp(startPos_, worldPos, localTime);
 
@@ -124,11 +137,11 @@ ItemSlot::ItemSlot()
     //カメラについての
     itemCamera_ = std::make_unique<Camera>();
     itemCamera_->Initialize();
-    itemCamera_->nearZ_ = 0.2f;
-    itemCamera_->farZ_ = 1000.0f;
+    itemCamera_->nearZ_ = 0.1f;
+    itemCamera_->farZ_ = 100.0f;
     float scales = 0.005f;
     itemCamera_->scale_ = { scales,scales,scales };
-    itemCamera_->translate_.z = -10.0f;
+    //itemCamera_->translate_.z = -10.0f;
     itemCamera_->UpdateMatrix();
 
     matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);
@@ -178,7 +191,7 @@ void ItemSlot::Update()
     }
 
 #ifdef USE_IMGUI
-    DebugUI::CheckCamera(*itemCamera_);
+    DebugUI::CheckCamera(*itemCamera_,"Item Camera");
 #endif
 
 }
@@ -186,7 +199,8 @@ void ItemSlot::Update()
 void ItemSlot::ToScreen()
 {
     itemCamera_->UpdateMatrix(); // ← カメラ行列を更新！
-    matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);
+    matViewport = MakeViewportMatrix(0, 0, width, height, 0,1);  
+
     matInverseVPV = Inverse(itemCamera_->GetViewProjectionMatrix() * matViewport);
 
     for (int i = 0; i < slotSprites_.size(); ++i) {
@@ -255,7 +269,7 @@ void ItemSlot::Draw()
 {
     for (auto& item : slots_) {
         if (item && !item->isUsed_) {
-            item->Draw(*itemCamera_);
+            item->DrawForSlotItem(*itemCamera_);
         }
     }
 }
@@ -274,7 +288,9 @@ void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& sc
     }
     if (item->aniTimer_ > 2.0f) {
         item->LerpScreenPos(screenPos, matInverseVPV);
-
+        const float size = 0.03125f;
+        item->Scale({ 1.0f,1.0f,1.0f }, { size,size,size });
     }
 
 }
+

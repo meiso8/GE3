@@ -4,13 +4,15 @@
 #include"SkinCluster.h"
 #include"MeshCommon.h"
 #include<memory>
+#include"Depth.h"
+
 class Model;
 class SkinningModel :public Primitive
 {
 public:
     SkinningModel();
     void SetModel(Model* model);
-    void PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack)override;
+    void PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack, const MaskMode maskMode = kAll, const bool usePSOKey = false)override;
     void Draw(ID3D12GraphicsCommandList* commandList)override;
     
     Skeleton* GetSkeleton() {

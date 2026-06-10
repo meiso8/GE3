@@ -128,7 +128,7 @@ void ItemManager::UseItemFromSlot(const Vector3& pos)
             Vector3 endOffset = { -0.3f,0.3f,0.01f };
             item->SetStartEndPos(pos + offset, pos + endOffset);
             item->SetRotate({ 4.7f,1.57f,0.0f });
-
+            item->SetScale({ 1.0f,1.0f,1.0f });
         }
     }
 
