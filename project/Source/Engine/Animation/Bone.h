@@ -32,14 +32,18 @@ struct Skeleton {
     std::vector<Joint> joints;//所属しているジョイント
 };
 
-Skeleton CreateSkeleton(const Node& rootNode);
+namespace Bone{
+    Skeleton CreateSkeleton(const Node& rootNode);
+    Joint* GetJoint(const std::string name, Skeleton& skeleton);
+    Matrix4x4* GetJointMatrix(const std::string name, Skeleton& skeleton);
 
-int32_t CreateJoint(
-    const Node& node,
-    const std::optional<int32_t>& parent,
-    std::vector<Joint>& joints);
+    int32_t CreateJoint(
+        const Node& node,
+        const std::optional<int32_t>& parent,
+        std::vector<Joint>& joints);
 
-void UpdateSkeleton(Skeleton& skeleton);
+    void UpdateSkeleton(Skeleton& skeleton);
+}
 
 struct BoneValue {
     std::unique_ptr<Object3d> object3d = nullptr;

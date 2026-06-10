@@ -2,7 +2,10 @@
 #include"TimeManager.h"
 #include"JsonFile.h"
 #include"DebugUI.h"
+#include"Sound.h"
+
 void RhythmManager::Initialize() {
+
     timer_ = 0.0f;
     beats_.clear();
 
@@ -19,9 +22,12 @@ void RhythmManager::Initialize() {
 void RhythmManager::Update() {
 
     timer_ += Time::DeltaTime();
-    if (timer_ >= kEndSoundTime_) {
+
+    if (!Sound::IsPlaying(tag_)) {
+        //音が鳴ってなかったら初期化する
         Initialize();
     }
+
 #ifdef USE_IMGUI
     ImGui::SliderFloat("timer", &timer_, 0.0f, 100.0f);
 
@@ -36,6 +42,7 @@ void RhythmManager::AddBeat(float time)
 
 
 bool RhythmManager::IsOnBeat(float currentTime, float tolerance) {
+
     for (auto& beat : beats_) {
         if (!beat.hit && std::abs(currentTime - beat.time) <= tolerance) {
             beat.hit = true;

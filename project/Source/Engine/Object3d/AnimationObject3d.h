@@ -28,7 +28,7 @@ public:
     };
     
     std::map<std::string, Animation>& GetAnimations() { return animations_; };
-   
+    Matrix4x4 GetWorldJointMatrix(const std::string name);
 private:
     void UpdateAnimation();
     float animationTime_ = 0.0f;

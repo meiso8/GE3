@@ -14,7 +14,7 @@ void SkinningModel::SetModel(Model* model)
     vertexBufferView_ = model->GetVBV();
     indexBufferView_ = model->GetIBV();
     //スケルトンやクラスターを作成する
-    *skeleton_ = CreateSkeleton(modelData_->rootNode);
+    *skeleton_ = Bone::CreateSkeleton(modelData_->rootNode);
     *skinCluster_ = CreateSkinCluster(*skeleton_, *modelData_);
 }
 
@@ -64,4 +64,9 @@ void SkinningModel::Draw(ID3D12GraphicsCommandList* commandList)
 
     ////描画!（DrawCall/ドローコール）6個のインデックスを使用し1つのインスタンスを描画。その他は当面0で良い。
     //commandList->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);
+}
+
+Matrix4x4* SkinningModel::GetJointMatrix(const std::string jointName)
+{
+    return  Bone::GetJointMatrix(jointName,*skeleton_);
 }

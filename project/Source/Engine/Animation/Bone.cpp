@@ -1,22 +1,46 @@
 #include"Bone.h"
 #include"MakeMatrix.h"
+#include"Log.h"
 
-Skeleton CreateSkeleton(const Node& rootNode)
+Skeleton Bone::CreateSkeleton(const Node& rootNode)
 {
     Skeleton skeleton;
-    skeleton.root = CreateJoint(rootNode, {}, skeleton.joints);
+    skeleton.root = Bone::CreateJoint(rootNode, {}, skeleton.joints);
 
     //名前とindexのマッピングを行いアクセスしやすくなる
     for (const Joint& joint : skeleton.joints) {
         skeleton.jointMap.emplace(joint.name, joint.index);
     }
 
-    UpdateSkeleton(skeleton);
+    Bone::UpdateSkeleton(skeleton);
     return skeleton;
 }
 
+Joint* Bone::GetJoint(const std::string name, Skeleton& skeleton)
+{
+    if (skeleton.jointMap.contains(name)) {
+        int32_t index = skeleton.jointMap.at(name);
+        return &skeleton.joints[index];
+    } else {
+        LogFile::Log("Joint : NotFound");
+        return nullptr;
+    }
+
+}
+
+Matrix4x4* Bone::GetJointMatrix(const std::string name, Skeleton& skeleton)
+{
+    auto* joint = Bone::GetJoint(name, skeleton);
+
+    if (joint) {
+        return &joint->skeletonSpaceMatrix;
+    }
+
+    return nullptr;
+}
+
 //Node階層に沿ってJointを作成　再帰呼び出しにより必ず自身の親は自身よりも若いindexになるようにjointsに登録する
-int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints)
+int32_t Bone::CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints)
 {
     Joint joint;
     joint.name = node.name;
@@ -37,7 +61,7 @@ int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std:
     return joint.index;
 }
 
-void UpdateSkeleton(Skeleton& skeleton)
+void Bone::UpdateSkeleton(Skeleton& skeleton)
 {
     for (Joint& joint : skeleton.joints) {
         joint.localMatrix = MakeAffineMatrix(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
@@ -72,11 +96,11 @@ void DebugBone::Create(Skeleton& skeleton)
         std::unique_ptr<BoneValue> value = std::make_unique<BoneValue>();
         value->object3d = std::make_unique<Object3d>();
         value->lineMesh = std::make_unique<LineMesh>();
-    
+
         std::unique_ptr<MeshData> meshData = std::make_unique<MeshData>();
         *meshData = PrimitiveGenerator::CreateLine(Vector3{ 0.0f,0.0f,0.0f }, joint.transform.translate);
         value->lineMesh->CreateLineMesh(std::move(meshData));
-   
+
         value->object3d->Create();
         value->object3d->SetMeshAndMaterial(std::move(value->lineMesh).get());
 
