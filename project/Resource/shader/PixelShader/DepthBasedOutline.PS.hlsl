@@ -78,7 +78,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     weight = saturate(weight * gMaterial.lineWidth);  
 
     
-    if (outlineMask > 0.5f)
+    if (outlineMask > 0.75f)
     {
         weight =  0.0f;
     }

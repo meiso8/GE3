@@ -20,8 +20,11 @@ private:
     float rangeMin = -10.0f;
     float rangeMax = 10.0f;
     Vector3* targetPos_ = nullptr;
+
     float enemyApperTime_ = 0.0f;
-    const float kEnemyApperMaxTime_  = 7.0f;
+    const float kEnemyApperMaxTime_  = 4.0f;
+    const float dummyMedjedHideTime_ = 6.0f;
+
     RaySprite* raySprite_ = nullptr;
 
     void UpdateEnemyApperTime();

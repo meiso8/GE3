@@ -12,6 +12,7 @@
 #include"Sound.h"
 #include"InputBind.h"
 #include"TimeManager.h"
+
 MedjedManager::MedjedManager()
 {
     enemy_ = std::make_unique<Enemy>();
@@ -43,7 +44,7 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
             dist = 10.0f;
 
         }
-       
+
         if (raySprite.IntersectsAABB(aabb, medjed->GetWorldTransform().GetWorldPosition(), dist)) {
             if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
                 medjed->SetColor({ 1.0f,1.0f,1.0f,0.5f });
@@ -51,7 +52,7 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
                 medjed->SetColor({ 1.0f,0.0f,0.0f,1.0f });
             }
 
-    
+
             //メジェドざまを当ててないとき
             if (!GetIsFindMedjed()) {
                 //Mouseをクリックしたら
@@ -70,17 +71,13 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
                         return;
                     }
 
-
                 }
-
 
             }
 
         }
 
-
     }
-
 
 }
 
@@ -97,7 +94,6 @@ void MedjedManager::Draw(Camera& camera)
 {
     for (auto& dummyMedjed : dummyMedjeds_) {
 
-
         if (auto medjed = dynamic_cast<Medjed*>(dummyMedjed.get())) {
             continue;
         }
@@ -109,20 +105,25 @@ void MedjedManager::Draw(Camera& camera)
 
     enemy_->Draw(camera, kLightModeHalfL);
 
-
 }
 
 void MedjedManager::UpdateEnemyApperTime()
 {
-    if (enemyApperTime_ >= kEnemyApperMaxTime_) {
+    if (enemyApperTime_ >= dummyMedjedHideTime_) {
+        //ダミーメジェドが隠れる時間
         return;
     }
 
     enemyApperTime_ += Time::DeltaTime();
-    enemyApperTime_ = std::clamp(enemyApperTime_, 0.0f, kEnemyApperMaxTime_);
+    enemyApperTime_ = std::clamp(enemyApperTime_, 0.0f, dummyMedjedHideTime_);
 
     if (enemyApperTime_ >= kEnemyApperMaxTime_) {
-        GetEnemy()->SetIsApper(true);
+        //敵出現時間になったら敵出現させる
+        auto* enemy = GetEnemy();
+        if (!enemy->GetIsApper()) {
+            enemy->SetIsApper(true);
+        }
+      
     }
 }
 
@@ -139,10 +140,10 @@ void MedjedManager::UpdateMedjedIfFind()
 
         medjed->Look(*targetPos_);
 
-        if (enemyApperTime_ >= 5.0f) {
+        if (enemyApperTime_ >= kEnemyApperMaxTime_) {
             medjed->GoToTarget(enemy_->GetWorldPos());
         }
-        if (GetIsApperMedjed()) {
+        if (enemyApperTime_ >= dummyMedjedHideTime_) {
             medjed->Hide();
         }
 
@@ -158,7 +159,6 @@ void MedjedManager::Update()
         UpdateMedjedIfFind();
         enemy_->Update();
 
-
     } else {
         UpdateMedjedIfNotFind();
     }
@@ -166,9 +166,6 @@ void MedjedManager::Update()
     for (auto& locker : dummyMedjeds_) {
         locker->Update();
     }
-
-
-  
 
 }
 
@@ -186,15 +183,15 @@ void MedjedManager::PlaceLockersRandomly() {
                 Random random;
                 random.SetMinMax(rangeMin, rangeMax);
                 pos.x = random.Get();
-                random.SetMinMax(rangeMin, rangeMin*0.5f);
+                random.SetMinMax(rangeMin, rangeMin * 0.5f);
                 pos.y = random.Get(); // Z座標として使う 
             } else {
                 Random random;
                 random.SetMinMax(rangeMin, rangeMax);
-                pos.x =   random.Get(); 
-                pos.y =   random.Get(); // Z座標として使う 
+                pos.x = random.Get();
+                pos.y = random.Get(); // Z座標として使う 
             }
-            
+
             if (!IsOverlapping(pos, placedPositions)) {
                 placedPositions.push_back(pos);
                 locker->GetWorldTransform().translate_ = { pos.x, 0.0f, pos.y };

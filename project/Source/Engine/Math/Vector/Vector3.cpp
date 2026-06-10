@@ -51,6 +51,13 @@ float Distance(const Vector3& v0, const Vector3& v1)
     return fabs(Length(v0 - v1));
 }
 
+Vector3 ToTargetVector(const Vector3& target, const  Vector3& ownPos)
+{
+    Vector3 velocity = target - ownPos;
+    velocity = Normalize(velocity);
+    return velocity;
+}
+
 Vector3 Normalize(const Vector3& v) {
     float length = Length(v);
     if (length != 0.0f) {

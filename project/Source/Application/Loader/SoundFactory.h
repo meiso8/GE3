@@ -45,6 +45,9 @@ public:
         VOICE_Asobimasyo,
         VOICE_Sottizyanaiwa,
         // ======================================
+        //メジェド様の足音
+        MEDJED_FOOT_STEP_SMALL,
+        MEDJED_FOOT_STEP,
     };
 
    static void Load();

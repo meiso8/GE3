@@ -13,6 +13,10 @@
 #include"TransformAni/TransformAni.h"
 #include"TimeManager.h"
 
+namespace {
+    const float kMoveSpeed_ = 2.0f;
+}
+
 Enemy::Enemy()
 {
     UpdateActions_ = {
@@ -142,7 +146,7 @@ void Enemy::OnCollision(Collider* collider)
 };
 
 
-void Enemy::SetPhase(PHASE phase)
+void Enemy::SetPhase(const PHASE phase)
 {
     timer_ = 0.0f;
     phase_ = phase;
@@ -258,9 +262,19 @@ void Enemy::AlphaWalk()
         bodyPos_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
         isShotStart_ = false;
         SetPhase(ROUND);
-
     }
 
+    if (target_) {
+        Vector3 distance = *target_ - bodyPos_.worldTransform_.translate_;
+        float length = Distance(*target_, bodyPos_.worldTransform_.translate_);
+
+        velocity_ = ToTargetVector(*target_, bodyPos_.worldTransform_.translate_);
+        const float deltaTime = Time::DeltaTime();
+        velocity_ *= deltaTime * kMoveSpeed_;
+
+        bodyPos_.worldTransform_.translate_.x += velocity_.x;
+        bodyPos_.worldTransform_.translate_.z += velocity_.z;
+    }
 
 }
 
@@ -290,7 +304,11 @@ void Enemy::HitUpdate()
             characterState_.isHit = false;
         }
     } else {
-        LerpScale();
+        if (phase_ != APPEAR) {
+            //出現時じゃないとき線形補間する
+            LerpScale();
+        }
+
     }
 }
 
