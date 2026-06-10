@@ -6,6 +6,7 @@
 #include"Mesh/Skybox/Skybox.h"
 #include"Particle/ParticleEmitter.h"
 #include"../GameObject/Player/Player.h"
+#include"../GameObject/Beam/Beam.h"
 
 class FreeTypeScene : public BaseScene
 {
@@ -22,14 +23,16 @@ private:
     Text text_;
     uint32_t handle_;
     Text pressSpaceText_;
+
     std::unique_ptr<Sprite>sprite_ = nullptr;
+
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
     std::unique_ptr<Object3d> object3d_ = nullptr;
     std::unique_ptr<Object3d> object3d2_ = nullptr;
-
-  /*  std::unique_ptr<Primitive> cubeMesh_ = nullptr;*/
     std::unique_ptr<Primitive>cylinder_ = nullptr;
-    std::unique_ptr<Primitive>beam_ = nullptr;
+
+    std::unique_ptr<Beam>beam_ = nullptr;
+
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
 

@@ -145,7 +145,7 @@ void AnimationObject3d::SetModelAndLoadAnimation(Model* model)
     animations_ = AnimationManager::GetAnimations(model->GetModelData()->filePath);
 }
 
-void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const TextureFactory::Handle skyBoxTexture)
+void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode,const bool usePSOKey,const TextureFactory::Handle skyBoxTexture)
 {
     transformationMatrixData_->World = worldMatrix_;
     transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
@@ -154,7 +154,7 @@ void AnimationObject3d::Draw(Camera& camera, const BlendMode& blendMode, const C
     if (skinningModel_) {
 
         auto* commandlist = DirectXCommon::GetCommandList();
-        skinningModel_->PreDraw(commandlist, blendMode, cullMode);
+        skinningModel_->PreDraw(commandlist, blendMode, cullMode,maskMode,usePSOKey);
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
         commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定

@@ -32,27 +32,25 @@ FreeTypeScene::FreeTypeScene()
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
 
-    //cubeMesh_ = std::make_unique<Primitive>();
-    //cubeMesh_->Create(PrimitiveGenerator::CreateCube());
-
     cylinder_ = std::make_unique<Primitive>();
     cylinder_->Create(PrimitiveGenerator::CreateCylinder());
-
-    beam_ = std::make_unique<Primitive>();
-    beam_->Create(PrimitiveGenerator::CreateBeam());
 
     object3d_ = std::make_unique<Object3d>();
 
     object3d_->Create();
-    object3d_->SetMeshAndMaterial(beam_.get());
+    object3d_->SetMeshAndMaterial(cylinder_.get());
 
-    object3d_->SetTextureHandle(TextureFactory::BEAM);
+    object3d_->SetTextureHandle(TextureFactory::GRADATION_LINE);
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
 
 
     object3d2_ = std::make_unique<Object3d>();
     object3d2_->Create();
     object3d2_->SetMeshAndMaterial(ModelManager::GetModel("playerGirl"));
+
+    beam_ = std::make_unique<Beam>();
+    beam_->SetParent(&object3d2_->worldTransform_);
+
 
     levelEditor_ = std::make_unique<LevelEditor>();
     levelEditor_->Load("test");
@@ -90,6 +88,9 @@ void FreeTypeScene::Initialize()
         enemies_.push_back(std::move(enemy));
     }
 
+
+    beam_->Initialize();
+
     CreateParticle();
 }
 
@@ -123,7 +124,7 @@ void FreeTypeScene::Update()
     DebugUI::CheckModel(*ModelManager::GetModel("playerGirl"), "playerGirl");
 
 
-    DebugUI::CheckObject3d(*object3d_, "Beam");
+    DebugUI::CheckObject3d(*object3d_, "cilinder");
     DebugUI::CheckObject3d(*object3d2_, "playerGirlObj");
 
 
@@ -157,6 +158,8 @@ void FreeTypeScene::Update()
 
     object3d2_->Update();
 
+    beam_->Update();
+
     // 共通更新
     ParticleManager::GetInstance()->Update(*currentCamera_);
 
@@ -186,7 +189,7 @@ void FreeTypeScene::DrawModel()
         enemy->Draw(*currentCamera_);
     }
 
-    //object3d2_->Draw(*currentCamera_);
+    object3d2_->Draw(*currentCamera_);
 
     //for (auto& obj : objects_) {
     //    obj->obj_->Draw(*currentCamera_);
@@ -194,6 +197,8 @@ void FreeTypeScene::DrawModel()
 
     skyBoxObj_->Draw(*currentCamera_);
     object3d_->Draw(*currentCamera_,BlendMode::kBlendModeAdd,CullMode::kCullModeNone,MaskMode::kZero);
+
+    beam_->Draw(currentCamera_);
 
  /*   object3d_->DrawForEffect(*currentCamera_);*/
     ParticleManager::GetInstance()->Draw();

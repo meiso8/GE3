@@ -163,6 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Beam\Beam.cpp" />
     <ClCompile Include="Source\Engine\PostProcessManager\PostProcessManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\LineMesh\LineMesh.cpp" />
     <ClCompile Include="Source\Engine\Math\Structs\AABB.cpp" />
@@ -311,6 +312,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\StageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Beam\Beam.h" />
     <ClInclude Include="Source\Engine\PostProcessManager\PostProcessManager.h" />
     <ClInclude Include="Source\Engine\Mesh\LineMesh\LineMesh.h" />
     <ClInclude Include="Source\Engine\LevelEditor\LevelEditor.h" />

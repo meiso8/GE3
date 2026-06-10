@@ -146,7 +146,7 @@ private:
     Microsoft::WRL::ComPtr <ID3D12PipelineState> CreateComputeShaderPSO(const RootSignature::TYPE& rootSignatureType, const DxcCompiler::CS_TYPE& csShaderType);
 public:
     static std::unique_ptr<RootSignature>rootSignature;
-private:
+private: 
     static std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode> graphicsPipelineStates_;
 
     static std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode> graphicsPipelineStatesSkinning_;

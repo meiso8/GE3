@@ -47,6 +47,9 @@ void DxcCompiler::ShaderSetting() {
     pixelShaderBlobs_[PS_SkyBox] = CompileShader(L"Resource/shader/PixelShader/Skybox.PS.hlsl", L"ps_6_0");
     //offscreen
     vertexShaderBlobs_[VS_OffScreen] = CompileShader(L"Resource/shader/VertexShader/Fullscreen.VS.hlsl", L"vs_6_0");
+    //Beam
+    vertexShaderBlobs_[VS_Beam] = CompileShader(L"Resource/shader/VertexShader/Beam.VS.hlsl", L"vs_6_0");
+
     pixelShaderBlobs_[PS_OffScreen] = CompileShader(L"Resource/shader/PixelShader/Fullscreen.PS.hlsl", L"ps_6_0");
     //Grayscale
     pixelShaderBlobs_[PS_GrayScale] = CompileShader(L"Resource/shader/PixelShader/Grayscale.PS.hlsl", L"ps_6_0");

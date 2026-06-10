@@ -37,8 +37,8 @@ Enemy::Enemy()
          {PHASE::ROUND, std::bind(&Enemy::Round, this)},
          {PHASE::FIREBALL, std::bind(&Enemy::Fireball, this)},
          {PHASE::ALPHA_WALK,std::bind(&Enemy::AlphaWalk,this)},
+         {PHASE::BEAM,std::bind(&Enemy::Beam,this)},
          {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
-
     };
 
     model_ = ModelManager::GetModel("medjed");
@@ -106,7 +106,7 @@ void Enemy::Draw(Camera& camera, const LightMode& lightMode)
     if (!isAppear_) { return; }
 
     bodyPos_.SetLightMode(lightMode);
-    bodyPos_.Draw(camera, kBlendModeNormal);
+    bodyPos_.Draw(camera);
     //ColliderDraw(camera);
 
     for (auto& [name, group] : colliders_) {
@@ -373,6 +373,12 @@ void Enemy::AlphaWalk()
         SoundFootStep(SoundFactory::MEDJED_FOOT_STEP_SMALL);
 
     }
+
+}
+
+void Enemy::Beam()
+{
+
 
 }
 

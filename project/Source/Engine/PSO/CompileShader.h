@@ -16,6 +16,7 @@ public:
         VS_Skinning,
         VS_SkyBox,
         VS_OffScreen,
+        VS_Beam,
         VS_Shaders,
     };
 

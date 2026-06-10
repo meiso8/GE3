@@ -32,13 +32,15 @@ public:
     virtual void DrawInfoUI();
     virtual void Update();
     virtual void Draw(Camera& camera);
-
+    void DrawForSlotItem(Camera& camera);
     void OnCollision(Collider* collider)override;
     Vector3 GetWorldPosition() const {
         return object_->worldTransform_.GetWorldPosition();
     };
     void Rotate();
     void SetRotate(const Vector3& rotate) { object_->worldTransform_.rotate_ = rotate; };
+    void Scale(const Vector3 start, const Vector3 end);
+    void SetScale(const Vector3& scale) { object_->worldTransform_.scale_ = scale; }
     void SetScreenStartPos();
     void UpdateAniTimer(const float& endTime = 4.0f);
     float aniTimer_ = 0.0f;
@@ -70,6 +72,7 @@ public:
     void Draw();
     void GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos);
     std::array<std::shared_ptr<Item>, kMaxSlots_>& GetItemInSlot() {return  slots_; };
+  
 private:
     std::unique_ptr<Camera> itemCamera_ = nullptr;
 

@@ -35,6 +35,7 @@ Vector3 CoordinateTransform(const Vector3& vector, const Matrix4x4& matrix) {
 
 }
 
+
 Vector3 CoordinateTransform(const Vector3 &vector, const Matrix3x3 &matrix) {
     Vector3 result;
     result.x = vector.x * matrix.m[0][0]

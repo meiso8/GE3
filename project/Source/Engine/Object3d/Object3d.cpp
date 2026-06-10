@@ -116,7 +116,7 @@ void Object3d::UpdateUV() {
 }
 
 
-void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const TextureFactory::Handle skyBoxTexture)
+void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, const TextureFactory::Handle skyBoxTexture)
 {
     //データを書き込む
     transformationMatrixData_->World = worldTransform_.matWorld_;
@@ -127,7 +127,8 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
     auto* commandlist = DirectXCommon::GetCommandList();
 
     if (meshCommon_) {
-        meshCommon_->PreDraw(commandlist, blendMode, cullMode);
+        meshCommon_->PreDraw(commandlist, blendMode, cullMode,maskMode, usePSOKey);
+
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
         commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
@@ -150,56 +151,57 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
     }
 }
 
-void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode,const TextureFactory::Handle skyBoxTexture)
-{
-    SetLightMode(kLightModeNone);
-    //データを書き込む
-    transformationMatrixData_->World = worldTransform_.matWorld_;
-    transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
-    transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
-
-    if (meshCommon_) {
-
-        auto* commandlist = DirectXCommon::GetCommandList();
-
-        commandlist->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::NORMAL));
-
-        PSO::PSOKey key{};
-        key.rootSignatureType = RootSignature::NORMAL;
-        key.vsShaderType = DxcCompiler::VS_Normal;
-        key.psShaderType = DxcCompiler::PS_Normal;
-        key.blendMode = blendMode;
-        key.cullMode = cullMode;
-        key.depthMode = maskMode; // 追加した設定
-        key.topologyType = PSO::kTriangle;
-        key.inputLayoutType = InputLayout::kInputLayoutTypeNormal;
-
-        auto pso = PSO::GetOrCreatePSO(key);
-        commandlist->SetPipelineState(pso.Get());
-
-        //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-        commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
-        //wvp用のCBufferの場所を設定
-        commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-        //拡散反射テクスチャ
-        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
-        //timeのSRVの場所を設定
-        commandlist->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
-        //expansionのCBufferの場所を設定
-        commandlist->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
-        //cameraのCBufferの場所を設定
-        commandlist->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
-        //ライトのCBufferの場所を設定
-        DirectionalLightManager::SetGraphicsRootConstantBufferView();
-        PointLightManager::SetGraphicsRootDescriptorTable();
-        SpotLightManager::SetGraphicsRootDescriptorTable();
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
-        
-        meshCommon_->Draw(commandlist);
-    }
-
-
-}
+//void Object3d::Draw(Camera& camera, const TextureFactory::Handle skyBoxTexture, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode)
+//{
+//    //データを書き込む
+//    transformationMatrixData_->World = worldTransform_.matWorld_;
+//    transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
+//    transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
+//
+//    if (meshCommon_) {
+//
+//        auto* commandlist = DirectXCommon::GetCommandList();
+//
+//        commandlist->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::NORMAL));
+//
+//        PSO::PSOKey key{};
+//        key.rootSignatureType = RootSignature::NORMAL;
+//        key.vsShaderType = DxcCompiler::VS_Normal;
+//        key.psShaderType = DxcCompiler::PS_Normal;
+//        
+//        key.blendMode = blendMode;
+//        key.cullMode = cullMode;
+//        key.depthMode = maskMode;
+//
+//        key.topologyType = PSO::kTriangle;
+//        key.inputLayoutType = InputLayout::kInputLayoutTypeNormal;
+//
+//        auto pso = PSO::GetOrCreatePSO(key);
+//        commandlist->SetPipelineState(pso.Get());
+//
+//        //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
+//        commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
+//        //wvp用のCBufferの場所を設定
+//        commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+//        //拡散反射テクスチャ
+//        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
+//        //timeのSRVの場所を設定
+//        commandlist->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
+//        //expansionのCBufferの場所を設定
+//        commandlist->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+//        //cameraのCBufferの場所を設定
+//        commandlist->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
+//        //ライトのCBufferの場所を設定
+//        DirectionalLightManager::SetGraphicsRootConstantBufferView();
+//        PointLightManager::SetGraphicsRootDescriptorTable();
+//        SpotLightManager::SetGraphicsRootDescriptorTable();
+//        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
+//        
+//        meshCommon_->Draw(commandlist);
+//    }
+//
+//
+//}
 
 void Object3d::SetMeshAndMaterial(Primitive* mesh)
 {
