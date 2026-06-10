@@ -181,6 +181,8 @@ void Object3d::DrawForEffect(Camera& camera, const BlendMode& blendMode, const T
         commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
         commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        //拡散反射テクスチャ
+        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
         //timeのSRVの場所を設定
         commandlist->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
         //expansionのCBufferの場所を設定
@@ -193,10 +195,6 @@ void Object3d::DrawForEffect(Camera& camera, const BlendMode& blendMode, const T
         SpotLightManager::SetGraphicsRootDescriptorTable();
         SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
         
-        //拡散反射テクスチャ
-        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
-  
-
         meshCommon_->Draw(commandlist);
     }
 

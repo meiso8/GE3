@@ -29,6 +29,7 @@ private:
 
   /*  std::unique_ptr<Primitive> cubeMesh_ = nullptr;*/
     std::unique_ptr<Primitive>cylinder_ = nullptr;
+    std::unique_ptr<Primitive>beam_ = nullptr;
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
 

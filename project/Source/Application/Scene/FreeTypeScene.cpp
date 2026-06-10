@@ -38,10 +38,13 @@ FreeTypeScene::FreeTypeScene()
     cylinder_ = std::make_unique<Primitive>();
     cylinder_->Create(PrimitiveGenerator::CreateCylinder());
 
+    beam_ = std::make_unique<Primitive>();
+    beam_->Create(PrimitiveGenerator::CreateBeam());
+
     object3d_ = std::make_unique<Object3d>();
 
     object3d_->Create();
-    object3d_->SetMeshAndMaterial(cylinder_.get());
+    object3d_->SetMeshAndMaterial(beam_.get());
 
     object3d_->SetTextureHandle(TextureFactory::GRADATION_LINE);
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
@@ -114,13 +117,13 @@ void FreeTypeScene::Update()
 
     DebugUI::CheckCamera(*currentCamera_);
     DebugUI::CheckModel(*ModelManager::GetModel("AmenRa"), "AmenRa");
-    DebugUI::CheckModel(*ModelManager::GetModel("medjed"),"medjed");
+    DebugUI::CheckModel(*ModelManager::GetModel("medjed"), "medjed");
     DebugUI::CheckModel(*ModelManager::GetModel("coffin"), "coffin");
 
     DebugUI::CheckModel(*ModelManager::GetModel("playerGirl"), "playerGirl");
 
 
-    DebugUI::CheckObject3d(*object3d_, "Cylinder");
+    DebugUI::CheckObject3d(*object3d_, "Beam");
     DebugUI::CheckObject3d(*object3d2_, "playerGirlObj");
 
 
@@ -132,7 +135,7 @@ void FreeTypeScene::Update()
 
 
     object3d_->Update();
- 
+
     object3d_->GetUVTranslate().x += 0.1f;
     object3d_->UpdateUV();
 
@@ -183,18 +186,19 @@ void FreeTypeScene::DrawModel()
         enemy->Draw(*currentCamera_);
     }
 
-    object3d2_->Draw(*currentCamera_);
+    //object3d2_->Draw(*currentCamera_);
 
-    for (auto& obj : objects_) {
-        obj->obj_->Draw(*currentCamera_);
-    }
+    //for (auto& obj : objects_) {
+    //    obj->obj_->Draw(*currentCamera_);
+    //}
 
     skyBoxObj_->Draw(*currentCamera_);
+    object3d_->Draw(*currentCamera_,BlendMode::kBlendModeAdd,CullMode::kCullModeNone);
 
-    object3d_->DrawForEffect(*currentCamera_);
+ /*   object3d_->DrawForEffect(*currentCamera_);*/
     ParticleManager::GetInstance()->Draw();
 
-   
+
 }
 
 void FreeTypeScene::CreateParticle()
@@ -245,7 +249,7 @@ void FreeTypeScene::CreateParticle()
     emitter1.blendMode = kBlendModeAdd;
     emitter1.movement = ParticleMovements::kParticleNormal;
     emitter1.rotateAABB_ = { .min = {0.0f,-3.14f,0.0f},.max = {0.0f,3.14f,0.0f} };
-    
+
     auto& group1 = ParticleManager::GetInstance()->GetParticleGroup(emitter1.name);
     group1->accelerationField.acceleration.y = 0.0f;
     group1->accelerationField.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
