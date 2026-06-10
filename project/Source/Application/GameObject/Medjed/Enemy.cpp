@@ -3,7 +3,7 @@
 #include"ModelManager.h"
 #include"Camera.h"
 #include"Input.h"
-#include"Sound.h"
+
 #include"JsonFile.h"
 #include"CollisionConfig.h"
 #include"SphericalCoordinate.h"
@@ -24,7 +24,10 @@ namespace {
 
     constexpr float kShotTime_ = 10.0f;
 
-    float colliderRad_ = 0.5f;
+    constexpr float kColliderRad_ = 0.5f;
+    constexpr float kWalkFootstepInterval_ = 0.4f;
+    float soundTimer_ = 0.0f;
+    bool isFootPreCollided_ = false;
 }
 
 Enemy::Enemy()
@@ -60,12 +63,12 @@ Enemy::Enemy()
 
     for (auto& [name, group] : colliders_) {
         group.matrix_ = MakeIdentity4x4();
-        group.collider_->SetRadius(colliderRad_);
+        group.collider_->SetRadius(kColliderRad_);
         group.collider_->SetCollisionAttribute(kCollisionEnemy);
         // 足とfloorを判定する
         group.collider_->SetCollisionMask(kCollisionFloor);
         group.collider_->SetWorldMatrix(group.matrix_);
-        //少し上の方に押し上げる
+        
         group.collider_->SetCenter({ 0.0f,0.125f,0.0f });
 
     }
@@ -85,6 +88,7 @@ void Enemy::Init()
     startScale_ = { 0.0f,0.0f,0.0f };
     isAppear_ = false;
     isShotStart_ = false;
+    isFootPreCollided_ = false;
 
     phase_ = APPEAR;
 
@@ -141,12 +145,15 @@ void Enemy::Update()
 #endif // USE_IMGUI  
 
     UpdateTimer();
-
+   
     // 呼び出す  
     UpdateActions_[phase_]();
     HitUpdate();
     bodyPos_.UpdateAniTimer();
     bodyPos_.Update();
+
+   
+
     ColliderUpdate();
 
     //マトリックスの更新
@@ -157,6 +164,33 @@ void Enemy::Update()
         collider.collider_->SetWorldMatrix(collider.matrix_);
         collider.collider_->ColliderUpdate();
     }
+
+}
+
+void Enemy::SoundFootStep(const SoundFactory::TAG tag)
+{
+
+    soundTimer_ -= Time::DeltaTime();
+
+    bool isCollided = false;
+
+    for (auto& [name, collider] : colliders_) {
+        if (collider.collider_->GetCollisionInfo().collided) {
+            isCollided = true;
+            break;
+
+        }
+    }
+
+    if (isCollided&& !isFootPreCollided_) {
+   
+        if (soundTimer_ <= 0.0f) {
+            Sound::PlaySE(tag,1.0f);
+            soundTimer_ = kWalkFootstepInterval_;
+        }
+    }
+
+    isFootPreCollided_ = isCollided;
 }
 
 void Enemy::OnCollision(Collider* collider)
@@ -330,6 +364,10 @@ void Enemy::AlphaWalk()
         //Y軸方向には移動しない
         bodyPos_.worldTransform_.translate_.x += velocity_.x;
         bodyPos_.worldTransform_.translate_.z += velocity_.z;
+
+        //足音の更新処理をここで呼び出す
+        SoundFootStep(SoundFactory::MEDJED_FOOT_STEP_SMALL);
+
     }
 
 }

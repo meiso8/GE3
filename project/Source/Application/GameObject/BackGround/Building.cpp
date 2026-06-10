@@ -128,8 +128,7 @@ void FieldCollider::Update()
 
 void FieldCollider::Draw(Camera& camera)
 {
- /*   object_->Draw(camera);*/
-
+    object_->Draw(camera);
     ColliderDraw(camera);
 }
 
