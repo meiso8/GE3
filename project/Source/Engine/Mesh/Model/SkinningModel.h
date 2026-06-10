@@ -23,7 +23,7 @@ public:
     ModelData* GetModelData() {
         return modelData_;
     }
-
+    Matrix4x4* GetJointMatrix(const std::string jointName);
 private:
     std::unique_ptr< Skeleton> skeleton_;
     std::unique_ptr< SkinCluster> skinCluster_;

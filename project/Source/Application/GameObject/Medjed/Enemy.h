@@ -21,6 +21,15 @@ private:
     CharacterState characterState_;
 
 public:
+    enum PHASE {
+        APPEAR,
+        ROUND,
+        FIREBALL,
+        ALPHA_WALK,
+        EXIT,
+        MAX_PHASE
+    };
+public:
 
     Enemy();
     void Init();
@@ -48,6 +57,7 @@ public:
     AnimationObject3d bodyPos_;
     HPs* GetHpsPtr() { return &characterState_.hps; }
     const bool& GetIsDead() { return characterState_.isDead; }
+    const PHASE GetPhase() { return phase_; }
 private:
    const float kScale_ = 5.0f;
     bool isAppear_ = false;
@@ -62,15 +72,7 @@ private:
     Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,10.0f};
     Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };
 
-    enum PHASE {
-        APPEAR,
-        ROUND,
-        FIREBALL,
-        ALPHA_WALK,
-        EXIT,
-        MAX_PHASE
-    };
-
+  
     //メンバ関数ポインタテーブル
     std::unordered_map<PHASE, std::function<void()>> UpdateActions_;
     PHASE phase_ = PHASE::APPEAR;

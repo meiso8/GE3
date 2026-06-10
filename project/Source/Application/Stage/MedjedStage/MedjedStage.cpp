@@ -47,7 +47,7 @@ void MedjedStage::Initialize()
     player_->Update();
 
     itemManager_->GenerateItems({ "SunRod" });
-    Sound::PlaySE(SoundFactory::VOICE_Asobimasyo,0.5f);
+    Sound::PlaySE(SoundFactory::VOICE_Asobimasyo, 0.5f);
 
 }
 
@@ -58,13 +58,15 @@ void MedjedStage::Update()
     backGround_->Update();
 
     if (FindMedjed()) {
-        
+
         backGround_->UpdateApperMedjed();
 
         if (medjedManager_->GetIsApperMedjed()) {
             //メジェド出現！
-            SoundManager::ApperMedjedUpdate();
+            rhythmBullet_->SetSound(SoundFactory::BGM_ArabRuins);
             rhythmBullet_->Update();
+            SoundManager::ApperMedjedUpdate();
+
         }
 
 
@@ -75,10 +77,16 @@ void MedjedStage::Update()
             particleEmitters_[0]->GetEmitter().transform.Parent(GetEnemy()->GetWorldTransform());
         }
 
+
         for (int i = 0; i < particleEmitters_.size(); ++i) {
-            particleEmitters_[i]->UpdateTimer();
-            particleEmitters_[i]->UpdateEmitter();
+            //透明移動じゃないときEmittする
+            if (GetEnemy()->GetPhase() != Enemy::PHASE::ALPHA_WALK || i == 1) {
+                particleEmitters_[i]->UpdateTimer();
+                particleEmitters_[i]->UpdateEmitter();
+            }
+
         }
+
 
         uiManager_->UpdateGage();
 

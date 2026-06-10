@@ -6,8 +6,14 @@ RhythmBullet::RhythmBullet()
     bulletManager_ = std::make_unique<BulletManager>();
 }
 
+void RhythmBullet::SetSound(const SoundFactory::TAG tag)
+{
+    rhythmManager_->SetSound(tag);
+}
+
 void RhythmBullet::Initialize()
 {
+
     rhythmManager_->Initialize();
     bulletManager_->Initialize();
     shotBulletManager_->Initialize();

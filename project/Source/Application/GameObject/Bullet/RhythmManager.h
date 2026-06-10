@@ -1,4 +1,6 @@
 #pragma once
+#include"../Loader/SoundFactory.h"
+
 #include<vector>
 struct RhythmBeat {
     float time;     // ビートの発生時間（秒）
@@ -7,6 +9,7 @@ struct RhythmBeat {
 
 class RhythmManager {
 public:
+    void SetSound(const SoundFactory::TAG tag) { tag_ = tag; };
     void Initialize();
     void Update();
     void AddBeat(float time); // 任意のタイミングでビートを追加
@@ -15,4 +18,5 @@ public:
 private:
     std::vector<RhythmBeat> beats_;
     float timer_ = 0.0f;
+    SoundFactory::TAG tag_;
 };

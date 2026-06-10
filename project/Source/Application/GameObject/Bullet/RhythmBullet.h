@@ -13,6 +13,7 @@ private:
     std::unique_ptr<ShotBulletManager>shotBulletManager_ = nullptr;
 public:
     RhythmBullet();
+    void SetSound(const SoundFactory::TAG tag);
     void Initialize();
     void Update();
     void Draw(Camera& camera);

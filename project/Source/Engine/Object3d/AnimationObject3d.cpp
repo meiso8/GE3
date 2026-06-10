@@ -40,6 +40,18 @@ void AnimationObject3d::InitTime()
     animationTime_ = 0.0f;
 }
 
+Matrix4x4 AnimationObject3d::GetWorldJointMatrix(const std::string name)
+{
+    auto* matrix = skinningModel_->GetJointMatrix(name);
+   
+    //行列があったら
+    if (matrix) {
+       return *matrix* worldMatrix_;
+    }
+
+    return MakeIdentity4x4();
+}
+
 void AnimationObject3d::UpdateAnimation()
 {
     ModelData* modelData = skinningModel_->GetModelData();
@@ -70,7 +82,7 @@ void AnimationObject3d::UpdateAnimation()
         //アニメーションの更新を行って、骨ごとのLocal情報を更新する
         ApplyAnimation(*skeleton, *animation, animationTime_);
         //現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
-        UpdateSkeleton(*skeleton);
+       Bone::UpdateSkeleton(*skeleton);
         //SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
         UpdateSkinCluster(*skinCluster, *skeleton);
     }
