@@ -61,6 +61,8 @@ SampleScene::SampleScene()
     stageManager_->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
     stageManager_->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
     stageManager_->SetNestStage("AmenStage");
+
+
     //現在のステージの初期化
     stageManager_->TransitionStage();
 

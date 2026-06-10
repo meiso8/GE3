@@ -12,5 +12,7 @@ void SceneFactory::Create()
     SceneManager::SetMap("Sample", std::move(std::make_unique < SampleScene>()));
     SceneManager::SetMap("Result", std::move(std::make_unique < ResultScene>()));
     SceneManager::SetNestScene("FreeType");
+
+
     SceneManager::InitScene();
 }

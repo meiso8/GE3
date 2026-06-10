@@ -12,9 +12,19 @@
 #include"DebugUI.h"
 #include"TransformAni/TransformAni.h"
 #include"TimeManager.h"
+#include"Math/Matrix/MakeMatrix.h"
 
 namespace {
-    const float kMoveSpeed_ = 2.0f;
+    constexpr float kScale_ = 5.0f;
+    constexpr float kMoveSpeed_ = 2.0f;
+    constexpr float kApperTime_ = 7.0f;
+    constexpr float kApperEndTime_ = 9.0f;
+    constexpr float kAlphaWalkTime_ = 10.0f;
+    constexpr float kAlphaWalkEndTime_ = kAlphaWalkTime_ + 1.0f;
+
+    constexpr float kShotTime_ = 10.0f;
+
+    float colliderRad_ = 0.5f;
 }
 
 Enemy::Enemy()
@@ -45,7 +55,20 @@ Enemy::Enemy()
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
     SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet);
 
+    colliders_["EnemyFoot_L"].collider_ = std::make_unique<Collider>();
+    colliders_["EnemyFoot_R"].collider_ = std::make_unique<Collider>();
 
+    for (auto& [name, group] : colliders_) {
+        group.matrix_ = MakeIdentity4x4();
+        group.collider_->SetRadius(colliderRad_);
+        group.collider_->SetCollisionAttribute(kCollisionEnemy);
+        // 足とfloorを判定する
+        group.collider_->SetCollisionMask(kCollisionFloor);
+        group.collider_->SetWorldMatrix(group.matrix_);
+        //少し上の方に押し上げる
+        group.collider_->SetCenter({ 0.0f,0.125f,0.0f });
+
+    }
 }
 
 void Enemy::Init()
@@ -56,8 +79,6 @@ void Enemy::Init()
     characterState_.hps.hp = characterState_.hps.maxHp;
     characterState_.isDead = false;
     characterState_.isHit = false;
-
-    attackTime_ = 10.0f;
 
     velocity_ = { 10.0f,10.0f,10.0f };
     startPos_ = { 0.0f };
@@ -71,7 +92,7 @@ void Enemy::Init()
     bodyPos_.worldTransform_.scale_ = { 0.0f };
     bodyPos_.SetAnimation("Nod");
 
-    timer_ = 0.0f;
+    phaseTimer_ = 0.0f;
     poyoAnimTimer_ = 0.0f;
 
 }
@@ -82,7 +103,11 @@ void Enemy::Draw(Camera& camera, const LightMode& lightMode)
 
     bodyPos_.SetLightMode(lightMode);
     bodyPos_.Draw(camera, kBlendModeNormal);
-    ColliderDraw(camera);
+    //ColliderDraw(camera);
+
+    for (auto& [name, group] : colliders_) {
+        group.collider_->ColliderDraw(camera);
+    }
 }
 
 void Enemy::Update()
@@ -96,10 +121,22 @@ void Enemy::Update()
 
 
 #ifdef USE_IMGUI  
-    DebugUI::CheckCaracterState(characterState_, "enemy");
+
+    DebugUI::CheckCaracterState(characterState_, "Enemy");
     DebugUI::CheckAnimation(bodyPos_, "EnemyAnimation");
 
+    ImGui::Begin("Enemy");
+    for (auto& [name, collider] : colliders_) {
 
+        auto& collided = collider.collider_->GetCollisionInfo().collided;
+
+        if (ImGui::TreeNode(name.c_str())) {
+            ImGui::Checkbox("isCollidedFoot", &collided);
+            ImGui::TreePop();
+        }
+
+    }
+    ImGui::End();
 
 #endif // USE_IMGUI  
 
@@ -111,6 +148,15 @@ void Enemy::Update()
     bodyPos_.UpdateAniTimer();
     bodyPos_.Update();
     ColliderUpdate();
+
+    //マトリックスの更新
+    colliders_["EnemyFoot_L"].matrix_ = bodyPos_.GetWorldJointMatrix("foot_L");
+    colliders_["EnemyFoot_R"].matrix_ = bodyPos_.GetWorldJointMatrix("foot_R");
+   
+    for (auto& [name, collider] : colliders_) {
+        collider.collider_->SetWorldMatrix(collider.matrix_);
+        collider.collider_->ColliderUpdate();
+    }
 }
 
 void Enemy::OnCollision(Collider* collider)
@@ -143,12 +189,20 @@ void Enemy::OnCollision(Collider* collider)
         }
 
     }
-};
+}
+Vector3 Enemy::GetToTarget()
+{
+    if (target_) {
+        return ToTargetVector(*target_, bodyPos_.worldTransform_.GetWorldPosition());
+    }
+
+    return { 0.0f };
+}
 
 
 void Enemy::SetPhase(const PHASE phase)
 {
-    timer_ = 0.0f;
+    phaseTimer_ = 0.0f;
     phase_ = phase;
     poyoAnimTimer_ = 0.0f;
     isShotStart_ = false;
@@ -186,13 +240,13 @@ void Enemy::SetPhase(const PHASE phase)
 
 void Enemy::Appear()
 {
-    float time = timer_ / kApperTime_;
+    float time = phaseTimer_ / kApperTime_;
     time = std::clamp(time, 0.0f, 1.0f);
     Look();
 
     bodyPos_.worldTransform_.scale_ = Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time);
 
-    if (timer_ >= kApperEndTime_) {
+    if (phaseTimer_ >= kApperEndTime_) {
         SetPhase(FIREBALL);
         bodyPos_.worldTransform_.scale_ = { kScale_,kScale_,kScale_ };
     }
@@ -201,22 +255,22 @@ void Enemy::Appear()
 
 void Enemy::Round()
 {
-    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInBounce(0.0f,1.0f,fmod(timer_,1.0f)) });
+    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInBounce(0.0f,1.0f,fmod(phaseTimer_,1.0f)) });
 
     bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,0.0f,0.0f }, 0.5f);
     Look();
-    if (timer_ >= actionTime_) {
+    if (phaseTimer_ >= actionTime_) {
         SetPhase(FIREBALL);
     }
 }
 
 void Enemy::Fireball()
 {
-    float theta = timer_ * std::numbers::phi_v<float>*2.0f;
-    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,sinf(timer_) * 0.5f + 1.0f });
+    float theta = phaseTimer_ * std::numbers::phi_v<float>*2.0f;
+    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,sinf(phaseTimer_) * 0.5f + 1.0f });
 
-    if (timer_ <= 1.0f) {
-        RotateY(timer_);
+    if (phaseTimer_ <= 1.0f) {
+        RotateY(phaseTimer_);
     } else {
 
         if (!isShotStart_) {
@@ -226,8 +280,8 @@ void Enemy::Fireball()
         Look();
     }
 
-    if (timer_ >= attackTime_) {
-        /*     isShotStart_ = false;*/
+    if (phaseTimer_ >= kShotTime_) {
+        //透明移動をする
         SetPhase(ALPHA_WALK);
     }
 
@@ -241,19 +295,19 @@ void Enemy::Exit()
 
 void Enemy::AlphaWalk()
 {
-
+    //常にプレイヤーを向く
     Look();
 
-    if (timer_ < kAlphaWalkTime_) {
+    if (phaseTimer_ < kAlphaWalkTime_) {
 
-        if (timer_ <= 1.0f) {
+        if (phaseTimer_ <= 1.0f) {
             //スーッとαが下がるよ
-            bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOutBack(1.0f,0.0f,timer_) });
+            bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOutBack(1.0f,0.0f,phaseTimer_) });
         }
 
-    } else if (timer_ < kAlphaWalkEndTime_) {
+    } else if (phaseTimer_ < kAlphaWalkEndTime_) {
 
-        float time = kAlphaWalkTime_ - timer_ / (kAlphaWalkEndTime_ - kAlphaWalkTime_);
+        float time = kAlphaWalkTime_ - phaseTimer_ / (kAlphaWalkEndTime_ - kAlphaWalkTime_);
         time = std::clamp(time, 0.0f, 1.0f);
         bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOutBack(0.0f,1.0f,time) });
 
@@ -265,13 +319,15 @@ void Enemy::AlphaWalk()
     }
 
     if (target_) {
-        Vector3 distance = *target_ - bodyPos_.worldTransform_.translate_;
-        float length = Distance(*target_, bodyPos_.worldTransform_.translate_);
 
-        velocity_ = ToTargetVector(*target_, bodyPos_.worldTransform_.translate_);
+        //距離によって変化させる
+        float distance = Distance(*target_, bodyPos_.worldTransform_.translate_);
+
+        velocity_ = GetToTarget();
         const float deltaTime = Time::DeltaTime();
         velocity_ *= deltaTime * kMoveSpeed_;
 
+        //Y軸方向には移動しない
         bodyPos_.worldTransform_.translate_.x += velocity_.x;
         bodyPos_.worldTransform_.translate_.z += velocity_.z;
     }
@@ -280,7 +336,7 @@ void Enemy::AlphaWalk()
 
 void Enemy::UpdateTimer()
 {
-    timer_ += Time::DeltaTime();
+    phaseTimer_ += Time::DeltaTime();
 }
 
 void Enemy::Look()
@@ -288,19 +344,22 @@ void Enemy::Look()
     TransformAni::LookTarget(bodyPos_.worldTransform_, *target_);
 }
 
-void Enemy::PoyoPoyo(const float& endTimer)
+bool Enemy::PoyoPoyoUpdateAndGetEnd(const float& endTimer)
 {
     poyoAnimTimer_ += Time::DeltaTime();
     poyoAnimTimer_ = std::clamp(poyoAnimTimer_, 0.0f, endTimer);
     TransformAni::PoyoPoyo(bodyPos_.worldTransform_, poyoAnimTimer_, kScale_);
+
+    return (poyoAnimTimer_ == endTimer);
+
 }
 
 void Enemy::HitUpdate()
 {
     if (characterState_.isHit) {
-        PoyoPoyo();
 
-        if (poyoAnimTimer_ == 0.25f) {
+        //ヒットしたらぽよぽよ終わったらヒットフラグを下げる
+        if (PoyoPoyoUpdateAndGetEnd()) {
             characterState_.isHit = false;
         }
     } else {

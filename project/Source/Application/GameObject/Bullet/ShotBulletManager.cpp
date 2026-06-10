@@ -29,7 +29,7 @@ void ShotBulletManager::Update() {
         Initialize();
     }
 
-    if (enemy_->isShotStart_) {
+    if (enemy_->GetIsShotStart()) {
 
         if (rhythmManager_->IsOnBeat(currentTime_)) {
 
@@ -37,6 +37,7 @@ void ShotBulletManager::Update() {
             Sound::PlaySE(SoundFactory::FIRE_BALL);
 
             if (rand() % 2 == 0) {
+
                 const int bulletCount = 5;
                 const float spreadAngle = std::numbers::pi_v<float> / 6.0f; // ±30度の範囲
 

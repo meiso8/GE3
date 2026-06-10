@@ -166,6 +166,9 @@ void RenderTexture::Update()
     materialForDepthBasedOutline_->projectionInverse = Inverse(camera_->GetProjectionMatrixForOutline());
 
 #ifdef _DEVELOP
+
+    ImGui::Begin("PosEffect");
+
     if (ImGui::TreeNode("GrayScale")) {
         DebugUI::CheckColor(materialForGrayScale_->color, "RenderTextureColor");
         ImGui::Checkbox("UseEffect", &materialForGrayScale_->useEffect);
@@ -237,6 +240,8 @@ void RenderTexture::Update()
         ImGui::DragFloat("sigma", &materialForThermography_->sigma);
         ImGui::TreePop();
     }
+
+    ImGui::End();
 
 #endif
 }

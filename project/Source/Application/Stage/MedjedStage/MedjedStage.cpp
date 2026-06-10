@@ -142,7 +142,15 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager)
         collisionManager.AddCollider(medjedManager_->GetMedjed());
 
         if (medjedManager_->GetIsApperMedjed()) {
-            collisionManager.AddCollider(medjedManager_->GetEnemy());
+
+            auto* enemy = medjedManager_->GetEnemy();
+            
+            collisionManager.AddCollider(enemy);
+
+            for (auto& [name, group] : enemy->GetColliderGroup()) {
+                //各コライダーの登録
+                collisionManager.AddCollider(group.collider_.get());
+            }
 
             //巨大メジェド出現し、弾を打ってくる
             for (auto& bullet : rhythmBullet_->GetBulletManager()->GetBullets()) {
