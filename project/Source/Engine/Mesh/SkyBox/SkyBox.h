@@ -17,9 +17,9 @@ struct MaterialForSkyBox
 struct AABB;
 class Model;
 enum LightMode;
+
 class SkyboxObject3d
 {
-
 public:
     WorldTransform worldTransform_;
 protected:

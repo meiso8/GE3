@@ -698,12 +698,78 @@ MeshData PrimitiveGenerator::CreateCylinder(const bool isFlip, const float topRa
     if (isFlip) {
         //ｙ反転させる
         for (uint32_t i = 0; i < data.vertices.size(); ++i) {
-            data.vertices[i].texcoord.y = 1.0f-data.vertices[i].texcoord.y;
+            data.vertices[i].texcoord.y = 1.0f - data.vertices[i].texcoord.y;
         }
     }
 
     //三角トポロジ
     data.topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    return data;
+}
+
+MeshData PrimitiveGenerator::CreateBeam()
+{
+    MeshData data;
+
+    data.vertices.resize(12);
+
+    Vector2 size = { 0.5f,0.5f };
+
+    //i 1~4
+    float pi = std::numbers::pi_v<float>;
+
+    const float firstPi = pi / 6.0f;
+    const float stepPi = pi / 3.0f;
+
+    for (int i = 0; i < 3; ++i) {
+
+        const float localPi1 = firstPi +i* stepPi;
+        const float localPi2 = localPi1 + pi;
+        const int index = i * 4;
+
+        data.vertices[index + 0].position = { std::cosf(localPi1),std::sinf(localPi1),1.0f,1.0f };//奥
+        data.vertices[index + 1].position = { std::cosf(localPi1),std::sinf(localPi1),-1.0f,1.0f };//手前
+        //１80度移動した値。
+        data.vertices[index + 2].position = { std::cosf(localPi2),std::sinf(localPi2),1.0f,1.0f };//奥
+        data.vertices[index + 3].position = { std::cosf(localPi2),std::sinf(localPi2),-1.0f,1.0f };//手前
+
+        data.vertices[index + 0].texcoord = { 0.0f, 1.0f };
+        data.vertices[index + 1].texcoord = { 0.0f,0.0f };
+        data.vertices[index + 2].texcoord = { 1.0f,1.0f };
+        data.vertices[index + 3].texcoord = { 1.0f,0.0f };
+
+        Vector4 pos1 = data.vertices[index + 0].position;
+        Vector4 pos2 = data.vertices[index + 1].position;
+        Vector4 pos3 = data.vertices[index + 2].position;
+        Vector4 pos4 = data.vertices[index + 3].position;
+
+        data.vertices[index +0].normal = { pos1.x,pos1.y,pos1.z };//法線
+        data.vertices[index +1].normal = { pos2.x,pos2.y,pos2.z };//法線
+        data.vertices[index +2].normal = { pos3.x,pos3.y,pos3.z };//法線
+        data.vertices[index +3].normal = { pos4.x,pos4.y,pos4.z };//法線
+    }
+
+    //　=========================//インデックスの作成//==================================
+
+    data.indices.resize(18);
+    //頂点数を削減
+    for (int i = 0; i < 3; ++i) {
+        int indicesIndex = i * 6;
+        int index = i * 4;
+
+        data.indices[indicesIndex +0] = index+0;
+        data.indices[indicesIndex +1] = index+2;
+        data.indices[indicesIndex +2] = index+1;
+
+        data.indices[indicesIndex +3] =index+ 3;
+        data.indices[indicesIndex +4] =index+ 1;
+        data.indices[indicesIndex +5] =index+ 2;
+    }
+
+
+    //三角トポロジ
+    data.topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
     return data;
 }
 
