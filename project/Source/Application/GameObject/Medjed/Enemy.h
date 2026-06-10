@@ -9,6 +9,7 @@
 
 #include"AnimationObject3d.h"
 #include"Model/SkinningModel.h"
+
 class Model;
 class Camera;
 enum LightMode;
@@ -16,9 +17,6 @@ enum LightMode;
 
 class Enemy :public Collider
 {
-private:
-    //キャラクターの共通でもつ状態
-    CharacterState characterState_;
 
 public:
     enum PHASE {
@@ -29,50 +27,73 @@ public:
         EXIT,
         MAX_PHASE
     };
+
+
+    struct ColliderGroup {
+        Matrix4x4 matrix_;
+        std::unique_ptr<Collider> collider_ = nullptr;
+    };
+
+
+public:
+    //体の位置
+    AnimationObject3d bodyPos_;
+
 public:
 
+    //コンストラクタ
     Enemy();
+    //初期化
     void Init();
+    //描画
     void Draw(Camera& camera, const LightMode& lightMode);
+    //更新
     void Update();
+
+    //フラグのカプセル化
     void SetIsApper(const bool& flag) { isAppear_ = flag; }
     const bool& GetIsApper() { return isAppear_; }
-    Vector3 GetWorldPos()const
-    {
-        return bodyPos_.worldTransform_.GetWorldPosition();
-    }
+    bool GetIsShotStart() { return isShotStart_; }
+    void SetIsShotStart(const bool flag) { isShotStart_ = flag; }
+
+    Vector3 GetWorldPos()const { return bodyPos_.worldTransform_.GetWorldPosition(); }
     WorldTransform& GetWorldTransform() { return bodyPos_.worldTransform_; }
     void OnCollision(Collider* collder)override;
 
+    std::unordered_map <std::string, ColliderGroup>& GetColliderGroup() { return colliders_; };
+
+    //ターゲットの設定
     void SetTarget(Vector3& target) { target_ = &target; };
-    Vector3 GetToTarget() { 
-        if (target_ != nullptr) {
-            return Normalize(*target_ - bodyPos_.worldTransform_.GetWorldPosition());
-        }
-        
-        return { 0.0f };
-    }
-    bool isShotStart_ = false;
-    //体の位置
-    AnimationObject3d bodyPos_;
+    //ターゲットに向かうベクトル
+    Vector3 GetToTarget();
+
     HPs* GetHpsPtr() { return &characterState_.hps; }
     const bool& GetIsDead() { return characterState_.isDead; }
     const PHASE GetPhase() { return phase_; }
+
+
+
 private:
-   const float kScale_ = 5.0f;
+    //キャラクターの共通でもつ状態
+    CharacterState characterState_;
+    //フラグ
+    bool isShotStart_ = false;
     bool isAppear_ = false;
-    float timer_ = 0.0f;
+    //フェーズのタイマー
+    float phaseTimer_ = 0.0f;
     float actionTime_ = 0.0f;
-    float attackTime_ = 10.0f;
+
     //目標地点
     Vector3* target_ = nullptr;
     //モデル
     Model* model_;
 
-    Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,10.0f};
+    Circle enemyRoundCircle_ = { {0.0f,0.0f,0.0f} ,10.0f };
     Circle enemyFieldCircle_ = { {0.0f,0.0f,0.0f} ,9.0f };
 
-  
+    //コライダーのマップ
+    std::unordered_map <std::string, ColliderGroup>colliders_;
+
     //メンバ関数ポインタテーブル
     std::unordered_map<PHASE, std::function<void()>> UpdateActions_;
     PHASE phase_ = PHASE::APPEAR;
@@ -80,30 +101,28 @@ private:
 
     Vector3 startPos_ = { 0.0f };
     Vector3 endPos_ = { 0.0f };
+    Vector3 startScale_ = { 0.0f,0.0f,0.0f };
+
     float poyoAnimTimer_ = 0.0f;
     float endRotateY_ = 0.0f;
     float startRotateY_ = 0.0f;
     float roundSpeedY = 1.0f;
 
-    const float kApperTime_ = 7.0f;
-    const float kApperEndTime_ = 9.0f;
-    Vector3 startScale_ = { 0.0f,0.0f,0.0f };
-
-    const float kAlphaWalkTime_ = 10.0f;
-    const float kAlphaWalkEndTime_ = kAlphaWalkTime_+1.0f;
-
 private:
+    //フェーズの設定
     void SetPhase(const PHASE phase);
+    //各フェーズ
     void Appear();
     void Round();
     void Fireball();
     void Exit();
     void AlphaWalk();
+
     void UpdateTimer();
     void Look();
-    void PoyoPoyo(const float& endTimer = 0.25f);
+    bool PoyoPoyoUpdateAndGetEnd(const float& endTimer = 0.25f);
     void HitUpdate();
     void LerpScale();
-    void RotateY (const float& timer);
+    void RotateY(const float& timer);
 };
 

@@ -30,11 +30,7 @@ Building::Building() {
             object->SetTexture(TextureFactory::TEST3);
             object->SetTemperature(0.1f);
         }
-
-
     }
-
-
 }
 
 void Building::Init()
@@ -132,7 +128,7 @@ void FieldCollider::Update()
 
 void FieldCollider::Draw(Camera& camera)
 {
-    object_->Draw(camera);
+ /*   object_->Draw(camera);*/
 
     ColliderDraw(camera);
 }

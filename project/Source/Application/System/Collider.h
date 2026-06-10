@@ -50,6 +50,9 @@ public:
 	/// @brief 衝突時コールバック関数
 	virtual void OnCollision(Collider* collider) {
 		(void)collider;
+		//コライダーを赤くする
+		OnCollisionCollider();
+
 	};
 	/// @brief ワールド座標を取得する関数の作成
 	/// @return 
