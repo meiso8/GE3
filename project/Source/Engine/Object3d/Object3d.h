@@ -82,7 +82,7 @@ public:
     virtual void Initialize();
     virtual void Update();
     virtual void Draw(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack, const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX);
-    void DrawForEffect(Camera& camera, const BlendMode& blendMode = BlendMode::kBlendModeAdd, const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX);
+    void Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX);
 
 private:
     void CreateUV();

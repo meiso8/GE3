@@ -52,4 +52,6 @@ void TextureFactory::Load()
     Texture::Load("Resource/Textures/world.png", WORLD);
 
     Texture::Load("Resource/Textures/night.dds", SKYBOX_TEX);
+
+    Texture::Load("Resource/Textures/beam.png", BEAM);
 }

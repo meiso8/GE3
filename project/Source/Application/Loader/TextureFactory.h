@@ -9,7 +9,7 @@ public:
         GRADATION_LINE,
         NOIZE0,
         NOIZE1,
-
+    
 
         NUMBERS,
         UI,
@@ -52,7 +52,7 @@ public:
 
         WORLD,
         SKYBOX_TEX,
-
+        BEAM,
         // ======================
         TEXTURES,
     };
