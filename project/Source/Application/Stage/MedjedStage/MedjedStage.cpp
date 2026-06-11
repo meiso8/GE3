@@ -120,10 +120,13 @@ void MedjedStage::Draw(Camera& camera)
 
     if (FindMedjed()) {
         backGround_->DrawField(camera);
-        rhythmBullet_->Draw(camera);
     }
 
     medjedManager_->Draw(camera);
+
+    if (FindMedjed()) {
+        rhythmBullet_->Draw(camera);
+    }
 
 }
 

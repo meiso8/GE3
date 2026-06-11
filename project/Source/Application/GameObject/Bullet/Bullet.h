@@ -14,8 +14,10 @@ class Bullet :public Collider
 {
 public:
     enum BulletType {
-        kEnemy,
-        kPlayer
+        kEnemyCold,
+        kEnemyHot,
+        kPlayerCold,
+        kPlayerHot,
     };
 
     Bullet();

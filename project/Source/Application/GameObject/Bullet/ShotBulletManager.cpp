@@ -25,7 +25,7 @@ void ShotBulletManager::Update() {
 
     currentTime_ += Time::DeltaTime();
 
-    if (currentTime_ >= rhythmManager_-> kEndSoundTime_) {
+    if (currentTime_ >= rhythmManager_->kEndSoundTime_) {
         Initialize();
     }
 
@@ -46,6 +46,8 @@ void ShotBulletManager::Update() {
                 const int bulletCount = 5;
                 const float spreadAngle = std::numbers::pi_v<float> / 6.0f; // ±30度の範囲
 
+                int select = rand() % bulletCount;
+
                 for (int i = 0; i < bulletCount; ++i) {
                     float angleOffset = spreadAngle * ((float)i / (bulletCount - 1) - 0.5f); // -0.5〜+0.5
                     Matrix4x4 rotY = MakeRotateYMatrix(angleOffset);
@@ -54,12 +56,13 @@ void ShotBulletManager::Update() {
 
                     Vector3 shotPosition = enemy_->GetWorldTransform().GetWorldPosition() + shotDirection * 0.5f;
                     shotPosition.y += 0.5f;
-                    bulletManager_->ShotBullet(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kEnemy);
+                    bulletManager_->ShotBullet(shotPosition, shotDirection, shotSpeed_, shotSize_, select == i ? Bullet::kEnemyHot : Bullet::kEnemyCold);
                 }
             } else {
+
                 Vector3 shotPosition = enemy_->GetWorldTransform().GetWorldPosition() + toTarget * 0.5f;
                 shotPosition.y += 0.5f;
-                bulletManager_->ShotBullet(shotPosition, toTarget, shotSpeed_, shotSize_, Bullet::kEnemy);
+                bulletManager_->ShotBullet(shotPosition, toTarget, shotSpeed_, shotSize_, rand() % 2 == 0 ? Bullet::kEnemyHot : Bullet::kEnemyCold);
             }
 
 
@@ -71,21 +74,24 @@ void ShotBulletManager::RayCastHit(RaySprite& raySprite)
 {
 
     for (auto& bullet : bulletManager_->GetBullets()) {
-        if (!bullet->isActive_ && bullet->type_ != Bullet::kPlayer) { continue; }
+
+        if (!bullet->isActive_ && bullet->type_ != Bullet::kPlayerCold && bullet->type_ != Bullet::kPlayerHot) { continue; }
 
         AABB aabb = GetAABBWorldPos(bullet.get());
 
         if (raySprite.IntersectsAABB(aabb, bullet->GetWorldPosition())) {
-            bullet->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+
+            bullet->SetColor({ 1.0f,0.5f,0.5f,1.0f });
 
             if (InputBind::IsClick()) {
-                if (bullet->type_ != Bullet::kPlayer) {
-                    Sound::PlaySE(SoundFactory::CRACKER, 0.5f);
-                    Vector3 shotDirection = raySprite.ray_.diff;
-                    Vector3 shotPosition = bullet->GetWorldPosition();
-                    bullet->Shot(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kPlayer);
-                }
+
+                Sound::PlaySE(SoundFactory::CRACKER, 0.5f);
+                Vector3 shotDirection = raySprite.ray_.diff;
+                Vector3 shotPosition = bullet->GetWorldPosition();
+                bullet->Shot(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kEnemyCold ? Bullet::kPlayerCold : Bullet::kPlayerHot);
+
             }
+
         } else {
             bullet->SetColor({ 1.0f,1.0f,1.0f,1.0f });
         }
