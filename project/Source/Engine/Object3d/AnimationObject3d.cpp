@@ -91,7 +91,7 @@ void AnimationObject3d::UpdateAnimation()
     if (isSkinning_) {
         worldMatrix_ = worldTransform_.matWorld_;
     } else {
-        worldMatrix_ = modelData->rootNode.localMatrix * worldTransform_.matWorld_;
+        worldMatrix_ = worldTransform_.matWorld_* modelData->rootNode.localMatrix;
     }
 
 #ifdef _DEBUG

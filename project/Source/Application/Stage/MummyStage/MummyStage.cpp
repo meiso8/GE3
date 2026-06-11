@@ -38,7 +38,7 @@ void MummyStage::Initialize() {
 
     memoManager_->GenerateMemos({ TextureFactory::BOOK,TextureFactory::MEMO5 });
 
-    DummyMummy::SetTargetPosPtr(&player_->GetBodyPos());
+    DummyMummy::SetTargetPosPtr(&player_->GetEyePos());
 
     Sound::Stop(SoundFactory::BGM_Sea);
     Sound::PlaySE(SoundFactory::HORROR1);

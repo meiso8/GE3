@@ -65,12 +65,12 @@ public:
     void OnCollision(Collider* collder)override;
 
     std::unordered_map <std::string, ColliderGroup>& GetColliderGroup() { return colliders_; };
-
+ 
     //ターゲットの設定
     void SetTarget(Vector3& target) { target_ = &target; };
     //ターゲットに向かうベクトル
     Vector3 GetToTarget();
-
+    Vector3* GetTarget() { return target_; };
     HPs* GetHpsPtr() { return &characterState_.hps; }
     const bool& GetIsDead() { return characterState_.isDead; }
     const PHASE GetPhase() { return phase_; }

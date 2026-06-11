@@ -30,17 +30,21 @@ VertexShaderOutput main(VertexShaderInput input)
 {
     VertexShaderOutput output;  
     
-    float4 positionOffset;
+
+    float3 positionOffset;
     
     if (input.position.z < 0.0f)
     {
-        positionOffset = float4(gPoint.startPos, 1.0f);
+        positionOffset = gPoint.startPos;
     }
     else
     {
-        positionOffset = float4(gPoint.endPos, 1.0f);
+        positionOffset = gPoint.endPos;
     }
-    output.position = mul(input.position + positionOffset, gTransformationMatrix.WVP);
+    float4 blendedWorldPos = input.position;
+    blendedWorldPos.xyz += positionOffset;
+    
+    output.position = mul(blendedWorldPos, gTransformationMatrix.WVP);
     output.texcoord = input.texcoord;
     output.normal = normalize(mul(input.normal, (float3x3) gTransformationMatrix.WorldInverseTranspose));
     output.worldPosition = mul(input.position, gTransformationMatrix.World).xyz;

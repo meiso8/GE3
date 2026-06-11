@@ -29,6 +29,11 @@ void ShotBulletManager::Update() {
         Initialize();
     }
 
+    if (enemy_->GetPhase() != Enemy::FIREBALL) {
+        //ファイヤーボールの時にショットする
+        return;
+    }
+
     if (enemy_->GetIsShotStart()) {
 
         if (rhythmManager_->IsOnBeat(currentTime_)) {

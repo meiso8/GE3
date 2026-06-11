@@ -13,9 +13,14 @@ public:
     void SetPos(const Vector3 startPos, const Vector3 endPos) {
         object3d_->SetPos(startPos, endPos);
     }
+    bool Shot(const Vector3& target);
+    bool GetIsActive() { return isActive_; };
 private:
     Matrix4x4* parent_ = nullptr;
     std::unique_ptr<Primitive>beam_ = nullptr;
     std::unique_ptr<BeamObject3d> object3d_ = nullptr;
+    Vector3 endPos_ = { 0.0f };
+    bool isActive_ = false;
+    float lifeTimer_ = 0.0f;
 };
 
