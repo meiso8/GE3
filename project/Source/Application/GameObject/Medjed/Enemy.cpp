@@ -17,12 +17,16 @@
 namespace {
     constexpr float kScale_ = 5.0f;
     constexpr float kMoveSpeed_ = 2.0f;
+
     constexpr float kApperTime_ = 7.0f;
-    constexpr float kApperEndTime_ = 9.0f;
+    constexpr float kApperEndTime_ = kApperTime_+2.0f;
+
     constexpr float kAlphaWalkTime_ = 10.0f;
     constexpr float kAlphaWalkEndTime_ = kAlphaWalkTime_ + 1.0f;
 
     constexpr float kShotTime_ = 10.0f;
+
+    constexpr float kBeamTime_ = 10.0f;
 
     constexpr float kColliderRad_ = 0.5f;
     constexpr float kWalkFootstepInterval_ = 0.4f;
@@ -60,17 +64,25 @@ Enemy::Enemy()
 
     colliders_["EnemyFoot_L"].collider_ = std::make_unique<Collider>();
     colliders_["EnemyFoot_R"].collider_ = std::make_unique<Collider>();
+    colliders_["EnemyEye"].collider_ = std::make_unique<Collider>();
 
     for (auto& [name, group] : colliders_) {
         group.matrix_ = MakeIdentity4x4();
         group.collider_->SetRadius(kColliderRad_);
+
         group.collider_->SetCollisionAttribute(kCollisionEnemy);
         // 足とfloorを判定する
-        group.collider_->SetCollisionMask(kCollisionFloor);
-        group.collider_->SetWorldMatrix(group.matrix_);
         
-        group.collider_->SetCenter({ 0.0f,0.125f,0.0f });
+        if (name == "EnemyEye") {
+            //目だったら
+            group.collider_->SetCollisionMask(kCollisionPlayerBullet);
+       /*     group.collider_->SetCenter({ 0.0f,0.0f,0.125f });*/
+        } else {
+            group.collider_->SetCollisionMask(kCollisionFloor);
+            group.collider_->SetCenter({ 0.0f,0.125f,0.0f });
+        }
 
+        group.collider_->SetWorldMatrix(group.matrix_);
     }
 }
 
@@ -135,7 +147,7 @@ void Enemy::Update()
         auto& collided = collider.collider_->GetCollisionInfo().collided;
 
         if (ImGui::TreeNode(name.c_str())) {
-            ImGui::Checkbox("isCollidedFoot", &collided);
+            ImGui::Checkbox("isCollided", &collided);
             ImGui::TreePop();
         }
 
@@ -159,9 +171,11 @@ void Enemy::Update()
     //マトリックスの更新
     colliders_["EnemyFoot_L"].matrix_ = bodyPos_.GetWorldJointMatrix("foot_L");
     colliders_["EnemyFoot_R"].matrix_ = bodyPos_.GetWorldJointMatrix("foot_R");
-   
+    //頭の位置を仮入れ
+    colliders_["EnemyEye"].matrix_ = bodyPos_.GetWorldJointMatrix("head");
+
     for (auto& [name, collider] : colliders_) {
-        collider.collider_->SetWorldMatrix(collider.matrix_);
+     /*   collider.collider_->SetWorldMatrix(collider.matrix_);*/
         collider.collider_->ColliderUpdate();
     }
 
@@ -176,6 +190,10 @@ void Enemy::SoundFootStep(const SoundFactory::TAG tag)
     bool isCollided = false;
 
     for (auto& [name, collider] : colliders_) {
+
+        //名前が目じゃないとき
+        if (name == "EnemyEye") { continue; }
+            
         if (collider.collider_->GetCollisionInfo().collided) {
             isCollided = true;
             break;
@@ -287,7 +305,7 @@ void Enemy::Appear()
     bodyPos_.worldTransform_.scale_ = Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time);
 
     if (phaseTimer_ >= kApperEndTime_) {
-        SetPhase(FIREBALL);
+        SetPhase(BEAM);
         bodyPos_.worldTransform_.scale_ = { kScale_,kScale_,kScale_ };
     }
 
@@ -352,10 +370,8 @@ void Enemy::AlphaWalk()
         bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOutBack(0.0f,1.0f,time) });
 
     } else {
-
         bodyPos_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
-        isShotStart_ = false;
-        SetPhase(ROUND);
+        SetPhase(BEAM);
     }
 
     if (target_) {
@@ -379,6 +395,24 @@ void Enemy::AlphaWalk()
 void Enemy::Beam()
 {
 
+    if (phaseTimer_ <= 1.0f) {
+
+        bodyPos_.SetAnimation("Swing");
+
+    } else {
+
+        bodyPos_.SetAnimation("Nod");
+
+        if (!isShotStart_) {
+            isShotStart_ = true;
+        }
+
+        Look();
+    }
+
+    if (phaseTimer_ >= kBeamTime_) {
+        SetPhase(BEAM);
+    }
 
 }
 

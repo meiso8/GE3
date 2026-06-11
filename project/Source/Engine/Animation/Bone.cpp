@@ -122,7 +122,7 @@ void DebugBone::Update(const Matrix4x4& parentMatrix)
     for (auto& [joint, value] : bones_) {
         //ここどうするか…
         value->lineMesh->SetVertex({ 0.0f,0.0f,0.0f }, joint->transform.translate);
-        value->object3d->worldTransform_.matWorld_ = joint->skeletonSpaceMatrix * parentMatrix;
+        value->object3d->worldTransform_.matWorld_ = parentMatrix* joint->skeletonSpaceMatrix;
     }
 
 

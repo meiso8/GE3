@@ -88,7 +88,7 @@ void Player::Init()
     bodyPos_.Initialize();
     //目の位置初期化
     eyeCollider_->Initialize();
-
+    eyePos_ = { 0.0f };
 
     velocity_ = { 0.0f,0.0f,0.0f };
     kSpeed_ = { 0.5f };
@@ -156,7 +156,7 @@ void Player::Update()
 
     bodyPos_.Update();
     eyeCollider_->Update();
-
+    eyePos_ = eyeCollider_->GetWorldTransform().GetWorldPosition();
     ColliderUpdate();
 
 #ifdef _DEBUG
