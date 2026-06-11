@@ -9,7 +9,7 @@ class PointLightManager
 {
 public:
     static void CreateData();
-    static void SetGraphicsRootDescriptorTable();
+    static void SetGraphicsRootDescriptorTable(const UINT rootParameterIndex);
     static void InitData(const uint32_t& index);
     static void InitDatas();
     static PointLight& GetData(const uint32_t& index) { assert(index < kMaxData_); return pointLightData_[index]; };

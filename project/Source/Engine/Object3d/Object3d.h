@@ -36,9 +36,9 @@ protected:
     // ==============波データ==================
     Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_;
     Wave* waveData_ = nullptr;
-private:
     //メッシュ情報
     Primitive* meshCommon_ = nullptr;
+private:
 
 public:
     ~Object3d();

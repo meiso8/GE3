@@ -27,9 +27,9 @@ void DirectionalLightManager::Finalize()
 
 }
 
-void DirectionalLightManager::SetGraphicsRootConstantBufferView()
+void DirectionalLightManager::SetGraphicsRootConstantBufferView(const UINT rootParameterIndex)
 {
     //LightのCBufferの場所を設定
-    DirectXCommon::GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
+    DirectXCommon::GetCommandList()->SetGraphicsRootConstantBufferView(rootParameterIndex, directionalLightResource->GetGPUVirtualAddress());
 
 }

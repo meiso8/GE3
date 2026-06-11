@@ -8,7 +8,7 @@ class DirectionalLightManager
 public:
     static void Create();
     static void Finalize();
-    static void SetGraphicsRootConstantBufferView();
+    static void SetGraphicsRootConstantBufferView(const UINT rootParameterIndex);
     static DirectionalLight* GetDirectionalLightData() { return directionalLightData; }
 private:
     static Microsoft::WRL::ComPtr <ID3D12Resource> directionalLightResource;

@@ -49,7 +49,7 @@ FreeTypeScene::FreeTypeScene()
     object3d2_->SetMeshAndMaterial(ModelManager::GetModel("playerGirl"));
 
     beam_ = std::make_unique<Beam>();
-    beam_->SetParent(&object3d2_->worldTransform_);
+    beam_->SetParent(&object3d2_->worldTransform_.matWorld_);
 
 
     levelEditor_ = std::make_unique<LevelEditor>();
