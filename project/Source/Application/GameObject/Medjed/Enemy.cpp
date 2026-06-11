@@ -60,7 +60,7 @@ Enemy::Enemy()
 
     SetCollisionAttribute(kCollisionEnemy);
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
-    SetCollisionMask(kCollisionPlayer | kCollisionPlayerBullet);
+    SetCollisionMask(kCollisionPlayer | kCollisionPlayerBulletCold| kCollisionPlayerBulletHot);
 
     colliders_["EnemyFoot_L"].collider_ = std::make_unique<Collider>();
     colliders_["EnemyFoot_R"].collider_ = std::make_unique<Collider>();
@@ -75,7 +75,7 @@ Enemy::Enemy()
         
         if (name == "EnemyEye") {
             //目だったら
-            group.collider_->SetCollisionMask(kCollisionPlayerBullet);
+            group.collider_->SetCollisionMask(kCollisionPlayerBulletCold|kCollisionPlayerBulletHot);
        /*     group.collider_->SetCenter({ 0.0f,0.0f,0.125f });*/
         } else {
             group.collider_->SetCollisionMask(kCollisionFloor);
@@ -225,7 +225,8 @@ void Enemy::OnCollision(Collider* collider)
     //デバック用
     OnCollisionCollider();
 
-    if (collider->GetCollisionAttribute() == kCollisionPlayerBullet) {
+    if (collider->GetCollisionAttribute() == kCollisionPlayerBulletCold || collider->GetCollisionAttribute() == kCollisionPlayerBulletHot) {
+        //プレイヤーの弾の温度によって後でカエル
         if (!characterState_.isHit) {
             characterState_.isHit = true;
 
@@ -305,7 +306,7 @@ void Enemy::Appear()
     bodyPos_.worldTransform_.scale_ = Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time);
 
     if (phaseTimer_ >= kApperEndTime_) {
-        SetPhase(BEAM);
+        SetPhase(FIREBALL);
         bodyPos_.worldTransform_.scale_ = { kScale_,kScale_,kScale_ };
     }
 
@@ -411,7 +412,7 @@ void Enemy::Beam()
     }
 
     if (phaseTimer_ >= kBeamTime_) {
-        SetPhase(BEAM);
+        SetPhase(ROUND);
     }
 
 }

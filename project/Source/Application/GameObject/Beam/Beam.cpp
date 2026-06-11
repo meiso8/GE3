@@ -80,7 +80,7 @@ void Beam::Draw(Camera* camera)
         return;
     }
 
-    object3d_->Draw(*camera, BlendMode::kBlendModeMultiply, CullMode::kCullModeNone, MaskMode::kZero, true);
+    object3d_->Draw(*camera, BlendMode::kBlendModeAdd, CullMode::kCullModeNone, MaskMode::kAll, true);
 }
 
 bool Beam::Shot(const Vector3& target)
