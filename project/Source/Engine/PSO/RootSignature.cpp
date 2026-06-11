@@ -120,7 +120,7 @@ void RootSignature::Create() {
 #pragma region//NormalRootParameters
     //CBufferを利用することになったので、RootParameterに設定を追加する
    /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
-    D3D12_ROOT_PARAMETER rootParameters[11] = {};
+    D3D12_ROOT_PARAMETER rootParameters[10] = {};
     //Material b0
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
@@ -163,29 +163,24 @@ void RootSignature::Create() {
     rootParameters[7].DescriptorTable.pDescriptorRanges = descriptorRangeForPointLight;//Tableの中身の配列を指定
     rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForPointLight);//Tableで利用する数
 
-    //DirectionalLight b3
-    rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-    rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters[8].Descriptor.ShaderRegister = 3;//レジスタ番号1を使う
-
     //SpotLight t5
-    rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
-    rootParameters[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters[9].DescriptorTable.pDescriptorRanges = descriptorRangeForSpotLight;//Tableの中身の配列を指定
-    rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSpotLight);//Tableで利用する数
+    rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParameters[8].DescriptorTable.pDescriptorRanges = descriptorRangeForSpotLight;//Tableの中身の配列を指定
+    rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSpotLight);//Tableで利用する数
 
     //SkyBox Texture t6
-    rootParameters[10].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
-    rootParameters[10].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters[10].DescriptorTable.pDescriptorRanges = descriptorRangeForSkyBox;//Tableの中身の配列を指定
-    rootParameters[10].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSkyBox);//Tableで利用する数
+    rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParameters[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParameters[9].DescriptorTable.pDescriptorRanges = descriptorRangeForSkyBox;//Tableの中身の配列を指定
+    rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSkyBox);//Tableで利用する数
 #pragma endregion
 
 #pragma region//Beam
 
     //CBufferを利用することになったので、RootParameterに設定を追加する
    /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
-    D3D12_ROOT_PARAMETER rootParametersForBeam[10] = {};
+    D3D12_ROOT_PARAMETER rootParametersForBeam[9] = {};
     //Material b0
     rootParametersForBeam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParametersForBeam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
@@ -218,37 +213,32 @@ void RootSignature::Create() {
     rootParametersForBeam[6].DescriptorTable.pDescriptorRanges = descriptorRangeForPointLight;//Tableの中身の配列を指定
     rootParametersForBeam[6].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForPointLight);//Tableで利用する数
 
-    //DirectionalLight b3
-    rootParametersForBeam[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-    rootParametersForBeam[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParametersForBeam[7].Descriptor.ShaderRegister = 3;//レジスタ番号1を使う
-
     //SpotLight t5
-   rootParametersForBeam[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
-   rootParametersForBeam[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-   rootParametersForBeam[8].DescriptorTable.pDescriptorRanges = descriptorRangeForSpotLight;//Tableの中身の配列を指定
-   rootParametersForBeam[8].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSpotLight);//Tableで利用する数
+   rootParametersForBeam[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+   rootParametersForBeam[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+   rootParametersForBeam[7].DescriptorTable.pDescriptorRanges = descriptorRangeForSpotLight;//Tableの中身の配列を指定
+   rootParametersForBeam[7].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSpotLight);//Tableで利用する数
 
     //SkyBox Texture t6
-   rootParametersForBeam[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
-   rootParametersForBeam[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-   rootParametersForBeam[9].DescriptorTable.pDescriptorRanges = descriptorRangeForSkyBox;//Tableの中身の配列を指定
-   rootParametersForBeam[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSkyBox);//Tableで利用する数
+   rootParametersForBeam[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+   rootParametersForBeam[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+   rootParametersForBeam[8].DescriptorTable.pDescriptorRanges = descriptorRangeForSkyBox;//Tableの中身の配列を指定
+   rootParametersForBeam[8].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSkyBox);//Tableで利用する数
 #pragma endregion
 
 #pragma region//rootParametersForSkinning
 
-    D3D12_ROOT_PARAMETER rootParametersForSkinning[12] = {};
+    D3D12_ROOT_PARAMETER rootParametersForSkinning[11] = {};
 
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < 10; ++i) {
         rootParametersForSkinning[i] = rootParameters[i];
     }
 
     //MatrixPalette t6
-    rootParametersForSkinning[11].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
-    rootParametersForSkinning[11].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    rootParametersForSkinning[11].DescriptorTable.pDescriptorRanges = descriptorRangeForMatrixPalette;//Tableの中身の配列を指定
-    rootParametersForSkinning[11].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForMatrixPalette);//Tableで利用する数
+    rootParametersForSkinning[10].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForSkinning[10].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParametersForSkinning[10].DescriptorTable.pDescriptorRanges = descriptorRangeForMatrixPalette;//Tableの中身の配列を指定
+    rootParametersForSkinning[10].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForMatrixPalette);//Tableで利用する数
 #pragma endregion
 
 #pragma region//ParticleRootParameters

@@ -159,7 +159,8 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
         commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
         commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-
+        //方向ライト
+        DirectionalLightManager::SetGraphicsRootConstantBufferView(3);
         ////拡散反射テクスチャ
         //SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
         //timeのSRVの場所を設定
@@ -168,11 +169,11 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
         commandlist->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
         //cameraのCBufferの場所を設定
         commandlist->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
-        //ライトのCBufferの場所を設定
-        DirectionalLightManager::SetGraphicsRootConstantBufferView();
-        PointLightManager::SetGraphicsRootDescriptorTable();
-        SpotLightManager::SetGraphicsRootDescriptorTable();
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
+        //ライトの場所を設定
+        PointLightManager::SetGraphicsRootDescriptorTable(7);
+        SpotLightManager::SetGraphicsRootDescriptorTable(8);
+        SrvManager::SetGraphicsRootDescriptorTable(9, Texture::GetSRVHandle(skyBoxTexture));
+        //ここでテクスチャの設定をする
         skinningModel_->Draw(commandlist);
     }
 

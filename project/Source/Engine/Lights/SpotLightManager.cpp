@@ -33,10 +33,10 @@ void SpotLightManager::Finalize()
 
 }
 
-void SpotLightManager::SetGraphicsRootDescriptorTable()
+void SpotLightManager::SetGraphicsRootDescriptorTable(const UINT rootParameterIndex)
 {
     //SpotLightのDescriptorTableの設定をする
-    SrvManager::SetGraphicsRootDescriptorTable(9, srvIndex_);
+    SrvManager::SetGraphicsRootDescriptorTable(rootParameterIndex, srvIndex_);
 }
 
 void SpotLightManager::InitData(const uint32_t& index)

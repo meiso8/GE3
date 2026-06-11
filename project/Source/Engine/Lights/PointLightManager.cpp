@@ -21,10 +21,10 @@ void PointLightManager::CreateData()
     InitDatas();
 }
 
-void PointLightManager::SetGraphicsRootDescriptorTable()
+void PointLightManager::SetGraphicsRootDescriptorTable(const UINT rootParameterIndex)
 {
     //PointLightのDescriptorTableの設定をする
-    SrvManager::SetGraphicsRootDescriptorTable(7, srvIndex_);
+    SrvManager::SetGraphicsRootDescriptorTable(rootParameterIndex, srvIndex_);
 }
 
 void PointLightManager::InitData(const uint32_t& index)

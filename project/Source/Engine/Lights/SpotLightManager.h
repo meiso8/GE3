@@ -8,7 +8,7 @@ class SpotLightManager
 public:
     static void Create();
 
-    static void SetGraphicsRootDescriptorTable();
+    static void SetGraphicsRootDescriptorTable(const UINT rootParameterIndex);
     static void InitData(const uint32_t& index);
     static void InitDatas();
     static SpotLight& GetData(const uint32_t& index) { return spotLightData_[index]; }
