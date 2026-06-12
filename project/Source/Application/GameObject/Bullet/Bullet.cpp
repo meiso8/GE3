@@ -31,6 +31,9 @@ void Bullet::Initialize() {
     isActive_ = false;
     size_ = 3.0f;
     body_.GetBalloonData().expansion = 0.0f;
+    //最初は冷たい
+    SetBulletType(kEnemyCold);
+  
 }
 void Bullet::OnCollision(Collider* collider)
 {

@@ -99,7 +99,7 @@ void DebugBone::Create(Skeleton& skeleton)
 
         std::unique_ptr<MeshData> meshData = std::make_unique<MeshData>();
         *meshData = PrimitiveGenerator::CreateLine(Vector3{ 0.0f,0.0f,0.0f }, joint.transform.translate);
-        value->lineMesh->CreateLineMesh(std::move(meshData));
+        value->lineMesh->Create(std::move(meshData));
 
         value->object3d->Create();
         value->object3d->SetMeshAndMaterial(std::move(value->lineMesh).get());

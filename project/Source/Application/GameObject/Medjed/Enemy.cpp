@@ -138,10 +138,12 @@ void Enemy::Update()
 
 #ifdef USE_IMGUI  
 
-    DebugUI::CheckCaracterState(characterState_, "Enemy");
-    DebugUI::CheckAnimation(bodyPos_, "EnemyAnimation");
+    DebugUI::CheckObject3d(bodyPos_, "Enemy");
 
     ImGui::Begin("Enemy");
+    
+    DebugUI::CheckCaracterState(characterState_, "Enemy");
+
     for (auto& [name, collider] : colliders_) {
 
         auto& collided = collider.collider_->GetCollisionInfo().collided;
@@ -152,6 +154,26 @@ void Enemy::Update()
         }
 
     }
+
+    const char* phase[] = { "APPEAR", "ROUND", "FIREBALL","ALPHA_WALK","BEAM","EXIT"};
+    int currentPhase = phase_;
+
+
+    if (ImGui::Combo("CurrentPhase", &currentPhase, phase, IM_ARRAYSIZE(phase))) {
+            //APPEAR,
+            //ROUND,
+            //FIREBALL,
+            //ALPHA_WALK,
+            //BEAM,
+            //EXIT,
+     
+        SetPhase(static_cast<PHASE>(currentPhase));
+
+    };
+
+    ImGui::TreePop();
+
+
     ImGui::End();
 
 #endif // USE_IMGUI  
@@ -234,8 +256,6 @@ void Enemy::OnCollision(Collider* collider)
 
             if (characterState_.hps.hp > 0) {
                 characterState_.hps.hp--;
-            } else {
-                characterState_.isDead = true;
             }
 
             poyoAnimTimer_ = 0.0f;
@@ -306,7 +326,7 @@ void Enemy::Appear()
     bodyPos_.worldTransform_.scale_ = Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time);
 
     if (phaseTimer_ >= kApperEndTime_) {
-        SetPhase(FIREBALL);
+        SetPhase(ROUND);
         bodyPos_.worldTransform_.scale_ = { kScale_,kScale_,kScale_ };
     }
 
@@ -402,7 +422,7 @@ void Enemy::Beam()
 
     } else {
 
-        bodyPos_.SetAnimation("Nod");
+        bodyPos_.SetAnimation("Idle");
 
         if (!isShotStart_) {
             isShotStart_ = true;
@@ -412,7 +432,7 @@ void Enemy::Beam()
     }
 
     if (phaseTimer_ >= kBeamTime_) {
-        SetPhase(ROUND);
+        SetPhase(BEAM);
     }
 
 }
@@ -439,12 +459,20 @@ bool Enemy::PoyoPoyoUpdateAndGetEnd(const float& endTimer)
 
 void Enemy::HitUpdate()
 {
+    //毎フレーム呼ばれる
+
     if (characterState_.isHit) {
 
         //ヒットしたらぽよぽよ終わったらヒットフラグを下げる
         if (PoyoPoyoUpdateAndGetEnd()) {
             characterState_.isHit = false;
+            
+            if (characterState_.hps.hp <= 0.0f) {
+                characterState_.isDead = true;
+            }
         }
+ 
+    
     } else {
         if (phase_ != APPEAR) {
             //出現時じゃないとき線形補間する
@@ -452,6 +480,9 @@ void Enemy::HitUpdate()
         }
 
     }
+
+
+
 }
 
 void Enemy::LerpScale()

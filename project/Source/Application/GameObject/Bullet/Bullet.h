@@ -33,8 +33,8 @@ public:
     bool isActive_ = false;
     Object3d body_;
     float size_;
-    BulletType type_;
 private:
+    BulletType type_;
     Model* model_ = nullptr;
     Vector3 moveDir_;
     float moveSpeed_;

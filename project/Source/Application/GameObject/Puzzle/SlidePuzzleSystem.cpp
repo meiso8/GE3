@@ -51,10 +51,11 @@ void SlidePuzzleSystem::Update(const Vector2& screenPos)
 
     puzzleObj_->Update();
 
-#ifdef _DEVELOP
+#ifdef USE_IMGUI
+    ImGui::Begin("Debug");
     ImGui::Checkbox("isEndPuzzle", &isEnd_);
-
-#endif //_DEVELOP
+    ImGui::End();
+#endif //USE_IMGUI
 
 }
 

@@ -14,7 +14,7 @@ void StageManager::Initialize()
 {
     //現在のステージを初期化する
     sceneChange_->Initialize();
-    sceneChange_->SetState(SceneChange::kFadeOut, 60);
+    sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
     LogFile::Log("Start FadeOut");
     //メモマネージャー
     memoManager_->Initialize();
@@ -56,7 +56,7 @@ void StageManager::TransitionStage()
     if (nextStage_) {
 
         sceneChange_->Initialize();
-        sceneChange_->SetState(SceneChange::kFadeOut, 60);
+        sceneChange_->SetState(SceneChange::kFadeOut,1.0f);
         LogFile::Log("Start FadeOut");
         //メモマネージャー
         memoManager_->Initialize();
@@ -72,8 +72,8 @@ void StageManager::TransitionStage()
 void StageManager::TransitionScene(const std::string& sceneName)
 {
     //メジェドを倒したらシーン切り替え
-    sceneChange_->SetState(SceneChange::kFadeIn, 60);
-    SceneManager::SetNestScene(sceneName);
+    sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
+    SceneManager::SetNextScene(sceneName);
 
 }
 

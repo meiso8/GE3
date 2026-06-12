@@ -34,10 +34,10 @@ public:
     void Update()override;
     void DrawModel()override;
     void DrawSprite()override;
-    void Debug()override;
     void CheckAllCollision();
     void BackToTitle();
     void SetSceneChange();
+
 private:
 #pragma region//ゲームオブジェクト
     std::unique_ptr<Player>player_ = nullptr;
@@ -56,5 +56,6 @@ private:
 #pragma endregion
     //衝突判定
     std::unique_ptr<CollisionManager>collisionManager_ = nullptr;
-
+private:
+    void Debug();
 };

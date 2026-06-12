@@ -191,7 +191,9 @@ void ItemSlot::Update()
     }
 
 #ifdef USE_IMGUI
+    ImGui::Begin("Debug");
     DebugUI::CheckCamera(*itemCamera_,"Item Camera");
+    ImGui::End();
 #endif
 
 }

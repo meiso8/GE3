@@ -54,7 +54,7 @@ void DebugUI::CheckFloat(float& value, const char* label) {
 #endif
 }
 
-void DebugUI::CheckCamera(Camera& camera,const std::string label) {
+void DebugUI::CheckCamera(Camera& camera, const std::string label) {
 
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label.c_str())) {
@@ -236,31 +236,33 @@ void DebugUI::CheckSpotLight()
 {
 #ifdef USE_IMGUI
 
-    ImGui::Begin("SpotLight");
+    if (ImGui::TreeNode("SpotLights")) {
 
-    for (int i = 0; i < SpotLightManager::kMaxData_; ++i) {
+        for (int i = 0; i < SpotLightManager::kMaxData_; ++i) {
 
-        if (ImGui::TreeNode(("light " + std::to_string(i)).c_str())) {
-            SpotLight& spotLight = SpotLightManager::GetData(i);
-            Vector3& direction = spotLight.direction;
+            if (ImGui::TreeNode(("light " + std::to_string(i)).c_str())) {
+                SpotLight& spotLight = SpotLightManager::GetData(i);
+                Vector3& direction = spotLight.direction;
 
-            CheckColor(spotLight.color, "color");
-            ImGui::SliderFloat("intensity", &spotLight.intensity, 0.0f, 100.0f);
-            ImGui::DragFloat3("position", &spotLight.position.x, 0.03f, -10000.0f, 10000.0f);
-            ImGui::SliderFloat3("direction", &direction.x, -1.0f, 1.0f);
-            direction = Normalize(direction);
-            ImGui::SliderFloat("distance", &spotLight.distance, 0.0f, 100.0f);
-            ImGui::SliderFloat("decay", &spotLight.decay, 0.0f, 100.0f);
-            ImGui::SliderFloat("cosAngle", &spotLight.cosAngle, -6.28f, 6.28f);
-            ImGui::TreePop();
+                CheckColor(spotLight.color, "color");
+                ImGui::SliderFloat("intensity", &spotLight.intensity, 0.0f, 100.0f);
+                ImGui::DragFloat3("position", &spotLight.position.x, 0.03f, -10000.0f, 10000.0f);
+                ImGui::SliderFloat3("direction", &direction.x, -1.0f, 1.0f);
+                direction = Normalize(direction);
+                ImGui::SliderFloat("distance", &spotLight.distance, 0.0f, 100.0f);
+                ImGui::SliderFloat("decay", &spotLight.decay, 0.0f, 100.0f);
+                ImGui::SliderFloat("cosAngle", &spotLight.cosAngle, -6.28f, 6.28f);
+                ImGui::TreePop();
+
+            }
+
+
 
         }
-
-
-
+        ImGui::TreePop();
     }
 
-    ImGui::End();
+
 #endif
 }
 
@@ -287,7 +289,7 @@ void DebugUI::CheckModel(Model& model, const char* label) {
 
         ImGui::TreePop();
     }
-    
+
 
     ImGui::End();
 #endif
@@ -296,15 +298,17 @@ void DebugUI::CheckModel(Model& model, const char* label) {
 
 void DebugUI::CheckInput() {
 #ifdef USE_IMGUI
-    ImGui::Begin("Input");
-    ImGui::SliderFloat2("mousePos", &Input::GetMousePos().x, 0.0f, 1280.0f);
-    ImGui::SliderFloat2("cursorPos", &Input::GetCursorPosition().x, 0.0f, 1280.0f);
+    if (ImGui::TreeNode("Input")) {
+        ImGui::Begin("Input");
+        ImGui::SliderFloat2("mousePos", &Input::GetMousePos().x, 0.0f, 1280.0f);
+        ImGui::SliderFloat2("cursorPos", &Input::GetCursorPosition().x, 0.0f, 1280.0f);
 
-    for (int i = 0; i < 4; ++i) {
-        CheckXInput(i);
+        for (int i = 0; i < 4; ++i) {
+            CheckXInput(i);
+        }
+
+        ImGui::TreePop();
     }
-
-    ImGui::End();
 #endif
 
 }
@@ -484,24 +488,23 @@ void DebugUI::CheckPointLightData()
 {
 #ifdef USE_IMGUI
 
-    ImGui::Begin("PointLight");
+    if (ImGui::TreeNode("PointLights")) {
+        for (int i = 0; i < PointLightManager::kMaxData_; ++i) {
 
-    for (int i = 0; i < PointLightManager::kMaxData_; ++i) {
+            if (ImGui::TreeNode(("light " + std::to_string(i)).c_str())) {
+                PointLight& pointLight = PointLightManager::GetData(i);
+                CheckColor(pointLight.color, "color");
+                ImGui::SliderFloat("intensity", &pointLight.intensity, 0.0f, 100.0f);
+                ImGui::DragFloat3("position", &pointLight.position.x, 0.03f, -10000.0f, 10000.0f);
+                ImGui::SliderFloat("radius", &pointLight.radius, 0.0f, 100.0f);
+                ImGui::SliderFloat("decay", &pointLight.decay, 0.0f, 100.0f);
+                ImGui::TreePop();
 
-        if (ImGui::TreeNode(("light " + std::to_string(i)).c_str())) {
-            PointLight& pointLight = PointLightManager::GetData(i);
-            CheckColor(pointLight.color, "color");
-            ImGui::SliderFloat("intensity", &pointLight.intensity, 0.0f, 100.0f);
-            ImGui::DragFloat3("position", &pointLight.position.x, 0.03f, -10000.0f, 10000.0f);
-            ImGui::SliderFloat("radius", &pointLight.radius, 0.0f, 100.0f);
-            ImGui::SliderFloat("decay", &pointLight.decay, 0.0f, 100.0f);
-            ImGui::TreePop();
+            }
 
         }
-
+        ImGui::TreePop();
     }
-
-    ImGui::End();
 
 #endif
 }
@@ -520,6 +523,17 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
         CheckWaveData(object3d.GetWaveData(0), "wave0");
         CheckWaveData(object3d.GetWaveData(1), "wave1");
         CheckBalloonData(object3d.GetBalloonData());
+
+        if (auto* aniObj = dynamic_cast<AnimationObject3d*>(&object3d)) {
+            if (ImGui::TreeNode("Animation")) {
+                for (auto& [name, animations] : aniObj->GetAnimations()) {
+                    ImGui::Text(name.c_str());
+                    ImGui::SliderFloat("duration", &animations.duration, 0.0f, 1000000.0f);
+                }
+                ImGui::TreePop();
+            }
+
+        }
 
         ImGui::TreePop();
     }
@@ -640,30 +654,6 @@ void DebugUI::CheckTransform(EulerTransform& transform, const char* label)
     CheckTransforms(transform.scale, transform.rotate, transform.translate, label);
 }
 
-
-void DebugUI::CheckAnimation(AnimationObject3d& aniObject3d, const char* label)
-{
-#ifdef USE_IMGUI
-
-    CheckObject3d(aniObject3d, label);
-
-    ImGui::Begin("AnimationObject3d");
-
-    if (ImGui::TreeNode(label)) {
-        
-        for (auto& [name, animation] : aniObject3d.GetAnimations()) {
-
-            if (ImGui::TreeNode(name.c_str())) {  
-                ImGui::SliderFloat("duration", &animation.duration, 0.0f, 1000000.0f);
-                ImGui::TreePop();
-            }
-        }
-        ImGui::TreePop();
-    }
-    ImGui::End();
-#endif
-}
-
 void DebugUI::CheckWorldTransform(WorldTransform& worldTransform, const char* label) {
 
     CheckTransforms(worldTransform.scale_, worldTransform.rotate_, worldTransform.translate_, label);
@@ -672,6 +662,7 @@ void DebugUI::CheckWorldTransform(WorldTransform& worldTransform, const char* la
 
 void DebugUI::CheckDirectionalLight() {
 #ifdef USE_IMGUI
+
     if (ImGui::TreeNode("DirectionalLight")) {
         DirectionalLight* directionalLight = DirectionalLightManager::GetDirectionalLightData();
         Vector3 direction = directionalLight->direction;
@@ -682,6 +673,7 @@ void DebugUI::CheckDirectionalLight() {
         ImGui::DragFloat("intensity", &directionalLight->intensity);
         ImGui::TreePop();
     }
+
 #endif
 };
 
@@ -726,7 +718,7 @@ void DebugUI::CheckBlendMode(BlendMode& blendMode) {
 void DebugUI::CheckCaracterState(CharacterState& characterState, const char* label)
 {
 #ifdef USE_IMGUI
-    ImGui::Begin(label);
+
     if (ImGui::TreeNode(label)) {
 
         ImGui::SliderInt("Maxhp", &characterState.hps.maxHp, 0, 500);
@@ -737,19 +729,23 @@ void DebugUI::CheckCaracterState(CharacterState& characterState, const char* lab
 
         ImGui::TreePop();
     }
-    ImGui::End();
+
 #endif
 
 }
 
 void DebugUI::CheckFPS() {
 #ifdef USE_IMGUI
+    if (ImGui::TreeNode("FPS")) {
 
-    ImVec4 color = (ImGui::GetIO().Framerate < 55.0f)? ImVec4(1, 0, 0, 1) :ImVec4(0, 1, 0, 1);
+        ImVec4 color = (ImGui::GetIO().Framerate < 55.0f) ? ImVec4(1, 0, 0, 1) : ImVec4(0, 1, 0, 1);
+        ImGui::TextColored(color, "FPS : %0.1f", ImGui::GetIO().Framerate);
+        ImGui::TextColored(color, "DeltaTime : %f", DirectXCommon::GetDeltaTime());
+        ImGui::TextColored(ImVec4(1, 1, 1, 1), "kDeltaTime : %f", 1.0f / 60.0f);
 
-    ImGui::TextColored(color, "FPS : %0.1f", ImGui::GetIO().Framerate);
-    ImGui::TextColored(color, "DeltaTime : %f", DirectXCommon::GetDeltaTime());
-    ImGui::TextColored(ImVec4(1, 1, 1, 1), "kDeltaTime : %f", 1.0f/60.0f);
+        ImGui::TreePop();
+    }
+
 
 #endif
 }

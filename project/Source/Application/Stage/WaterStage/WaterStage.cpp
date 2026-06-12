@@ -25,9 +25,8 @@ void WaterStage::Initialize()
     blockMap_->Initialize();
     blockMap_->Update();
     itemManager_->Init();
-    player_->Init();
-    player_->SetBodyPos({ 0.0f,0.0f, -10.0f });
-    player_->Update();
+    player_->Init({ 0.0f,0.0f, -10.0f });
+
     itemApper_ = false;
 }
 

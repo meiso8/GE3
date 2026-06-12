@@ -75,7 +75,7 @@ void ShotBulletManager::RayCastHit(RaySprite& raySprite)
 
     for (auto& bullet : bulletManager_->GetBullets()) {
 
-        if (!bullet->isActive_ && bullet->type_ != Bullet::kPlayerCold && bullet->type_ != Bullet::kPlayerHot) { continue; }
+        if (!bullet->isActive_ && bullet->GetType() != Bullet::kPlayerCold && bullet->GetType() != Bullet::kPlayerHot) { continue; }
 
         AABB aabb = GetAABBWorldPos(bullet.get());
 

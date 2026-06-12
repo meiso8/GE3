@@ -1,6 +1,6 @@
 #include "BeamManager.h"
 namespace {
-	const int kMaxBeams = 5;
+	const int kMaxBeams = 10;
 }
 
 BeamManager::BeamManager()
@@ -37,13 +37,14 @@ void BeamManager::Draw(Camera* camera)
 	}
 }
 
-bool BeamManager::ShotBeam(const Vector3& target)
+bool BeamManager::ShotBeam(const Vector3& target,Matrix4x4* parent,const Beam::BeamType  beamType)
 {
 	bool isShot = false;
 
 	for (auto& bullet : beams_) {
 		if (!bullet->GetIsActive()) {
-			isShot = bullet->Shot(target);
+			//始点なし　親を設定する
+			isShot = bullet->Shot(target, beamType,{0.0f,0.0f,0.0f},parent);
 			break;
 		}
 	}
@@ -51,9 +52,3 @@ bool BeamManager::ShotBeam(const Vector3& target)
 	return isShot;
 }
 
-void BeamManager::SetParentMatrix(Matrix4x4* parent)
-{
-	for (auto& beam : beams_) {
-		beam->SetParent(parent);
-	}
-}

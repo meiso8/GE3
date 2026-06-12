@@ -141,16 +141,22 @@ void MyEngine::Update() {
 void MyEngine::Debug()
 {
 #ifdef USE_IMGUI
-    DebugUI::CheckJsonFile();
+
+    ImGui::Begin("Debug");
+
     DebugUI::CheckFPS();
     DebugUI::CheckInput();
+    DebugUI::CheckJsonFile();
+    SceneManager::Debug();
 
     DebugUI::CheckSound();
     DebugUI::CheckDirectionalLight();
     DebugUI::CheckSpotLight();
     DebugUI::CheckPointLightData();
 
-    SceneManager::Debug();
+
+
+    ImGui::End();
 
 #endif // USE_IMGUI
 

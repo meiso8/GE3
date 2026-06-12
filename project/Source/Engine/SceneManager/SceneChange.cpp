@@ -2,9 +2,10 @@
 #include"Window.h"
 #include"Easing.h"
 #include"ImGuiClass.h"
+#include"TimeManager.h"
 
-uint32_t SceneChange::timer_ = 0;
-uint32_t SceneChange::endTime_ = 60;
+float SceneChange::timer_ = 0.0f;
+float SceneChange::endTime_ = 1.0f;
 
 std::unordered_map<SceneChange::State, PFunc>SceneChange::StatesUpdate_ =
 {
@@ -23,12 +24,12 @@ SceneChange::SceneChange()
    
 }
 
-void SceneChange::SetState(State state, uint32_t endTime)
+void SceneChange::SetState(State state, const float endTime)
 {
     if (state == kUnKnown) { return; }
     if (state == state_) { return; }
     state_ = state;
-    timer_ = 0;
+    timer_ = 0.0f;
     endTime_ = endTime;
 }
 
@@ -37,32 +38,32 @@ void SceneChange::Initialize()
     sprite_ = std::make_unique<Sprite>();
     sprite_->Create(TextureFactory::WHITE_1X1, { 0.0f,0.0f }, { 0.0f,0.0f,0.0f,1.0f });
     sprite_->SetSize(Vector2{ static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()) });
-    timer_ = 0;
+    timer_ = 0.0f;
     state_ = kUnKnown;
 }
 
 void SceneChange::FadeOut()
 {
     sprite_->SetScale({ 1.0f,1.0f });
-    sprite_->SetColor({ 0.0f,0.0f,0.0f,1.0f - (float)timer_ / (float)endTime_ });
+    sprite_->SetColor({ 0.0f,0.0f,0.0f,1.0f - timer_ / endTime_ });
 }
 
 void SceneChange::FadeIn()
 {
     sprite_->SetScale({ 1.0f,1.0f });
-    sprite_->SetColor({ 0.0f,0.0f,0.0f,(float)timer_ / (float)endTime_ });
+    sprite_->SetColor({ 0.0f,0.0f,0.0f,timer_ / endTime_ });
 }
 
 void SceneChange::WipeOut()
 {
     sprite_->SetColor({ 0.0f,0.0f,0.0f,1.0 });
-    sprite_->SetScale(Easing::EaseOutSine(Vector2{ 1.0f,1.0f }, { 0.0f,1.0f }, (float)timer_ / (float)endTime_));
+    sprite_->SetScale(Easing::EaseOutSine(Vector2{ 1.0f,1.0f }, { 0.0f,1.0f }, timer_ / endTime_));
 }
 
 void SceneChange::WipeIn()
 {
     sprite_->SetColor({ 0.0f,0.0f,0.0f,1.0 });
-    sprite_->SetScale(Easing::EaseOutSine(Vector2{ 0.0f,1.0f }, { 1.0f,1.0f }, (float)timer_ / (float)endTime_));
+    sprite_->SetScale(Easing::EaseOutSine(Vector2{ 0.0f,1.0f }, { 1.0f,1.0f }, timer_ / endTime_));
 }
 
 
@@ -92,7 +93,7 @@ void SceneChange::TimerUpdate()
 {
     if (timer_ == endTime_) { return; }
 
-    timer_++;
+    timer_+= Time::DeltaTime();
 
     if (timer_ >= endTime_) {
         timer_ = endTime_;

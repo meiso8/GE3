@@ -21,22 +21,17 @@ class Player :public Collider
 {
 public:
     void OnCollision(Collider* collider)override;
+
+    void OnCollisionEnemy();
+
+
     Player();
-    void Init();
+    void Init(const Vector3& pos);
 
     void Draw(Camera& camera, const LightMode& lightType);
     void DrawRaySprite();
     void Update();
-
-
-    void UpdateRay();
-    void Move();
-    void Jump();
-    void Zoom();
-
-    void LookBack();
-    void Thermography();
-    void MouseLook();
+    void Debug();
 
     Vector3& GetForward();
 
@@ -55,7 +50,6 @@ public:
     WorldTransform& GetBodyWorldTransform() {
         return bodyPos_.worldTransform_;
     }
-    void SetBodyPos(const Vector3& pos) { bodyPos_.worldTransform_.translate_ = pos; };
     void SetBodyRotate(const Vector3& rotate){ bodyPos_.worldTransform_.rotate_ = rotate; }
     void SetBodyScale(const Vector3& scale) { bodyPos_.worldTransform_.scale_ = scale; }
     HPs* GetHpsPtr() { return &characterState_.hps; }
@@ -72,6 +66,17 @@ public:
     const bool& IsDead() { return characterState_.isDead; }
 
 private:
+
+    void UpdateRay();
+    void Move();
+    void Jump();
+    void Zoom();
+    void LookBack();
+    void Thermography();
+    void MouseLook();
+private:
+
+
     bool isFloorHit_ = false;
     const float kJumpSpeed_ = 0.3125;
     float hitTimer_ = 0.0f;
@@ -104,6 +109,6 @@ private:
 
     CharacterState characterState_;
 
-    void OnCollisionEnemy();
+
 };
 

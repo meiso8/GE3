@@ -1,7 +1,7 @@
 #include "LineMesh.h"
 #include"DirectXCommon.h"
 
-void LineMesh::CreateLineMesh(std::unique_ptr<MeshData> meshData)
+void LineMesh::Create(std::unique_ptr<MeshData> meshData)
 {
     meshData_ = std::move(meshData);
 

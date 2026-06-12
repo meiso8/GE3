@@ -4,7 +4,7 @@
 class LineMesh : public Primitive
 {
 public:
-   void CreateLineMesh(std::unique_ptr<MeshData> meshData);
+   void Create(std::unique_ptr<MeshData> meshData);
    void SetVertex(const Vector3& start, const Vector3& end);
 private:
 

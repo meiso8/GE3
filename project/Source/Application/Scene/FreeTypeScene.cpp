@@ -49,8 +49,6 @@ FreeTypeScene::FreeTypeScene()
     object3d2_->SetMeshAndMaterial(ModelManager::GetModel("playerGirl"));
 
     beam_ = std::make_unique<Beam>();
-    beam_->SetParent(&object3d2_->worldTransform_.matWorld_);
-
 
     levelEditor_ = std::make_unique<LevelEditor>();
     levelEditor_->Load("test");
@@ -100,13 +98,13 @@ void FreeTypeScene::Update()
     text_.Debug();
 
     if (inputText_ == U"next") {
-        sceneChange_->SetState(SceneChange::kFadeIn, 30);
-        SceneManager::SetNestScene("Title");
+        sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
+        SceneManager::SetNextScene("Title");
     }
 
     if (Input::IsTriggerKey(DIK_SPACE)) {
-        sceneChange_->SetState(SceneChange::kFadeIn, 30);
-        SceneManager::SetNestScene("Title");
+        sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
+        SceneManager::SetNextScene("Title");
     }
     currentCamera_->UpdateMatrix();
     DirectXCommon::GetInstance()->SetRenderTextureCamera(currentCamera_);

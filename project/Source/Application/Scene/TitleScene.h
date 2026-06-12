@@ -13,7 +13,6 @@ public:
     void Update()override;
     void DrawModel()override;
     void DrawSprite()override;
-    void Debug()override;
    void SceneChangeUpdate()override;
 private:
     std::unique_ptr<Sprite> titleSprite_;

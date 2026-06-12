@@ -7,6 +7,7 @@
 #include"../GameObject/Beam/BeamManager.h"
 #include"../GameObject/Beam/ShotBeamManager.h"
 
+class Player;
 class RhythmBullet
 {
 private:
@@ -16,15 +17,17 @@ private:
 
     std::unique_ptr<BeamManager>beamManager_ = nullptr;
     std::unique_ptr<ShotBeamManager>shotBeamManager_ = nullptr;
-
 public:
-    RhythmBullet();
+    RhythmBullet(Enemy* enemy,Player* player);
     void SetSound(const SoundFactory::TAG tag);
     void Initialize();
     void Update();
     void Draw(Camera& camera);
-    void SetEnemy(Enemy* enemy);
+
     BulletManager* GetBulletManager() { return bulletManager_.get(); };
     ShotBulletManager* GetShotBulletManager() { return shotBulletManager_.get();}
+    ShotBeamManager* GetShotBeamManager() { return shotBeamManager_.get(); }
+
+
 };
 

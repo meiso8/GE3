@@ -6,7 +6,7 @@ BaseScene::BaseScene()
 {
     sceneChange_ = std::make_unique<SceneChange>();
     sceneChange_->Initialize();
-    sceneChange_->SetState(SceneChange::kFadeOut, 60);
+    sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
 
     camera_ = std::make_unique<Camera>();
 #ifdef _DEVELOP
@@ -27,11 +27,6 @@ void BaseScene::Update()
 }
 
 
-
-void BaseScene::Debug()
-{
-}
-
 void BaseScene::SceneChangeUpdate()
 {
 #ifdef _DEBUG
@@ -40,7 +35,7 @@ void BaseScene::SceneChangeUpdate()
 
     // 何かをしたらシーン遷移
     if (Input::IsTriggerKey(DIK_I)) {
-        sceneChange_->SetState(SceneChange::kFadeIn, 30);
+        sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
     }
 
 #endif
@@ -95,14 +90,46 @@ void SceneManager::Debug()
 {
 
 #ifdef USE_IMGUI
-    for (const auto& [name, scene] : scenes_) {
-        if (currentScene_ == scene.get()) {
-            ImGui::Text("%s", name.c_str());
+    
+    if (ImGui::TreeNode("SceneManager")) {
+
+        std::string currentSceneName = "None";
+ 
+        for (const auto& [name, scene] : scenes_) {
+            if (currentScene_ == scene.get()) {
+                currentSceneName = name;
+                break;
+            }
+          
         }
+
+        ImGui::Separator();
+
+        if (ImGui::BeginCombo("Change Scene", currentSceneName.c_str())) {
+
+            // マップ内のすべてのシーンをループして選択肢を作る
+            for (const auto& [name, scene] : scenes_) {
+                 
+                // 選択肢を表示（クリックされたら true を返す）
+                if (ImGui::Selectable(name.c_str(), true)) {
+                    // クリックされたらシーン切り替え関数を呼ぶ
+                        //メジェドを倒したらシーン切り替え
+      
+                    //すぐに移動する
+                    currentScene_->SetStateEnd();
+                    SetNextScene(name);
+                    break;
+                }
+            }
+
+            ImGui::EndCombo();
+        }
+
+        ImGui::TreePop();
     }
 
+
 #endif // USE_IMGUI
-    currentScene_->Debug();
 
 }
 
@@ -111,7 +138,7 @@ void SceneManager::SetMap(const std::string& name, std::unique_ptr<BaseScene> sc
     scenes_[name] = std::move(scene);
 }
 
-void SceneManager::SetNestScene(const std::string& name)
+void SceneManager::SetNextScene(const std::string& name)
 {
     //最初の位置を保持
     nextScene_ = scenes_[name].get();

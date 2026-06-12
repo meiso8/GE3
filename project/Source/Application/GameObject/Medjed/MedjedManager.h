@@ -46,6 +46,7 @@ public:
     }
     std::vector < std::unique_ptr<DummyMedjed>>& GetAllMedjeds() { return dummyMedjeds_; };
     Medjed* GetMedjed();
+
     const bool& GetIsFindMedjed() {
         return GetMedjed()->GetIsFind();
     };

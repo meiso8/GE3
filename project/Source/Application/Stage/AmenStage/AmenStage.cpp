@@ -21,9 +21,8 @@ void AmenStage::Initialize()
 {
 
     memoManager_->GenerateMemos({ TextureFactory::MEMO1, TextureFactory::MEMO3,TextureFactory::MEMO4,TextureFactory::BOOK4 });
-
-    player_->Init();
-    player_->SetBodyPos({ 0.0f,0.0f,-5.0f });
+    // ミイラ前に移動
+    player_->Init({ 0.0f, 0.0f, -5.0f });
 
     Sound::StopAllSound();
     slidePuzzleSystem_->Initialize();

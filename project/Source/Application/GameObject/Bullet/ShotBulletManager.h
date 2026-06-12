@@ -1,6 +1,8 @@
+#pragma once
+
 #include"Player/RaySprite.h"
 #include"RhythmManager.h"
-#pragma once
+
 class Enemy;
 class BulletManager;
 
