@@ -17,7 +17,7 @@ MedjedStage::MedjedStage()
     medjedManager_ = std::make_unique<MedjedManager>();
 
     auto* enemy = medjedManager_->GetEnemy();
-    rhythmBullet_ = std::make_unique<RhythmBullet>(enemy,player_);
+    rhythmBullet_ = std::make_unique<RhythmBullet>(enemy,player_,player_->raySprite_.get());
 
     //パーティクルの作成
     CreateParticle();
@@ -43,7 +43,6 @@ void MedjedStage::Initialize()
     medjedManager_->Initialize();
     rhythmBullet_->Initialize();
 
-    medjedManager_->SetTarget(player_->GetEyePos());
     medjedManager_->SetRaySprite(player_->raySprite_.get());
     //medjedManager_->Update();
 
@@ -137,10 +136,10 @@ void MedjedStage::DrawSprite()
 void MedjedStage::CheckCollision(CollisionManager& collisionManager)
 {
     //メジェドたちがヒットしているかどうか
-    medjedManager_->RayCastHit(*player_->raySprite_);
+    medjedManager_->RayCastHit();
     //弾がヒットしているかどうか
-    rhythmBullet_->GetShotBulletManager()->RayCastHit(*player_->raySprite_);
-    rhythmBullet_->GetShotBeamManager()->RayCastHit(*player_->raySprite_);
+    rhythmBullet_->GetShotBulletManager()->RayCastHit();
+    rhythmBullet_->GetShotBeamManager()->RayCastHit();
 
     //メジェド探したかどうか
     if (FindMedjed()) {

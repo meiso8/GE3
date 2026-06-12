@@ -16,6 +16,11 @@ RaySprite::RaySprite()
     sprite_->SetPosition({ width * 0.5f,height * 0.5f });
 }
 
+void RaySprite::OnCollisionColor()
+{
+    sprite_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+}
+
 void RaySprite::Draw()
 {
     Sprite::PreDraw();
@@ -29,7 +34,7 @@ bool RaySprite::IntersectsAABB(const AABB& aabb, const Vector3& pos,const float 
 
         float dist = Distance(ray_.origin, pos);
         if (dist <= kMaxDistance) {
-            sprite_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+            OnCollisionColor();
             return true;
         }
 

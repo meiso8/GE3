@@ -18,6 +18,9 @@ public:
         Update();
     };
 
+
+    void OnCollisionColor();
+
     void Draw();
     bool IntersectsAABB(const AABB& aabb,const Vector3& pos,const float kMaxDistance = 5.0f);
     Ray ray_ = {};

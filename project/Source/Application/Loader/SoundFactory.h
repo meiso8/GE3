@@ -47,6 +47,7 @@ public:
         // ======================================
         //メジェド様の足音
         MEDJED_FOOT_STEP_SMALL,
+        BEAM,
     };
 
    static void Load();

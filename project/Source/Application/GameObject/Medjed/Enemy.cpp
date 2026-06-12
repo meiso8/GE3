@@ -392,6 +392,7 @@ void Enemy::AlphaWalk()
 
     } else {
         bodyPos_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
+
         SetPhase(BEAM);
     }
 
