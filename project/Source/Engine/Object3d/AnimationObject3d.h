@@ -26,7 +26,7 @@ public:
     void SetAnimation(const std::string animName) {
         currentAnimation_ = animName;
     };
-    
+    const std::string GetCurrentAnimation() { return currentAnimation_; }
     std::map<std::string, Animation>& GetAnimations() { return animations_; };
     Matrix4x4 GetWorldJointMatrix(const std::string name);
 private:

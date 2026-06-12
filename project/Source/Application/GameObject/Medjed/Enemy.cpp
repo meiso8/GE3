@@ -364,6 +364,12 @@ void Enemy::Fireball()
         SetPhase(ALPHA_WALK);
     }
 
+    if (bodyPos_.GetCurrentAnimation() == "Jump" || bodyPos_.GetCurrentAnimation()== "Step") {
+        //足音の更新処理をここで呼び出す
+        SoundFootStep(SoundFactory::MEDJED_JUMP);
+    }
+
+
 }
 
 
