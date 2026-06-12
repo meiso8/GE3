@@ -7,7 +7,7 @@
 
 namespace {
     const float kBeamDuretion_ = 1.5f;
-    const float kLigeDuration_ = 10.0f;
+    const float kLigeDuration_ = 5.0f;
     
 }
 
