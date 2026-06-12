@@ -1,6 +1,7 @@
 #include "TransformAni.h"
 #include"TimeManager.h"
 #include<cmath>
+
 void TransformAni::RotateY(WorldTransform& worldTransform, const float& rotateSpeed)
 {
     worldTransform.rotate_.x = 1.0f;

@@ -9,11 +9,12 @@ class ShotBeamManager
 {
 public:
 
-	ShotBeamManager(Enemy* enemy, Player* player,BeamManager* beamManager);
+	ShotBeamManager(Enemy* enemy, Player* player,BeamManager* beamManager,RaySprite* raySprite);
 	void Initialize();
 	void Update();
-	void RayCastHit(RaySprite& raySprite);
+	void RayCastHit();
 private:
+	RaySprite* raySprite_ = nullptr;
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;
 	BeamManager* beamManager_ = nullptr;

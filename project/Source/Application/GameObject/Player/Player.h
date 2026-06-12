@@ -43,10 +43,6 @@ public:
         return eyeCollider_->GetWorldTransform();
     }
 
-    Vector3& GetEyePos() {
-        return eyePos_;
-    }
-
     WorldTransform& GetBodyWorldTransform() {
         return bodyPos_.worldTransform_;
     }
@@ -102,7 +98,6 @@ private:
     Model* model_;
 
     Object3d bodyPos_;
-    Vector3 eyePos_;
     std::unique_ptr<EyeCollider>eyeCollider_ = nullptr;
     float cameraRotateY_ = 0.0f;
     float cameraRotateX_ = 0.0f;

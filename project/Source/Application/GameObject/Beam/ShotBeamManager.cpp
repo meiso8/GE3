@@ -16,8 +16,8 @@ namespace {
     float tMax_ = 1.0f;
 }
 
-ShotBeamManager::ShotBeamManager(Enemy* enemy, Player* player, BeamManager* beamManager)
-    :enemy_(enemy), player_(player), beamManager_(beamManager)
+ShotBeamManager::ShotBeamManager(Enemy* enemy, Player* player, BeamManager* beamManager, RaySprite* raySprite)
+    :enemy_(enemy), player_(player), beamManager_(beamManager),raySprite_(raySprite)
 {
 
 }
@@ -43,11 +43,12 @@ void ShotBeamManager::Update()
 
         if (currentTime_ <= 0.0f) {
 
-            Vector3 target = player_->GetEyePos();
+            Vector3 target = raySprite_->ray_.origin;
 
             Matrix4x4* enemyEyeMat = &enemy_->GetColliderGroup().at("EnemyEye").matrix_;
 
             if (beamManager_->ShotBeam(target, enemyEyeMat, Beam::kEnemy)) {
+                Sound::PlaySE(SoundFactory::BEAM);
                 Initialize();
             }
 
@@ -66,9 +67,9 @@ bool IntersectsAABB(const Ray& ray, const AABB& aabb, const Vector3& pos, const 
     }
     return false;
 }
-void ShotBeamManager::RayCastHit(RaySprite& raySprite)
+void ShotBeamManager::RayCastHit()
 {
-    AABB playerAABB = GetAABBWorldPos(player_);
+    AABB playerAABB = GetAABBWorldPos(player_->GetEyeCollider());
     float min = 0.0f;
 
 
@@ -82,21 +83,25 @@ void ShotBeamManager::RayCastHit(RaySprite& raySprite)
 
         //アイテムがあれば　跳ね返し攻撃が出来るように作成していく予定
 
-        if (IntersectsAABB(ray, playerAABB, player_->GetBodyWorldTransform().GetWorldPosition(), length)) {
+        if (IntersectsAABB(ray, playerAABB, player_->GetEyeCollider()->GetWorldTransform().GetWorldPosition(), length)) {
 
-            Sound::PlaySE(SoundFactory::FALL, 0.5f);
+            raySprite_->OnCollisionColor();
 
             if (InputBind::IsClick()) {
 
+
                 if (beam->GetBeamType() != Beam::kPlayer) {
+                
+                    Sound::PlaySE(SoundFactory::FALL, 0.5f);
+
                     //rayのオリジンから　rayの方向にLength分shotする
-                    Vector3 target = raySprite.ray_.origin + raySprite.ray_.diff * length;
+                    Vector3 target = raySprite_->ray_.origin + raySprite_->ray_.diff * length;
                     //親なし
-                    beam->Shot(target, Beam::kPlayer, raySprite.ray_.origin, nullptr);
+                    beam->Shot(target, Beam::kPlayer, raySprite_->ray_.origin, nullptr);
                 }
 
             } else {
-
+            
                 player_->OnCollisionEnemy();
             }
 

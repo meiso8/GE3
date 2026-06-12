@@ -30,7 +30,7 @@ MedjedManager::MedjedManager()
     }
 }
 
-void MedjedManager::RayCastHit(RaySprite& raySprite) {
+void MedjedManager::RayCastHit() {
 
     if (GetIsApperMedjed()) {
         return;//一旦ここでリターンする
@@ -45,7 +45,7 @@ void MedjedManager::RayCastHit(RaySprite& raySprite) {
 
         }
 
-        if (raySprite.IntersectsAABB(aabb, medjed->GetWorldTransform().GetWorldPosition(), dist)) {
+        if (raySprite_->IntersectsAABB(aabb, medjed->GetWorldTransform().GetWorldPosition(), dist)) {
             if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
                 medjed->SetColor({ 1.0f,1.0f,1.0f,0.5f });
             } else {
@@ -86,7 +86,7 @@ void MedjedManager::Initialize()
     enemyApperTime_ = false;
     PlaceLockersRandomly();
     enemy_->Init();
-    enemy_->SetTarget(*targetPos_);
+    enemy_->SetTarget(raySprite_->ray_.origin);
     GetMedjed()->MoveStart();
 }
 
@@ -130,7 +130,7 @@ void MedjedManager::UpdateEnemyApperTime()
 void MedjedManager::UpdateMedjedIfNotFind()
 {
     //メジェド一つだけ
-    GetMedjed()->Look(*targetPos_);
+    GetMedjed()->Look(raySprite_->ray_.origin);
 
 }
 
@@ -138,7 +138,7 @@ void MedjedManager::UpdateMedjedIfFind()
 {
     for (auto& medjed : dummyMedjeds_) {
 
-        medjed->Look(*targetPos_);
+        medjed->Look(raySprite_->ray_.origin);
 
         if (enemyApperTime_ >= kEnemyApperMaxTime_) {
             medjed->GoToTarget(enemy_->GetWorldPos());

@@ -31,5 +31,5 @@ void SoundFactory::Load()
     // ======================================
 
     Sound::Load("Resource/Sounds/externals/medjedFootStep_Small.mp3", MEDJED_FOOT_STEP_SMALL);
-
+    Sound::Load("Resource/Sounds/externals/beam.mp3", BEAM);
 }
