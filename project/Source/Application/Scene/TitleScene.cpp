@@ -55,7 +55,7 @@ void TitleScene::Initialize()
     isHoverStartButton_ = false;
     isHoverExitButton_ = false;
     sceneChange_->Initialize();
-    sceneChange_->SetState(SceneChange::kFadeOut, 60);
+    sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
     Sound::bgmVolume_ = 0.5f;
     Sound::StopAllSound();
 
@@ -105,8 +105,8 @@ void TitleScene::Update()
         startButton_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
         if (InputBind::IsClick()) {
             Sound::PlaySE(SoundFactory::FALL);
-            sceneChange_->SetState(SceneChange::kFadeIn, 30);
-            SceneManager::SetNestScene("Sample");
+            sceneChange_->SetState(SceneChange::kFadeIn, 0.5f);
+            SceneManager::SetNextScene("Sample");
         }
     } else {
         startButton_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
@@ -142,10 +142,6 @@ void TitleScene::DrawSprite()
     sceneChange_->Draw();
 }
 
-void TitleScene::Debug()
-{
-
-}
 
 void TitleScene::SceneChangeUpdate()
 {

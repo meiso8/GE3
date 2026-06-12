@@ -47,9 +47,8 @@ void MummyStage::Initialize() {
     mummy_->Initialize();
     mummyRoom_->Init();
     mummyRoom_->Update();
-    player_->Init();
-    player_->SetBodyPos({ 0.0f, 0.0f, -5.0f }); // ミイラ前に移動
-    player_->Update();
+    // ミイラ前に移動
+    player_->Init({ 0.0f, 0.0f, -5.0f });
 
     const float distance = 7.0f;
     const float spacing = 2.5f;

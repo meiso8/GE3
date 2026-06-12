@@ -26,6 +26,7 @@ public:
     void Draw(Camera& camera)override;
     void DrawSprite()override;
     void CheckCollision(CollisionManager& collisionManager)override;
+  
     const bool& FindMedjed() { return medjedManager_->GetIsFindMedjed(); }
     Medjed* GetMedjed() { return medjedManager_->GetMedjed(); };
     Enemy* GetEnemy() { return medjedManager_->GetEnemy(); };

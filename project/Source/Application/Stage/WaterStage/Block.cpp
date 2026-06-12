@@ -186,12 +186,13 @@ void BlockMap::Update() {
         }
     }
 
-#ifdef _DEVELOP
-
+#ifdef USE_IMGUI
+    ImGui::Begin("Debug");
     if (ImGui::Button("isBlockClear")) {
         ClearSet();
     }
-#endif //_DEVELOP
+    ImGui::End();
+#endif //USE_IMGUI
     if (isClear_) {
         return;
     }

@@ -26,7 +26,6 @@ public:
     virtual void Update();
     virtual void DrawModel() = 0;
     virtual void DrawSprite() = 0;
-    virtual void Debug();
     virtual void SceneChangeUpdate();
     bool GetIsEndScene() {
         if (sceneChange_ == nullptr) { 
@@ -35,6 +34,8 @@ public:
         // nullptr でない場合は IsEndScene() を呼び出す
         return sceneChange_->IsEndScene(); 
     };
+
+    void SetStateEnd() { sceneChange_->SetState(SceneChange::kSceneEnd , 0.0f); }
 
     void SwitchCamera();
 };
@@ -49,7 +50,7 @@ public:
     static void DrawSprite();
     static void Debug();
     static void SetMap(const std::string& name, std::unique_ptr<BaseScene> scene);
-    static void SetNestScene(const std::string& name);
+    static void SetNextScene(const std::string& name);
     static void InitScene();
 
 private:

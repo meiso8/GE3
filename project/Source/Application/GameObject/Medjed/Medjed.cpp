@@ -94,7 +94,13 @@ void Medjed::Update()
     ColliderUpdate();
 
 #ifdef USE_IMGUI
-    DebugUI::CheckAnimation(*aniObj_,"Medjed");
+
+    DebugUI::CheckObject3d(*aniObj_,"Medjed");
+
+    ImGui::Begin("Debug");
+    ImGui::Checkbox("isFinedMedjed", &isFind_);
+    ImGui::End();
+
 #endif
 }
 void Medjed::Init()

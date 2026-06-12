@@ -31,11 +31,11 @@ public:
 
     /// @brief シーンの状態と終了時間を設定する
     /// @param state シーンの状態
-    /// @param endTime 終了時間 60=1秒とする
-    void SetState(State state, uint32_t endTime);
+    /// @param endTime 終了時間 
+    void SetState(State state, const float endTime);
     /// @brief 時間を得る
     /// @return 
-    static uint32_t GetTimer() { return timer_; }
+    static float GetTimer() { return timer_; }
     /// @brief シーン遷移の初期化　これをシーンの初期化で呼ぶ
     void Initialize();
     /// @brief シーン遷移の描画処理
@@ -46,13 +46,16 @@ public:
     /// @brief エンド判定を得る
     /// @return 判定結果
     bool IsEndScene() { return(state_ == kSceneEnd) ? true : false; }
+   
+    bool IsStateTransition() { return state_ == kFadeIn|| state_ == kFadeOut|| state_ == kWipeIn|| state_ == kWipeOut; }
+
     /// @brief シーンの更新
     void Update();
     SceneChange();
     ~SceneChange();
 private:
-    static uint32_t timer_;
-    static uint32_t endTime_;
+    static float timer_;
+    static float endTime_;
 
     std::unique_ptr<Sprite> sprite_ = nullptr;
     State state_ = SceneChange::State::kUnKnown;

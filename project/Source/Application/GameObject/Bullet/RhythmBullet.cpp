@@ -1,13 +1,13 @@
 #include "RhythmBullet.h"
 
-
-RhythmBullet::RhythmBullet()
+RhythmBullet::RhythmBullet(Enemy* enemy, Player* player)
 {
     rhythmManager_ = std::make_unique<RhythmManager>();
     bulletManager_ = std::make_unique<BulletManager>();
 
     beamManager_ = std::make_unique<BeamManager>();
-
+    shotBulletManager_ = std::make_unique<ShotBulletManager>(enemy, bulletManager_.get(), rhythmManager_.get());
+    shotBeamManager_ = std::make_unique<ShotBeamManager>(enemy, player,beamManager_.get());
 }
 
 void RhythmBullet::SetSound(const SoundFactory::TAG tag)
@@ -45,9 +45,4 @@ void RhythmBullet::Draw(Camera& camera)
     beamManager_->Draw(&camera);
 }
 
-void RhythmBullet::SetEnemy(Enemy* enemy)
-{
-    shotBulletManager_ = std::make_unique<ShotBulletManager>(enemy, bulletManager_.get(), rhythmManager_.get());
-    shotBeamManager_ = std::make_unique<ShotBeamManager>(enemy, beamManager_.get());
-}
 

@@ -7,7 +7,7 @@
 void Game::Initialize()
 {
     //エンジンの生成
-    MyEngine::Create(L"LE2A_19_ヨシダ_トモカ_打ち倒すもの", WIN_WIDTH, WIN_HEIGHT);
+    MyEngine::Create(L"LE3A_19_ヨシダ_トモカ_打ち倒すもの", WIN_WIDTH, WIN_HEIGHT);
 }
 
 void Game::Finalize()

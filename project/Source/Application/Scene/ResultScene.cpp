@@ -35,7 +35,7 @@ ResultScene::ResultScene()
 void ResultScene::Initialize()
 {
     sceneChange_->Initialize();
-    sceneChange_->SetState(SceneChange::kFadeOut, 60);
+    sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
 
     creditSprite_->SetUVTranslate({ 0.0f, 0.0f, 0.0f });
     timer_ = 0.0f;
@@ -58,8 +58,8 @@ void ResultScene::Update()
         Sound::PlaySE(SoundFactory::FALL);
 
         if (lookTimer_ >= 10.0f) {
-            sceneChange_->SetState(SceneChange::kFadeIn, 30);
-            SceneManager::SetNestScene("Title");
+            sceneChange_->SetState(SceneChange::kFadeIn, 0.5f);
+            SceneManager::SetNextScene("Title");
         } else {
 
             if (lookTimer_ <= 10.0f) {

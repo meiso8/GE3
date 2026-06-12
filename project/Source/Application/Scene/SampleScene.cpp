@@ -62,6 +62,9 @@ SampleScene::SampleScene()
     stageManager_->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
     stageManager_->SetNestStage("AmenStage");
 
+#ifdef _DEVELOP
+    stageManager_->SetNestStage("MedjedStage");
+#endif
 
     //現在のステージの初期化
     stageManager_->TransitionStage();
@@ -92,6 +95,9 @@ void SampleScene::Initialize() {
 
 void SampleScene::Update() {
 
+    //デバック処理
+    Debug();
+
     lightingManager_->UpdatePointLight();
 
     if (isDebugCameraActive_) {
@@ -106,7 +112,9 @@ void SampleScene::Update() {
         BackToTitle();
     }
 
-    if (!PauseScreen::isActive_) {
+    if (!PauseScreen::isActive_&& !sceneChange_->IsStateTransition()) {
+        //最初は移動しない
+        
         //アクティブなら更新しない
         player_->Update();
 
@@ -128,42 +136,16 @@ void SampleScene::Update() {
     memoManager_->Update();
 
     CheckAllCollision();
+
+
+
+
+
 }
 
 SampleScene::~SampleScene()
 {
     camera_ = nullptr;
-}
-
-void SampleScene::Debug()
-{
-
-#ifdef USE_IMGUI
-
-    if (Input::IsTriggerKey(DIK_Q)) {
-        SwitchCamera();
-    }
-
-    ImGui::Text("SwitchCamera : Q key");
-    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
-    std::function<void()> func = [this]() { SwitchCamera(); };
-    DebugUI::CheckCamera(*currentCamera_);
-    DebugUI::Button("ChangeCamera", func);
-
-
-
-    if (ImGui::TreeNode("StageManager")) {
-
-        const char* stages[] = { "AmenStage", "WaterStage", "MedjedStage","MummyStage"};
-        int stageCurrent = 0;
-
-        if (ImGui::Combo("CurrentStage", &stageCurrent, stages, IM_ARRAYSIZE(stages))) {
-            stageManager_->SetNestStage(stages[stageCurrent % 4]);
-        };
-
-        ImGui::TreePop();
-    }
-#endif // !USE_IMGUI
 }
 
 void SampleScene::CheckAllCollision()
@@ -202,14 +184,48 @@ void SampleScene::CheckAllCollision()
 
 void SampleScene::BackToTitle()
 {
-    sceneChange_->SetState(SceneChange::kFadeIn, 60);
-    SceneManager::SetNestScene("Title");
+    sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
+    SceneManager::SetNextScene("Title");
 }
 
 void SampleScene::SetSceneChange()
 {
     sceneChange_->Initialize();
-    sceneChange_->SetState(SceneChange::kFadeOut, 60);
+    sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
+}
+
+void SampleScene::Debug()
+{
+#ifdef USE_IMGUI
+
+    ImGui::Begin("Debug");
+    if (Input::IsTriggerKey(DIK_Q)) {
+        SwitchCamera();
+    }
+
+    ImGui::Text("SwitchCamera : Q key");
+    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
+    std::function<void()> func = [this]() { SwitchCamera(); };
+    DebugUI::CheckCamera(*currentCamera_);
+    DebugUI::Button("ChangeCamera", func);
+
+    if (ImGui::TreeNode("StageManager")) {
+
+        const char* stages[] = { "AmenStage", "WaterStage", "MedjedStage","MummyStage" };
+        int stageCurrent = 0;
+
+        if (ImGui::Combo("CurrentStage", &stageCurrent, stages, IM_ARRAYSIZE(stages))) {
+            stageManager_->SetNestStage(stages[stageCurrent % 4]);
+        };
+
+        ImGui::TreePop();
+    }
+
+    ImGui::End();
+    //プレイヤーのデバッグ
+    player_->Debug();
+
+#endif // !USE_IMGUI
 }
 
 void SampleScene::DrawModel() {

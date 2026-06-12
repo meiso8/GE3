@@ -4,6 +4,8 @@
 #include"AABB.h"
 #include"Object3d.h"
 #include"MeshCommon.h"
+#include"Line.h"
+
 class Camera;
 
 struct CollisionInfo {
@@ -22,12 +24,14 @@ public:
 
 	enum ColliderType {
 		kSphere,
-		kAABB
+		kAABB,
+		kRay
 	};
 
 private:
 	float radius_ = 1.0f;	// 衝突半径
 	AABB aabb_;
+	Ray ray_;
 	uint32_t collisionAttribute_ = 0xffffffff;	// 衝突属性
 	uint32_t collisionMask_ = 0xffffffff;		// 衝突マスク
 	ColliderType type_ = ColliderType::kSphere;

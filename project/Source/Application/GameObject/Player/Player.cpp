@@ -78,16 +78,22 @@ Player::Player() {
     eyeCollider_->SetParent(bodyPos_.worldTransform_);
 }
 
-void Player::Init()
+void Player::Init(const Vector3& pos)
 {
-
     isJump_ = false;
     zoomTimer_ = 0.0f;
     zoomStartTimer_ = 0.0f;
+    
     //体の位置初期化
     bodyPos_.Initialize();
+
+    bodyPos_.worldTransform_.translate_ = pos;
+
+    bodyPos_.Update();
+
     //目の位置初期化
     eyeCollider_->Initialize();
+    eyeCollider_->Update();
     eyePos_ = { 0.0f };
 
     velocity_ = { 0.0f,0.0f,0.0f };
@@ -99,6 +105,8 @@ void Player::Init()
     isThermographyEnd_ = false;
     thermography_ = 0.0f;
 
+    RenderTexture::GetInstance()->GetMaterialDissolve()->maskVal = 1.0f - thermography_;
+
     Json file = JsonFile::GetJsonFiles("config");
 
     characterState_.hps.hp = file["CharacterState"]["hp"];
@@ -109,6 +117,8 @@ void Player::Init()
     cameraRotateY_ = 0.0f;
     cameraRotateX_ = 0.0f;
 }
+
+
 
 void Player::UpdateRay()
 {
@@ -149,6 +159,7 @@ void Player::Update()
     Thermography();
     MouseLook();
     UpdateRay();
+
     //クリックしたらサウンド
     if (InputBind::IsClick()) {
         Sound::PlaySE(SoundFactory::SWITCH_ON);
@@ -157,15 +168,22 @@ void Player::Update()
     bodyPos_.Update();
     eyeCollider_->Update();
     eyePos_ = eyeCollider_->GetWorldTransform().GetWorldPosition();
+
     ColliderUpdate();
+}
 
-#ifdef _DEBUG
-    DebugUI::CheckCaracterState(characterState_, "player");
+void Player::Debug()
+{
+#ifdef USE_IMGUI
+    DebugUI::CheckObject3d(bodyPos_, "player");
+    ImGui::Begin("Player");
+    DebugUI::CheckCaracterState(characterState_, "CharacterStage");
+
     ImGui::SliderFloat3("velocity_", &velocity_.x, -1000.0f, 1000.0f);
-#endif // _DEBUG
+    ImGui::End();
 
 
-
+#endif //USE_IMGUI
 }
 
 void Player::Move()

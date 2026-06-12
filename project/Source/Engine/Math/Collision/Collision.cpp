@@ -16,6 +16,8 @@ Vector3 ClosestPoint(const Vector3& point, const AABB& aabb) {
 }
 
 
+
+
 Vector3 ClosestPoint(const Segment& segment, const Plane& plane) {
     float dot = Dot(plane.normal, segment.diff);
     if (dot == 0.0f) {
@@ -169,6 +171,47 @@ bool IsCollision(const Sphere& s1, const Sphere& s2) {
     }
 
     return false;
+}
+
+bool IsCollision(const Ray& ray, const Sphere& sphere,Vector3& Q1,Vector3& Q2) {
+
+   //計算でrayを原点に移動するため　球の中心も移動する
+   Vector3 P2 = sphere.center - ray.origin;
+
+   float A = Dot(ray.diff, ray.diff);
+   float B = Dot(ray.diff, P2);
+   float C = Dot(P2, P2) - sphere.radius * sphere.radius;
+
+   if (A == 0.0f) {
+       //レイの長さが0
+       return false;
+   }
+
+   //解の公式のルートの中の部分を計算する
+   float s = B * B - A * C;
+
+   if (s < 0.0f) {
+       //実数解無し？
+       //衝突していない
+       return false;
+   }
+
+   //ルートにする
+   s = sqrtf(s);
+
+   float a1 = (B - s) / A;
+   float a2 = (B + s) / A;
+
+   if (a1 < 0.0f || a1 < 0.0f) {
+       //レイの反対で衝突
+       return false;
+   }
+
+   //貫通点を代入する
+    Q1 = ray.origin + a1 *ray.diff;
+    Q2 = ray.origin + a2 *ray.diff;
+
+    return true;
 }
 
 float Distance(const Circle& p1, const Circle& p2) {

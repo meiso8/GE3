@@ -3,6 +3,7 @@
 #include<algorithm>
 
 bool RayIntersectsAABB(const Ray& ray, const AABB& box, float& tMin, float& tMax) {
+  
     tMin = 0.0f;
     tMax = std::numeric_limits<float>::max();
 
