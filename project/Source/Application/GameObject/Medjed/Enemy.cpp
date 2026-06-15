@@ -19,15 +19,15 @@ namespace {
     constexpr float kMoveSpeed_ = 2.0f;
 
     constexpr float kApperTime_ = 7.0f;
-    constexpr float kApperEndTime_ = kApperTime_+2.0f;
+    constexpr float kApperEndTime_ = kApperTime_ + 2.0f;
 
     constexpr float kAlphaWalkTime_ = 10.0f;
     constexpr float kAlphaWalkEndTime_ = kAlphaWalkTime_ + 1.0f;
 
     constexpr float kShotTime_ = 10.0f;
 
-    constexpr float kBeamTime_ = 10.0f;
-
+    constexpr float kBeamTime_ = 3.0f;
+    constexpr float kBeamEndTime_ = 10.0f;
     constexpr float kColliderRad_ = 0.5f;
     constexpr float kWalkFootstepInterval_ = 0.4f;
     float soundTimer_ = 0.0f;
@@ -60,11 +60,15 @@ Enemy::Enemy()
 
     SetCollisionAttribute(kCollisionEnemy);
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
-    SetCollisionMask(kCollisionPlayer | kCollisionPlayerBulletCold| kCollisionPlayerBulletHot);
+    SetCollisionMask(kCollisionPlayer | kCollisionPlayerBulletCold | kCollisionPlayerBulletHot);
 
     colliders_["EnemyFoot_L"].collider_ = std::make_unique<Collider>();
     colliders_["EnemyFoot_R"].collider_ = std::make_unique<Collider>();
-    colliders_["EnemyEye"].collider_ = std::make_unique<Collider>();
+    colliders_["EnemyHead"].collider_ = std::make_unique<Collider>();
+
+
+    eyeMats_["eye_L"] = MakeIdentity4x4();
+    eyeMats_["eye_R"] = MakeIdentity4x4();
 
     for (auto& [name, group] : colliders_) {
         group.matrix_ = MakeIdentity4x4();
@@ -72,11 +76,11 @@ Enemy::Enemy()
 
         group.collider_->SetCollisionAttribute(kCollisionEnemy);
         // 足とfloorを判定する
-        
-        if (name == "EnemyEye") {
+
+        if (name == "EnemyHead") {
             //目だったら
-            group.collider_->SetCollisionMask(kCollisionPlayerBulletCold|kCollisionPlayerBulletHot);
-       /*     group.collider_->SetCenter({ 0.0f,0.0f,0.125f });*/
+            group.collider_->SetCollisionMask(kCollisionPlayerBulletCold | kCollisionPlayerBulletHot);
+            /*     group.collider_->SetCenter({ 0.0f,0.0f,0.125f });*/
         } else {
             group.collider_->SetCollisionMask(kCollisionFloor);
             group.collider_->SetCenter({ 0.0f,0.125f,0.0f });
@@ -128,21 +132,18 @@ void Enemy::Draw(Camera& camera, const LightMode& lightMode)
 
 void Enemy::Update()
 {
-    if (!isAppear_) { return; }
 
-    // とりあえずフェーズが最大になったら処理を終える  
-    if (phase_ >= MAX_PHASE || phase_ < 0) {
-        return;
-    }
 
 
 #ifdef USE_IMGUI  
 
     DebugUI::CheckObject3d(bodyPos_, "Enemy");
 
+
     ImGui::Begin("Enemy");
-    
+
     DebugUI::CheckCaracterState(characterState_, "Enemy");
+    ImGui::Checkbox("isApper", &isAppear_);
 
     for (auto& [name, collider] : colliders_) {
 
@@ -155,38 +156,43 @@ void Enemy::Update()
 
     }
 
-    const char* phase[] = { "APPEAR", "ROUND", "FIREBALL","ALPHA_WALK","BEAM","EXIT"};
+    const char* phase[] = { "APPEAR", "ROUND", "FIREBALL","ALPHA_WALK","BEAM","EXIT" };
     int currentPhase = phase_;
 
 
     if (ImGui::Combo("CurrentPhase", &currentPhase, phase, IM_ARRAYSIZE(phase))) {
-            //APPEAR,
-            //ROUND,
-            //FIREBALL,
-            //ALPHA_WALK,
-            //BEAM,
-            //EXIT,
-     
+        //APPEAR,
+        //ROUND,
+        //FIREBALL,
+        //ALPHA_WALK,
+        //BEAM,
+        //EXIT,
+
         SetPhase(static_cast<PHASE>(currentPhase));
 
     };
-
-    ImGui::TreePop();
 
 
     ImGui::End();
 
 #endif // USE_IMGUI  
 
+    if (!isAppear_) { return; }
+
+    // とりあえずフェーズが最大になったら処理を終える  
+    if (phase_ >= MAX_PHASE || phase_ < 0) {
+        return;
+    }
+
     UpdateTimer();
-   
+
     // 呼び出す  
     UpdateActions_[phase_]();
     HitUpdate();
     bodyPos_.UpdateAniTimer();
     bodyPos_.Update();
 
-   
+
 
     ColliderUpdate();
 
@@ -194,11 +200,16 @@ void Enemy::Update()
     colliders_["EnemyFoot_L"].matrix_ = bodyPos_.GetWorldJointMatrix("foot_L");
     colliders_["EnemyFoot_R"].matrix_ = bodyPos_.GetWorldJointMatrix("foot_R");
     //頭の位置を仮入れ
-    colliders_["EnemyEye"].matrix_ = bodyPos_.GetWorldJointMatrix("head");
+    colliders_["EnemyHead"].matrix_ = bodyPos_.GetWorldJointMatrix("head");
 
     for (auto& [name, collider] : colliders_) {
-     /*   collider.collider_->SetWorldMatrix(collider.matrix_);*/
+        /*   collider.collider_->SetWorldMatrix(collider.matrix_);*/
         collider.collider_->ColliderUpdate();
+    }
+
+
+    for (auto& [name, mat] : eyeMats_) {
+        mat = bodyPos_.GetWorldJointMatrix(name);
     }
 
 }
@@ -214,8 +225,8 @@ void Enemy::SoundFootStep(const SoundFactory::TAG tag)
     for (auto& [name, collider] : colliders_) {
 
         //名前が目じゃないとき
-        if (name == "EnemyEye") { continue; }
-            
+        if (name == "EnemyHead") { continue; }
+
         if (collider.collider_->GetCollisionInfo().collided) {
             isCollided = true;
             break;
@@ -223,8 +234,8 @@ void Enemy::SoundFootStep(const SoundFactory::TAG tag)
         }
     }
 
-    if (isCollided&& !isFootPreCollided_) {
-   
+    if (isCollided && !isFootPreCollided_) {
+
         if (soundTimer_ <= 0.0f) {
 
             //距離によって変化させる
@@ -286,6 +297,7 @@ void Enemy::SetPhase(const PHASE phase)
     poyoAnimTimer_ = 0.0f;
     isShotStart_ = false;
     bodyPos_.InitTime();
+
 
     if (phase_ == ROUND || phase_ == APPEAR) {
         //ここを変更する
@@ -364,7 +376,7 @@ void Enemy::Fireball()
         SetPhase(ALPHA_WALK);
     }
 
-    if (bodyPos_.GetCurrentAnimation() == "Jump" || bodyPos_.GetCurrentAnimation()== "Step") {
+    if (bodyPos_.GetCurrentAnimation() == "Jump" || bodyPos_.GetCurrentAnimation() == "Step") {
         //足音の更新処理をここで呼び出す
         SoundFootStep(SoundFactory::MEDJED_JUMP);
     }
@@ -423,23 +435,31 @@ void Enemy::AlphaWalk()
 void Enemy::Beam()
 {
 
-    if (phaseTimer_ <= 1.0f) {
+    //ずっとコチラを覗く
+    Look();
 
-        bodyPos_.SetAnimation("Swing");
+    if (phaseTimer_ < kBeamTime_) {
 
-    } else {
+        if (PoyoPoyoUpdateAndGetEnd(1.0f)) {
 
-        bodyPos_.SetAnimation("Idle");
-
-        if (!isShotStart_) {
-            isShotStart_ = true;
+            //ぽよぽよ終わったら
+            bodyPos_.SetAnimation("Swing");
+            if (!isShotStart_) {
+                //打つ
+                isShotStart_ = true;
+            }
+        } else {
+            //ぽよぽよしている時はコレ
+            bodyPos_.SetAnimation("Idle");
         }
 
-        Look();
-    }
-
-    if (phaseTimer_ >= kBeamTime_) {
-        SetPhase(BEAM);
+    } else if (phaseTimer_ < kBeamEndTime_) {
+        //うなずく
+        //ショットを中止する
+        isShotStart_ = false;
+        bodyPos_.SetAnimation("Nod");
+    } else {
+        SetPhase(ROUND);
     }
 
 }
@@ -473,13 +493,13 @@ void Enemy::HitUpdate()
         //ヒットしたらぽよぽよ終わったらヒットフラグを下げる
         if (PoyoPoyoUpdateAndGetEnd()) {
             characterState_.isHit = false;
-            
+
             if (characterState_.hps.hp <= 0.0f) {
                 characterState_.isDead = true;
             }
         }
- 
-    
+
+
     } else {
         if (phase_ != APPEAR) {
             //出現時じゃないとき線形補間する

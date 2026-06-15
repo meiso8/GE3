@@ -9,6 +9,7 @@
 #include"TimeManager.h"
 #include"DebugUI.h"
 
+
 namespace {
     const float kInterval_ = 2.0f;
     float currentTime_ = kInterval_;
@@ -17,9 +18,9 @@ namespace {
 }
 
 ShotBeamManager::ShotBeamManager(Enemy* enemy, Player* player, BeamManager* beamManager, RaySprite* raySprite)
-    :enemy_(enemy), player_(player), beamManager_(beamManager),raySprite_(raySprite)
+    :enemy_(enemy), player_(player), beamManager_(beamManager), raySprite_(raySprite)
 {
-
+    CreateParticleEmitter();
 }
 
 void ShotBeamManager::Initialize()
@@ -30,10 +31,14 @@ void ShotBeamManager::Initialize()
 void ShotBeamManager::Update()
 {
 
+#ifdef USE_IMGUI
 
+    DebugUI::CheckParticle(*chargeParticleEmitter_, "ChargeParticle");
+
+#endif // !USE_IMGUI
 
     if (enemy_->GetPhase() != Enemy::BEAM) {
-        Initialize();
+        currentTime_ = 0.0f;
         return;
     }
 
@@ -45,16 +50,20 @@ void ShotBeamManager::Update()
 
             Vector3 target = raySprite_->ray_.origin;
 
-            Matrix4x4* enemyEyeMat = &enemy_->GetColliderGroup().at("EnemyEye").matrix_;
-
-            if (beamManager_->ShotBeam(target, enemyEyeMat, Beam::kEnemy)) {
+            Matrix4x4* enemyEyeMatL = &enemy_->GetEyeMats().at("eye_L");
+            Matrix4x4* enemyEyeMatR = &enemy_->GetEyeMats().at("eye_R");
+            if (beamManager_->ShotBeam(target, enemyEyeMatL, Beam::kEnemy) && beamManager_->ShotBeam(target, enemyEyeMatR, Beam::kEnemy)) {
                 Sound::PlaySE(SoundFactory::BEAM);
                 Initialize();
             }
 
-        }
+        } else {
+            //ショットが開始されていないときはすぐに
+           chargeParticleEmitter_->UpdateTimer();
+           chargeParticleEmitter_->UpdateEmitter();
 
-    }
+        }
+    } 
 
 }
 bool IntersectsAABB(const Ray& ray, const AABB& aabb, const Vector3& pos, const float kMaxDistance)
@@ -91,7 +100,7 @@ void ShotBeamManager::RayCastHit()
 
 
                 if (beam->GetBeamType() != Beam::kPlayer) {
-                
+
                     Sound::PlaySE(SoundFactory::FALL, 0.5f);
 
                     //rayのオリジンから　rayの方向にLength分shotする
@@ -101,11 +110,40 @@ void ShotBeamManager::RayCastHit()
                 }
 
             } else {
-            
+
                 player_->OnCollisionEnemy();
             }
 
         }
     }
+}
+
+void ShotBeamManager::CreateParticleEmitter()
+{
+
+    chargeParticleEmitter_ = std::make_unique<ParticleEmitter>();
+    chargeParticleEmitter_->Initialize();
+    chargeParticleEmitter_->SetName("powerCharge");
+
+    auto& emitter2 = chargeParticleEmitter_->GetEmitter();
+    emitter2.transform.Parent(enemy_->GetWorldTransform());
+    emitter2.count = 10;
+    emitter2.color = { 1.0f,0.5f,0.0f,1.0f };
+    emitter2.frequencyTime = 0.2f;
+    emitter2.lifeTime = 1.0f;
+    emitter2.blendMode = kBlendModeScreen;
+    emitter2.movement = ParticleMovements::kParticleSphere;
+    emitter2.radius = 7.0f;
+    emitter2.radiusSpeed = 0.5f;
+    emitter2.polarSpeed = 3.0f;
+    emitter2.transform.scale_ = { 0.25f,0.25f,0.25f };
+    emitter2.transform.translate_.y = 1.35f;
+    emitter2.translateAABB_ = { .min = {0.0f,-0.5f,0.0f},.max = {0.0f,0.5f,0.0f} };
+    //emitter2.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
+    emitter2.velocityAABB = { .min = {0.0f,-1.0f,0.0f},.max = {0.0f,2.0f,0.0f} };
+    auto& powerChargeGroup = ParticleManager::GetInstance()->GetParticleGroup(emitter2.name);
+    powerChargeGroup->accelerationField.acceleration.y = -0.25f;
+    powerChargeGroup->accelerationField.area = { .min = {-10.0f,-1.0f,-10.0f},.max = {10.0f,10.0f,10.0f} };
+    powerChargeGroup->useBillboard = true;
 }
 

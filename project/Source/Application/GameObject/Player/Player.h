@@ -22,7 +22,7 @@ class Player :public Collider
 public:
     void OnCollision(Collider* collider)override;
 
-    void OnCollisionEnemy();
+    void OnCollisionEnemy(const int hitPoint = 10);
 
 
     Player();
@@ -72,6 +72,7 @@ private:
     void MouseLook();
 private:
 
+    bool isInvincible_ = false;
 
     bool isFloorHit_ = false;
     const float kJumpSpeed_ = 0.3125;

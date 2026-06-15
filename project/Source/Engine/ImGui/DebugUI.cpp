@@ -554,32 +554,43 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
         int movement = static_cast<int>(emitter.movement);
         ImGui::SliderInt("movement", &movement, 0, 2);
         emitter.movement = static_cast<ParticleMovements>(movement);
-        ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
-        ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
-
-        ImGui::SliderFloat3("scaleAABBMin", &emitter.scaleAABB_.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("scaleAABBMax", &emitter.scaleAABB_.max.x, 0.0f, 20.0f);
-
-        ImGui::SliderFloat3("translateMin", &emitter.translateAABB_.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("translateMax", &emitter.translateAABB_.max.x, 0.0f, 20.0f);
-
-        ImGui::SliderFloat3("rotateAABBMin", &emitter.rotateAABB_.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("rotateAABBMax", &emitter.rotateAABB_.max.x, 0.0f, 20.0f);
-
-        ImGui::SliderFloat3("velcityAABBMax", &emitter.velocityAABB.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("velcityAABBMin", &emitter.velocityAABB.max.x, 0.0f, 20.0f);
-
-
-        CheckBlendMode(emitter.blendMode);
-        CheckColor(emitter.color, "color");
-
+        ImGui::Separator();
         int count = emitter.count;
         ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
         emitter.count = count;
 
-        CheckWorldTransform(emitter.transform, "transform");
         ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
         ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
+        ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
+
+        ImGui::Separator();
+        CheckWorldTransform(emitter.transform, "transform");
+        ImGui::Separator();
+        ImGui::SliderFloat3("scaleAABBMin", &emitter.scaleAABB_.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("scaleAABBMax", &emitter.scaleAABB_.max.x, 0.0f, 20.0f);
+        ImGui::Separator();
+        ImGui::SliderFloat3("rotateAABBMin", &emitter.rotateAABB_.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("rotateAABBMax", &emitter.rotateAABB_.max.x, 0.0f, 20.0f);
+        ImGui::Separator();
+        ImGui::SliderFloat3("translateMin", &emitter.translateAABB_.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("translateMax", &emitter.translateAABB_.max.x, 0.0f, 20.0f);
+        ImGui::Separator();
+        ImGui::SliderFloat3("velcityAABBMax", &emitter.velocityAABB.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("velcityAABBMin", &emitter.velocityAABB.max.x, 0.0f, 20.0f);
+        ImGui::Separator();
+ 
+        ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
+        ImGui::SliderFloat("radiusSpeed", &emitter.radiusSpeed, -100.f, 100.0f);
+
+        ImGui::Separator();
+        ImGui::SliderFloat("polarSpeed", &emitter.polarSpeed, -100.f, 100.0f);
+        ImGui::SliderFloat("polarSpeedAABBMin", &emitter.polarSpeedMinMax.min, -20.0f, 0.0f);
+        ImGui::SliderFloat("polarSpeedAABBMax", &emitter.polarSpeedMinMax.max, 0.0f, 20.0f);
+        ImGui::Separator();
+
+        CheckBlendMode(emitter.blendMode);
+        CheckColor(emitter.color, "color");
+
         ImGui::TreePop();
     }
 

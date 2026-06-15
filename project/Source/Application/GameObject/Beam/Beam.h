@@ -38,7 +38,7 @@ private:
     Ray ray_;
     Matrix4x4* parent_ = nullptr;
     std::unique_ptr<Primitive>beam_ = nullptr;
-    std::unique_ptr<Object3d> object3d_ = nullptr;
+    std::unique_ptr<BeamObject3d> object3d_ = nullptr;
 
 #ifdef _DEBUG
     std::unique_ptr<LineMesh>line_ = nullptr;

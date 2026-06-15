@@ -12,9 +12,17 @@ class SkinningModel :public Primitive
 public:
     SkinningModel();
     void SetModel(Model* model);
-    void PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode = BlendMode::kBlendModeNormal, const CullMode& cullMode = CullMode::kCullModeBack, const MaskMode maskMode = kAll, const bool usePSOKey = false)override;
-    void Draw(ID3D12GraphicsCommandList* commandList)override;
-    
+    void PreDraw(
+        ID3D12GraphicsCommandList* commandList,
+        const BlendMode& blendMode,
+        const CullMode& cullMode = CullMode::kCullModeBack,
+        const MaskMode maskMode = kAll,
+        const bool usePSOKey = false,
+        const RootSignature::TYPE rootSignatureType = RootSignature::TYPE::SKINNING,
+        const DxcCompiler::VS_TYPE vsType = DxcCompiler::VS_TYPE::VS_Skinning,
+        const DxcCompiler::PS_TYPE psType = DxcCompiler::PS_TYPE::PS_Normal);
+    virtual void Draw(ID3D12GraphicsCommandList* commandList )override;
+
     Skeleton* GetSkeleton() {
         return skeleton_.get();
     };

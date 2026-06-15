@@ -779,21 +779,31 @@ MeshData PrimitiveGenerator::CreateBeam(const float firstSize)
     return data;
 }
 
-void Primitive::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey) {
+void Primitive::PreDraw(
+    ID3D12GraphicsCommandList* commandList,
+    const BlendMode& blendMode,
+    const CullMode& cullMode,
+    const MaskMode maskMode,
+    const bool usePSOKey,
+    const RootSignature::TYPE rootSignatureType,
+    const DxcCompiler::VS_TYPE vsType ,
+    const DxcCompiler::PS_TYPE psType
 
-    commandList->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::NORMAL));
+) {
+
+    commandList->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(rootSignatureType));
  
     if (usePSOKey) {
         //普通のPSO
         PSO::PSOKey key{};
-        key.rootSignatureType = RootSignature::NORMAL;
-        key.vsShaderType = DxcCompiler::VS_Normal;
-        key.psShaderType = DxcCompiler::PS_Normal;
+        key.rootSignatureType = rootSignatureType;
+        key.vsShaderType = vsType;
+        key.psShaderType = psType;
 
         key.blendMode = blendMode;
         key.cullMode = cullMode;
         key.depthMode = maskMode;
-        key.topologyType = PSO::kTriangle;
+   
         key.inputLayoutType = InputLayout::kInputLayoutTypeNormal;
 
         if (meshType_ == MeshType::kLine) {

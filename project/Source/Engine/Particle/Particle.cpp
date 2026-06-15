@@ -23,9 +23,12 @@ std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager
 void ParticleManager::CreateAll()
 {
     CreateParticleGroup("particle1", TextureFactory::CIRCLE, kPlane, false);
+
     CreateParticleGroup("people", TextureFactory::UV_CHECKER, kPlane, true, "people");
     CreateParticleGroup("ring", TextureFactory::GRADATION_LINE, kRing);
     CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, kPlane, true, "people");
+
+    CreateParticleGroup("powerCharge", TextureFactory::CIRCLE, kPlane, false);
 }
 
 // ==========================================================================================================

@@ -7,16 +7,16 @@
 
 namespace {
     const float kBeamDuretion_ = 1.5f;
-    const float kLigeDuration_ = 5.0f;
+    const float kLigeDuration_ = 2.0f;
     
 }
 
 Beam::Beam()
 {
     beam_ = std::make_unique<Primitive>();
-    beam_->Create(PrimitiveGenerator::CreateBeam(1.0f));
+    beam_->Create(PrimitiveGenerator::CreateBeam(0.5f));
 
-    object3d_ = std::make_unique<Object3d>();
+    object3d_ = std::make_unique<BeamObject3d>();
 
     object3d_->Create();
     object3d_->SetMeshAndMaterial(beam_.get());
@@ -166,7 +166,7 @@ void Beam::Draw(Camera* camera)
     }
 
     object3d_->SetLightMode(kLightModeNone);
-    object3d_->Draw(*camera, BlendMode::kBlendModeAdd, CullMode::kCullModeNone, MaskMode::kZero, true);
+    object3d_->Draw(*camera);
 
 
 }
@@ -213,8 +213,9 @@ void Beam::UpdateObject()
 
     Vector3 rotate = CalculateLookAtRotate(point_.startPos, point_.endPos);
     float scaleZ = Length(point_.endPos - point_.startPos);
-    Vector3 centerPos =  point_.endPos;
+    Vector3 centerPos = Lerp(point_.startPos, point_.endPos, 0.5f);
 
+    
     object3d_->worldTransform_.rotate_ = rotate;
     object3d_->worldTransform_.scale_ = { 1.0f,1.0f,scaleZ };
     object3d_->worldTransform_.translate_ = centerPos;

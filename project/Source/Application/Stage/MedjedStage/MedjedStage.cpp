@@ -17,7 +17,7 @@ MedjedStage::MedjedStage()
     medjedManager_ = std::make_unique<MedjedManager>();
 
     auto* enemy = medjedManager_->GetEnemy();
-    rhythmBullet_ = std::make_unique<RhythmBullet>(enemy,player_,player_->raySprite_.get());
+    rhythmBullet_ = std::make_unique<RhythmBullet>(enemy, player_, player_->raySprite_.get());
 
     //パーティクルの作成
     CreateParticle();
@@ -30,7 +30,9 @@ void MedjedStage::Initialize()
     //ライトの初期化？
     lightingManager_->Initialize();
     //パーティクルの初期化
-    particleEmitters_[0]->GetEmitter().transform.Parent(GetMedjed()->GetWorldTransform());
+    particleEmitters_[kMedjed_Particle]->GetEmitter().transform.Parent(GetMedjed()->GetWorldTransform());
+
+
     //パーティクルのリセット
     ParticleManager::ResetAll();
 
@@ -76,17 +78,16 @@ void MedjedStage::Update()
         lightingManager_->DirectionalLightUpdate();
 
         if (GetEnemyApper()) {
-            particleEmitters_[0]->GetEmitter().transform.Parent(GetEnemy()->GetWorldTransform());
+            particleEmitters_[kSky_Particle]->GetEmitter().transform.Parent(GetEnemy()->GetWorldTransform());
+            UpdateEmitter(kSky_Particle);
         }
 
 
-        for (int i = 0; i < particleEmitters_.size(); ++i) {
-            //透明移動じゃないときEmittする
-            if (GetEnemy()->GetPhase() != Enemy::PHASE::ALPHA_WALK || i == 1) {
-                particleEmitters_[i]->UpdateTimer();
-                particleEmitters_[i]->UpdateEmitter();
-            }
+        auto enemyPhase = GetEnemy()->GetPhase();
 
+        //透明移動じゃないときEmittする
+        if (enemyPhase != Enemy::PHASE::ALPHA_WALK && enemyPhase != Enemy::PHASE::BEAM) {
+            UpdateEmitter(kMedjed_Particle);
         }
 
 
@@ -103,7 +104,8 @@ void MedjedStage::Update()
 
 #ifdef USE_IMGUI
 
-    DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
+    DebugUI::CheckParticle(*particleEmitters_[kSky_Particle], "SkyParticle");
+    DebugUI::CheckParticle(*particleEmitters_[kMedjed_Particle], "MedjedParticle");
 
 #endif // !USE_IMGUI
 
@@ -179,6 +181,12 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager)
     }
 }
 
+void MedjedStage::UpdateEmitter(const Particels& particles)
+{
+    particleEmitters_[particles]->UpdateTimer();
+    particleEmitters_[particles]->UpdateEmitter();
+}
+
 void MedjedStage::CreateParticle()
 {
     for (int i = 0; i < particleEmitters_.size(); ++i) {
@@ -188,11 +196,11 @@ void MedjedStage::CreateParticle()
 
     ParticleManager::GetInstance()->Create();
 
-    particleEmitters_[0]->SetName("medjedParticle");
-    particleEmitters_[1]->SetName("people");
+    particleEmitters_[kMedjed_Particle]->SetName("medjedParticle");
+    particleEmitters_[kSky_Particle]->SetName("people");
 
 
-    auto& emitter0 = particleEmitters_[0]->GetEmitter();
+    auto& emitter0 = particleEmitters_[kMedjed_Particle]->GetEmitter();
     emitter0.count = 8;
     emitter0.color = { 1.0f,0.75f,0.75f,1.0f };
     emitter0.frequencyTime = 0.25f;
@@ -206,7 +214,7 @@ void MedjedStage::CreateParticle()
     group->accelerationField.acceleration.y = 5.0f;
     group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
 
-    auto& emitter1 = particleEmitters_[1]->GetEmitter();
+    auto& emitter1 = particleEmitters_[kSky_Particle]->GetEmitter();
     emitter1.transform.translate_.y = 30.0f;
     emitter1.transform.scale_ = { 10.0f,10.0f,10.0f };
     emitter1.count = 4;
@@ -220,6 +228,10 @@ void MedjedStage::CreateParticle()
     auto& enemyGroup = ParticleManager::GetInstance()->GetParticleGroup(emitter1.name);
     enemyGroup->accelerationField.acceleration.y = 10.0f;
     enemyGroup->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,15.0f,25.0f} };
+
+
+
+
 }
 
 void MedjedStage::TransitionScene()

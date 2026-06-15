@@ -65,7 +65,7 @@ public:
     void OnCollision(Collider* collder)override;
 
     std::unordered_map <std::string, ColliderGroup>& GetColliderGroup() { return colliders_; };
- 
+    std::unordered_map < std::string, Matrix4x4>& GetEyeMats() { return eyeMats_; };
     //ターゲットの設定
     void SetTarget(Vector3& target) { target_ = &target; };
     //ターゲットに向かうベクトル
@@ -111,6 +111,8 @@ private:
     float endRotateY_ = 0.0f;
     float startRotateY_ = 0.0f;
     float roundSpeedY = 1.0f;
+
+    std::unordered_map < std::string, Matrix4x4>eyeMats_;
 
 private:
     //フェーズの設定

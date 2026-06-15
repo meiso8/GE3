@@ -44,6 +44,7 @@ private:
 public:
 public:
     ParticleEmitter();
+    ~ParticleEmitter() = default;
     void Initialize();
     void SetEmitterParam(
         const Vector3& translate,
