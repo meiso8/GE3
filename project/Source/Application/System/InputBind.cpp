@@ -36,4 +36,8 @@ bool InputBind::IsClickPressR()
 {
     return Input::IsPressMouse(1) || Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0);
 }
-;
+bool InputBind::IsTriggerMenuKey()
+{
+    //ちょっと後でキーを確認する
+    return (Input::IsTriggerKey(DIK_ESCAPE) || Input::IsControllerTriggerButton(XINPUT_GAMEPAD_START, 0));
+};

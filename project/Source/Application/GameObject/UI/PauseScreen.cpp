@@ -10,6 +10,7 @@
 #include"Sound.h"
 #include"TimeManager.h"
 #include"Memo/MemoManager.h"
+#include"RenderTexture/RenderTexture.h"
 
 
 
@@ -30,11 +31,11 @@ PauseScreen::PauseScreen()
     sprites_[kBlackScreen]->SetSize({ width,height });
 
     sprites_[kBackToGame]->Create(TextureFactory::BUTTON_BACK_TO_GAME, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
-    sprites_[kBackToTitle]->Create(TextureFactory::BUTTON_BACK_TO_TITL, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
-    pos_[kBackToGame] = {256.0f+128.0f,  528.0f + sprites_[kBackToGame]->GetSize().y * 0.5f };
-    pos_[kBackToTitle] = { width - sprites_[kBackToTitle]->GetSize().x * 0.5f - 256.0f,  528.0f + sprites_[kBackToTitle]->GetSize().y * 0.5f };
-
+    pos_[kBackToGame] = { 256.0f + 128.0f,  528.0f + sprites_[kBackToGame]->GetSize().y * 0.5f };
     sprites_[kBackToGame]->SetAnchorPoint({ 0.5f,0.5f });
+
+    sprites_[kBackToTitle]->Create(TextureFactory::BUTTON_BACK_TO_TITL, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f });
+    pos_[kBackToTitle] = { width - sprites_[kBackToTitle]->GetSize().x * 0.5f - 256.0f,  528.0f + sprites_[kBackToTitle]->GetSize().y * 0.5f };
     sprites_[kBackToTitle]->SetAnchorPoint({ 0.5f,0.5f });
 
     for (int i = kBackToGame; i < sprites_.size(); ++i) {
@@ -45,6 +46,9 @@ PauseScreen::PauseScreen()
 void PauseScreen::Initialize()
 {
     isPause_ = false;
+    
+    isShowMenu_ = false;
+    isLookGameItem_ = false;
 
     isBackToTitle = false;
     isActive_ = false;
@@ -60,7 +64,18 @@ void PauseScreen::Initialize()
 void PauseScreen::Update()
 {
 
-    if (SlidePuzzleSystem::IsActive() || MemoManager::isLookItem_) {
+    if (InputBind::IsTriggerMenuKey()) {
+        isShowMenu_ = !isShowMenu_;
+    }
+
+
+    //タイトル
+    isLookGameItem_ = SlidePuzzleSystem::IsActive() || MemoManager::isLookItem_;
+
+    if (isLookGameItem_ ||isShowMenu_) {
+
+        RenderTexture::GetInstance()->GetMaterialGaussianFilter()->sigma = 4.0f;
+        RenderTexture::GetInstance()->GetMaterialGaussianFilter()->kernel = 10;
 
         if (!isPause_) {
             isPause_ = true;
@@ -76,6 +91,10 @@ void PauseScreen::Update()
         }
 
     } else {
+
+        RenderTexture::GetInstance()->GetMaterialGaussianFilter()->sigma = 1.0f;
+        RenderTexture::GetInstance()->GetMaterialGaussianFilter()->kernel = 0;
+
         isPause_ = false;
         isActive_ = false;
         Input::SetShowCursor(false);
@@ -93,6 +112,15 @@ void PauseScreen::Update()
     if (!isActive_) { return; }
 
     TimerUpdate();
+
+    //アイテムを見ているときトそうでないときで変更する
+    Vector2 pos = pos_[kBackToGame];
+
+    if (isLookGameItem_) {
+       pos.x = 640.0f;
+    }
+
+    sprites_[kBackToGame]->SetPosition(pos);
 
     if (isPause_) {
 
@@ -128,18 +156,27 @@ void PauseScreen::SelectButton()
 
 
     for (int i = kBackToGame; i < kMaxLayer; ++i) {
+       
+        if (isLookGameItem_&& i == kBackToTitle) {
+            continue;
+        }
+
         if (IsCollision(*sprites_[i], *curPos_)) {
+            
             selectButtonNum_ = i;
             
             sprites_[i]->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
             if (InputBind::IsClick()) {
+                
                 Sound::PlaySE(SoundFactory::FALL);
+
                 switch (selectButtonNum_)
                 {
                 case kBackToGame:
                     isActive_ = true;
                     isPause_ = false;
+                    isShowMenu_ = false;
                     pauseTimer_ = 0.0f;
                     SlidePuzzleSystem::SetActive(false);
                     MemoManager::isLookItem_ = false;
@@ -164,8 +201,16 @@ void PauseScreen::Draw()
     if (!isActive_) { return; }
 
     Sprite::PreDraw();
-    for (auto& sprite : sprites_) {
-        sprite->Draw();
+
+    sprites_[kBlackScreen]->Draw();
+
+    for (int i = kBackToGame; i < kMaxLayer; ++i) {
+        //タイトルに戻る
+        if (isLookGameItem_ && i == kBackToTitle) {
+            continue;
+        }
+        sprites_[i]->Draw();
     }
+
 
 }
