@@ -21,6 +21,8 @@ private:
     float pauseTimer_ = 0.0f;
     int selectButtonNum_ = kBackToGame;
 
+    bool isShowMenu_ = false;
+    bool isLookGameItem_ = false;
     float scaleTheta_ = 0.0f;
     Vector2* curPos_ = nullptr;
     std::array < Vector2, kMaxLayer> pos_;
@@ -29,6 +31,9 @@ public:
     static bool isActive_;
     static bool isPause_;
     static bool isBackToTitle;
+
+
+
 
     PauseScreen();
     void Initialize();

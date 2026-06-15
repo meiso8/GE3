@@ -14,5 +14,6 @@ public:
     static bool IsTriggerJump();
     static bool IsClickR();
     static bool IsClickPressR();
+    static bool IsTriggerMenuKey();
 };
 

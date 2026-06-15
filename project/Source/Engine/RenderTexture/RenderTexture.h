@@ -144,6 +144,9 @@ public:
     void SetCamera(Camera* camera);
     MaterialForThermography* GetMaterialThermography() { return materialForThermography_; };
     MaterialForDissolve* GetMaterialDissolve() { return materialForDissolve_; };
+
+    MaterialForGaussianFilter* GetMaterialGaussianFilter() { return materialForGaussianFilter_; };
+
 protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
