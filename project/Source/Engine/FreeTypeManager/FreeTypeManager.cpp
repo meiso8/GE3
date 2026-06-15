@@ -393,9 +393,8 @@ void FreeTypeManager::CreateGlyphTexture(uint32_t faceHandle, FT_UInt glyphIndex
     FTTextureData texData;
     texData.ftResource = CreateResourceFromFTBitmap(bitmap);
   
-    DirectX::TexMetadata metadata;
-    metadata.miscFlags = 
-    metadata.IsCubemap();
+    DirectX::TexMetadata metadata = {};
+    metadata.miscFlags = metadata.IsCubemap();
     metadata.format = DXGI_FORMAT_R8_UNORM;
     metadata.mipLevels = 1;
 
@@ -516,6 +515,27 @@ std::vector<GlyphRun> FreeTypeManager::LayoutString(uint32_t handle, const std::
     FT_UInt prevGlyph = 0;
 
     for (char32_t ch : text) {
+
+
+        if (ch == U'\n' || ch == U'\r') {
+            penX = startPos.x;
+            penY += face->size->metrics.height / 64.0f;
+            prevGlyph = 0;
+            continue;
+        }
+
+        if (ch == U'　') {
+            //日本語入力の時
+            penX += face->glyph->advance.x / 32.0f;
+            continue;
+        }
+
+        if (ch == U'\t' || ch == U' ') {
+            penX += face->glyph->advance.x / 64.0f;
+            continue;
+        }
+
+
         FT_UInt glyphIndex = GetGlyphID(handle, ch, 0);
         if (glyphIndex == 0) continue;
 

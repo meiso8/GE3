@@ -3,8 +3,15 @@
 #include"CollisionManager.h"
 #include"InputBind.h"
 #include"Sound.h"
+#include<algorithm>
+#include"TimeManager.h"
 
 bool MemoManager::isLookItem_ = false;
+
+namespace {
+   float maxSpriteScale_ = { 2.0f};
+   float minSpriteScale_ = { 1.0f};
+}
 
 MemoManager::MemoManager()
 {
@@ -23,9 +30,27 @@ void MemoManager::Initialize()
 
 void MemoManager::Update()
 {
+
+
     for (auto& [handle, memo] : memos_) {
         memo->Update();
     }
+
+    if (isLookItem_) {
+
+        Vector2 controllerPos = { 0.0f, 0.0f };
+        if (Input::IsControllerStickPosMove(BUTTON_RIGHT, 0, &controllerPos)) {
+            //コントローラーの入力情報を取得する　どちらもy
+            spriteScale_ = { controllerPos.y, controllerPos.y };
+
+        } else {
+            spriteScale_ += Input::GetMouseWheel()*Time::DeltaTime();
+        }
+        spriteScale_.x = std::clamp(spriteScale_.x, minSpriteScale_, maxSpriteScale_);
+        spriteScale_.y = std::clamp(spriteScale_.y, minSpriteScale_, maxSpriteScale_);
+
+        sprite_->SetScale(spriteScale_);
+    } 
 }
 
 void MemoManager::Draw(Camera& camera)
@@ -74,7 +99,7 @@ void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handl
     for (const auto& handle : handles) {
         auto memo = std::make_unique<Memo>();
         memo->SetTexture(handle);
-       
+
         std::string key;
         switch (handle) {
         case TextureFactory::MEMO1: key = "memo1"; break;
@@ -136,6 +161,7 @@ void MemoManager::RayCastHit(RaySprite& raySprite)
                 if (!isLookItem_) {
                     isLookItem_ = true;
                     SetSpriteSize(handle);
+                    spriteScale_ = { minSpriteScale_ ,minSpriteScale_ };
                     Sound::PlayOriginSE(SoundFactory::BOOK);
                     return;
                 }

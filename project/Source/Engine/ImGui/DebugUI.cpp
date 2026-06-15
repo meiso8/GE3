@@ -54,10 +54,10 @@ void DebugUI::CheckFloat(float& value, const char* label) {
 #endif
 }
 
-void DebugUI::CheckCamera(Camera& camera, const std::string label) {
+void DebugUI::CheckCamera(Camera& camera, const char* label) {
 
 #ifdef USE_IMGUI
-    if (ImGui::TreeNode(label.c_str())) {
+    if (ImGui::TreeNode(label)) {
 
         CheckTransforms(camera.scale_, camera.rotate_, camera.translate_, "worldMatrix");
         ShowMatrix4x4(camera.worldMat_);
