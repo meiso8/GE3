@@ -85,6 +85,9 @@ Player::Player() {
 #ifdef _DEBUG
     isInvincible_ = true;
 #endif
+
+    velocity_ = { 0.0f,0.0f,0.0f };
+    kSpeed_ = { 0.5f };
 }
 
 void Player::Init(const Vector3& pos)
