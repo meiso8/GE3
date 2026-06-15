@@ -19,10 +19,24 @@ void SkinningModel::SetModel(Model* model)
     *skinCluster_ = CreateSkinCluster(*skeleton_, *modelData_);
 }
 
-void SkinningModel::PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode,  const MaskMode maskMode, const bool usePSOKey)
+void SkinningModel::PreDraw(
+    ID3D12GraphicsCommandList* commandList,
+    const BlendMode& blendMode,
+    const CullMode& cullMode,
+    const MaskMode maskMode,
+    const bool usePSOKey,
+    const RootSignature::TYPE rootSignatureType,
+    const DxcCompiler::VS_TYPE vsType,
+    const DxcCompiler::PS_TYPE psType
+
+)
 {
     (void)maskMode;
     (void)usePSOKey;
+    (void)rootSignatureType;
+    (void)vsType;
+    (void)psType;
+    //InputLayout kInputLayoutTypeSkinning;
 
     commandList->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::SKINNING));
     commandList->SetPipelineState(PSO::GetGraphicsPipelineStatesSkinning(blendMode, cullMode).Get());//PSOを設定
@@ -72,5 +86,5 @@ void SkinningModel::Draw(ID3D12GraphicsCommandList* commandList)
 
 Matrix4x4* SkinningModel::GetJointMatrix(const std::string jointName)
 {
-    return  Bone::GetJointMatrix(jointName,*skeleton_);
+    return  Bone::GetJointMatrix(jointName, *skeleton_);
 }

@@ -150,6 +150,8 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
     }
 }
 
+
+
 void Object3d::SetMeshAndMaterial(Primitive* mesh)
 {
     meshCommon_ = mesh;

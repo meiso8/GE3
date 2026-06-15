@@ -38,6 +38,7 @@ public:
         PS_Dissolve,
         PS_Random,
         PS_Thermography,
+        PS_Beam,
         PS_Shaders,
     };
 

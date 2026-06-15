@@ -12,10 +12,17 @@ class ParticleEmitter;
 class MedjedStage :public Stage
 {
 private:
+
+    enum Particels {
+        kSky_Particle,
+        kMedjed_Particle,
+        kMaxParticles,
+    };
+
     std::unique_ptr<MedjedManager>medjedManager_ = nullptr;
     std::unique_ptr<RhythmBullet>rhythmBullet_ = nullptr;
     std::unique_ptr<BackGround>backGround_ = nullptr;
-    std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
+    std::array<std::unique_ptr<ParticleEmitter>, kMaxParticles>particleEmitters_;
 
 
 public:
@@ -31,7 +38,7 @@ public:
     Medjed* GetMedjed() { return medjedManager_->GetMedjed(); };
     Enemy* GetEnemy() { return medjedManager_->GetEnemy(); };
     const bool& GetEnemyApper() {return medjedManager_->GetIsApperMedjed(); }
-    
+    void UpdateEmitter(const Particels& particles);
 private:
     void CreateParticle();
     void TransitionScene();

@@ -8,6 +8,7 @@
 #include"Sphere.h"
 #include"ModelData.h"
 #include"Circle.h"
+#include"PSO.h"
 
 class PrimitiveGenerator {
 public:
@@ -32,7 +33,15 @@ public:
     };
 
     virtual void Create(const MeshData& meshData);
-    virtual void PreDraw(ID3D12GraphicsCommandList* commandList, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode,const bool usePSOKey = false);
+    virtual void PreDraw(
+        ID3D12GraphicsCommandList* commandList,
+        const BlendMode& blendMode, 
+        const CullMode& cullMode,
+        const MaskMode maskMode,
+        const bool usePSOKey = false,
+        const RootSignature::TYPE rootSignatureType = RootSignature::TYPE::NORMAL,
+       const DxcCompiler::VS_TYPE vsType =  DxcCompiler::VS_TYPE::VS_Normal,
+       const DxcCompiler::PS_TYPE psType =  DxcCompiler::PS_TYPE::PS_Normal);
     virtual void Draw(ID3D12GraphicsCommandList* commandList);  
     virtual void DrawCallForParticle(ID3D12GraphicsCommandList* commandList, const uint32_t numInstance);
 protected:

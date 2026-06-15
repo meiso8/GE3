@@ -81,7 +81,12 @@ public:
     void Create();
     virtual void Initialize();
     virtual void Update();
-    virtual void Draw(Camera& camera,  const BlendMode& blendMode = kBlendModeNormal, const CullMode& cullMode = kCullModeBack, const MaskMode maskMode = kAll, const bool usePSOKey = false, const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX);
+    virtual void Draw(Camera& camera,
+        const BlendMode& blendMode = kBlendModeNormal,
+        const CullMode& cullMode = kCullModeBack,
+        const MaskMode maskMode = kAll, 
+        const bool usePSOKey = false,
+        const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX);
 private:
     void CreateUV();
     void CreateTransformationMatrix();

@@ -26,7 +26,11 @@ void Player::OnCollision(Collider* collider)
         || collider->GetCollisionAttribute() == kCollisionMummy
 
         ) {
+
+
+
         OnCollisionEnemy();
+
     }
 
     if (collider->GetCollisionAttribute() == kCollisionFloor) {
@@ -76,6 +80,11 @@ Player::Player() {
     eyeCollider_ = std::make_unique<EyeCollider>();
     //体の位置を親に設定
     eyeCollider_->SetParent(bodyPos_.worldTransform_);
+
+    isInvincible_ = false;
+#ifdef _DEBUG
+    isInvincible_ = true;
+#endif
 }
 
 void Player::Init(const Vector3& pos)
@@ -177,7 +186,7 @@ void Player::Debug()
     DebugUI::CheckObject3d(bodyPos_, "player");
     ImGui::Begin("Player");
     DebugUI::CheckCaracterState(characterState_, "CharacterStage");
-
+    ImGui::Checkbox("isInvincible", &isInvincible_);
     ImGui::SliderFloat3("velocity_", &velocity_.x, -1000.0f, 1000.0f);
     ImGui::End();
 
@@ -437,8 +446,14 @@ void Player::MouseLook()
 
 }
 
-void Player::OnCollisionEnemy()
+void Player::OnCollisionEnemy(const int hitPoint)
 {
+
+    if (isInvincible_) {
+        //無敵だったらリターンする
+        return;
+    }
+
     if (characterState_.isHit) {
         return;
     }
@@ -446,7 +461,7 @@ void Player::OnCollisionEnemy()
     Sound::PlaySE(SoundFactory::CRACKER);
     //衝突フラグを真に
     characterState_.isHit = true;
-    characterState_.hps.hp -= 10;
+    characterState_.hps.hp -= hitPoint;
     hitTimer_ = 1.0f;
 
     if (characterState_.hps.hp <= 0.0f) {
