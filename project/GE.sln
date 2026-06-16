@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35806.99
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11828.311
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目", "ソリューション項目", "{2022CB0F-8BAF-F49E-0C48-8EF4C96EC109}"
 	ProjectSection(SolutionItems) = preProject
@@ -27,6 +27,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgui", "externals\imgui\imgui.vcxproj", "{B86956B3-A830-4D93-9550-79E4BD728EBC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nlohmann", "externals\nlohmann\nlohmann.vcxproj", "{5EF949F0-DF36-408F-8C04-832336F80D29}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGuizmo", "externals\ImGuizmo\ImGuizmo.vcxproj", "{80551F0B-AAF8-4B67-B152-27BF03EAF307}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,12 @@ Global
 		{5EF949F0-DF36-408F-8C04-832336F80D29}.Development|x64.Build.0 = Release|x64
 		{5EF949F0-DF36-408F-8C04-832336F80D29}.Release|x64.ActiveCfg = Release|x64
 		{5EF949F0-DF36-408F-8C04-832336F80D29}.Release|x64.Build.0 = Release|x64
+		{80551F0B-AAF8-4B67-B152-27BF03EAF307}.Debug|x64.ActiveCfg = Debug|x64
+		{80551F0B-AAF8-4B67-B152-27BF03EAF307}.Debug|x64.Build.0 = Debug|x64
+		{80551F0B-AAF8-4B67-B152-27BF03EAF307}.Development|x64.ActiveCfg = Development|x64
+		{80551F0B-AAF8-4B67-B152-27BF03EAF307}.Development|x64.Build.0 = Development|x64
+		{80551F0B-AAF8-4B67-B152-27BF03EAF307}.Release|x64.ActiveCfg = Release|x64
+		{80551F0B-AAF8-4B67-B152-27BF03EAF307}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +89,7 @@ Global
 		{4D192107-FD73-43B3-B341-AFE780FBFF3D} = {DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97}
 		{B86956B3-A830-4D93-9550-79E4BD728EBC} = {DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97}
 		{5EF949F0-DF36-408F-8C04-832336F80D29} = {DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97}
+		{80551F0B-AAF8-4B67-B152-27BF03EAF307} = {DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F8FCCDB-BCBB-40C5-8CA7-D2BE2B625B5B}

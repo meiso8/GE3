@@ -21,6 +21,8 @@ Bullet::~Bullet() {
 }
 
 void Bullet::Initialize() {
+    //最初は冷たい
+    SetBulletType(kEnemyCold);
     body_.Initialize();
     body_.worldTransform_.translate_.y = -10.0f;
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
@@ -31,8 +33,7 @@ void Bullet::Initialize() {
     isActive_ = false;
     size_ = 3.0f;
     body_.GetBalloonData().expansion = 0.0f;
-    //最初は冷たい
-    SetBulletType(kEnemyCold);
+
   
 }
 void Bullet::OnCollision(Collider* collider)
@@ -96,7 +97,7 @@ void Bullet::SetBulletType(const BulletType& type)
     }
 
     if (type == kEnemyCold|| type == kPlayerCold) {
-        body_.SetTemperature(0.0f);
+        body_.SetTemperature(0.375f);
 
     } else if (type == kEnemyHot || type == kPlayerHot) {
         body_.SetTemperature(1.0f);
@@ -105,10 +106,10 @@ void Bullet::SetBulletType(const BulletType& type)
 
 void Bullet::Shot(const Vector3& position, const Vector3& direction, const float speed, const float size, const Bullet::BulletType& type) {
 
-
+    SetBulletType(type);
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     type_ = type;
-    SetBulletType(type);
+  
     body_.worldTransform_.translate_ = position;
     body_.Update();
     moveDir_ = Normalize(direction);

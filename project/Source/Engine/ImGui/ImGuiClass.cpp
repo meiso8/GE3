@@ -83,6 +83,22 @@ void ImGuiClass::Initialize(Window& window,
         SrvManager::GetDescriptorHeap(),
         SrvManager::GetCPUDescriptorHandle(srvIndex),
         SrvManager::GetGPUDescriptorHandle(srvIndex));
+
+
+    // ==========================================
+    // ここに解決のためのコードを追加
+    // ==========================================
+    ImGuiIO& io = ImGui::GetIO();
+    // 1. 強制的にフォントをビルド
+    
+    // 日本語フォントを読み込む場合（※パスは環境に合わせて調整してください）
+    //io.Fonts->AddFontFromFileTTF("Resources\Fonts\meiryo.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
+
+    io.Fonts->Build();
+    // 2. DX12バックエンドに、フォントテクスチャをGPUへアップロードさせる
+    ImGui_ImplDX12_CreateDeviceObjects();
+    // ==========================================
+
 }
 
 void ImGuiClass::FrameStart() {

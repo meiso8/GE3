@@ -60,10 +60,9 @@ SampleScene::SampleScene()
     stageManager_->SetMap("WaterStage", std::move(std::make_unique<WaterStage>()));
     stageManager_->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
     stageManager_->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
-    stageManager_->SetNestStage("AmenStage");
-
+    /*   stageManager_->SetNestStage("AmenStage");*/
 #ifdef _DEVELOP
-    stageManager_->SetNestStage("MedjedStage");
+    stageManager_->SetNestStage("MummyStage");
 #endif
 
     //現在のステージの初期化
@@ -196,6 +195,11 @@ void SampleScene::SetSceneChange()
 
 void SampleScene::Debug()
 {
+
+    if (Input::IsTriggerKey(DIK_V)) {
+        stageManager_->SetNestStage("MedjedStage");
+    }
+
 #ifdef USE_IMGUI
 
     ImGui::Begin("Debug");
