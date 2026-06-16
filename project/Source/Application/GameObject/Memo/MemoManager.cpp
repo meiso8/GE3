@@ -40,12 +40,12 @@ void MemoManager::Update()
 
         Vector2 controllerPos = { 0.0f, 0.0f };
         if (Input::IsControllerStickPosMove(BUTTON_RIGHT, 0, &controllerPos)) {
-            //コントローラーの入力情報を取得する　どちらもy
-            spriteScale_ = { controllerPos.y, controllerPos.y };
-
         } else {
-            spriteScale_ += Input::GetMouseWheel()*Time::DeltaTime();
+            controllerPos.y += Input::GetMouseWheel();
         }
+
+        controllerPos.y *= Time::DeltaTime();
+        spriteScale_ += { controllerPos.y, controllerPos.y };
         spriteScale_.x = std::clamp(spriteScale_.x, minSpriteScale_, maxSpriteScale_);
         spriteScale_.y = std::clamp(spriteScale_.y, minSpriteScale_, maxSpriteScale_);
 

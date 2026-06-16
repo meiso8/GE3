@@ -30,7 +30,7 @@ bool InputBind::IsTriggerJump()
 }
 bool InputBind::IsClickR()
 {
-    return Input::IsTriggerMouse(1) ||Input::IsControllerPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0);
+    return Input::IsTriggerMouse(1) ||Input::IsControllerTriggerButton(XINPUT_GAMEPAD_RIGHT_SHOULDER, 0);
 }
 bool InputBind::IsClickPressR()
 {
