@@ -61,17 +61,17 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(SolutionDir)..\generated\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\generated\outputs\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)externals\freetype;$(SolutionDir)externals\imgui;$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)externals\freetype;$(SolutionDir)externals\imgui;$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(SolutionDir)externals\ImGuizmo;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'">
     <IntDir>$(SolutionDir)..\generated\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\generated\outputs\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)externals\freetype;$(SolutionDir)externals\imgui;$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)externals\freetype;$(SolutionDir)externals\imgui;$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(SolutionDir)externals\ImGuizmo;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(SolutionDir)..\generated\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\generated\outputs\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)externals\freetype;$(SolutionDir)externals\imgui;$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)externals\freetype;$(SolutionDir)externals\imgui;$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(SolutionDir)externals\ImGuizmo;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -93,7 +93,7 @@
       <AdditionalOptions>/ignore:4049 /ignore:4099
  %(AdditionalOptions)</AdditionalOptions>
       <AdditionalLibraryDirectories>$(SolutionDir)..\generated\outputs\$(Configuration)\;$(ProjectDir)externals\assimp\lib\Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;imgui.lib;DirectXTex.lib;assimp-vc143-mtd.lib</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;ImGuizmo.lib;imgui.lib;DirectXTex.lib;assimp-vc143-mtd.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -121,7 +121,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\generated\outputs\$(Configuration)\;$(ProjectDir)externals\assimp\lib\Release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;User32.lib;DirectXTex.lib;assimp-vc143-mt.lib</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;ImGuizmo.lib;User32.lib;DirectXTex.lib;assimp-vc143-mt.lib</AdditionalDependencies>
       <AdditionalOptions>/ignore:4049 /ignore:4099
  %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -152,7 +152,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\generated\outputs\$(Configuration)\;$(ProjectDir)externals\assimp\lib\Release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;imgui.lib;DirectXTex.lib;assimp-vc143-mt.lib</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;ImGuizmo.lib;imgui.lib;DirectXTex.lib;assimp-vc143-mt.lib</AdditionalDependencies>
       <AdditionalOptions>/ignore:4049 /ignore:4099
  %(AdditionalOptions)</AdditionalOptions>
       <LinkTimeCodeGeneration />

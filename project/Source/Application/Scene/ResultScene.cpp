@@ -130,6 +130,5 @@ void ResultScene::DrawModel()
 }
 
 void ResultScene::SceneChangeUpdate()
-{
-    sceneChange_->Update();
+{    sceneChange_->Update();
 }

@@ -223,7 +223,7 @@ void DebugUI::CheckSRVIndex() {
     D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = SrvManager::GetGPUDescriptorHandle(index);
 
     // ImGui::Imageに渡すために ImTextureID (void* 型) にキャストする
-    ImTextureID texID = reinterpret_cast<ImTextureID>(gpuHandle.ptr);
+    ImTextureID texID =(ImTextureID)gpuHandle.ptr;
 
     // 画像の表示 (引数: テクスチャID, 表示サイズ(横, 縦))
     ImGui::Image(texID, ImVec2(128.0f, 72.0f));
@@ -269,6 +269,8 @@ void DebugUI::CheckSpotLight()
 void DebugUI::CheckModel(Model& model, const char* label) {
 #ifdef USE_IMGUI
     ImGui::Begin("Model");
+
+    if (ImGui::TreeNode("material")) {
     auto* modelData = model.GetModelData();
     std::string string = "filePath :" + modelData->filePath;
     ImGui::Text(string.c_str());
@@ -288,6 +290,7 @@ void DebugUI::CheckModel(Model& model, const char* label) {
         }
 
         ImGui::TreePop();
+    }
     }
 
 
