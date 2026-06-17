@@ -402,7 +402,7 @@ void FreeTypeManager::CreateGlyphTexture(uint32_t faceHandle, FT_UInt glyphIndex
     Texture::AddTextureHandleByIndex(texData.srvIndex);
     texData.srvHandleCPU = SrvManager::GetCPUDescriptorHandle(texData.srvIndex);
     texData.srvHandleGPU = SrvManager::GetGPUDescriptorHandle(texData.srvIndex);
-    SrvManager::CreateSRVforTexture2D(texData.srvIndex, texData.ftResource.resource.Get(), metadata);
+    SrvManager::CreateSRVforTexture(texData.srvIndex, texData.ftResource.resource.Get(), metadata);
     texData.glyphSize = { (float)bitmap.width, (float)bitmap.rows };
     texData.bearingY = face->glyph->metrics.horiBearingY / 64.0f;
 

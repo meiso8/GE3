@@ -147,12 +147,10 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
 
         for (auto& [name,material] : materials) {
             newParticleGroup->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex = material.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex;
-            newParticleGroup->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureFilePath = material.textureData_[TEXTURE_USAGE_DIFFUSE].textureFilePath;
         }
 
     } else {
         newParticleGroup->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex = Texture::GetSRVHandle(textureHandle);
-        newParticleGroup->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureFilePath = Texture::GetFilePath(textureHandle);
     }
 
     newParticleGroup->primitive = std::make_unique<Primitive>();

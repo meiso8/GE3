@@ -37,7 +37,11 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
         //OSに対して、アプリの終了を伝える
         PostQuitMessage(0);
         return 0;
-
+    case WM_DROPFILES: 
+#ifdef USE_IMGUI
+        ImGuiClass::DropFiles(wparam);
+#endif
+        break;
     case WM_CHAR: 
         Input::PushChar(static_cast<char32_t>(wparam)); // ← ここで文字を渡す！ 
         break;

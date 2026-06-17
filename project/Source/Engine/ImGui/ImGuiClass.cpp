@@ -1,13 +1,31 @@
 #include "ImGuiClass.h"
 #include"CommandList.h"
 #include"SRVmanager/SrvManager.h"
+#include"ImGuizmo.h"
+#include"Camera.h"
+#include"Object3d.h"
+#include"MakeMatrix.h"
+#include <shellapi.h> // DragQueryFile用
+#include"ModelManager.h"
+#include"Texture.h"
+#include<filesystem>
+#include<Sound.h>
+#include"Log.h"
+#include"Texture.h"
+
+
+namespace ImGuiLoadFile {
+    std::filesystem::path droppedFilePath = "";
+    bool isFileDropped = false;
+}
+
 
 #ifdef USE_IMGUI
 void ImGuiClass::Initialize(Window& window,
     const Microsoft::WRL::ComPtr<ID3D12Device>& device,
     SwapChain& swapChain,
     RenderTargetView& rtv) {
-    
+
     uint32_t srvIndex = SrvManager::Allocate();
 
     IMGUI_CHECKVERSION();
@@ -90,7 +108,7 @@ void ImGuiClass::Initialize(Window& window,
     // ==========================================
     ImGuiIO& io = ImGui::GetIO();
     // 1. 強制的にフォントをビルド
-    
+
     // 日本語フォントを読み込む場合（※パスは環境に合わせて調整してください）
     //io.Fonts->AddFontFromFileTTF("Resources\Fonts\meiryo.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
 
@@ -99,6 +117,8 @@ void ImGuiClass::Initialize(Window& window,
     ImGui_ImplDX12_CreateDeviceObjects();
     // ==========================================
 
+    //ドラッグ可能にする
+    DragAcceptFiles(window.GetHwnd(), TRUE);
 }
 
 void ImGuiClass::FrameStart() {
@@ -107,6 +127,7 @@ void ImGuiClass::FrameStart() {
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
+    ImGuizmo::SetOrthographic(false); // パースペクティブカメラの場合
 
 }
 
@@ -122,6 +143,7 @@ void ImGuiClass::DrawImGui(ID3D12GraphicsCommandList* commandList) {
     //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
 //実際のcommandListのImGuiの描画コマンドを積む
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
+
 }
 
 void ImGuiClass::ShutDown() {
@@ -129,6 +151,212 @@ void ImGuiClass::ShutDown() {
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
+}
+
+
+
+void ConvertMatArray(const Matrix4x4& srcMatrix, float dstArray[16])
+{
+    // 行列のメモリ構造をそのまま16個のfloat配列にコピー
+    std::memcpy(dstArray, &srcMatrix.m[0][0], sizeof(float) * 16);
+
+}
+
+void ImGuiClass::UpdateGuizmo(Camera& camera, Object3d& targetObject)
+{
+
+
+
+#ifdef USE_IMGUI
+
+    // 1. ImGuizmoのフレーム開始宣言（内部のコンテキストを初期化・更新します）
+    ImGuizmo::BeginFrame();
+
+    static ImGuizmo::MODE currentMode = ImGuizmo::LOCAL;
+    static ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;// TRANSLATE, ROTATE, SCALE
+
+    if (ImGui::IsKeyPressed(ImGuiKey_T)) currentOperation = ImGuizmo::TRANSLATE;
+    if (ImGui::IsKeyPressed(ImGuiKey_R)) currentOperation = ImGuizmo::ROTATE;
+    if (ImGui::IsKeyPressed(ImGuiKey_S)) currentOperation = ImGuizmo::SCALE;
+
+    ImGuiIO& io = ImGui::GetIO();
+    //画面全域に合わせる
+    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+    /*
+    ImVec2 pos = ImGui::GetWindowPos();
+    ImVec2 size = ImGui::GetWindowSize();
+    ImGuizmo::SetRect(pos.x, pos.y, size.x, size.y);
+    */
+
+    float viewMat[16] = { 0.0f };
+    float projectionMat[16] = { 0.0f };
+    float worldMat[16] = { 0.0f };
+
+
+    ConvertMatArray(camera.GetViewMatrix(), viewMat);
+    ConvertMatArray(camera.GetProjectionMatrix(), projectionMat);
+    ConvertMatArray(targetObject.worldTransform_.matWorld_, worldMat);
+
+    if (ImGuizmo::Manipulate(
+        viewMat,          // float[16]
+        projectionMat,    // float[16]
+        currentOperation,           // 現在の操作（移動・回転・拡大縮小）
+        currentMode,                // 座標系（WORLD / LOCAL）
+        worldMat,   // 操作対象の行列（※中身が書き換わります）
+        nullptr,                    // (任意) デルタ行列を受け取りたい場合
+        nullptr,                    // (任意) スナップ値（グリッド吸着など）を指定したい場合
+        nullptr,                    // (任意) ローカル境界ボックス
+        nullptr                     // (任意) 境界ボックス用のスナップ
+    )) {
+
+        ImGuizmo::DecomposeMatrixToComponents(
+            worldMat,
+            &targetObject.worldTransform_.translate_.x,
+            &targetObject.worldTransform_.rotate_.x, // ラジアン（または度、ライブラリの仕様に合わせて調整）
+            &targetObject.worldTransform_.scale_.x
+        );
+
+
+        //if (targetObject.worldTransform_.parent_) {
+        //    // 親の逆行列を掛けることで、親から見たローカルな行列に変換する
+        //    Matrix4x4 invParent = Inverse(targetObject.worldTransform_.parent_->matWorld_);
+        //    targetObject.worldTransform_.matWorld_ = Multiply(targetObject.worldTransform_.matWorld_, invParent);
+
+        //    // ローカル行列から再度SRTを抽出し直す
+        //    float localMatrix[16];
+        //    ConvertMatArray(targetObject.worldTransform_.matWorld_, localMatrix);
+        //    
+        //    ImGuizmo::DecomposeMatrixToComponents(
+        //        localMatrix,
+        //        &targetObject.worldTransform_.scale_.x, &targetObject.worldTransform_.rotate_.x, &targetObject.worldTransform_.translate_.x
+        //    );
+        //}
+    };
+
+#endif
+
+}
+
+void ImGuiClass::DropFiles(WPARAM wParam) {
+    HDROP hDrop = (HDROP)wParam;
+
+    // ImGuiが「今、マウスの下にImGuiのウィンドウがあるよ」と言っているか判定
+    // かつ、特定のウィンドウ（例: "Model Loader"）の上にいるかチェックしたい場合
+    if (ImGui::GetCurrentContext() && ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) {
+
+        // ドロップされたファイルの数を取得（今回は1つだけ処理）
+        UINT fileCount = DragQueryFileW(hDrop, 0xFFFFFFFF, NULL, 0);
+        if (fileCount > 0) {
+            wchar_t filePath[MAX_PATH];
+            // 最初のファイルのパスを取得
+            DragQueryFileW(hDrop, 0, filePath, MAX_PATH);
+
+            // パスを保存して、メインループ側でロードさせる
+            ImGuiLoadFile::droppedFilePath = filePath;
+            ImGuiLoadFile::isFileDropped = true;
+        }
+    }
+    DragFinish(hDrop);
+}
+
+
+void HandleDroppedFile(const std::filesystem::path& fullPath) {
+    std::string directoryPath = fullPath.parent_path().string() + "/";
+    std::string filename = fullPath.filename().string();
+    std::string ext = fullPath.extension().string();
+    // すべて小文字に変換
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+    // 拡張子ごとのロード処理
+    if (ext == ".gltf" || ext == ".obj") {
+        ModelManager::LoadModel(directoryPath, filename);
+    } else if (ext == ".png" || ext == ".jpeg" || ext == ".jpg" || ext == ".dds") {
+        // ─── テクスチャのロード ───
+
+        //一旦これにしておくけど後で変更する
+        Texture::AddTextureHandle(fullPath.string());
+
+    } else if (ext == ".mp3" || ext == ".wav") {
+        // ─── サウンドのロード ───
+        //一旦これにしておくが後で変更する
+        Sound::Load(fullPath.string(), SoundFactory::HORROR2);
+    } else {
+        // 対応していない拡張子の場合
+        std::string message = "未対応のファイル形式です: " + ext;
+        LogFile::Log(message);
+        ImGui::Text(message.c_str());
+    }
+
+}
+
+void ImGuiClass::DrawModelLoaderWindow()
+{
+
+ 
+    ImGui::Begin("Assets");
+
+    // ファイルがドロップされたらDX12のリソースを生成
+    if (ImGuiLoadFile::isFileDropped) {
+        
+        std::filesystem::path fullPath(ImGuiLoadFile::droppedFilePath);
+
+        HandleDroppedFile(fullPath);
+
+        ImGuiLoadFile::isFileDropped = false; // フラグを下ろす
+    }
+
+    const std::vector<uint32_t>& srvIndexes = Texture::GetMappedSRVIndexes();
+
+    // アイテム1個あたりの横幅（Imageの72.0f + 余裕を持たせたパディング）
+    const float itemWidth = 72.0f + ImGui::GetStyle().ItemSpacing.x;
+
+    for (int i = 0; i < (int)srvIndexes.size(); ++i) {
+
+
+        // ★ 折り返し計算
+        if (i > 0) {
+            // 現在の行の残り横幅を取得
+            float lastX = ImGui::GetItemRectMax().x;
+            float nextX = lastX + itemWidth;
+            float windowVisibleX = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+            // 次のアイテムを置くスペースが残っている場合だけ横に並べる
+            if (nextX < windowVisibleX) {
+                ImGui::SameLine();
+            }
+            // スペースがなければ SameLine() を呼ばないことで自動的に次の行（改行）になる
+        }
+        // 1つの項目を縦にまとめるためのグループ化
+        ImGui::BeginGroup();
+
+        uint32_t currentSrvIndex = srvIndexes[i];
+
+        // ★ 0 などの未割り当て、あるいは無効な定数(0xFFFFFFFF等)の場合は描画しないガードを入れる
+        if (currentSrvIndex != 0 && currentSrvIndex < SrvManager::kMaxSRVCount && currentSrvIndex != Texture::GetSRVHandle(TextureFactory::SKYBOX_TEX)) {
+
+            // 安全であることを確認してからハンドルを取得
+            D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = SrvManager::GetGPUDescriptorHandle(currentSrvIndex);
+
+            if (gpuHandle.ptr != 0) {
+                ImGui::Text("[%d] SRV:%d", i,currentSrvIndex);
+                ImTextureID texID = (ImTextureID)gpuHandle.ptr;
+                ImGui::Image(texID, ImVec2(72.0f, 72.0f));
+            }
+        } else {
+            ImGui::Text("[%d] Skip", i,currentSrvIndex);
+            // 代わりに空白（ダミー領域）を作って高さを揃える
+            ImGui::Dummy(ImVec2(72.0f, 72.0f));
+        }
+
+        ImGui::EndGroup(); // グループ化終了
+    }
+
+
+    ImGui::Text("%s", ImGuiLoadFile::droppedFilePath.string().c_str());
+    ImGui::Checkbox("isFileDropped", &ImGuiLoadFile::isFileDropped);
+
+    ImGui::End();
 }
 
 #endif

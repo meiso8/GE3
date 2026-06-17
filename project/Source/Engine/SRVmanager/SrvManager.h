@@ -27,7 +27,7 @@ public:
     static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index);
     static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t index);
 
-    static void CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DirectX::TexMetadata& metadata);
+    static void CreateSRVforTexture(uint32_t srvIndex, ID3D12Resource* pResource, DirectX::TexMetadata& metadata);
     static void CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource,UINT numElements, UINT structureByteStride);
 
     static void SetGraphicsRootDescriptorTable(UINT RootParameterIndex, uint32_t srvIndex);

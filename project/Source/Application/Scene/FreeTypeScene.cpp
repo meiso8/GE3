@@ -88,7 +88,7 @@ void FreeTypeScene::Initialize()
 
 
     beam_->Initialize();
-
+    sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
     CreateParticle();
 }
 
@@ -110,7 +110,7 @@ void FreeTypeScene::Update()
     DirectXCommon::GetInstance()->SetRenderTextureCamera(currentCamera_);
 #ifdef _DEVELOP
 
-    if (Input::IsTriggerKey(DIK_F1)) {
+    if (Input::IsTriggerKey(DIK_1)) {
         SwitchCamera();
     }
 
@@ -129,6 +129,14 @@ void FreeTypeScene::Update()
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
     DebugUI::CheckParticle(*particleEmitters_[1], "Emitter1");
     DebugUI::CheckSRVIndex();
+
+
+    for (auto& obj : objects_) {
+        ImGuiClass::UpdateGuizmo(*currentCamera_, *obj->obj_);
+    }
+
+    
+
 
 #endif //_DEVELOP
 
@@ -189,9 +197,9 @@ void FreeTypeScene::DrawModel()
 
     object3d2_->Draw(*currentCamera_);
 
-    //for (auto& obj : objects_) {
-    //    obj->obj_->Draw(*currentCamera_);
-    //}
+    for (auto& obj : objects_) {
+        obj->obj_->Draw(*currentCamera_);
+    }
 
     skyBoxObj_->Draw(*currentCamera_);
     object3d_->Draw(*currentCamera_,BlendMode::kBlendModeAdd,CullMode::kCullModeNone,MaskMode::kZero);

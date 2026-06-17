@@ -61,12 +61,7 @@ SampleScene::SampleScene()
     stageManager_->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
     stageManager_->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
     /*   stageManager_->SetNestStage("AmenStage");*/
-#ifdef _DEVELOP
-    stageManager_->SetNestStage("MummyStage");
-#endif
 
-    //現在のステージの初期化
-    stageManager_->TransitionStage();
 
     skyboxObject3d_ = std::make_unique<SkyboxObject3d>();
     skyboxObject3d_->Create();
@@ -89,7 +84,12 @@ void SampleScene::Initialize() {
     memoManager_->Initialize();
     //アメンステージにする
     stageManager_->SetNestStage("AmenStage");
+#ifdef _DEVELOP
+    stageManager_->SetNestStage("MummyStage");
+#endif
 
+    //現在のステージの初期化
+    stageManager_->TransitionStage();
 }
 
 void SampleScene::Update() {
