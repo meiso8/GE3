@@ -855,17 +855,11 @@ void DebugUI::CheckCaracterState(CharacterState& characterState, const char* lab
 
 void DebugUI::CheckFPS() {
 #ifdef USE_IMGUI
-    if (ImGui::TreeNode("FPS")) {
-
-        ImVec4 color = (ImGui::GetIO().Framerate < 55.0f) ? ImVec4(1, 0, 0, 1) : ImVec4(0, 1, 0, 1);
-        ImGui::TextColored(color, "FPS : %0.1f", ImGui::GetIO().Framerate);
-        ImGui::TextColored(color, "DeltaTime : %f", DirectXCommon::GetDeltaTime());
-        ImGui::TextColored(ImVec4(1, 1, 1, 1), "kDeltaTime : %f", 1.0f / 60.0f);
-
-        ImGui::TreePop();
-    }
-
-
+    ImGui::Begin("Debug");
+    ImVec4 color = (ImGui::GetIO().Framerate < 55.0f) ? ImVec4(1, 0, 0, 1) : ImVec4(0, 1, 0, 1);
+    ImGui::TextColored(color, "FPS : %0.1f", ImGui::GetIO().Framerate);
+    ImGui::TextColored(color, "DeltaTime : %f", DirectXCommon::GetDeltaTime());
+    ImGui::End();
 #endif
 }
 
@@ -889,10 +883,10 @@ void DebugUI::CheckSound()
 
                 ImGui::Text("fileName : %s", filename.string().c_str());
 
-                ImGui::Text("IsPlaying? : %s", Sound::IsPlaying(filename)?"Playing!!":"NoSound");
+                ImGui::Text("IsPlaying? : %s", Sound::IsPlaying(filename) ? "Playing!!" : "NoSound");
 
                 if (ImGui::Button("Play")) {
-                    Sound::Play(filename,volume, isLoop);
+                    Sound::Play(filename, volume, isLoop);
                 }
 
                 if (ImGui::Button(" Stop")) {

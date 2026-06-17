@@ -14,7 +14,7 @@ BaseScene::BaseScene()
     debugCamera_ = std::make_unique<DebugCamera>();
 #endif //_DEVELOP
 
-   DirectXCommon::GetInstance()->SetRenderTextureCamera(camera_.get());
+    DirectXCommon::GetInstance()->SetRenderTextureCamera(camera_.get());
 }
 
 void BaseScene::Initialize()
@@ -29,16 +29,7 @@ void BaseScene::Update()
 
 void BaseScene::SceneChangeUpdate()
 {
-#ifdef _DEBUG
 
-    if (Input::IsTriggerKey(DIK_R)) { Initialize(); }
-
-    // 何かをしたらシーン遷移
-    if (Input::IsTriggerKey(DIK_I)) {
-        sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
-    }
-
-#endif
     sceneChange_->Update();
 }
 
@@ -90,43 +81,45 @@ void SceneManager::Debug()
 {
 
 #ifdef USE_IMGUI
-    
-    if (ImGui::TreeNode("SceneManager")) {
 
-        std::string currentSceneName = "None";
- 
+    ImGui::Begin("Debug");
+
+    ImGui::Separator();
+    std::string currentSceneName = "None";
+
+    for (const auto& [name, scene] : scenes_) {
+        if (currentScene_ == scene.get()) {
+            currentSceneName = name;
+            break;
+        }
+
+    }
+
+    if (ImGui::BeginCombo("Change Scene", currentSceneName.c_str())) {
+
+        // マップ内のすべてのシーンをループして選択肢を作る
         for (const auto& [name, scene] : scenes_) {
-            if (currentScene_ == scene.get()) {
-                currentSceneName = name;
+
+            // 選択肢を表示（クリックされたら true を返す）
+            if (ImGui::Selectable(name.c_str(), true)) {
+                // クリックされたらシーン切り替え関数を呼ぶ
+                    //メジェドを倒したらシーン切り替え
+
+                //すぐに移動する
+                currentScene_->SetStateEnd();
+                SetNextScene(name);
                 break;
             }
-          
         }
 
-        ImGui::Separator();
-
-        if (ImGui::BeginCombo("Change Scene", currentSceneName.c_str())) {
-
-            // マップ内のすべてのシーンをループして選択肢を作る
-            for (const auto& [name, scene] : scenes_) {
-                 
-                // 選択肢を表示（クリックされたら true を返す）
-                if (ImGui::Selectable(name.c_str(), true)) {
-                    // クリックされたらシーン切り替え関数を呼ぶ
-                        //メジェドを倒したらシーン切り替え
-      
-                    //すぐに移動する
-                    currentScene_->SetStateEnd();
-                    SetNextScene(name);
-                    break;
-                }
-            }
-
-            ImGui::EndCombo();
-        }
-
-        ImGui::TreePop();
+        ImGui::EndCombo();
     }
+
+
+    if (ImGui::Button("InitializeCurrentScene")) { currentScene_->Initialize(); }
+    ImGui::Separator();
+
+    ImGui::End();
 
 
 #endif // USE_IMGUI
