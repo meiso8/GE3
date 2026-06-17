@@ -39,6 +39,8 @@ public:
     static void CheckSound();
     static void CheckJsonFile();
     static void CheckSRVIndex();
+    static void CheckSRVTexture(const int srvIndex);
+    static void CheckTextures();
   /*  static void CheckDamageStruct(Damage& damage, const char* label);*/
     /// @brief 入力
     /// @param input 
