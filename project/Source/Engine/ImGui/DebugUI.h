@@ -39,23 +39,20 @@ public:
     static void CheckSound();
     static void CheckJsonFile();
     static void CheckSRVIndex();
+    static void CheckSRVTexture(const int srvIndex);
+    static void CheckTextures();
   /*  static void CheckDamageStruct(Damage& damage, const char* label);*/
     /// @brief 入力
     /// @param input 
     static void CheckInput();
     static void CheckXInput(const int& num);
-    /// @brief 光源
-   /// @param directionalLights 
-   /// @param lightType 
-    static void CheckDirectionalLight();
-    /// @brief 光源
-/// @param CheckSpotLight 
-/// @param lightType 
-    static void CheckSpotLight();
+
+    static void CheckLights();
+
     /// @brief モデル
     /// @param model
     /// @param label 
-    static void CheckModel(Model& model, const char* label);
+    static void CheckModels();
     /// @brief スプライト
     /// @param sprite 
     static void CheckSprite(Sprite& sprite, const char* label);
@@ -64,7 +61,7 @@ public:
     static void CheckFont(Font& sprite, const char* label);
     static void CheckBalloonData(Balloon& balloon);
     static void CheckWaveData(Wave& wave, const char* label);
-    static void CheckPointLightData();
+
     /// @brief Object3d
     /// @param object3d Object3d
     /// @param label 
@@ -109,5 +106,18 @@ public:
     static void CheckFlag(bool& flag, const char* label);
     static void SwitchFlag(bool& flag, const char* label);
     static void Button(const char* label, std::function<void()> onSwitch);
+
+
+
+private:
+    /// @brief 光源
+/// @param directionalLights 
+/// @param lightType 
+    static void CheckDirectionalLight();
+    /// @brief 光源
+/// @param CheckSpotLight 
+/// @param lightType 
+    static void CheckSpotLight();
+    static void CheckPointLightData();
 };
 

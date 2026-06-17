@@ -40,6 +40,13 @@ void AnimationObject3d::InitTime()
     animationTime_ = 0.0f;
 }
 
+std::map<std::string, Animation>& AnimationObject3d::GetAnimations()
+{
+
+ return skinningModel_->GetModelData()->animations_;
+
+}
+
 Matrix4x4 AnimationObject3d::GetWorldJointMatrix(const std::string name)
 {
     auto* matrix = skinningModel_->GetJointMatrix(name);
@@ -62,12 +69,16 @@ void AnimationObject3d::UpdateAnimation()
     assert(skeleton);
     assert(skinCluster);
 
+    auto& animations = modelData->animations_;
+
+    assert(&animations);
+
     Animation* animation = nullptr;
-    if (animations_.contains(currentAnimation_)) {
-        animation = &animations_.at(currentAnimation_);
+    if (animations.contains(currentAnimation_)) {
+        animation = &animations.at(currentAnimation_);
     } else {
 
-        for (auto& [name, findAnimation] : animations_) {
+        for (auto& [name, findAnimation] : animations) {
             animation = &findAnimation;
             //最新のアニメーションの名前を入れる
             currentAnimation_ = name;
@@ -102,13 +113,17 @@ void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
 {
     animationTime_ += Time::DeltaTime();
 
+    ModelData* modelData = skinningModel_->GetModelData();
+
     Animation* animation = nullptr;
 
-    if (animations_.contains(currentAnimation_)) {
-        animation = &animations_.at(currentAnimation_);
+    auto& animetions = modelData->animations_;
+
+    if (animetions.contains(currentAnimation_)) {
+        animation = &animetions.at(currentAnimation_);
     } else {
 
-        for (auto& [name, findAnimation] : animations_) {
+        for (auto& [name, findAnimation] : animetions) {
             animation = &findAnimation;
             //最新のアニメーションの名前を入れる
             currentAnimation_ = name;
@@ -124,9 +139,12 @@ void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
 }
 bool AnimationObject3d::IsAnimEnd()
 {
+    ModelData* modelData = skinningModel_->GetModelData();
 
-    if (animations_.contains(currentAnimation_)) {
-        return  animationTime_ == animations_.at(currentAnimation_).duration;
+    auto& animetions = modelData->animations_;
+
+    if (animetions.contains(currentAnimation_)) {
+        return  animationTime_ == animetions.at(currentAnimation_).duration;
     }
     //もしアニメーションが見つからなかったらfalseで返す
     LogFile::Log("not found animetion : IsAnimEnd return false");
@@ -141,8 +159,7 @@ void AnimationObject3d::SetModelAndLoadAnimation(Model* model)
 #ifdef _DEBUG
     debugBone_->Create(*skinningModel_->GetSkeleton());
 #endif
-    //試しにここでセットしてみる　
-    animations_ = AnimationManager::GetAnimations(model->GetModelData()->filePath);
+
 }
 
 void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode,const bool usePSOKey,const TextureFactory::Handle skyBoxTexture)

@@ -83,18 +83,23 @@ void Text::Draw() {
 void Text::Debug() {
 
 #ifdef _DEVELOP
-    ImGui::Begin("Font");
+    ImGui::Begin("Debug");
 
-    DebugUI::CheckColor(color_, "color");
-    DebugUI::CheckBlendMode(blendMode_);
-    ImGui::SliderFloat2("pos", &position_.x, -1000.0f, 1000.0f);
-    UpdateLayout();
-    for (size_t i = 0; i < activeFonts_.size(); ++i) {
-        auto* font = activeFonts_[i];
-        if (font) {
-            std::string msg = "Glyph[" + std::to_string(i) + "]";
-            DebugUI::CheckFont(*font, msg.c_str());
+    if (ImGui::TreeNode("Font")) {
+
+        DebugUI::CheckColor(color_, "color");
+        DebugUI::CheckBlendMode(blendMode_);
+        ImGui::SliderFloat2("pos", &position_.x, -1000.0f, 1000.0f);
+        UpdateLayout();
+        for (size_t i = 0; i < activeFonts_.size(); ++i) {
+            auto* font = activeFonts_[i];
+            if (font) {
+                std::string msg = "Glyph[" + std::to_string(i) + "]";
+                DebugUI::CheckFont(*font, msg.c_str());
+            }
         }
+
+        ImGui::TreePop();
     }
     ImGui::End();
 #endif

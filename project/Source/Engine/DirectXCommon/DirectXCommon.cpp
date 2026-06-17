@@ -5,6 +5,8 @@
 #include<cassert>
 #include <thread>
 #include"SRVmanager/SrvManager.h"
+#include"DebugUI.h"
+
 using namespace Microsoft::WRL;
 ComPtr<ID3D12Device> DirectXCommon::device = nullptr;
 
@@ -460,16 +462,14 @@ void DirectXCommon::UpdateRenderTexture()
 {
     renderTexture_->Update();
 #ifdef USE_IMGUI
-    ImGui::Begin("SRVTexture");
-    // 例：表示したいSRVのインデックス番号
-    // （テクスチャを読み込んだ時のインデックスや、RenderTextureのsrvIndexなど）
-    // ImGui::Imageに渡すために ImTextureID (void* 型) にキャストする
-    ImTextureID texID = (ImTextureID)depthTextureData_.srvHandleGPU.ptr;
-    ImTextureID texIDTemp = (ImTextureID)renderTexture_->GetRenderTextureData(RenderTexture::kThermography).srvHandleGPU.ptr;
+    ImGui::Begin("PosEffect");
 
-    // 画像の表示 (引数: テクスチャID, 表示サイズ(横, 縦))
-    ImGui::Image(texID, ImVec2(128.0f, 72.0f));
-    ImGui::Image(texIDTemp, ImVec2(128.0f, 72.0f));
+    // 例：表示したいSRVのインデックス番号
+    DebugUI::CheckSRVTexture(depthTextureData_.srvIndex);
+    for (auto& textureData : renderTexture_->GetRenderTextureDatas()) {
+        DebugUI::CheckSRVTexture(textureData.srvIndex);
+    }
+
     ImGui::End();
 #endif
 }

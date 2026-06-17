@@ -12,7 +12,7 @@
 #include<Sound.h>
 #include"Log.h"
 #include"Texture.h"
-
+#include"DebugUI.h"
 
 namespace ImGuiLoadFile {
     std::filesystem::path droppedFilePath = "";
@@ -270,17 +270,14 @@ void HandleDroppedFile(const std::filesystem::path& fullPath) {
 
     // 拡張子ごとのロード処理
     if (ext == ".gltf" || ext == ".obj") {
-        ModelManager::LoadModel(directoryPath, filename);
+        ModelManager::LoadModel(fullPath);
     } else if (ext == ".png" || ext == ".jpeg" || ext == ".jpg" || ext == ".dds") {
         // ─── テクスチャのロード ───
-
-        //一旦これにしておくけど後で変更する
-        Texture::AddTextureHandle(fullPath.string());
-
+        Texture::AddTextureHandle(fullPath);
     } else if (ext == ".mp3" || ext == ".wav") {
         // ─── サウンドのロード ───
         //一旦これにしておくが後で変更する
-        Sound::Load(fullPath.string(), SoundFactory::HORROR2);
+        Sound::Load(fullPath);
     } else {
         // 対応していない拡張子の場合
         std::string message = "未対応のファイル形式です: " + ext;
@@ -292,7 +289,6 @@ void HandleDroppedFile(const std::filesystem::path& fullPath) {
 
 void ImGuiClass::DrawModelLoaderWindow()
 {
-
  
     ImGui::Begin("Assets");
 
@@ -306,55 +302,11 @@ void ImGuiClass::DrawModelLoaderWindow()
         ImGuiLoadFile::isFileDropped = false; // フラグを下ろす
     }
 
-    const std::vector<uint32_t>& srvIndexes = Texture::GetMappedSRVIndexes();
-
-    // アイテム1個あたりの横幅（Imageの72.0f + 余裕を持たせたパディング）
-    const float itemWidth = 72.0f + ImGui::GetStyle().ItemSpacing.x;
-
-    for (int i = 0; i < (int)srvIndexes.size(); ++i) {
-
-
-        // ★ 折り返し計算
-        if (i > 0) {
-            // 現在の行の残り横幅を取得
-            float lastX = ImGui::GetItemRectMax().x;
-            float nextX = lastX + itemWidth;
-            float windowVisibleX = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-            // 次のアイテムを置くスペースが残っている場合だけ横に並べる
-            if (nextX < windowVisibleX) {
-                ImGui::SameLine();
-            }
-            // スペースがなければ SameLine() を呼ばないことで自動的に次の行（改行）になる
-        }
-        // 1つの項目を縦にまとめるためのグループ化
-        ImGui::BeginGroup();
-
-        uint32_t currentSrvIndex = srvIndexes[i];
-
-        // ★ 0 などの未割り当て、あるいは無効な定数(0xFFFFFFFF等)の場合は描画しないガードを入れる
-        if (currentSrvIndex != 0 && currentSrvIndex < SrvManager::kMaxSRVCount && currentSrvIndex != Texture::GetSRVHandle(TextureFactory::SKYBOX_TEX)) {
-
-            // 安全であることを確認してからハンドルを取得
-            D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = SrvManager::GetGPUDescriptorHandle(currentSrvIndex);
-
-            if (gpuHandle.ptr != 0) {
-                ImGui::Text("[%d] SRV:%d", i,currentSrvIndex);
-                ImTextureID texID = (ImTextureID)gpuHandle.ptr;
-                ImGui::Image(texID, ImVec2(72.0f, 72.0f));
-            }
-        } else {
-            ImGui::Text("[%d] Skip", i,currentSrvIndex);
-            // 代わりに空白（ダミー領域）を作って高さを揃える
-            ImGui::Dummy(ImVec2(72.0f, 72.0f));
-        }
-
-        ImGui::EndGroup(); // グループ化終了
-    }
-
-
     ImGui::Text("%s", ImGuiLoadFile::droppedFilePath.string().c_str());
-    ImGui::Checkbox("isFileDropped", &ImGuiLoadFile::isFileDropped);
+
+    DebugUI::CheckTextures();
+    DebugUI::CheckModels();
+    DebugUI::CheckSound();
 
     ImGui::End();
 }

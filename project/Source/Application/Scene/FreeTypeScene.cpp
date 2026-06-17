@@ -115,13 +115,6 @@ void FreeTypeScene::Update()
     }
 
     DebugUI::CheckCamera(*currentCamera_);
-    DebugUI::CheckModel(*ModelManager::GetModel("AmenRa"), "AmenRa");
-    DebugUI::CheckModel(*ModelManager::GetModel("medjed"), "medjed");
-    DebugUI::CheckModel(*ModelManager::GetModel("coffin"), "coffin");
-
-    DebugUI::CheckModel(*ModelManager::GetModel("playerGirl"), "playerGirl");
-
-
     DebugUI::CheckObject3d(*object3d_, "cilinder");
     DebugUI::CheckObject3d(*object3d2_, "playerGirlObj");
 

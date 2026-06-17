@@ -6,6 +6,9 @@
 #include<cstdint>
 #include<map>
 #include<d3d12.h>
+#include<string>
+#include<Animation.h>
+
 struct VertexWeightData {
     float weight;
     uint32_t vertexIndex;
@@ -34,7 +37,7 @@ struct ModelData :public MeshData {
     std::map<std::string, JointWeightData> skinClusterData;
     std::vector<MeshSection> sections; // ★追加：マテリアルごとの範囲情報
     std::map<std::string, MaterialData>materials;
-    std::string filePath;
     Node rootNode;
+    std::map <std::string, Animation> animations_;
 };
 

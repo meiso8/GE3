@@ -28,6 +28,7 @@ public:
     void SetSize(const Vector2 size) { size_ = size; }
     void Draw();
     void Debug();
+
 private:
     void UpdateLayout();
 

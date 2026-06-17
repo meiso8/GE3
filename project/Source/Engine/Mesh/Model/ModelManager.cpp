@@ -13,12 +13,13 @@
 #include"Model.h"
 #include"Quaternion/Quaternion.h"
 #include"MakeMatrix.h"
+#include"Animation.h"
 
-std::map < const std::string, std::unique_ptr< Model> > ModelManager::models_;
+std::map < const std::filesystem::path, std::unique_ptr< Model> > ModelManager::models_;
 
 // ========================================================================================================
 
-Model* ModelManager::GetModel(const std::string& tag)
+Model* ModelManager::GetModel(const std::filesystem::path& tag)
 {
 
     if (models_.contains(tag)) {
@@ -37,8 +38,12 @@ void ModelManager::Finalize()
 
 // ========================================================================================================
 
-void ModelManager::LoadModel(const std::string& directoryPath, const std::string& filename)
+void ModelManager::LoadModel(const std::filesystem::path& filePath)
 {
+    std::string directoryPath = filePath.parent_path().string();
+    std::string filename = filePath.filename().string();
+    //std::string ext = filePath.extension().string();
+
 
     // .stem() で拡張子抜きのファイル名を取得し、.string() で std::string に変換
     std::string tag = std::filesystem::path(filename).stem().string();
@@ -56,10 +61,9 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
     std::unique_ptr<ModelData> modelData = std::make_unique<ModelData>();
 
     Assimp::Importer importer;
-    std::string filePath = directoryPath + "/" + filename;
-    modelData->filePath = filePath;
 
-    const aiScene* scene = importer.ReadFile(filePath.c_str(),
+    const aiScene* scene = importer.ReadFile(
+        filePath.string(),
         aiProcess_Triangulate |
         aiProcess_FlipWindingOrder |
         aiProcess_FlipUVs |
@@ -169,7 +173,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
     //アニメーションがあったら
     if (scene->HasAnimations()) {
-
+        modelData->animations_ = AnimationManager::LoadAnimation(filePath);
     }
    
     model->SetModelData(std::move(modelData));

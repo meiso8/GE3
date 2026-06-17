@@ -5,7 +5,7 @@
 #include <assimp/scene.h>
 #include<array>
 #include"Vector3.h"
-
+#include<filesystem>
 enum TEXTURE_USAGE
 {
     TEXTURE_USAGE_DIFFUSE = 0,  //!< ディフューズマップとして利用します.
@@ -30,7 +30,7 @@ struct MaterialData {
 };
 
 namespace LoadMaterial {
-    std::string Convert(const std::string& directoryPath, aiString textureFilePath);
-    MaterialData LoadMaterialFromAssimp(aiMaterial* material, const std::string& directoryPath);
+    std::string Convert(const   std::filesystem::path& directoryPath, aiString textureFilePath);
+    MaterialData LoadMaterialFromAssimp(aiMaterial* material, const   std::filesystem::path& directoryPath);
 }
 
