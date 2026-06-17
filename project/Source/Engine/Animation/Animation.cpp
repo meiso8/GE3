@@ -6,31 +6,14 @@
 #include"Bone.h"
 #include<iostream>
 
-std::unordered_map < std::string,std::map<std::string, Animation>> AnimationManager::animations_;
+std::unordered_map < std::filesystem::path,std::map<std::string, Animation>> AnimationManager::animations_;
 
 AnimationManager::~AnimationManager()
 {
     animations_.clear();
 };
 
-
-std::map<std::string, Animation>& AnimationManager::GetAnimations(const std::string& filePath) {
-
-    if (animations_.contains(filePath)) {
-        return animations_.at(filePath);
-    }
-
-    return LoadAnimationFileForFilePath(filePath);
-}
-
-
-std::map<std::string, Animation>& AnimationManager::LoadAnimationFile(const std::string& directoryPath, const std::string& filename)
-{
-    std::string filePath = directoryPath + "/" + filename;
-    return LoadAnimationFileForFilePath(filePath);
-}
-
-std::map<std::string, Animation>& AnimationManager::LoadAnimationFileForFilePath(const std::string& filePath)
+std::map<std::string, Animation>& AnimationManager::LoadAnimation(const std::filesystem::path& filePath)
 {
 
     if (animations_.contains(filePath)) {
@@ -41,7 +24,7 @@ std::map<std::string, Animation>& AnimationManager::LoadAnimationFileForFilePath
 
 
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
+    const aiScene* scene = importer.ReadFile(filePath.string(), 0);
     assert(scene->mNumAnimations != 0);//アニメーションがない
 
     for (uint32_t i = 0; i < scene->mNumAnimations;++i) {

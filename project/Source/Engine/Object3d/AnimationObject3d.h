@@ -27,13 +27,13 @@ public:
         currentAnimation_ = animName;
     };
     const std::string GetCurrentAnimation() { return currentAnimation_; }
-    std::map<std::string, Animation>& GetAnimations() { return animations_; };
+    std::map<std::string, Animation>& GetAnimations();
     Matrix4x4 GetWorldJointMatrix(const std::string name);
 private:
     void UpdateAnimation();
     float animationTime_ = 0.0f;
     std::string currentAnimation_ = "Idle";
-    std::map <std::string, Animation> animations_;
+
     Matrix4x4 worldMatrix_ = { 0.0f };
     bool isSkinning_ = true;
     std::unique_ptr<SkinningModel> skinningModel_ = nullptr;

@@ -147,13 +147,12 @@ void MyEngine::Debug()
 
     DebugUI::CheckFPS();
     DebugUI::CheckInput();
-    DebugUI::CheckJsonFile();
+
     SceneManager::Debug();
 
-    DebugUI::CheckSound();
-    DebugUI::CheckDirectionalLight();
-    DebugUI::CheckSpotLight();
-    DebugUI::CheckPointLightData();
+    DebugUI::CheckLights();
+    DebugUI::CheckJsonFile();
+
     ImGui::End();
 
     //Loaderをここで

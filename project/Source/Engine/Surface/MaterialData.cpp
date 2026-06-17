@@ -1,12 +1,13 @@
 #include"MaterialData.h"
 
 
-std::string LoadMaterial::Convert(const std::string& directoryPath, aiString textureFilePath)
+std::string LoadMaterial::Convert(const std::filesystem::path& directoryPath, aiString textureFilePath)
 {
-    return directoryPath + "/" + textureFilePath.C_Str();
+   
+    return directoryPath.string() + "/" + textureFilePath.C_Str();
 }
 
-MaterialData LoadMaterial::LoadMaterialFromAssimp(aiMaterial * material, const std::string & directoryPath)
+MaterialData LoadMaterial::LoadMaterialFromAssimp(aiMaterial * material, const  std::filesystem::path& directoryPath)
 {
 
     MaterialData materialData;

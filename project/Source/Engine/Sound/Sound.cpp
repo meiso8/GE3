@@ -11,14 +11,18 @@
 #pragma comment(lib, "mfuuid.lib")  
 
 #pragma comment(lib, "xaudio2.lib") // xaudio2.libをリンクする。  
+#include"Log.h"
+
 
 using namespace Microsoft::WRL;
 
 ComPtr<IXAudio2> Sound::xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
-std::unordered_map<SoundFactory::TAG, IXAudio2SourceVoice*>Sound::voices_;
+
 IXAudio2MasteringVoice* Sound::masterVoice_ = nullptr;
 
-std::unordered_map<SoundFactory::TAG,SoundData> Sound::soundDatas_;
+std::unordered_map<std::filesystem::path, SoundData> Sound::soundDatas_;
+std::unordered_map<std::filesystem::path, IXAudio2SourceVoice*>  Sound::voices_;
+std::unordered_map<uint32_t, std::filesystem::path> Sound::handleToPath_;
 
 float Sound::bgmVolume_ = 0.25f;
 float Sound::seVolume_ = 0.75f;
@@ -51,17 +55,26 @@ void Sound::PlayOriginSE(const SoundFactory::TAG& tag, const float& volumeOffset
     }
 }
 
-void Sound::Pause(const SoundFactory::TAG& tag)
+void Sound::Pause(const std::filesystem::path& path)
 {
-    auto it = voices_.find(tag);
+    auto it = voices_.find(path);
     if (it != voices_.end() && it->second != nullptr) {
         it->second->Stop(); // バッファは保持されたまま停止
     }
 }
 
-void Sound::Resume(const SoundFactory::TAG& tag)
+void Sound::Pause(const SoundFactory::TAG& tag)
 {
-    auto it = voices_.find(tag);
+    Pause(handleToPath_[tag]);
+}
+
+void Sound::Resume(const SoundFactory::TAG& tag) {
+    Resume(handleToPath_[tag]);
+}
+
+void Sound::Resume(const std::filesystem::path& path)
+{
+    auto it = voices_.find(path);
     if (it != voices_.end() && it->second != nullptr) {
         it->second->Start(); // 停止した位置から再開
     }
@@ -69,18 +82,26 @@ void Sound::Resume(const SoundFactory::TAG& tag)
 
 void Sound::Stop(const SoundFactory::TAG& tag)
 {
-    auto it = voices_.find(tag);
+    Stop(handleToPath_[tag]);
+}
+
+void Sound::Stop(const std::filesystem::path& path)
+{
+    auto it = voices_.find(path);
     if (it != voices_.end() && it->second != nullptr) {
         it->second->Stop(); // バッファは保持されたまま停止
         it->second->Discontinuity();
         it->second->FlushSourceBuffers();
     }
-
 }
 
 bool Sound::IsPlaying(const SoundFactory::TAG& tag) {
+    return IsPlaying(handleToPath_[tag]);
+}
 
-    auto it = voices_.find(tag);
+bool Sound::IsPlaying(const std::filesystem::path& path)
+{
+    auto it = voices_.find(path);
     if (it != voices_.end() && it->second != nullptr) {
         XAUDIO2_VOICE_STATE state{};
         it->second->GetState(&state);
@@ -106,12 +127,11 @@ void Sound::StopAllSound()
 
 }
 
-
-XAUDIO2_BUFFER Sound::GetBuffer(const SoundFactory::TAG& tag)
+XAUDIO2_BUFFER Sound::GetBuffer(const std::filesystem::path& path)
 {
     XAUDIO2_BUFFER buf{};
-    buf.pAudioData = soundDatas_[tag].mediaData.data();
-    buf.AudioBytes = static_cast<UINT32>(soundDatas_[tag].mediaData.size());
+    buf.pAudioData = soundDatas_[path].mediaData.data();
+    buf.AudioBytes = static_cast<UINT32>(soundDatas_[path].mediaData.size());
     buf.Flags = XAUDIO2_END_OF_STREAM;
 
     return buf;
@@ -119,7 +139,13 @@ XAUDIO2_BUFFER Sound::GetBuffer(const SoundFactory::TAG& tag)
 
 std::vector<float> Sound::GetWaveform(const SoundFactory::TAG& tag)
 {
-    XAUDIO2_BUFFER buf = Sound::GetBuffer(tag);
+    return  GetWaveform(handleToPath_[tag]);
+
+}
+
+std::vector<float> Sound::GetWaveform(const std::filesystem::path& path)
+{
+    XAUDIO2_BUFFER buf = Sound::GetBuffer(path);
     std::vector<float> waveform;
     const int16_t* pcm = reinterpret_cast<const int16_t*>(buf.pAudioData);
     size_t sampleCount = buf.AudioBytes / sizeof(int16_t);
@@ -134,8 +160,13 @@ std::vector<float> Sound::GetWaveform(const SoundFactory::TAG& tag)
 
 UINT64 Sound::GetSamplesPlayed(const SoundFactory::TAG& tag)
 {
+    return GetSamplesPlayed(handleToPath_[tag]);
+}
+
+UINT64 Sound::GetSamplesPlayed(const std::filesystem::path& path)
+{
     XAUDIO2_VOICE_STATE state{};
-    auto it = voices_.find(tag);
+    auto it = voices_.find(path);
     if (it != voices_.end() && it->second != nullptr) {
         it->second->GetState(&state);
     }
@@ -153,11 +184,16 @@ void Sound::Unload(SoundData& soundData) {
 // ====================================================================================================
 
 void Sound::Play(const SoundFactory::TAG& tag, const float& volume, const bool& isLoop) {
+    Play(handleToPath_[tag], volume, isLoop);
+}
+
+void Sound::Play(const std::filesystem::path& path, const float& volume, const bool& isLoop)
+{
     HRESULT result;
 
     IXAudio2SourceVoice* newVoice = nullptr;
 
-    result = xAudio2_->CreateSourceVoice(&newVoice, &soundDatas_[tag].pWaveFormat);
+    result = xAudio2_->CreateSourceVoice(&newVoice, &soundDatas_[path].pWaveFormat);
     assert(SUCCEEDED(result));
     float newVolume = volume;
     //最大値と最小値を入れる
@@ -166,8 +202,8 @@ void Sound::Play(const SoundFactory::TAG& tag, const float& volume, const bool& 
     newVoice->SetVolume(newVolume);
 
     XAUDIO2_BUFFER buf{};
-    buf.pAudioData = soundDatas_[tag].mediaData.data();
-    buf.AudioBytes = static_cast<UINT32>(soundDatas_[tag].mediaData.size());
+    buf.pAudioData = soundDatas_[path].mediaData.data();
+    buf.AudioBytes = static_cast<UINT32>(soundDatas_[path].mediaData.size());
     buf.Flags = XAUDIO2_END_OF_STREAM;
 
     if (isLoop) {
@@ -179,13 +215,19 @@ void Sound::Play(const SoundFactory::TAG& tag, const float& volume, const bool& 
     result = newVoice->Start();//再生開始
     assert(SUCCEEDED(result));
 
-    voices_[tag] = newVoice;
+    voices_[path] = newVoice;
+
 };
 
 
 void Sound::SetVol(const float& vol, const SoundFactory::TAG& tag)
 {
-    auto it = voices_.find(tag);
+    SetVol(vol, handleToPath_[tag]);
+}
+
+void Sound::SetVol(const float& vol, const std::filesystem::path& path)
+{
+    auto it = voices_.find(path);
     if (it != voices_.end() && it->second != nullptr) {
         float newVolume = vol;
         //最大値と最小値を入れる
@@ -209,30 +251,18 @@ bool Sound::IsPlayingAll() {
     return false; // すべての音声が停止している
 }
 
-
-void Sound::Load(const std::string& path, const SoundFactory::TAG& tag) {
-
-    //読み込み済みテクスチャを検索
-    auto it = std::find_if(
-        soundDatas_.begin(),
-        soundDatas_.end(),
-        [&](const auto& pair) {
-            return pair.second.filePath == path;
-        }
-    );
-
-    if (soundDatas_.contains(tag)) {
-        return;
+bool Sound::LoadFile(const std::filesystem::path& path)
+{
+    //読み込み済みファイルを検索
+    if (soundDatas_.contains(path)) {
+        LogFile::Log("Already Load Audio File!");
+        return false;
     }
 
     //テクスチャ枚数上限チェック
     assert(soundDatas_.size() < DirectXCommon::kMaxSoundCount);
 
-    if (it != soundDatas_.end()) {
-        return;
-    }
-
-    std::wstring filePathW = StringUtility::ConvertString(path);
+    std::wstring filePathW = path.wstring();
 
     //ソースリーダーの作成
     ComPtr<IMFSourceReader> pMFSourceReader = { nullptr };
@@ -254,8 +284,7 @@ void Sound::Load(const std::string& path, const SoundFactory::TAG& tag) {
     WAVEFORMATEX* waveFormat{ nullptr };
     MFCreateWaveFormatExFromMFMediaType(pOutType.Get(), &waveFormat, nullptr);
 
-    soundDatas_[tag].pWaveFormat = *waveFormat;
-    soundDatas_[tag].filePath = path;
+    soundDatas_[path].pWaveFormat = *waveFormat;
 
     while (true) {
         ComPtr<IMFSample> pMFSample{ nullptr };
@@ -273,14 +302,40 @@ void Sound::Load(const std::string& path, const SoundFactory::TAG& tag) {
             BYTE* pBuffer{ nullptr };
             DWORD maxLength = 0, cbCurrentLength = 0;
             pMFMediaBuffer->Lock(&pBuffer, &maxLength, &cbCurrentLength);
-            soundDatas_[tag].mediaData.insert(soundDatas_[tag].mediaData.end(), pBuffer, pBuffer + cbCurrentLength);
+            soundDatas_[path].mediaData.insert(soundDatas_[path].mediaData.end(), pBuffer, pBuffer + cbCurrentLength);
             pMFMediaBuffer->Unlock();
         }
 
     }
+
+    LogFile::Log("Success AudioLoad!");
+    return true;
 }
 
 
+void Sound::LoadAndMap(const std::filesystem::path& path, const SoundFactory::TAG& tag) {
+
+    if (LoadFile(path)) {
+        //ハンドルとパスをマッピング
+        handleToPath_[tag] = path;
+        LogFile::Log("Mapping AudioLoad File!");
+    };
+
+
+}
+
+void Sound::Load(const std::filesystem::path& path)
+{
+    if (LoadFile(path)) {
+        //ハンドルとパスをマッピング?
+        uint32_t handle = (uint32_t)handleToPath_.size();
+        if (handleToPath_[handle].empty()) {
+            handleToPath_[handle] = path;
+        }
+    
+        LogFile::Log("Mapping AudioLoad File!");
+    };
+}
 
 void Sound::Initialize()
 {
@@ -311,7 +366,7 @@ void Sound::Finalize()
         }
     }
 
-    for (auto& [tag, data] : soundDatas_) {
+    for (auto& [filePath, data] : soundDatas_) {
         Unload(data);
     }
 

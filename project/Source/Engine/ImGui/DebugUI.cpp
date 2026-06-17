@@ -225,14 +225,14 @@ void DebugUI::CheckSRVIndex() {
     // （テクスチャを読み込んだ時のインデックスや、RenderTextureのsrvIndexなど）
     ImGui::SliderInt("srvIndex", &index, 0, SrvManager::kMaxSRVCount - 1);
 
-        // SrvManager から GPUハンドルを取得
-        D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = SrvManager::GetGPUDescriptorHandle(index);
+    // SrvManager から GPUハンドルを取得
+    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = SrvManager::GetGPUDescriptorHandle(index);
 
-        // ImGui::Imageに渡すために ImTextureID (void* 型) にキャストする
-        ImTextureID texID = (ImTextureID)gpuHandle.ptr;
+    // ImGui::Imageに渡すために ImTextureID (void* 型) にキャストする
+    ImTextureID texID = (ImTextureID)gpuHandle.ptr;
 
-        // 画像の表示 (引数: テクスチャID, 表示サイズ(横, 縦))
-        ImGui::Image(texID, ImVec2(128.0f, 72.0f));
+    // 画像の表示 (引数: テクスチャID, 表示サイズ(横, 縦))
+    ImGui::Image(texID, ImVec2(128.0f, 72.0f));
 
 
     ImGui::End();
@@ -243,7 +243,7 @@ void DebugUI::CheckSRVTexture(const int srvIndex)
 {
 #ifdef USE_IMGUI
 
-    if (srvIndex >=(int) SrvManager::kMaxSRVCount) {
+    if (srvIndex >= (int)SrvManager::kMaxSRVCount) {
         return;
     };
 
@@ -359,40 +359,41 @@ void DebugUI::CheckSpotLight()
 #endif
 }
 
-void DebugUI::CheckModel(Model& model, const char* label) {
+void DebugUI::CheckModels() {
 
 #ifdef USE_IMGUI
 
-    ImGui::Begin("Debug");
 
-    if (ImGui::TreeNode("Model")) {
-        if (ImGui::TreeNode("material")) {
-            auto* modelData = model.GetModelData();
-            std::string string = "filePath :" + modelData->filePath;
-            ImGui::Text(string.c_str());
-            ImGui::Text("indices : Size : %d", modelData->indices.size());
-            ImGui::Text("vertices : Size : %d", modelData->vertices.size());
+    if (ImGui::TreeNode("Models")) {
 
-            if (ImGui::TreeNode("material")) {
-                for (auto& [name, materials] : modelData->materials) {
-                    if (ImGui::TreeNode(name.c_str())) {
-                        for (int i = 0; i < materials.textureData_.size(); ++i) {
-                            ImGui::Text("material : SrvIndex : %d", materials.textureData_[i].textureSrvIndex);
+        for (auto& [name, model] : ModelManager::GetModels()) {
+
+            if (ImGui::TreeNode(name.string().c_str())) {
+
+                auto* modelData = model->GetModelData();
+
+                ImGui::Text("indices : Size : %d", modelData->indices.size());
+                ImGui::Text("vertices : Size : %d", modelData->vertices.size());
+
+                if (ImGui::TreeNode("material")) {
+                    for (auto& [name, materials] : modelData->materials) {
+                        if (ImGui::TreeNode(name.c_str())) {
+                            for (int i = 0; i < materials.textureData_.size(); ++i) {
+                                ImGui::Text("material : SrvIndex : %d", materials.textureData_[i].textureSrvIndex);
+                            }
+                            ImGui::TreePop();
                         }
-                        ImGui::TreePop();
                     }
+
+                    ImGui::TreePop();
                 }
 
                 ImGui::TreePop();
             }
-
-            ImGui::TreePop();
-        }
-
+        };
         ImGui::TreePop();
     }
 
-    ImGui::End();
 #endif
 }
 
@@ -400,7 +401,7 @@ void DebugUI::CheckModel(Model& model, const char* label) {
 void DebugUI::CheckInput() {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode("Input")) {
- 
+
         ImGui::SliderFloat2("mousePos", &Input::GetMousePos().x, 0.0f, 1280.0f);
         ImGui::SliderFloat2("cursorPos", &Input::GetCursorPosition().x, 0.0f, 1280.0f);
 
@@ -449,6 +450,17 @@ void DebugUI::CheckXInput(const int& num)
         ImGui::TreePop();
     }
 #endif
+}
+
+void DebugUI::CheckLights()
+{
+    if (ImGui::TreeNode("Lights")) {
+        DebugUI::CheckDirectionalLight();
+        DebugUI::CheckSpotLight();
+        DebugUI::CheckPointLightData();
+        ImGui::TreePop();
+    }
+
 }
 
 void DebugUI::CheckSprite(Sprite& sprite, const char* label) {
@@ -524,32 +536,32 @@ void DebugUI::CheckFont(Font& font, const char* label)
 {
 #ifdef USE_IMGUI
 
-        if (ImGui::TreeNode(label)) {
+    if (ImGui::TreeNode(label)) {
 
-            if (ImGui::TreeNode("transform2D")) {
-                ImGui::SliderFloat2("pos", &font.GetPosition().x, -1280.0f, 1280.0f);
-                ImGui::SliderFloat("rotation", &font.GetRotate(), 0.0f, std::numbers::pi_v<float>*2.0f);
-                ImGui::SliderFloat2("scale", &font.GetScale().x, -1280.0f, 1280.0f);
-                ImGui::SliderFloat2("size", &font.GetSize().x, -1280.0f, 1280.0f);
-                ImGui::TreePop();
-            }
-
-            CheckTransforms(font.GetUVScale(), font.GetUVRotate(), font.GetUVTranslate(), "uvTransform");
-
-            if (ImGui::TreeNode("anchorPointTextureSize")) {
-
-                ImGui::SliderFloat2("anchorPoint", &font.GetAnchorPoint().x, 0.0f, 1.0f);
-                ImGui::Checkbox("isFlipX", &font.GetIsFlipX());
-                ImGui::Checkbox("isFlipY", &font.GetIsFlipY());
-                ImGui::SliderFloat2("textureLeftTop", &font.GetTextureLeftTop().x, 0.0f, 1280.0f);
-                ImGui::SliderFloat2("textureSize", &font.GetTextureSize().x, 0.0f, 1280.0f);
-                ImGui::TreePop();
-            }
-
-            CheckColor(font.GetColor(), "color");
-
+        if (ImGui::TreeNode("transform2D")) {
+            ImGui::SliderFloat2("pos", &font.GetPosition().x, -1280.0f, 1280.0f);
+            ImGui::SliderFloat("rotation", &font.GetRotate(), 0.0f, std::numbers::pi_v<float>*2.0f);
+            ImGui::SliderFloat2("scale", &font.GetScale().x, -1280.0f, 1280.0f);
+            ImGui::SliderFloat2("size", &font.GetSize().x, -1280.0f, 1280.0f);
             ImGui::TreePop();
         }
+
+        CheckTransforms(font.GetUVScale(), font.GetUVRotate(), font.GetUVTranslate(), "uvTransform");
+
+        if (ImGui::TreeNode("anchorPointTextureSize")) {
+
+            ImGui::SliderFloat2("anchorPoint", &font.GetAnchorPoint().x, 0.0f, 1.0f);
+            ImGui::Checkbox("isFlipX", &font.GetIsFlipX());
+            ImGui::Checkbox("isFlipY", &font.GetIsFlipY());
+            ImGui::SliderFloat2("textureLeftTop", &font.GetTextureLeftTop().x, 0.0f, 1280.0f);
+            ImGui::SliderFloat2("textureSize", &font.GetTextureSize().x, 0.0f, 1280.0f);
+            ImGui::TreePop();
+        }
+
+        CheckColor(font.GetColor(), "color");
+
+        ImGui::TreePop();
+    }
 #endif
 }
 
@@ -674,7 +686,7 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
         ImGui::SliderFloat3("velcityAABBMax", &emitter.velocityAABB.min.x, -20.0f, 0.0f);
         ImGui::SliderFloat3("velcityAABBMin", &emitter.velocityAABB.max.x, 0.0f, 20.0f);
         ImGui::Separator();
- 
+
         ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
         ImGui::SliderFloat("radiusSpeed", &emitter.radiusSpeed, -100.f, 100.0f);
 
@@ -865,18 +877,50 @@ void DebugUI::CheckSound()
         ImGui::SliderFloat("SE Val", &Sound::seVolume_, 0.0f, 1.0f);
         ImGui::SliderFloat("BGM Val", &Sound::bgmVolume_, 0.0f, 1.0f);
 
-        // 正規化済みのモノラル波形バッファ
-        if (ImGui::TreeNode("ShowOscilloscope")) {
-            static int writeIdx = 0;
-            std::vector<float> waveform = Sound::GetWaveform(SoundFactory::BGM_ArabRuins);
-            writeIdx = (int)(Sound::GetSamplesPlayed(SoundFactory::BGM_ArabRuins) % waveform.size());
+        static bool isLoop = false;
+        static float volume = false;
+        ImGui::Checkbox("isLoop", &isLoop);
+        ImGui::SliderFloat("volume", &volume, 0.0f, 10.0f);
 
-            float scale = Sound::bgmVolume_; // 0.0〜1.0
 
-            ImGui::PlotLines("", waveform.data(), (int)waveform.size(), writeIdx,
-                nullptr, -scale, scale, ImVec2(0, 64));
-            ImGui::TreePop();
-        }
+        for (auto& [filename, sound] : Sound::GetSouneDatas()) {
+
+            if (ImGui::TreeNode(filename.filename().string().c_str())) {
+
+                ImGui::Text("fileName : %s", filename.string().c_str());
+
+                ImGui::Text("IsPlaying? : %s", Sound::IsPlaying(filename)?"Playing!!":"NoSound");
+
+                if (ImGui::Button("Play")) {
+                    Sound::Play(filename,volume, isLoop);
+                }
+
+                if (ImGui::Button(" Stop")) {
+                    Sound::Stop(filename);
+                }
+
+                if (ImGui::Button("Pause")) {
+                    Sound::Pause(filename);
+                }
+
+                // 正規化済みのモノラル波形バッファ
+                if (ImGui::TreeNode("Show Oscilloscope")) {
+                    static int writeIdx = 0;
+                    std::vector<float> waveform = Sound::GetWaveform(filename);
+                    writeIdx = (int)(Sound::GetSamplesPlayed(filename) % waveform.size());
+
+                    float scale = Sound::bgmVolume_; // 0.0〜1.0
+
+                    ImGui::PlotLines("", waveform.data(), (int)waveform.size(), writeIdx,
+                        nullptr, -scale, scale, ImVec2(0, 64));
+                    ImGui::TreePop();
+                }
+
+                ImGui::TreePop();
+            }
+
+        };
+
         ImGui::TreePop();
     };
 #endif

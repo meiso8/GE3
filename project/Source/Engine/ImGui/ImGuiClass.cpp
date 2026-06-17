@@ -270,17 +270,14 @@ void HandleDroppedFile(const std::filesystem::path& fullPath) {
 
     // 拡張子ごとのロード処理
     if (ext == ".gltf" || ext == ".obj") {
-        ModelManager::LoadModel(directoryPath, filename);
+        ModelManager::LoadModel(fullPath);
     } else if (ext == ".png" || ext == ".jpeg" || ext == ".jpg" || ext == ".dds") {
         // ─── テクスチャのロード ───
-
-        //一旦これにしておくけど後で変更する
-        Texture::AddTextureHandle(fullPath.string());
-
+        Texture::AddTextureHandle(fullPath);
     } else if (ext == ".mp3" || ext == ".wav") {
         // ─── サウンドのロード ───
         //一旦これにしておくが後で変更する
-        Sound::Load(fullPath.string(), SoundFactory::HORROR2);
+        Sound::Load(fullPath);
     } else {
         // 対応していない拡張子の場合
         std::string message = "未対応のファイル形式です: " + ext;
@@ -308,7 +305,9 @@ void ImGuiClass::DrawModelLoaderWindow()
     ImGui::Text("%s", ImGuiLoadFile::droppedFilePath.string().c_str());
 
     DebugUI::CheckTextures();
-    
+    DebugUI::CheckModels();
+    DebugUI::CheckSound();
+
     ImGui::End();
 }
 
