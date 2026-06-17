@@ -13,11 +13,12 @@
 #include"../externals/imgui/imgui_impl_win32.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-
 #include"Window.h"
 #include"SwapChain.h"
 #include"RenderTargetView.h"
 
+class Object3d;
+class Camera;
 
 class CommandList;
 
@@ -33,7 +34,9 @@ public:
     void Render();
     void DrawImGui(ID3D12GraphicsCommandList* commandList);
     void ShutDown();
-
+   static  void UpdateGuizmo(Camera& camera, Object3d& targetObject);
+   void DrawModelLoaderWindow();
+   static void DropFiles(WPARAM wParam);
 };
 
 

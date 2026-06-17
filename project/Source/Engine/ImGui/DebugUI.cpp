@@ -281,8 +281,6 @@ void DebugUI::CheckModel(Model& model, const char* label) {
         for (auto& [name, materials] : modelData->materials) {
             if (ImGui::TreeNode(name.c_str())) {
                 for (int i = 0; i < materials.textureData_.size(); ++i) {
-                    std::string textureFilePath = "material : FilePath :" + materials.textureData_[i].textureFilePath;
-                    ImGui::Text(textureFilePath.c_str());
                     ImGui::Text("material : SrvIndex : %d", materials.textureData_[i].textureSrvIndex);
                 }
                 ImGui::TreePop();

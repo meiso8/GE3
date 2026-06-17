@@ -6,8 +6,8 @@
 using namespace StringUtility;
 
 std::vector<uint32_t> Texture::srvIndexes_;
-std::unordered_map<uint32_t, std::string> Texture::handleToPath_;
-std::unordered_map<std::string, Texture::TextureData> Texture::textureDatas;
+std::unordered_map<uint32_t, std::filesystem::path> Texture::handleToPath_;
+std::unordered_map<std::filesystem::path, Texture::TextureData> Texture::textureDatas;
 
 void Texture::Initialize()
 {
@@ -17,12 +17,12 @@ void Texture::Initialize()
 }
 
 
-void Texture::Load(const std::string& filePath, const TextureFactory::Handle& handle)
+void Texture::LoadAndMapHandle(const std::filesystem::path& filePath, const TextureFactory::Handle& handle)
 {
     srvIndexes_[handle] = LoadAndGetIndex(filePath);
 }
 
-uint32_t Texture::LoadAndGetIndex(const std::string& filePath)
+uint32_t Texture::LoadAndGetIndex(const std::filesystem::path& filePath)
 {
     LoadTexture(filePath);
 
@@ -31,7 +31,7 @@ uint32_t Texture::LoadAndGetIndex(const std::string& filePath)
     return index;
 }
 
-uint32_t Texture::AddTextureHandle(const std::string& filePath) {
+uint32_t Texture::AddTextureHandle(const std::filesystem::path& filePath) {
 
     uint32_t srvIndex = LoadAndGetIndex(filePath);
     // すでに登録済みならそのSRVインデックスを返す
@@ -82,9 +82,38 @@ void Texture::Finalize()
     textureDatas.clear();
 }
 
-void Texture::LoadTexture(const std::string& filePath)
+uint32_t Texture::GetSrvIndexByFilePath(const std::filesystem::path& filePath)
 {
+
     //読み込み済みテクスチャを検索
+    if (textureDatas.contains(filePath)) {
+        return textureDatas.at(filePath).srvIndex;
+    }
+
+    assert(0);
+    return 0;
+}
+
+
+D3D12_GPU_DESCRIPTOR_HANDLE Texture::GetSrvHandleGPU(const std::filesystem::path& filePath)
+{
+    //テクスチャ番号が正常範囲内にある
+    assert(SrvManager::IsMaxCount());
+    //テクスチャデータの参照を取得
+    return textureDatas[filePath].srvHandleGPU;
+}
+
+const DirectX::TexMetadata& Texture::GetMetaData(const uint32_t& handle)
+{
+    //テクスチャ番号が正常範囲内にある
+    assert(SrvManager::IsMaxCount());
+
+    return textureDatas[handleToPath_[handle]].metadata;
+}
+
+void Texture::LoadTexture(const std::filesystem::path& filePath)
+{  //読み込み済みテクスチャを検索
+
     if (textureDatas.contains(filePath)) {
         return;
     }
@@ -94,7 +123,7 @@ void Texture::LoadTexture(const std::string& filePath)
 
     //テクスチャファイルを読んでプログラムで扱えるようにする
     DirectX::ScratchImage image{};
-    std::wstring filePathW = ConvertString(filePath);
+    std::wstring filePathW = filePath.wstring();
     //sRBG空間で作られた物として読む。
     HRESULT hr;
 
@@ -126,12 +155,9 @@ void Texture::LoadTexture(const std::string& filePath)
 
     }
 
-
-
     //追加したテクスチャデータの参照を取得する
     TextureData& textureData = textureDatas[filePath];
 
-    textureData.filePath = filePath;
     textureData.metadata = mipImages.GetMetadata();
     textureData.resource = DirectXCommon::CreateTextureResource(textureData.metadata);
     textureData.intermediateResource = DirectXCommon::UploadTextureData(textureData.resource, mipImages);
@@ -142,35 +168,6 @@ void Texture::LoadTexture(const std::string& filePath)
     textureData.srvHandleCPU = SrvManager::GetCPUDescriptorHandle(textureData.srvIndex);
     textureData.srvHandleGPU = SrvManager::GetGPUDescriptorHandle(textureData.srvIndex);
 
-    SrvManager::CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metadata);
+    SrvManager::CreateSRVforTexture(textureData.srvIndex, textureData.resource.Get(), textureData.metadata);
 
-}
-
-uint32_t Texture::GetSrvIndexByFilePath(const std::string& filePath)
-{
-
-    //読み込み済みテクスチャを検索
-    if (textureDatas.contains(filePath)) {
-        return textureDatas.at(filePath).srvIndex;
-    }
-
-    assert(0);
-    return 0;
-}
-
-
-D3D12_GPU_DESCRIPTOR_HANDLE Texture::GetSrvHandleGPU(const std::string& filePath)
-{
-    //テクスチャ番号が正常範囲内にある
-    assert(SrvManager::IsMaxCount());
-    //テクスチャデータの参照を取得
-    return textureDatas[filePath].srvHandleGPU;
-}
-
-const DirectX::TexMetadata& Texture::GetMetaData(const uint32_t& handle)
-{
-    //テクスチャ番号が正常範囲内にある
-    assert(SrvManager::IsMaxCount());
-
-    return textureDatas[handleToPath_[handle]].metadata;
 }

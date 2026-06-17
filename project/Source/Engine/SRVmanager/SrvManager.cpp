@@ -59,15 +59,17 @@ SrvManager::~SrvManager()
 
 D3D12_CPU_DESCRIPTOR_HANDLE SrvManager::GetCPUDescriptorHandle(uint32_t index)
 {
+    assert(IsMaxCount());
     return DirectXCommon::GetCPUDescriptorHandle(descriptorHeap.Get(), descriptorSize, index);
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE SrvManager::GetGPUDescriptorHandle(uint32_t index)
 {
+    assert(IsMaxCount());
     return DirectXCommon::GetGPUDescriptorHandle(descriptorHeap.Get(), descriptorSize, index);
 }
 
-void SrvManager::CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DirectX::TexMetadata& metadata)
+void SrvManager::CreateSRVforTexture(uint32_t srvIndex, ID3D12Resource* pResource, DirectX::TexMetadata& metadata)
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 
@@ -80,6 +82,7 @@ void SrvManager::CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResou
         srvDesc.TextureCube.MostDetailedMip = 0;
         srvDesc.TextureCube.MipLevels = UINT_MAX;
         srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+       
     } else {
         srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//texture
         srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);

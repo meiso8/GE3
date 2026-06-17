@@ -2,6 +2,7 @@
 #include"Log.h"
 #include"SceneManager.h"
 
+
 StageManager::~StageManager()
 {
     stages_.clear();
@@ -12,10 +13,7 @@ StageManager::~StageManager()
 
 void StageManager::Initialize()
 {
-    //現在のステージを初期化する
-    sceneChange_->Initialize();
-    sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
-    LogFile::Log("Start FadeOut");
+
     //メモマネージャー
     memoManager_->Initialize();
     LogFile::Log("InitializeMemoManager");
@@ -54,8 +52,6 @@ void StageManager::TransitionStage()
 
     //次のステージがセットされていたら次のステージにする
     if (nextStage_) {
-
-        sceneChange_->Initialize();
         sceneChange_->SetState(SceneChange::kFadeOut,1.0f);
         LogFile::Log("Start FadeOut");
         //メモマネージャー

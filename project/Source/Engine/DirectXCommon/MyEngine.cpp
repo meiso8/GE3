@@ -132,6 +132,7 @@ void MyEngine::Update() {
 #ifdef USE_IMGUI
     //ImGuiにここからフレームが始まる旨を伝える
     imGuiClass.FrameStart();
+
 #endif
     VibrateManager::Update();
     SceneManager::Update();
@@ -153,10 +154,10 @@ void MyEngine::Debug()
     DebugUI::CheckDirectionalLight();
     DebugUI::CheckSpotLight();
     DebugUI::CheckPointLightData();
-
-
-
     ImGui::End();
+
+    //Loaderをここで
+    imGuiClass.DrawModelLoaderWindow();
 
 #endif // USE_IMGUI
 
