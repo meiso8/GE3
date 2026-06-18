@@ -1,8 +1,10 @@
 #pragma once
 #include<Object3d.h>
 #include"../../../Engine/Object3d/BeamObject3d.h"
+#include"LineObject3d/LineObject3d.h"
 #include"Line.h"
-#include"Mesh/LineMesh/LineMesh.h"
+
+
 
 class Beam
 {
@@ -41,8 +43,8 @@ private:
     std::unique_ptr<BeamObject3d> object3d_ = nullptr;
 
 #ifdef _DEBUG
-    std::unique_ptr<LineMesh>line_ = nullptr;
-    std::unique_ptr<Object3d> lineObj_ = nullptr;
+
+    std::unique_ptr<LineObject3d> lineObj_ = nullptr;
 
 #endif
 

@@ -1,10 +1,11 @@
 
 #include "../Hlsli/SkinningObject.hlsli"
 
-ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b0);
-ConstantBuffer<Balloon> gBalloon : register(b1);
+#include "../Hlsli/WaveData.hlsli"
+#include "../Hlsli/BallonData.hlsli"
+ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b1);
+ConstantBuffer<Balloon> gBalloon : register(b5);
 StructuredBuffer<Wave> gWave : register(t1);
-
 StructuredBuffer<Well> gMatrixPalette : register(t6);
 
 
@@ -34,15 +35,14 @@ Skinned Skinning(VertexShaderInput input)
 float WaveUpdate(VertexShaderInput input)
 {
      
-    float Dot1 = dot(input.position, normalize(gWave[0].direction) * gWave[0].frequency);
+    float Dot1 = dot(input.position.xyz, normalize(gWave[0].direction) * gWave[0].frequency);
     float Wave1 = cos(gWave[0].time + Dot1) * gWave[0].amplitude;
     
-    float Dot2 = dot(input.position, normalize(gWave[1].direction) * gWave[1].frequency);
+    float Dot2 = dot(input.position.xyz, normalize(gWave[1].direction) * gWave[1].frequency);
     float Wave2 = cos(gWave[1].time + Dot2) * gWave[1].amplitude;
-    
+   
     return Wave1 + Wave2;
 }
-
 float3 BalloonUpdate(VertexShaderInput input)
 {
     float3 output;

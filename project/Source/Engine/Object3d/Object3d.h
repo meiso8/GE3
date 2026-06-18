@@ -42,7 +42,6 @@ protected:
     // ==============波データ==================
     Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_;
     Wave* waveData_ = nullptr;
-
     // ==============ID情報==================
     Microsoft::WRL::ComPtr <ID3D12Resource> idResource_ = nullptr;
     ObjectID* idData_ = nullptr;

@@ -30,6 +30,8 @@ public:
         THERMOGRAPHY,
         //ビーム用
         BEAM,
+        //ライン用
+        LINE,
         TYPES,
     };
 

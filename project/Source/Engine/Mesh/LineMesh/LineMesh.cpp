@@ -1,9 +1,10 @@
 #include "LineMesh.h"
 #include"DirectXCommon.h"
 
-void LineMesh::Create(std::unique_ptr<MeshData> meshData)
+void LineMesh::Create(const Vector3& startPos, const Vector3& endPos)
 {
-    meshData_ = std::move(meshData);
+    meshData_ = std::make_unique<MeshData>();
+    *meshData_ = PrimitiveGenerator::CreateLine(startPos, endPos);
 
     Primitive::Create(*meshData_);
 

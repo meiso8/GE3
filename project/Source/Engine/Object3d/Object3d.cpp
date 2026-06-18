@@ -6,7 +6,7 @@
 #include"Lights/SpotLightManager.h"
 #include"Model.h"
 #include"SRVmanager/SrvManager.h"
-
+#include"ObjectManager.h"
 void Object3d::CreateMaterial(const float temperature, const Vector4& color, const uint32_t& lightType) {
 
     for (auto& textureHandle : textureHandles_) {
@@ -61,16 +61,8 @@ void Object3d::InitBalloonData()
 
 void Object3d::InitWaveData()
 {
-    waveData_[0].direction = { 1.0f,0.0f,0.0f };
-    waveData_[0].time = 0.0f;
-    waveData_[0].amplitude = 0.0f;
-    waveData_[0].frequency = 4;
-
-    waveData_[1].direction = { 1.0f,0.0f,0.0f };
-    waveData_[1].time = 0.0f;
-    waveData_[1].amplitude = 0.0f;
-    waveData_[1].frequency = 4;
-
+    InitWaveDataIndex(0);
+    InitWaveDataIndex(1);
 }
 
 void Object3d::InitWaveDataIndex(const uint32_t& index)
@@ -93,7 +85,7 @@ void Object3d::CreateWaveData()
     size_t bufferSize = (sizeof(Wave) * waveCount + 255) & ~255;
     waveResource_ = DirectXCommon::CreateBufferResource(bufferSize);
     //書き込むためのアドレスを取得
-    waveResource_->Map(0, nullptr, reinterpret_cast<void**>(&waveData_));
+    waveResource_->Map(0, nullptr, reinterpret_cast<void**>(&waveData_));    
 
     InitWaveData();
 }
@@ -115,7 +107,7 @@ void Object3d::CreateID()
 
     //書き込むためのアドレスを取得
     idResource_->Map(0, nullptr, reinterpret_cast<void**>(&idData_));
-    idData_->id =  1;
+    idData_->id = 0;
 }
 
 void Object3d::UpdateUV() {
@@ -143,20 +135,21 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         //wvp用のCBufferの場所を設定
         commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
         SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
-        DirectionalLightManager::SetGraphicsRootConstantBufferView(3);
-        //timeのSRVの場所を設定
-        commandlist->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
-        //expansionのCBufferの場所を設定
-        commandlist->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
         //cameraのCBufferの場所を設定
-        commandlist->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
-        //ライトのCBufferの場所を設定
-        PointLightManager::SetGraphicsRootDescriptorTable(7);
-
-        SpotLightManager::SetGraphicsRootDescriptorTable(8);
-        SrvManager::SetGraphicsRootDescriptorTable(9, Texture::GetSRVHandle(skyBoxTexture));
+        commandlist->SetGraphicsRootConstantBufferView(3, camera.GetResource()->GetGPUVirtualAddress());
         //ID
-        commandlist->SetGraphicsRootConstantBufferView(10, idResource_->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(4, idResource_->GetGPUVirtualAddress());
+        //ライト
+        DirectionalLightManager::SetGraphicsRootConstantBufferView(5);
+        //expansionのCBufferの場所を設定
+        commandlist->SetGraphicsRootConstantBufferView(6, expansionResource_->GetGPUVirtualAddress());
+        //timeのSRVの場所を設定
+        commandlist->SetGraphicsRootShaderResourceView(7, waveResource_->GetGPUVirtualAddress());
+        //ライトのCBufferの場所を設定
+        PointLightManager::SetGraphicsRootDescriptorTable(8);
+        SpotLightManager::SetGraphicsRootDescriptorTable(9);
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
+
         meshCommon_->Draw(commandlist);
     }
 }
@@ -196,16 +189,18 @@ void Object3d::Create()
 {
     CreateTransformationMatrix();
     CreateMaterial();
-    Initialize();
     CreateUV();
     CreateWaveData();
     CreateBalloonData();
     CreateID();
+
+    Initialize();
 }
 
 void Object3d::Initialize()
 {
     worldTransform_.Initialize();
+    ObjectManager::GetInstance()->RegisterObject(this);
 }
 
 void Object3d::Update()

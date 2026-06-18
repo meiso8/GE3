@@ -207,9 +207,9 @@ void PSO::CreateALLPSO()
             kCullModeBack,
             kAll,
             true,
-            RootSignature::NORMAL,
-            DxcCompiler::VS_Normal,
-            DxcCompiler::PS_Normal,
+            RootSignature::LINE,
+            DxcCompiler::VS_Line,
+            DxcCompiler::PS_Line,
             kLine,
             InputLayout::kInputLayoutTypeNormal,
             rtvFormatsForTermoAndObjectID

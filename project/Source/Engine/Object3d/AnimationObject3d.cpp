@@ -172,26 +172,26 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
 
         auto* commandlist = DirectXCommon::GetCommandList();
         skinningModel_->PreDraw(commandlist, blendMode, cullMode,maskMode,usePSOKey);
+       
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
         commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
         commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-        //方向ライト
-        DirectionalLightManager::SetGraphicsRootConstantBufferView(3);
-        ////拡散反射テクスチャ
-        //SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
-        //timeのSRVの場所を設定
-        commandlist->SetGraphicsRootShaderResourceView(4, waveResource_->GetGPUVirtualAddress());
-        //expansionのCBufferの場所を設定
-        commandlist->SetGraphicsRootConstantBufferView(5, expansionResource_->GetGPUVirtualAddress());
+        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
         //cameraのCBufferの場所を設定
-        commandlist->SetGraphicsRootConstantBufferView(6, camera.GetResource()->GetGPUVirtualAddress());
-        //ライトの場所を設定
-        PointLightManager::SetGraphicsRootDescriptorTable(7);
-        SpotLightManager::SetGraphicsRootDescriptorTable(8);
-        SrvManager::SetGraphicsRootDescriptorTable(9, Texture::GetSRVHandle(skyBoxTexture));
-
-        commandlist->SetGraphicsRootConstantBufferView(10, idResource_->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(3, camera.GetResource()->GetGPUVirtualAddress());
+        //ID
+        commandlist->SetGraphicsRootConstantBufferView(4, idResource_->GetGPUVirtualAddress());
+        //ライト
+        DirectionalLightManager::SetGraphicsRootConstantBufferView(5);
+        //expansionのCBufferの場所を設定
+        commandlist->SetGraphicsRootConstantBufferView(6, expansionResource_->GetGPUVirtualAddress());
+        //WaveのSRVの場所を設定
+        commandlist->SetGraphicsRootShaderResourceView(7, waveResource_->GetGPUVirtualAddress());
+        //ライトのCBufferの場所を設定
+        PointLightManager::SetGraphicsRootDescriptorTable(8);
+        SpotLightManager::SetGraphicsRootDescriptorTable(9);
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
 
         //ここでテクスチャの設定をする
         skinningModel_->Draw(commandlist);

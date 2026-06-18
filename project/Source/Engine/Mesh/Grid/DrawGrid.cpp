@@ -4,35 +4,35 @@
 #include"Texture.h"
 #include"AABB.h"
 
-std::array<std::unique_ptr<Primitive>, 102> DrawGrid::line_;
-std::array <std::unique_ptr<Primitive>, 2>  DrawGrid::cube_;
-
-std::array< std::unique_ptr<Object3d>, 102>  DrawGrid::lineTransforms_;
+ std::array <std::unique_ptr<Primitive>, 2> DrawGrid::cube_;
+std::array< std::unique_ptr<Object3d>, 2> DrawGrid::cubes_;
+std::array< std::unique_ptr<LineObject3d>, 102>DrawGrid::lineTransforms2_;
 
 void DrawGrid::Finalize()
 {
-    for (auto& l : line_) {
-        l.reset();
+    for (auto& c : cubes_) {
+        c.reset();
     }
 
     for (auto& c : cube_) {
         c.reset();
     }
 
-    for (auto& t : lineTransforms_) {
+    for (auto& t : lineTransforms2_) {
         t.reset();
     }
 }
 
 void DrawGrid::Create()
 {
-    for (int i = 0; i < line_.size(); ++i) {
-        line_[i] = std::make_unique<Primitive>();  
+
+    for (auto& line : lineTransforms2_) {
+        line = std::make_unique<LineObject3d>();
     }
 
     for (int i = 0; i < 51; ++i) {
-        line_[i]->Create(PrimitiveGenerator::CreateLine(Vector3(-25.0f, 0.0f, static_cast<float>(i - 25)), Vector3(25.0f, 0.0f, static_cast<float>(i - 25))));
-        line_[i+51]->Create(PrimitiveGenerator::CreateLine(Vector3(static_cast<float>(i - 25), 0.0f, -25.0f), Vector3(static_cast<float>(i - 25), 0.0f, 25.0f)));
+        lineTransforms2_[i]->Create(Vector3(-25.0f, 0.0f, static_cast<float>(i - 25)), Vector3(25.0f, 0.0f, static_cast<float>(i - 25)));
+        lineTransforms2_[i+51]->Create(Vector3(static_cast<float>(i - 25), 0.0f, -25.0f), Vector3(static_cast<float>(i - 25), 0.0f, 25.0f));
     }
 
     for (int i = 0; i < cube_.size(); ++i) {
@@ -45,42 +45,45 @@ void DrawGrid::Create()
     cube_[0]->Create(PrimitiveGenerator::CreateCube(aabb0));
     cube_[1]->Create(PrimitiveGenerator::CreateCube(aabb1));
 
-    for (size_t i = 0; i < lineTransforms_.size(); ++i) {
-        lineTransforms_[i] = std::make_unique<Object3d>();
-        lineTransforms_[i]->Create();
-        lineTransforms_[i]->Update();
-        lineTransforms_[i]->SetLightMode(kLightModeNone);
-        if (i != 25 && i != 76) {
-            lineTransforms_[i]->SetMeshAndMaterial(line_[i].get());
-        }
+    for (auto& cubeTransform : cubes_) {
+        cubeTransform = std::make_unique<Object3d>();
+        cubeTransform->Create();
+        cubeTransform->SetLightMode(kLightModeNone);
+    }
+
+    for (size_t i = 0; i < lineTransforms2_.size(); ++i) {
+
+        lineTransforms2_[i]->Update();
 
         if (i < 50) {
             if ((i) % 10 == 0) {
-                lineTransforms_[i]->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+                lineTransforms2_[i]->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
             } else {
-                lineTransforms_[i]->SetColor(Vector4(0.5f, 0.5f, 0.5f, 1.0f));
+                lineTransforms2_[i]->SetColor(Vector4(0.5f, 0.5f, 0.5f, 1.0f));
             }
 
         } else {
             if ((i + 4) % 10 == 0) {
-                lineTransforms_[i]->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+                lineTransforms2_[i]->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
             } else {
-                lineTransforms_[i]->SetColor(Vector4(0.5f, 0.5f, 0.5f, 1.0f));
+                lineTransforms2_[i]->SetColor(Vector4(0.5f, 0.5f, 0.5f, 1.0f));
             }
         }
-
-
     }
 
-    lineTransforms_[27]->SetMeshAndMaterial(cube_[0].get());
-    lineTransforms_[27]->SetColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-    lineTransforms_[76]->SetMeshAndMaterial(cube_[1].get());
-    lineTransforms_[76]->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+    cubes_[0]->SetMeshAndMaterial(cube_[0].get());
+    cubes_[0]->SetColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+    cubes_[1]->SetMeshAndMaterial(cube_[1].get());
+    cubes_[1]->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 }
 
 void DrawGrid::Draw(Camera& camera) {
 
-    for (int i = 0; i < lineTransforms_.size(); ++i) {
-        lineTransforms_[i]->Draw(camera, kBlendModeNone);
+    for (auto& line : lineTransforms2_) {
+        line->Draw(camera,false);
+    }
+
+    for (auto& cubeTransform : cubes_) {
+        cubeTransform->Draw(camera, kBlendModeNone);
     }
 }

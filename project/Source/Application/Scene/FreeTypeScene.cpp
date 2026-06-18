@@ -31,12 +31,8 @@ FreeTypeScene::FreeTypeScene()
 
 
     ObjectManager::GetInstance()->Clear();
-
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
-
-
-
 
     cylinder_ = std::make_unique<Primitive>();
     cylinder_->Create(PrimitiveGenerator::CreateCylinder());
@@ -53,9 +49,6 @@ FreeTypeScene::FreeTypeScene()
     object3d2_->Create();
     object3d2_->SetMeshAndMaterial(ModelManager::GetModel("playerGirl"));
 
-
-    ObjectManager::GetInstance()->RegisterObject(object3d2_.get());
-
     beam_ = std::make_unique<Beam>();
 
     levelEditor_ = std::make_unique<LevelEditor>();
@@ -63,9 +56,6 @@ FreeTypeScene::FreeTypeScene()
     //オブジェクトをセットする
     levelEditor_->CreateObject(objects_);
 
-    for (auto& obj : objects_) {
-        ObjectManager::GetInstance()->RegisterObject(obj->obj_.get());
-    }
 
     auto* levelData = levelEditor_->GetLevelData();
 
@@ -81,15 +71,12 @@ FreeTypeScene::FreeTypeScene()
 
     }
 
-    for (auto& enemy : enemies_) {
-        ObjectManager::GetInstance()->RegisterObject(enemy.get());
-    }
-
    clickedID_ = 0;
 }
 
 void FreeTypeScene::Initialize()
 {
+
     ParticleManager::ResetAll();
 
     camera_->Initialize();

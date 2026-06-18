@@ -12,12 +12,16 @@ struct Material
 
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<Camera> gCamera : register(b2);
+ConstantBuffer<ObjectID> gObjectID : register(b3);
+
 Texture2D<float4> gTexture : register(t2);
 SamplerState gSampler : register(s0);
 
 struct PixelShaderOutput
 {
     float4 color : SV_TARGET0;
+    float4 temperature : SV_TARGET1; //AddTemperature
+    uint1 objectID : SV_TARGET2;
 };
 
 
@@ -25,6 +29,12 @@ PixelShaderOutput main(VertexShaderOutput input)
 {
  
     PixelShaderOutput output;
+    
+    float outlineMask = 1.0f - gMaterial.color.a;
+    outlineMask = clamp(outlineMask, 0.0f, 1.0f);
+    //SetTemperature　Use G Channel for OutlineMask
+    output.temperature = float4(gMaterial.color.r, outlineMask, 0.0, 1.0);
+    output.objectID = gObjectID.id;
     
          //normal
     float3 normalInput = normalize(input.normal);

@@ -8,7 +8,10 @@ ObjectManager* ObjectManager::GetInstance() {
 
 void ObjectManager::RegisterObject(Object3d* gameObject) {
     if (!gameObject) return;
-
+    if (gameObject->GetObjectID() != 0) {
+        //あいでぃーあり
+        return;
+    }
     // 新しいIDを割り当てる（Allocate）
     uint32_t allocatedID = nextID_++;
     gameObject->SetObjectID(allocatedID);
@@ -53,7 +56,7 @@ void ObjectManager::DrawAll(Camera& camera) {
 void ObjectManager::DebugAll()
 {
     for (int i = 0; i < objects_.size();++i) {
-        std::string name = "Object:" + std::to_string(i);
+        std::string name = "Object:" + std::to_string(objects_[i]->GetObjectID());
         DebugUI::CheckObject3d(*objects_[i], name.c_str());
     }
  

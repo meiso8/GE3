@@ -522,6 +522,9 @@
     <ClCompile Include="Source\Engine\Object3d\ObjectManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\LineObject3d\LineObject3d.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Math\Structs\AABB.h">
@@ -1043,12 +1046,17 @@
     <ClInclude Include="Source\Engine\Object3d\ObjectManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\LineObject3d\LineObject3d.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\Boss.json" />
     <None Include="Resource\JsonFiles\notes.json" />
     <None Include="Resource\JsonFiles\memo.json" />
+    <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
+    <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">

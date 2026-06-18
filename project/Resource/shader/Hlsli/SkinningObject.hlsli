@@ -37,19 +37,3 @@ struct TransformationMatrix
     float32_t4x4 WorldInverseTranspose;
 };
 
-struct Wave
-{
-    float32_t4 direction;
-    float time;
-    float amplitude;
-    float frequency;
-};
-
-struct Balloon
-{
-    float expansion;
-    float sphere;
-    float cube;
-    bool isSphere;
-};
-

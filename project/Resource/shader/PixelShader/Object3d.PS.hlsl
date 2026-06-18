@@ -12,25 +12,14 @@ struct Material
     float32_t4x4 uvTransform;
 };
 
-struct ObjectID
-{
-    uint32_t id;
-    uint32_t padding1;
-    uint32_t padding2;
-    uint32_t padding3;
-    
-};
-
 ConstantBuffer<Material> gMaterial : register(b0);
-ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 ConstantBuffer<Camera> gCamera : register(b2);
-
 ConstantBuffer<ObjectID> gObjectID : register(b3);
+ConstantBuffer<DirectionalLight> gDirectionalLight : register(b4);
 
-
-Texture2D<float4> gTexture : register(t2);
 SamplerState gSampler : register(s0);
 
+Texture2D<float4> gTexture : register(t2);
 StructuredBuffer<PointLight> gPointLights : register(t4);
 StructuredBuffer<SpotLight> gSpotLights : register(t5);
 TextureCube<float4> gEnvironmentTexture : register(t7);
@@ -216,6 +205,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     {
         //if temperature over 0
         
+        //output.color discard  
         //output.color discard  
         if (textureColor.a == 0.0 || gMaterial.color.a == 0.0)
         {

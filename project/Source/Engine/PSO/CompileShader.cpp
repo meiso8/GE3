@@ -75,6 +75,10 @@ void DxcCompiler::ShaderSetting() {
     vertexShaderBlobs_[VS_Beam] = CompileShader(L"Resource/shader/VertexShader/Beam.VS.hlsl", L"vs_6_0");
     pixelShaderBlobs_[PS_Beam] = CompileShader(L"Resource/shader/PixelShader/Beam.PS.hlsl", L"ps_6_0");
 
+    //Line
+    vertexShaderBlobs_[VS_Line] = CompileShader(L"Resource/shader/VertexShader/Line.VS.hlsl", L"vs_6_0");
+    pixelShaderBlobs_[PS_Line] = CompileShader(L"Resource/shader/PixelShader/Line.PS.hlsl", L"ps_6_0");
+
     //===================ComputeShader====================
     
     //ComputeShader
