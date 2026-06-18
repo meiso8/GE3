@@ -7,6 +7,7 @@
 #include"hlslTypeToCpp.h"
 #include"Camera.h"
 #include"Texture.h"
+#include"TransitionBarrier.h"
 
 struct MaterialForRenderTexture {
     float4 color;
@@ -105,6 +106,9 @@ private:
     std::array< RenderTextureData, kMaxRenderTexutre> renderTextureDatas_;
     RenderTextureData thermographyTextureData_;
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, PSO::kCountOfEffect> materialResource_;
+    //ID用リソース
+    Microsoft::WRL::ComPtr<ID3D12Resource> idReadbackResource_;
+
 
     MaterialForRenderTexture* materialForGrayScale_ = nullptr;
     MaterialForVignette* materialForVignette_ = nullptr;
@@ -127,6 +131,13 @@ public:
     Microsoft::WRL::ComPtr<ID3D12Resource>& GetMaterialResouce(const PSO::EffectType& effectType);
     void Create();
     void CreateResource(const uint32_t index, DXGI_FORMAT format, bool createSRV);
+
+
+    // 1. 描画コマンドの最後にコピー命令を積む関数 (PostDrawの直前に呼ぶ)
+    void CopyClickPixelCommand(int mouseX, int mouseY);
+
+    // 2. 次のフレームのUpdateなどで、安全にIDを読み出す関数
+    uint32_t GetClickedObjectID();
 
     const Vector4& GetColor() {
         return kRenderTargetClearValue_;

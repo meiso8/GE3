@@ -23,7 +23,7 @@ private:
     Text text_;
     uint32_t handle_;
     Text pressSpaceText_;
-
+    uint32_t clickedID_ = 0;
     std::unique_ptr<Sprite>sprite_ = nullptr;
 
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;

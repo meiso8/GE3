@@ -15,6 +15,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource>& RenderTexture::GetMaterialResouce(const 
     return materialResource_[effectType];
 }
 
+
 void RenderTexture::Create()
 {
     kRenderTargetClearValue_ = { 1.0f,0.0f,0.0f,1.0f };
@@ -25,7 +26,9 @@ void RenderTexture::Create()
     CreateResource(kThermography, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,true);
     //ObjectID用テクスチャ　
     CreateResource(kObjectID, DXGI_FORMAT_R32_UINT, false);
-    
+    //ObjectID用リソース
+    idReadbackResource_ = DirectXCommon::CreateReadbackBufferResource(sizeof(uint32_t));
+
     CreateMaterialBUfferForFullScreen();
     CreateMaterialBufferForGrayScale();
     CreateMaterialBufferForVignette();
@@ -81,6 +84,85 @@ void RenderTexture::CreateResource(const uint32_t index, DXGI_FORMAT format, boo
         LogFile::Log("Rendertexture : CreateShaderResourceView");
     }
 
+}
+
+
+void RenderTexture::CopyClickPixelCommand(int mouseX, int mouseY)
+{   // 画面外の座標の場合は弾く (バッファオーバーフロー防止)
+    if (mouseX < 0 || mouseX >= 1280 || mouseY < 0 || mouseY >= 720) {
+        return;
+    }
+
+    // kObjectIDのリソースポインタを取得
+    ID3D12Resource* idTexture = renderTextureDatas_[kObjectID].resource.Get();
+    ID3D12Resource* readbackBuffer = idReadbackResource_.Get();
+    if (!idTexture || !readbackBuffer) return;
+
+    auto* commandList = DirectXCommon::GetCommandList();
+
+    D3D12_RESOURCE_BARRIER barrier{};
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier.Transition.pResource = idTexture;
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    commandList->ResourceBarrier(1, &barrier);
+
+    // 2. コピー元のテクスチャ上の1ピクセルの位置（マウス位置）を指定
+    D3D12_TEXTURE_COPY_LOCATION srcLocation{};
+    srcLocation.pResource = idTexture;
+    srcLocation.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+    srcLocation.SubresourceIndex = 0;
+
+    D3D12_BOX srcBox{};
+    srcBox.left = mouseX;
+    srcBox.top = mouseY;
+    srcBox.front = 0;
+    srcBox.right = mouseX + 1;  // 1ピクセル幅
+    srcBox.bottom = mouseY + 1; // 1ピクセル高
+    srcBox.back = 1;
+
+    // 3. コピー先のReadbackバッファの指定（バッファ構造なのでFOOTPRINT形式）
+    D3D12_TEXTURE_COPY_LOCATION dstLocation{};
+    dstLocation.pResource = idReadbackResource_.Get();
+    dstLocation.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+    dstLocation.PlacedFootprint.Offset = 0;
+    dstLocation.PlacedFootprint.Footprint.Width = 1;
+    dstLocation.PlacedFootprint.Footprint.Height = 1;
+    dstLocation.PlacedFootprint.Footprint.Depth = 1;
+    dstLocation.PlacedFootprint.Footprint.Format = DXGI_FORMAT_R32_UINT; // IDのフォーマット
+    dstLocation.PlacedFootprint.Footprint.RowPitch = 256; // アライメントの最低規則(256バイト)に合わせる
+
+    // 4. GPUコマンドリストにコピー命令を発行
+    commandList->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
+
+
+    // 3. 元の状態に戻す
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET; // ★1で指定した元の状態に戻す
+    commandList->ResourceBarrier(1, &barrier);
+
+}
+
+uint32_t RenderTexture::GetClickedObjectID()
+{
+    ID3D12Resource* readbackBuffer = idReadbackResource_.Get();
+    if (!readbackBuffer) return 0;
+
+    // 7. GPUの処理が終わったら、CPU側でバッファをMapして数値を読み出す
+    uint32_t clickedID = 0;
+    uint32_t* mappedData = nullptr;
+
+    // 読み出し専用なので、Rangeの設定は全体
+    D3D12_RANGE readRange{ 0, sizeof(uint32_t) };
+    if (SUCCEEDED(readbackBuffer->Map(0, &readRange, reinterpret_cast<void**>(&mappedData)))) {
+        clickedID = *mappedData; // ピクセルに書き込まれていたIDを取得！
+        readbackBuffer->Unmap(0, nullptr); // すぐにアンマップ
+    }
+
+
+    return clickedID;
 }
 
 void RenderTexture::DrawDissolve(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const TextureFactory::Handle& textureHandle) {

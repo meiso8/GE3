@@ -54,6 +54,10 @@ private:
 public:
     ~Object3d();
 
+    // IDの設定と取得
+    void SetObjectID(uint32_t id) { idData_->id = id; }
+    uint32_t GetObjectID() const { return idData_->id; }
+
     // ==============膨張データ==================
 
     Balloon& GetBalloonData() { return *balloonData_; }

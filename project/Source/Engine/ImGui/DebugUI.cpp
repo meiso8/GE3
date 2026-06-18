@@ -619,7 +619,8 @@ void DebugUI::CheckPointLightData()
 void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 {
 #ifdef USE_IMGUI
-    ImGui::Begin("Object3d");
+
+    ImGui::Begin("Object3ds");
 
     if (ImGui::TreeNode(label)) {
         CheckWorldTransform(object3d.worldTransform_, label);
@@ -645,7 +646,9 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 
         ImGui::TreePop();
     }
+
     ImGui::End();
+
 #endif
 }
 void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)

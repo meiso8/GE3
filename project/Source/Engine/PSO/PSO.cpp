@@ -141,7 +141,7 @@ void PSO::CreateALLPSO()
     }
 
 
-    LogFile::Log("SetBlendState");
+ 
 
     //RasterizerStateの設定を行う
     rasterizerStates.resize(kCountOfCullMode);
