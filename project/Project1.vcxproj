@@ -163,6 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\LineObject3d\LineObject3d.cpp" />
     <ClCompile Include="Source\Application\GameObject\Beam\ShotBeamManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Beam\BeamManager.cpp" />
     <ClCompile Include="Source\Engine\Object3d\BeamObject3d.cpp" />
@@ -316,6 +317,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\StageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\LineObject3d\LineObject3d.h" />
     <ClInclude Include="Source\Application\GameObject\Beam\ShotBeamManager.h" />
     <ClInclude Include="Source\Application\GameObject\Beam\BeamManager.h" />
     <ClInclude Include="Source\Engine\Object3d\BeamObject3d.h" />
@@ -500,6 +502,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\memo.json" />
     <None Include="Resource\JsonFiles\notes.json" />
+    <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
+    <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />

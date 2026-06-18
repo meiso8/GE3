@@ -9,7 +9,7 @@ struct Material
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);
-Texture2D<float> gDepthTexture : register(t1);
+Texture2D<float> gDepthTexture : register(t0);
 Texture2D<float4> gTexture : register(t2);
 //empty thread is t8?
 Texture2D<float4> gTemperatureTexture : register(t8);

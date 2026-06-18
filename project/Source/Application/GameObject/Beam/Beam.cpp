@@ -24,15 +24,11 @@ Beam::Beam()
     object3d_->SetTemperature(1.0f);
 
 #ifdef _DEBUG
-    line_ = std::make_unique<LineMesh>();
-    std::unique_ptr<MeshData> meshData = std::make_unique<MeshData>();
-    *meshData = PrimitiveGenerator::CreateLine({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f });
-    line_->Create(std::move(meshData));
 
-    lineObj_ = std::make_unique<Object3d>();
-    lineObj_->Create();
+    lineObj_ = std::make_unique<LineObject3d>();
+    lineObj_->Create({-1.0f,0.0f,0.0f},{1.0f,0.0f,0.0f});
     lineObj_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-    lineObj_->SetMeshAndMaterial(line_.get());
+
 #endif
 
 
@@ -56,7 +52,7 @@ void Beam::Initialize()
 
 
 #ifdef _DEBUG
-    line_->SetVertex(ray_.origin, ray_.diff + ray_.origin);
+    lineObj_->SetVertex(ray_.origin, ray_.diff + ray_.origin);
 
 #endif
 
@@ -158,7 +154,7 @@ void Beam::Draw(Camera* camera)
 {
 
 #ifdef _DEBUG
-    lineObj_->Draw(*camera);
+    lineObj_->Draw(*camera,false);
 #endif
 
     if (!isActive_) {
@@ -205,7 +201,7 @@ void Beam::UpdateObject()
     ray_ = { .origin = point_.startPos,.diff = point_.endPos - point_.startPos };
 
 #ifdef _DEBUG
-    line_->SetVertex(point_.startPos, point_.endPos);
+    lineObj_->SetVertex(point_.startPos, point_.endPos);
     lineObj_->Update();
 
 #endif

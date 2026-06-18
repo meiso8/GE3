@@ -8,8 +8,7 @@
 #include<map>
 #include"Node.h"
 
-#include"Object3d.h"
-#include "Mesh/LineMesh/LineMesh.h"
+#include "LineObject3d/LineObject3d.h"
 
 #include<tuple>
 #include<memory>
@@ -45,16 +44,14 @@ namespace Bone{
     void UpdateSkeleton(Skeleton& skeleton);
 }
 
-struct BoneValue {
-    std::unique_ptr<Object3d> object3d = nullptr;
-    std::unique_ptr<LineMesh> lineMesh = nullptr;
-};
 
 class DebugBone {
 private:
-    std::map<Joint*, std::unique_ptr<BoneValue>> bones_;
+    std::vector < std::unique_ptr<LineObject3d>>bones_;
+    Skeleton* skeleton_ = nullptr;
 public:
     void Create(Skeleton& skeleton);
     void Update(const Matrix4x4& parentMatrix);
     void Draw(Camera& camera);
+ 
 };

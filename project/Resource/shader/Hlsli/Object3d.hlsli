@@ -5,3 +5,13 @@ struct VertexShaderOutput
     float3 normal : NORMAL0;
     float3 worldPosition : POSITION0;
 };
+
+struct ObjectID
+{
+    uint id;
+    uint padding1;
+    uint padding2;
+    uint padding3;
+    
+};
+

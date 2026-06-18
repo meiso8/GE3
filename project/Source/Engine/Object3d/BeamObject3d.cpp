@@ -1,9 +1,6 @@
 #include "BeamObject3d.h"
 #include"DirectXCommon.h"
 #include"MakeMatrix.h"
-#include"Lights/PointLightManager.h"
-#include"Lights/DirectionalLightManager.h"
-#include"Lights/SpotLightManager.h"
 #include"SRVmanager/SrvManager.h"
 
 void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, const TextureFactory::Handle skyBoxTexture)
@@ -19,7 +16,8 @@ void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMo
     auto* commandlist = DirectXCommon::GetCommandList();
 
     if (meshCommon_) {
-        meshCommon_->PreDraw(commandlist, blendMode, cullMode, maskMode, usePSOKey, RootSignature::BEAM, DxcCompiler::VS_Beam, DxcCompiler::PS_Beam);
+
+        meshCommon_->PreDraw(commandlist, blendMode, cullMode, maskMode, true, RootSignature::BEAM, DxcCompiler::VS_Beam, DxcCompiler::PS_Beam);
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
         commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
@@ -27,6 +25,9 @@ void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMo
         SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
         //cameraのCBufferの場所を設定
         commandlist->SetGraphicsRootConstantBufferView(3, camera.GetResource()->GetGPUVirtualAddress());
+        //ID
+        commandlist->SetGraphicsRootConstantBufferView(4, idResource_->GetGPUVirtualAddress());
+
         meshCommon_->Draw(commandlist);
     }
 

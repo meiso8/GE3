@@ -791,7 +791,7 @@ void Primitive::PreDraw(
 ) {
 
     commandList->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(rootSignatureType));
- 
+
     if (usePSOKey) {
         //普通のPSO
         PSO::PSOKey key{};

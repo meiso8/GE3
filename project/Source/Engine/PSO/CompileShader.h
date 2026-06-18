@@ -17,6 +17,7 @@ public:
         VS_SkyBox,
         VS_OffScreen,
         VS_Beam,
+        VS_Line,
         VS_Shaders,
     };
 
@@ -39,6 +40,7 @@ public:
         PS_Random,
         PS_Thermography,
         PS_Beam,
+        PS_Line,
         PS_Shaders,
     };
 

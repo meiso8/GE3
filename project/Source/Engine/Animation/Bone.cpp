@@ -80,61 +80,83 @@ void Bone::UpdateSkeleton(Skeleton& skeleton)
 
 void DebugBone::Draw(Camera& camera)
 {
-    for (auto& [joint, value] : bones_) {
-        value->object3d->Draw(camera);
+    for (auto& value : bones_) {
+        value->Draw(camera, true);
     }
 }
 
 void DebugBone::Create(Skeleton& skeleton)
 {
-
+    skeleton_ = &skeleton;
     bones_.clear();
-    assert(!skeleton.joints.empty());
+    assert(!skeleton_->joints.empty());
 
-    for (Joint& joint : skeleton.joints) {
+    for (Joint& joint : skeleton_->joints) {
 
-        std::unique_ptr<BoneValue> value = std::make_unique<BoneValue>();
-        value->object3d = std::make_unique<Object3d>();
-        value->lineMesh = std::make_unique<LineMesh>();
-
-        std::unique_ptr<MeshData> meshData = std::make_unique<MeshData>();
-        *meshData = PrimitiveGenerator::CreateLine(Vector3{ 0.0f,0.0f,0.0f }, joint.transform.translate);
-        value->lineMesh->Create(std::move(meshData));
-
-        value->object3d->Create();
-        value->object3d->SetMeshAndMaterial(std::move(value->lineMesh).get());
-
-        value->object3d->Initialize();
-        value->object3d->worldTransform_.matWorld_ = joint.skeletonSpaceMatrix;
-        value->object3d->SetLightMode(kLightModeNone);
-        value->object3d->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
-        bones_.emplace(std::make_pair(&joint, std::move(value)));
-
+        std::unique_ptr<LineObject3d> object3d = std::make_unique<LineObject3d>();
+        object3d = std::make_unique<LineObject3d>();
+        object3d->Create(Vector3{ 0.0f,0.0f,0.0f }, joint.transform.translate);
+        object3d->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+        bones_.push_back(std::move(object3d));
     }
-
 }
 
 #include"DebugUI.h"
 
-void DebugBone::Update(const Matrix4x4& parentMatrix)
+
+void CheckJoint(Joint& joint, std::vector<Joint>& joints)
 {
-    for (auto& [joint, value] : bones_) {
-        //ここどうするか…
-        value->lineMesh->SetVertex({ 0.0f,0.0f,0.0f }, joint->transform.translate);
-        value->object3d->worldTransform_.matWorld_ = parentMatrix* joint->skeletonSpaceMatrix;
+    ImGui::PushID(joint.index);
+
+    // ツリーのノードを作成（名前を表示）
+    // 子がいない場合は葉ノード（Bullet）にするオプション
+    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
+    if (joint.children.empty()) {
+        flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet;
     }
 
+    if (ImGui::TreeNodeEx(joint.name.c_str(), flags)) {
+        // ノードが開かれている間だけ中身を表示
+        DebugUI::CheckQuaternionTransform(joint.transform, "Transform");
+        DebugUI::ShowMatrix4x4(joint.localMatrix, "localMat");
+        DebugUI::ShowMatrix4x4(joint.skeletonSpaceMatrix, "skeletonSpaceMat");
+        ImGui::Separator();
+
+        // 子要素を再帰呼び出し
+        for (auto& child : joint.children) {
+            CheckJoint(joints[child], joints);
+        }
+
+        ImGui::TreePop(); // 開いたツリーを閉じる（超重要！）
+    }
+
+    ImGui::PopID();
+
+}
+void DebugBone::Update(const Matrix4x4& parentMatrix)
+{
+    for (int i = 0; i < bones_.size(); ++i) {
+
+        auto& joint = skeleton_->joints[i];
+
+        if (joint.parent.has_value()) {
+            int32_t parentIndex = joint.parent.value();
+            Vector3 parentPos = skeleton_->joints[parentIndex].transform.translate;
+            bones_[i]->SetVertex(joint.transform.translate, parentPos);
+
+        } else {
+            bones_[i]->SetVertex(joint.transform.translate, skeleton_->joints[0].transform.translate);
+        }
+
+        bones_[i]->worldTransform_.matWorld_ = parentMatrix * joint.skeletonSpaceMatrix;
+    }
 
 #ifdef USE_IMGUI
 
-    ImGui::Begin("Bone");
-    for (auto& [joint, value] : bones_) {
-        if (ImGui::TreeNode(joint->name.c_str())) {
-            DebugUI::CheckQuaternionTransform(joint->transform, joint->name.c_str());
-            ImGui::TreePop();
-        }
-    }
+    ImGui::Begin("Bones");
+
+        CheckJoint(skeleton_->joints[0], skeleton_->joints);
+
     ImGui::End();
 #endif
 }

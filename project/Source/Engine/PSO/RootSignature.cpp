@@ -23,7 +23,7 @@ void RootSignature::Create() {
 
     //DepthBasedOutline
     D3D12_DESCRIPTOR_RANGE descriptorRangeForDepthBasedOutline[1] = {};
-    descriptorRangeForDepthBasedOutline[0].BaseShaderRegister = 1;//1から始める Texture2D<float32_t4> gTexture : register(t1); 
+    descriptorRangeForDepthBasedOutline[0].BaseShaderRegister = 0;//1から始める Texture2D<float32_t4> gTexture : register(t0); 
     descriptorRangeForDepthBasedOutline[0].NumDescriptors = 1;//1つ
     descriptorRangeForDepthBasedOutline[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
     descriptorRangeForDepthBasedOutline[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
@@ -34,58 +34,42 @@ void RootSignature::Create() {
     descriptorRange[0].NumDescriptors = 1;//1つ
     descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
     descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
-
     //Instancing用
     D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing[1] = {};
     descriptorRangeForInstancing[0].BaseShaderRegister = 3; // gTransformationMatrices : register(t3)
     descriptorRangeForInstancing[0].NumDescriptors = 1;
     descriptorRangeForInstancing[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     descriptorRangeForInstancing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
     //PointLight用
     D3D12_DESCRIPTOR_RANGE descriptorRangeForPointLight[1] = {};
     descriptorRangeForPointLight[0].BaseShaderRegister = 4; // : register(t4)
     descriptorRangeForPointLight[0].NumDescriptors = 1;
     descriptorRangeForPointLight[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     descriptorRangeForPointLight[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
     //SpotLight用
     D3D12_DESCRIPTOR_RANGE descriptorRangeForSpotLight[1] = {};
     descriptorRangeForSpotLight[0].BaseShaderRegister = 5; // : register(t5)
     descriptorRangeForSpotLight[0].NumDescriptors = 1;
     descriptorRangeForSpotLight[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     descriptorRangeForSpotLight[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
     //MatrixPalette用
     D3D12_DESCRIPTOR_RANGE descriptorRangeForMatrixPalette[1] = {};
     descriptorRangeForMatrixPalette[0].BaseShaderRegister = 6;// StructuredBuffer<Well> gMatrixPalette : register(t6);
     descriptorRangeForMatrixPalette[0].NumDescriptors = 1;
     descriptorRangeForMatrixPalette[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     descriptorRangeForMatrixPalette[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-
-    //DescriptorRange
+    //DescriptorRange SkyBox
     D3D12_DESCRIPTOR_RANGE descriptorRangeForSkyBox[1] = {};
-    descriptorRangeForSkyBox[0].BaseShaderRegister = 7;//2から始める Texture2D<float32_t4> gTexture : register(t2); 
+    descriptorRangeForSkyBox[0].BaseShaderRegister = 7;
     descriptorRangeForSkyBox[0].NumDescriptors = 1;//1つ
     descriptorRangeForSkyBox[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
     descriptorRangeForSkyBox[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
-
-
-
-    //DescriptorRange
+    //DescriptorRange Temperature
     D3D12_DESCRIPTOR_RANGE descriptorRangeForTemperature[1] = {};
     descriptorRangeForTemperature[0].BaseShaderRegister = 8;//8から始める Texture2D<float32_t4> gTexture : register(t8); 
     descriptorRangeForTemperature[0].NumDescriptors = 1;//1つ
     descriptorRangeForTemperature[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
     descriptorRangeForTemperature[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
-
-    //D3D12_DESCRIPTOR_RANGE waveDescriptorRange[1] = {};
-    //waveDescriptorRange[0].BaseShaderRegister = 1; // StructuredBuffer<Wave> gWave : register(t1);
-    //waveDescriptorRange[0].NumDescriptors = 1;
-    //waveDescriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-    //waveDescriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
 #pragma endregion
 
 #pragma region//Sampler
@@ -125,61 +109,51 @@ void RootSignature::Create() {
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParameters[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
-    //Transform用 b0
+    //Transform用 b1
     rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    rootParameters[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+    rootParameters[1].Descriptor.ShaderRegister = 1;//レジスタ番号0を使う
     //Texture t2
     rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
     rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
     rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
-    //DirectionalLight b1
+    //Camera b2
     rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters[3].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
-    //Wave t1
-    rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;//SRVを使う
-    rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    rootParameters[4].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
-
-    //rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-    //rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-    //rootParameters[4].DescriptorTable.pDescriptorRanges = waveDescriptorRange;
-    //rootParameters[4].DescriptorTable.NumDescriptorRanges = _countof(waveDescriptorRange);
-
-    //Ballon b1
+    rootParameters[3].Descriptor.ShaderRegister = 2;//レジスタ番号2を使う
+    //ObjectID b3
+    rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParameters[4].Descriptor.ShaderRegister = 3;//レジスタ番号3を使う
+    //DirectionalLight b4
     rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-    rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    rootParameters[5].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
-
-    //Camera
+    rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParameters[5].Descriptor.ShaderRegister = 4;//レジスタ番号1を使う
+    //Ballon b5
     rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-    rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters[6].Descriptor.ShaderRegister = 2;//レジスタ番号2を使う
-    //PointLight t4
-    rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
-    rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters[7].DescriptorTable.pDescriptorRanges = descriptorRangeForPointLight;//Tableの中身の配列を指定
-    rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForPointLight);//Tableで利用する数
+    rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParameters[6].Descriptor.ShaderRegister = 5;//レジスタ番号1を使う
 
-    //SpotLight t5
+    //Wave t1
+    rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;//SRVを使う
+    rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParameters[7].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う  //PointLight t4
+
     rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
     rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters[8].DescriptorTable.pDescriptorRanges = descriptorRangeForSpotLight;//Tableの中身の配列を指定
-    rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSpotLight);//Tableで利用する数
-
-    //SkyBox Texture t6
+    rootParameters[8].DescriptorTable.pDescriptorRanges = descriptorRangeForPointLight;//Tableの中身の配列を指定
+    rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForPointLight);//Tableで利用する数
+    //SpotLight t5
     rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
     rootParameters[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters[9].DescriptorTable.pDescriptorRanges = descriptorRangeForSkyBox;//Tableの中身の配列を指定
-    rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSkyBox);//Tableで利用する数
-
-    //ObjectID b3
-    rootParameters[10].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParameters[9].DescriptorTable.pDescriptorRanges = descriptorRangeForSpotLight;//Tableの中身の配列を指定
+    rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSpotLight);//Tableで利用する数
+    //SkyBox Texture register(t7);
+    rootParameters[10].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
     rootParameters[10].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters[10].Descriptor.ShaderRegister = 3;//レジスタ番号3を使う
-
+    rootParameters[10].DescriptorTable.pDescriptorRanges = descriptorRangeForSkyBox;//Tableの中身の配列を指定
+    rootParameters[10].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSkyBox);//Tableで利用する数
 
 #pragma endregion
 
@@ -192,7 +166,7 @@ void RootSignature::Create() {
         rootParametersForSkinning[i] = rootParameters[i];
     }
 
-    //MatrixPalette t6
+    //MatrixPalette StructuredBuffer<Well> gMatrixPalette : register(t6);
     rootParametersForSkinning[11].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
     rootParametersForSkinning[11].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
     rootParametersForSkinning[11].DescriptorTable.pDescriptorRanges = descriptorRangeForMatrixPalette;//Tableの中身の配列を指定
@@ -207,8 +181,7 @@ void RootSignature::Create() {
     rootParametersForInstancing[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParametersForInstancing[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParametersForInstancing[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
-
-    //Transform用 t3
+    //Transform用 StructuredBuffer<ParticleForGPU> gParticle : register(t3);
     rootParametersForInstancing[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
     rootParametersForInstancing[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
     rootParametersForInstancing[1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing;//レジスタ番号0を使う
@@ -282,24 +255,22 @@ void RootSignature::Create() {
 
 #pragma region //BeamParaeters
 
-    D3D12_ROOT_PARAMETER rootParametersForBeam[4] = {};
+    D3D12_ROOT_PARAMETER rootParametersForBeam[5] = {};
+
+    for (int i = 0; i < 5; ++i) {
+        rootParametersForBeam[i] = rootParameters[i];
+    }
+
+#pragma endregion
+
+#pragma region //Line
+
+    D3D12_ROOT_PARAMETER rootParametersForLine[2] = {};
     //Material b0
-    rootParametersForBeam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-    rootParametersForBeam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParametersForBeam[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
-    //Transform用 b0
-   rootParametersForBeam[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-   rootParametersForBeam[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-   rootParametersForBeam[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
-    //Texture t2
-   rootParametersForBeam[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
-   rootParametersForBeam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-   rootParametersForBeam[2].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
-   rootParametersForBeam[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
-    //Camera b2
-    rootParametersForBeam[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
-    rootParametersForBeam[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParametersForBeam[3].Descriptor.ShaderRegister = 2;//レジスタ番号2を使う
+    for (int i = 0; i < 2; ++i) {
+        rootParametersForLine[i] = rootParameters[i];
+    }
+
 #pragma endregion
 
 #pragma region//offScreenParameters
@@ -325,7 +296,7 @@ void RootSignature::Create() {
     rootParametersForDepthBasedOutline[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParametersForDepthBasedOutline[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
 
-    //DepthTexture t1
+    //DepthTexture t0
     rootParametersForDepthBasedOutline[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
     rootParametersForDepthBasedOutline[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParametersForDepthBasedOutline[1].DescriptorTable.pDescriptorRanges = descriptorRangeForDepthBasedOutline;//Tableの中身の配列を指定
@@ -414,10 +385,13 @@ void RootSignature::Create() {
     descriptionRootSignature[THERMOGRAPHY].pParameters = rootParameterForThermography;
     descriptionRootSignature[THERMOGRAPHY].NumParameters = _countof(rootParameterForThermography);//配列の長さ
 
-    //ビーム用に仮にNormalなrootParameterを設定しておく
+    //ビーム用
     descriptionRootSignature[BEAM].pParameters = rootParametersForBeam;
     descriptionRootSignature[BEAM].NumParameters = _countof(rootParametersForBeam);//配列の長さ
 
+    //ライン
+    descriptionRootSignature[LINE].pParameters = rootParametersForLine;
+    descriptionRootSignature[LINE].NumParameters = _countof(rootParametersForLine);//配列の長さ
 
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;

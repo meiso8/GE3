@@ -462,10 +462,6 @@ void DirectXCommon::UpdateFixFPS()
     //現在の時間を記録する
     reference_ = frame_end;
 
-    std::string message = "DeltaTime : " + std::to_string(deltaTime_);
-    LogFile::Log(message.c_str());
-    LogFile::Log("UpdateFixFPS");
-
 }
 
 void DirectXCommon::InitializeRenderTexture()
