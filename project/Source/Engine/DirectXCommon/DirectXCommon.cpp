@@ -90,23 +90,29 @@ void DirectXCommon::RenderTexturePreDraw()
 
     auto& renderTextureDataNormal = renderTexture_->GetRenderTextureData(RenderTexture::kNormal0);
     auto& renderTextureDataThermography = renderTexture_->GetRenderTextureData(RenderTexture::kThermography);
-    // 2つのレンダーターゲットハンドルを入れる配列を用意
-    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
+    auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
+
+
+
+    // 3つのレンダーターゲットハンドルを入れる配列を用意
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[3];
 
     // SV_TARGET0 用 (メインカラー)
     rtvHandles[0] = renderTextureDataNormal.rtvHandleCPU;
     // SV_TARGET1 用 (温度バッファ) 
     rtvHandles[1] = renderTextureDataThermography.rtvHandleCPU;
+    //SV_TARGET2 用 (IDバッファ)
+    rtvHandles[2] = renderTextureDataID.rtvHandleCPU;
 
     //TransitionBarrierの設定
     barrier.SettingBarrierSRVforRTV(renderTextureDataNormal.resource);
     barrier.SettingBarrierSRVforRTV(renderTextureDataThermography.resource);
+    barrier.SettingBarrierSRVforRTV(renderTextureDataID.resource);
 
     //2.描画用のRTVとDSVを設定する 
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-    // ★ 第1引数を 2 にし、第3引数を FALSE (連続したメモリ配列として渡す) にする
-    commandList->GetCommandList()->OMSetRenderTargets(2, rtvHandles, false, &dsvHandle);
-    //commandList->GetCommandList()->OMSetRenderTargets(1, &renderTextureData.rtvHandleCPU, false, &dsvHandle);
+    // 第1引数を 3 に変更して3つのRTVを同時にバインド
+    commandList->GetCommandList()->OMSetRenderTargets(3, rtvHandles, false, &dsvHandle);
 
     //3.指定した色で画面全体をクリアする
     Vector4 color = renderTexture_->GetColor();
@@ -118,11 +124,10 @@ void DirectXCommon::RenderTexturePreDraw()
 
     // ★ 2. 温度バッファ(Index 1)のクリア処理を追加！
     D3D12_CPU_DESCRIPTOR_HANDLE rtvTemp = renderTexture_->GetRenderTextureData(RenderTexture::kThermography).rtvHandleCPU;
-    // 温度の初期値は「0.0（熱源なし）」にリセットしたいので、すべて 0.0f にします
-    //renderTexture_->GetColor();
-
     commandList->GetCommandList()->ClearRenderTargetView(rtvTemp, clearColor, 0, nullptr);
-
+    
+    // ★追加: IDバッファ(Index 2)のクリア処理
+    commandList->GetCommandList()->ClearRenderTargetView(renderTextureDataID.rtvHandleCPU, clearColor, 0, nullptr);
 
     SrvManager::PreDraw();
 
@@ -171,6 +176,10 @@ void DirectXCommon::RenderTexturePostDraw()
 
     auto& renderTextureDataThermography = renderTexture_->GetRenderTextureData(RenderTexture::kThermography);
     barrier.SettingBarrierRTVforSRV(renderTextureDataThermography.resource);
+
+    // ★追加: ID用テクスチャのバリアを元に戻す
+    auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
+    barrier.SettingBarrierRTVforSRV(renderTextureDataID.resource);
 
     LogFile::Log("Rendertexture : PosDraw : SettingBarrier");
 }
@@ -507,6 +516,36 @@ ComPtr<ID3D12Resource> DirectXCommon::CreateBufferResource(
 
 };
 
+
+ComPtr<ID3D12Resource> DirectXCommon::CreateReadbackBufferResource(size_t sizeInBytes) {
+    ComPtr<ID3D12Resource> resource = nullptr;
+
+    // 1. ヒープの設定をREADBACKに変更
+    D3D12_HEAP_PROPERTIES heapProperties{};
+    heapProperties.Type = D3D12_HEAP_TYPE_READBACK; // ここが重要
+
+    D3D12_RESOURCE_DESC resourceDesc{};
+    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    resourceDesc.Width = sizeInBytes; // 1ピクセル分(UINTなら4バイト)
+    resourceDesc.Height = 1;
+    resourceDesc.DepthOrArraySize = 1;
+    resourceDesc.MipLevels = 1;
+    resourceDesc.SampleDesc.Count = 1;
+    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+    // 2. 初期状態を COPY_DEST にする
+    if (SUCCEEDED(device->CreateCommittedResource(
+        &heapProperties,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_COPY_DEST, // ここが重要
+        nullptr,
+        IID_PPV_ARGS(&resource)))) {
+        return resource;
+    }
+
+    return nullptr;
+}
 
 ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible)
 {

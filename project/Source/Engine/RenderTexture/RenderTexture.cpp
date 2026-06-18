@@ -19,11 +19,13 @@ void RenderTexture::Create()
 {
     kRenderTargetClearValue_ = { 1.0f,0.0f,0.0f,1.0f };
 
-    CreateResource(0);
-    CreateResource(1);
+    CreateResource(kNormal0, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,true);
+    CreateResource(kNormal1, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,true);
     //サーモグラフィー用テクスチャ
-    CreateResource(kThermography);
-
+    CreateResource(kThermography, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,true);
+    //ObjectID用テクスチャ　
+    CreateResource(kObjectID, DXGI_FORMAT_R32_UINT, false);
+    
     CreateMaterialBUfferForFullScreen();
     CreateMaterialBufferForGrayScale();
     CreateMaterialBufferForVignette();
@@ -37,43 +39,47 @@ void RenderTexture::Create()
     CreateMaterialThermography();
 }
 
-void RenderTexture::CreateResource(const uint32_t index)
-{    //rtvの作成
+void RenderTexture::CreateResource(const uint32_t index, DXGI_FORMAT format, bool createSRV)
+{ 
+    //rtvの作成
     renderTextureDatas_[index].resource =
         DirectXCommon::CreateRenderTextureResource(
             Window::GetClientWidth(),
             Window::GetClientHeight(),
-            DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+            format,
             kRenderTargetClearValue_
         );
 
     LogFile::Log("Rendertexture : CreateRTV");
 
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-    rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    rtvDesc.Format = format;
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
     renderTextureDatas_[index].rtvHandleCPU = DirectXCommon::GetRTVCPUDescriptorHandle(index + 3);
     DirectXCommon::GetDevice()->CreateRenderTargetView(renderTextureDatas_[index].resource.Get(), &rtvDesc, renderTextureDatas_[index].rtvHandleCPU);
 
     LogFile::Log("Rendertexture : CreateRTVDesc");
-    //SRVの作成
-    D3D12_SHADER_RESOURCE_VIEW_DESC renderTextureSrvDesc{};
-    renderTextureSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-    renderTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    renderTextureSrvDesc.Texture2D.MipLevels = 1;
-    LogFile::Log("Rendertexture : Create SRV");
 
     // ------------------------------------------
-    renderTextureDatas_[index].srvIndex = SrvManager::Allocate();
-    renderTextureDatas_[index].srvHandleCPU = SrvManager::GetCPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
-    renderTextureDatas_[index].srvHandleGPU = SrvManager::GetGPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
-    LogFile::Log("Rendertexture : GetSRVIndexAndGPUAndCPUHandle");
 
-    DirectXCommon::GetDevice()->CreateShaderResourceView(renderTextureDatas_[index].resource.Get(), &renderTextureSrvDesc, renderTextureDatas_[index].srvHandleCPU);
-    LogFile::Log("Rendertexture : CreateShaderResourceView");
+    // 3. SRVは必要に応じて作成する
+    if (createSRV) {
+        //SRVの作成
+        D3D12_SHADER_RESOURCE_VIEW_DESC renderTextureSrvDesc{};
+        renderTextureSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+        renderTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+        renderTextureSrvDesc.Texture2D.MipLevels = 1;
+        LogFile::Log("Rendertexture : Create SRV");
 
+        renderTextureDatas_[index].srvIndex = SrvManager::Allocate();
+        renderTextureDatas_[index].srvHandleCPU = SrvManager::GetCPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
+        renderTextureDatas_[index].srvHandleGPU = SrvManager::GetGPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
+        LogFile::Log("Rendertexture : GetSRVIndexAndGPUAndCPUHandle");
 
+        DirectXCommon::GetDevice()->CreateShaderResourceView(renderTextureDatas_[index].resource.Get(), &renderTextureSrvDesc, renderTextureDatas_[index].srvHandleCPU);
+        LogFile::Log("Rendertexture : CreateShaderResourceView");
+    }
 
 }
 

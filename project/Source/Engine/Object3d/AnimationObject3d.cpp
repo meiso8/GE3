@@ -190,6 +190,9 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
         PointLightManager::SetGraphicsRootDescriptorTable(7);
         SpotLightManager::SetGraphicsRootDescriptorTable(8);
         SrvManager::SetGraphicsRootDescriptorTable(9, Texture::GetSRVHandle(skyBoxTexture));
+
+        commandlist->SetGraphicsRootConstantBufferView(10, idResource_->GetGPUVirtualAddress());
+
         //ここでテクスチャの設定をする
         skinningModel_->Draw(commandlist);
     }

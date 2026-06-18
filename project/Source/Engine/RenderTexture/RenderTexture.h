@@ -86,6 +86,7 @@ public:
         kNormal0,
         kNormal1,
         kThermography,
+        kObjectID,
         kMaxRenderTexutre,
     };
     struct RenderTextureData {
@@ -125,7 +126,7 @@ public:
 
     Microsoft::WRL::ComPtr<ID3D12Resource>& GetMaterialResouce(const PSO::EffectType& effectType);
     void Create();
-    void CreateResource(const uint32_t index);
+    void CreateResource(const uint32_t index, DXGI_FORMAT format, bool createSRV);
 
     const Vector4& GetColor() {
         return kRenderTargetClearValue_;

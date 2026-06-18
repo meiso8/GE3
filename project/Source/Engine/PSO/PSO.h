@@ -141,7 +141,7 @@ private:
         const  DxcCompiler::PS_TYPE& psShaderType,
         const TopologyType topologyType,
         const InputLayout::InputLayoutType inputLayoutType,
-        const uint32_t RTVnum = 2);
+        const std::vector<DXGI_FORMAT>& rtvFormats);
 
     Microsoft::WRL::ComPtr <ID3D12PipelineState> CreateComputeShaderPSO(const RootSignature::TYPE& rootSignatureType, const DxcCompiler::CS_TYPE& csShaderType);
 public:

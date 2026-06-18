@@ -109,6 +109,15 @@ void Object3d::CreateBalloonData()
 
 }
 
+void Object3d::CreateID()
+{
+    idResource_ = DirectXCommon::CreateBufferResource(sizeof(int));
+
+    //書き込むためのアドレスを取得
+    idResource_->Map(0, nullptr, reinterpret_cast<void**>(&idData_));
+    idData_->id =  1;
+}
+
 void Object3d::UpdateUV() {
 
     uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
@@ -127,7 +136,7 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
     auto* commandlist = DirectXCommon::GetCommandList();
 
     if (meshCommon_) {
-        meshCommon_->PreDraw(commandlist, blendMode, cullMode,maskMode, usePSOKey);
+        meshCommon_->PreDraw(commandlist, blendMode, cullMode, maskMode, usePSOKey);
 
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
         commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
@@ -146,6 +155,8 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
 
         SpotLightManager::SetGraphicsRootDescriptorTable(8);
         SrvManager::SetGraphicsRootDescriptorTable(9, Texture::GetSRVHandle(skyBoxTexture));
+        //ID
+        commandlist->SetGraphicsRootConstantBufferView(10, idResource_->GetGPUVirtualAddress());
         meshCommon_->Draw(commandlist);
     }
 }
@@ -160,7 +171,7 @@ void Object3d::SetMeshAndMaterial(Primitive* mesh)
 
     if (auto model = dynamic_cast<Model*>(meshCommon_)) {
         //一旦マテリアル0
-        for (auto& [name,material] : model->GetModelData()->materials) {
+        for (auto& [name, material] : model->GetModelData()->materials) {
             for (int i = 0; i < material.textureData_.size(); ++i) {
 
                 textureHandles_[i] = material.textureData_[i].textureSrvIndex;
@@ -183,13 +194,13 @@ void Object3d::SetMeshAndMaterial(Primitive* mesh)
 
 void Object3d::Create()
 {
-
     CreateTransformationMatrix();
     CreateMaterial();
     Initialize();
     CreateUV();
     CreateWaveData();
     CreateBalloonData();
+    CreateID();
 }
 
 void Object3d::Initialize()

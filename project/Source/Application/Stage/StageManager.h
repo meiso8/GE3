@@ -18,7 +18,6 @@ public:
         static StageManager instance;
         return &instance;
     }
-
     void Initialize();
     void Update();
     void DrawModel(Camera* camera);
@@ -28,16 +27,16 @@ public:
     void SetMap(const std::string& name, std::unique_ptr<Stage> stage);
     void SetNestStage(const std::string& name);
     void CheckCollision(CollisionManager& collisionManager);
-    void SetSceneChange(SceneChange* sceneChange);
+    void SetSceneChange(SceneChange* sceneChange) { sceneChange_ = sceneChange; }
     void SetMemoManager(MemoManager* memoManager);
     void SetItemManager(ItemManager* itemManager);
     void SetUIManager(UIManager* uiManager);
     void SetPlayer(Player* player);
     void SetLightingManager(LightingManager* lightingManager);
 private:
-    SceneChange* sceneChange_ = nullptr;
-    MemoManager* memoManager_ = nullptr;
 
+    MemoManager* memoManager_ = nullptr;
+    SceneChange* sceneChange_ = nullptr;
     Stage* currentStage_ = nullptr;
     Stage* nextStage_ = nullptr;
     std::map < std::string, std::unique_ptr<Stage>> stages_;

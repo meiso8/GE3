@@ -125,6 +125,10 @@ public:
     /// @return BufferResource
     static Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(
         size_t sizeInBytes);
+    /// @brief ReadbackBufferResource作成関数
+    /// @param sizeInBytes 
+    /// @return 
+    static Microsoft::WRL::ComPtr<ID3D12Resource> CreateReadbackBufferResource(size_t sizeInBytes);
     /// @brief DescriptorHeapの作成関数
     /// @param heapType ヒープタイプの指定
     /// @param numDescriptors 

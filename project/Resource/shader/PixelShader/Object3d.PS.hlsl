@@ -12,9 +12,21 @@ struct Material
     float32_t4x4 uvTransform;
 };
 
+struct ObjectID
+{
+    uint32_t id;
+    uint32_t padding1;
+    uint32_t padding2;
+    uint32_t padding3;
+    
+};
+
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 ConstantBuffer<Camera> gCamera : register(b2);
+
+ConstantBuffer<ObjectID> gObjectID : register(b3);
+
 
 Texture2D<float4> gTexture : register(t2);
 SamplerState gSampler : register(s0);
@@ -27,7 +39,9 @@ struct PixelShaderOutput
 {
     float4 color : SV_TARGET0;
     float4 temperature : SV_TARGET1; //AddTemperature
+    uint1 objectID : SV_TARGET2;
 };
+
 
 float GetCosin(float NdotL, int lightMode)
 {
@@ -106,7 +120,8 @@ PixelShaderOutput main(VertexShaderOutput input)
     outlineMask = clamp(outlineMask, 0.0f, 1.0f); 
     //SetTemperature　Use G Channel for OutlineMask
     output.temperature = float4(gMaterial.temperature, outlineMask, 0.0, 1.0);
-   
+    output.objectID = gObjectID.id;
+    
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
    
@@ -201,8 +216,8 @@ PixelShaderOutput main(VertexShaderOutput input)
     {
         //if temperature over 0
         
-        //output.color discard
-        if (output.color.a == 0.0)
+        //output.color discard  
+        if (textureColor.a == 0.0 || gMaterial.color.a == 0.0)
         {
             discard;
         }

@@ -31,7 +31,7 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     const  DxcCompiler::PS_TYPE& psShaderType,
     const TopologyType topologyType,
     const InputLayout::InputLayoutType inputLayoutType,
-    const uint32_t RTVnum) {
+    const std::vector<DXGI_FORMAT>& rtvFormats) {
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc = {};
 
@@ -44,16 +44,17 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     DirectXCommon::GetDxcCompiler()->GetPixelShaderBlob(psShaderType)->GetBufferSize() };//PixelShader
     graphicsPipelineStateDesc.BlendState = blendStates[blendMode].GetDesc();//BlendState
     graphicsPipelineStateDesc.RasterizerState = rasterizerStates[cullMode].GetDesc();//RasterizerState
-    //書き込むRTVの情報
-    //graphicsPipelineStateDesc.NumRenderTargets = 1;
-    //graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+    //DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    //DXGI_FORMAT_R32_UINT
 
     // レンダーターゲットの数を設定する
-    graphicsPipelineStateDesc.NumRenderTargets = RTVnum;
+    graphicsPipelineStateDesc.NumRenderTargets = uint32_t(rtvFormats.size());
 
-    for (uint32_t i = 0; i < RTVnum; ++i) {
-        // スロット0とスロット1、両方のフォーマットを正しく指定する
-        graphicsPipelineStateDesc.RTVFormats[i] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 例
+    for (uint32_t i = 0; i < rtvFormats.size(); ++i) {
+        //書き込むRTVの情報
+        graphicsPipelineStateDesc.RTVFormats[i] = rtvFormats[i];
+
     }
 
     //どのように画面に色を打ち込むかの設定（気にしなくていい）
@@ -134,8 +135,12 @@ void PSO::CreateALLPSO()
     //BlendStateの設定を行う
     blendStates.resize(kCountOfBlendMode);
     for (int i = 0; i < blendStates.size(); ++i) {
-        blendStates[i].Create(i);
+        blendStates[i].Create(i,0);
+        blendStates[i].Create(i,1);
+        blendStates[i].Create(kBlendModeNone, 2);
     }
+
+
     LogFile::Log("SetBlendState");
 
     //RasterizerStateの設定を行う
@@ -154,6 +159,15 @@ void PSO::CreateALLPSO()
 
     LogFile::Log("Create depthStencilDesc");
 
+    std::vector<DXGI_FORMAT> rtvFormatsForTermoAndObjectID =
+    {
+        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+        DXGI_FORMAT_R32_UINT
+    };
+
+    //  DXGI_FORMAT_R32_UINT
+
     for (uint32_t b = 0; b < kCountOfBlendMode; ++b) {
         for (uint32_t c = 0; c < kCountOfCullMode; ++c) {
             graphicsPipelineStates_[b][c] = Create(
@@ -166,7 +180,7 @@ void PSO::CreateALLPSO()
                 DxcCompiler::PS_Normal,
                 kTriangle,
                 InputLayout::kInputLayoutTypeNormal,
-                2
+                rtvFormatsForTermoAndObjectID
             );
         }
     }
@@ -181,7 +195,8 @@ void PSO::CreateALLPSO()
             DxcCompiler::VS_Particle,
             DxcCompiler::PS_Particle,
             kTriangle,
-            InputLayout::kInputLayoutTypeNormal
+            InputLayout::kInputLayoutTypeNormal,
+            rtvFormatsForTermoAndObjectID
         );
     }
 
@@ -196,7 +211,8 @@ void PSO::CreateALLPSO()
             DxcCompiler::VS_Normal,
             DxcCompiler::PS_Normal,
             kLine,
-            InputLayout::kInputLayoutTypeNormal
+            InputLayout::kInputLayoutTypeNormal,
+            rtvFormatsForTermoAndObjectID
         );
 
     for (int b = 0; b < kCountOfBlendMode; ++b) {
@@ -209,7 +225,8 @@ void PSO::CreateALLPSO()
             DxcCompiler::VS_Sprite,
             DxcCompiler::PS_Sprite,
             kTriangle,
-            InputLayout::kInputLayoutTypeNormal
+            InputLayout::kInputLayoutTypeNormal,
+            rtvFormatsForTermoAndObjectID
         );
 
     }
@@ -224,7 +241,8 @@ void PSO::CreateALLPSO()
             DxcCompiler::VS_Sprite,
             DxcCompiler::PS_Font,
             kTriangle,
-            InputLayout::kInputLayoutTypeNormal
+            InputLayout::kInputLayoutTypeNormal,
+            rtvFormatsForTermoAndObjectID
         );
     }
 
@@ -240,10 +258,13 @@ void PSO::CreateALLPSO()
                 DxcCompiler::VS_Skinning,
                 DxcCompiler::PS_Normal,
                 kTriangle,
-                InputLayout::kInputLayoutTypeSkinning
+                InputLayout::kInputLayoutTypeSkinning,
+                rtvFormatsForTermoAndObjectID
             );
         }
     }
+
+    
     graphicsPipelineStateSkyBox_ =
         Create(
             kBlendModeNone,
@@ -254,7 +275,8 @@ void PSO::CreateALLPSO()
             DxcCompiler::VS_SkyBox,
             DxcCompiler::PS_SkyBox,
             kTriangle,
-            InputLayout::kInputLayoutTypeNormal);
+            InputLayout::kInputLayoutTypeNormal,
+            rtvFormatsForTermoAndObjectID);
 
 
     graphicsPipelineStateOffScreen_[kEffectNone] = Create(
@@ -266,7 +288,8 @@ void PSO::CreateALLPSO()
         DxcCompiler::VS_OffScreen,
         DxcCompiler::PS_OffScreen,
         kTriangle,
-        InputLayout::kInputLayoutTypeOffScreen);
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormatsForTermoAndObjectID);
 
     graphicsPipelineStateOffScreen_[kEffectGrayScale] = Create(
         kBlendModeNone,
@@ -277,7 +300,8 @@ void PSO::CreateALLPSO()
         DxcCompiler::VS_OffScreen,
         DxcCompiler::PS_GrayScale,
         kTriangle,
-        InputLayout::kInputLayoutTypeOffScreen);
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormatsForTermoAndObjectID);
 
     graphicsPipelineStateOffScreen_[kEffectVignette] = Create(
         kBlendModeNone,
@@ -288,7 +312,8 @@ void PSO::CreateALLPSO()
         DxcCompiler::VS_OffScreen,
         DxcCompiler::PS_Vignette,
         kTriangle,
-        InputLayout::kInputLayoutTypeOffScreen);
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormatsForTermoAndObjectID);
 
     graphicsPipelineStateOffScreen_[kEffectBoxFilter] = Create(
         kBlendModeNone,
@@ -299,7 +324,8 @@ void PSO::CreateALLPSO()
         DxcCompiler::VS_OffScreen,
         DxcCompiler::PS_BoxFilter,
         kTriangle,
-        InputLayout::kInputLayoutTypeOffScreen);
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormatsForTermoAndObjectID);
 
     graphicsPipelineStateOffScreen_[kEffectGaussianFilter] = Create(
         kBlendModeNone,
@@ -310,7 +336,8 @@ void PSO::CreateALLPSO()
         DxcCompiler::VS_OffScreen,
         DxcCompiler::PS_GaussianFilter,
         kTriangle,
-        InputLayout::kInputLayoutTypeOffScreen);
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormatsForTermoAndObjectID);
 
 
     graphicsPipelineStateOffScreen_[kEffectLuminanceBasedOutline] = Create(
@@ -322,7 +349,8 @@ void PSO::CreateALLPSO()
         DxcCompiler::VS_OffScreen,
         DxcCompiler::PS_LuminanceBasedOutline,
         kTriangle,
-        InputLayout::kInputLayoutTypeOffScreen);
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormatsForTermoAndObjectID);
 
     graphicsPipelineStateOffScreen_[kEffectDepthBasedOutline] = Create(
         kBlendModeNone,
@@ -333,7 +361,8 @@ void PSO::CreateALLPSO()
         DxcCompiler::VS_OffScreen,
         DxcCompiler::PS_DepthBasedOutline,
         kTriangle,
-        InputLayout::kInputLayoutTypeOffScreen);
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormatsForTermoAndObjectID);
 
 
     graphicsPipelineStateOffScreen_[kEffectRadialBlur] = Create(
@@ -345,7 +374,8 @@ void PSO::CreateALLPSO()
         DxcCompiler::VS_OffScreen,
         DxcCompiler::PS_RadialBlur,
         kTriangle,
-        InputLayout::kInputLayoutTypeOffScreen);
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormatsForTermoAndObjectID);
 
     graphicsPipelineStateOffScreen_[kEffectDissolve] = Create(
         kBlendModeNone,
@@ -356,7 +386,8 @@ void PSO::CreateALLPSO()
         DxcCompiler::VS_OffScreen,
         DxcCompiler::PS_Dissolve,
         kTriangle,
-        InputLayout::kInputLayoutTypeOffScreen);
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormatsForTermoAndObjectID);
 
     //Romdomならコレになります。kEffectRandomは一応あるけど。。エラーになりマスね。
     for (int b = 0; b < kCountOfBlendMode; ++b) {
@@ -369,7 +400,8 @@ void PSO::CreateALLPSO()
             DxcCompiler::VS_OffScreen,
             DxcCompiler::PS_Random,
             kTriangle,
-            InputLayout::kInputLayoutTypeOffScreen
+            InputLayout::kInputLayoutTypeOffScreen,
+            rtvFormatsForTermoAndObjectID
         );
     }
 
@@ -382,7 +414,8 @@ void PSO::CreateALLPSO()
         DxcCompiler::VS_OffScreen,
         DxcCompiler::PS_Thermography,
         kTriangle,
-        InputLayout::kInputLayoutTypeOffScreen);
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormatsForTermoAndObjectID);
 
 };
 
@@ -453,6 +486,12 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::GetOrCreatePSO(const PSOKey& ke
 
     assert(GetInstance()->inputLayout);
 
+    std::vector<DXGI_FORMAT> rtvFormatsForTermoAndObjectID =
+    {
+        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+        DXGI_FORMAT_R32_UINT
+    };
     Microsoft::WRL::ComPtr<ID3D12PipelineState> newPso = GetInstance()->Create(
         static_cast<BlendMode>(key.blendMode),
         static_cast<CullMode>(key.cullMode),
@@ -462,7 +501,8 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::GetOrCreatePSO(const PSOKey& ke
         key.vsShaderType,
         key.psShaderType,
         key.topologyType,
-        key.inputLayoutType
+        key.inputLayoutType,
+        rtvFormatsForTermoAndObjectID
     );
 
     // 3. キャッシュに保存して返す

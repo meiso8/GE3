@@ -84,10 +84,11 @@ void SampleScene::Initialize() {
     memoManager_->Initialize();
     //アメンステージにする
     stageManager_->SetNestStage("AmenStage");
-#ifdef _DEVELOP
-    stageManager_->SetNestStage("MummyStage");
-#endif
-
+//#ifdef _DEVELOP
+//    stageManager_->SetNestStage("MummyStage");
+//#endif
+    sceneChange_->Initialize();
+ /*   sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);*/
     //現在のステージの初期化
     stageManager_->TransitionStage();
 }
@@ -135,11 +136,6 @@ void SampleScene::Update() {
     memoManager_->Update();
 
     CheckAllCollision();
-
-
-
-
-
 }
 
 SampleScene::~SampleScene()
@@ -234,18 +230,21 @@ void SampleScene::DrawModel() {
 #ifdef _DEVELOP
     DrawGrid::Draw(*currentCamera_);
 #endif
+
     skyboxObject3d_->Draw(*currentCamera_);
+
     memoManager_->Draw(*currentCamera_);
     itemManager_->Draw(*currentCamera_);
     //ステージごとの描画
     stageManager_->DrawModel(currentCamera_);
     //プレイヤーの描画
-    player_->Draw(*currentCamera_, kLightModeHalfL);
-
+    player_->Draw(*currentCamera_);
 
     ParticleManager::GetInstance()->Draw();
     //アイテムを手前に描画する
     itemManager_->DrawGetItem();
+
+
 }
 
 void SampleScene::DrawSprite() {
