@@ -183,16 +183,9 @@ void ImGuiClass::UpdateGuizmo(Camera& camera, Object3d& targetObject)
     //画面全域に合わせる
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 
-    /*
-    ImVec2 pos = ImGui::GetWindowPos();
-    ImVec2 size = ImGui::GetWindowSize();
-    ImGuizmo::SetRect(pos.x, pos.y, size.x, size.y);
-    */
-
     float viewMat[16] = { 0.0f };
     float projectionMat[16] = { 0.0f };
     float worldMat[16] = { 0.0f };
-
 
     ConvertMatArray(camera.GetViewMatrix(), viewMat);
     ConvertMatArray(camera.GetProjectionMatrix(), projectionMat);

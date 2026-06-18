@@ -4,6 +4,7 @@
 #include"DrawGrid.h"
 #include"DebugUI.h"
 #include"Model.h"
+#include"Object3d/ObjectManager.h"
 
 FreeTypeScene::FreeTypeScene()
 {
@@ -29,8 +30,13 @@ FreeTypeScene::FreeTypeScene()
     sprite_->SetSize({ 1280,720 });
 
 
+    ObjectManager::GetInstance()->Clear();
+
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
+
+
+
 
     cylinder_ = std::make_unique<Primitive>();
     cylinder_->Create(PrimitiveGenerator::CreateCylinder());
@@ -43,10 +49,12 @@ FreeTypeScene::FreeTypeScene()
     object3d_->SetTextureHandle(TextureFactory::GRADATION_LINE);
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
 
-
     object3d2_ = std::make_unique<Object3d>();
     object3d2_->Create();
     object3d2_->SetMeshAndMaterial(ModelManager::GetModel("playerGirl"));
+
+
+    ObjectManager::GetInstance()->RegisterObject(object3d2_.get());
 
     beam_ = std::make_unique<Beam>();
 
@@ -55,6 +63,29 @@ FreeTypeScene::FreeTypeScene()
     //オブジェクトをセットする
     levelEditor_->CreateObject(objects_);
 
+    for (auto& obj : objects_) {
+        ObjectManager::GetInstance()->RegisterObject(obj->obj_.get());
+    }
+
+    auto* levelData = levelEditor_->GetLevelData();
+
+    for (auto& enemyData : levelData->enemies) {
+        std::unique_ptr<Object3d> enemy = std::make_unique<Object3d>();
+        enemy->Create();
+        enemy->SetMeshAndMaterial(ModelManager::GetModel(enemyData.fileName));
+        enemy->Initialize();
+        enemy->worldTransform_.translate_ = enemyData.transform.translate;
+        enemy->worldTransform_.rotate_ = enemyData.transform.rotate;
+        enemy->worldTransform_.scale_ = enemyData.transform.scale;
+        enemies_.push_back(std::move(enemy));
+
+    }
+
+    for (auto& enemy : enemies_) {
+        ObjectManager::GetInstance()->RegisterObject(enemy.get());
+    }
+
+   clickedID_ = 0;
 }
 
 void FreeTypeScene::Initialize()
@@ -66,7 +97,7 @@ void FreeTypeScene::Initialize()
     currentCamera_ = camera_.get();
 
     //player_->Init();
-    auto* levelData = levelEditor_->GetLevelData();
+
     //if (!levelData->players.empty()) {
     //    auto& playerData = levelData->players[0];
     //    player_->SetBodyPos(playerData.transform.translate);
@@ -74,18 +105,6 @@ void FreeTypeScene::Initialize()
     //    player_->SetBodyScale(playerData.transform.scale);
     //}
     //player_->Update();
-
-    for (auto& enemyData : levelData->enemies) {
-        std::unique_ptr<Object3d> enemy = std::make_unique<Object3d>();
-        enemy->Create();
-        enemy->SetMeshAndMaterial(ModelManager::GetModel(enemyData.fileName));
-        enemy->Initialize();
-        enemy->worldTransform_.translate_ = enemyData.transform.translate;
-        enemy->worldTransform_.rotate_ = enemyData.transform.rotate;
-        enemy->worldTransform_.scale_ = enemyData.transform.scale;
-        enemies_.push_back(std::move(enemy));
-    }
-
 
     beam_->Initialize();
     sceneChange_->Initialize();
@@ -116,39 +135,34 @@ void FreeTypeScene::Update()
     }
 
     DebugUI::CheckCamera(*currentCamera_);
-    DebugUI::CheckObject3d(*object3d_, "cilinder");
-    DebugUI::CheckObject3d(*object3d2_, "playerGirlObj");
-
 
     DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
     DebugUI::CheckParticle(*particleEmitters_[1], "Emitter1");
     DebugUI::CheckSRVIndex();
 
+    ObjectManager::GetInstance()->DebugAll();
 
-    for (auto& obj : objects_) {
-        ImGuiClass::UpdateGuizmo(*currentCamera_, *obj->obj_);
+
+    clickedID_ = RenderTexture::GetInstance()->GetClickedObjectID();
+   
+    ImGui::Text("ClickedID : %d", clickedID_);
+
+    if (clickedID_ != 0) {
+        auto* selectedObj = ObjectManager::GetInstance()->FindObjectByID(clickedID_);
+        if (selectedObj) {
+            ImGuiClass::UpdateGuizmo(*currentCamera_, *selectedObj);
+        }
     }
-
-    
-
-
 #endif //_DEVELOP
 
 
-    object3d_->Update();
+    ObjectManager::GetInstance()->UpdateAll();
 
-    object3d_->GetUVTranslate().x += 0.1f;
-    object3d_->UpdateUV();
+    beam_->Update();
 
-
-    for (auto& enemy : enemies_) {
-        enemy->Update();
-    }
     for (auto& obj : objects_) {
         obj->obj_->SetTemperature(1.0f);
-        obj->obj_->Update();
     }
-
 
     for (int i = 0; i < particleEmitters_.size(); ++i) {
         particleEmitters_[i]->UpdateTimer();
@@ -156,16 +170,8 @@ void FreeTypeScene::Update()
 
     }
 
-    object3d2_->Update();
-
-    beam_->Update();
-
     // 共通更新
     ParticleManager::GetInstance()->Update(*currentCamera_);
-
-
-
-
 }
 
 void FreeTypeScene::DrawSprite() {
@@ -185,22 +191,14 @@ void FreeTypeScene::DrawModel()
     DrawGrid::Draw(*currentCamera_);
 #endif //_DEVELOP
 
-    for (auto& enemy : enemies_) {
-        enemy->Draw(*currentCamera_);
-    }
-
-    object3d2_->Draw(*currentCamera_);
-
-    for (auto& obj : objects_) {
-        obj->obj_->Draw(*currentCamera_);
-    }
+    ObjectManager::GetInstance()->DrawAll(*currentCamera_);
 
     skyBoxObj_->Draw(*currentCamera_);
+
     object3d_->Draw(*currentCamera_,BlendMode::kBlendModeAdd,CullMode::kCullModeNone,MaskMode::kZero);
 
     beam_->Draw(currentCamera_);
 
- /*   object3d_->DrawForEffect(*currentCamera_);*/
     ParticleManager::GetInstance()->Draw();
 
 

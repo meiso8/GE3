@@ -364,6 +364,14 @@ Vector2& Input::GetCursorPosition()
     return cursorPos;
 }
 
+Vector2Int Input::GetCursorPositionInt()
+{
+    POINT pos;
+    GetCursorPos(&pos);
+    ScreenToClient(window_->GetHwnd(), &pos);
+    return { pos.x,pos.y };
+}
+
 void Input::SetCursorPosition(const Vector2& pos)
 {
     SetCursorPos(static_cast<int>(pos.x), static_cast<int>(pos.y));

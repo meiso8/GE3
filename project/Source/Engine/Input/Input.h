@@ -8,6 +8,11 @@
 #include<vector>
 #include<memory>
 
+struct Vector2Int {
+    int x;
+    int y;
+};
+
 #include <Xinput.h>
 #pragma comment(lib, "xinput.lib")
 #include<array>
@@ -113,6 +118,7 @@ public:
 
     static bool IsControllerDeadZone(BYTE& triggerButton);
     static Vector2& GetCursorPosition();
+    static Vector2Int GetCursorPositionInt();
     static void SetCursorPosition(const Vector2& pos);
 private:
     static inline std::vector<char32_t> inputChars_;

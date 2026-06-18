@@ -6,6 +6,7 @@
 #include <thread>
 #include"SRVmanager/SrvManager.h"
 #include"DebugUI.h"
+#include"Input.h"
 
 using namespace Microsoft::WRL;
 ComPtr<ID3D12Device> DirectXCommon::device = nullptr;
@@ -63,6 +64,7 @@ void DirectXCommon::Initialize(Window& window)
     InitializeViewPort();
     ScissorRectSetting();
     CreateDXCCompiler();
+
 }
 
 void DirectXCommon::CreateDepthStencilResourceSRV()
@@ -92,8 +94,6 @@ void DirectXCommon::RenderTexturePreDraw()
     auto& renderTextureDataThermography = renderTexture_->GetRenderTextureData(RenderTexture::kThermography);
     auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
 
-
-
     // 3つのレンダーターゲットハンドルを入れる配列を用意
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[3];
 
@@ -108,6 +108,7 @@ void DirectXCommon::RenderTexturePreDraw()
     barrier.SettingBarrierSRVforRTV(renderTextureDataNormal.resource);
     barrier.SettingBarrierSRVforRTV(renderTextureDataThermography.resource);
     barrier.SettingBarrierSRVforRTV(renderTextureDataID.resource);
+
 
     //2.描画用のRTVとDSVを設定する 
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
@@ -135,7 +136,6 @@ void DirectXCommon::RenderTexturePreDraw()
     commandList->GetCommandList()->RSSetViewports(1, &viewport);//Viewportを設定
     //シザー矩形の設定
     commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
-
 
 }
 #include "PostProcessManager/PostProcessManager.h"
@@ -167,6 +167,11 @@ void DirectXCommon::DrawRenderTexture()
 void DirectXCommon::RenderTexturePostDraw()
 {
 
+    if (Input::IsTriggerMouse(0)) {
+        Vector2Int pos = Input::GetCursorPositionInt();
+        renderTexture_->CopyClickPixelCommand(pos.x, pos.y);
+    }
+
     barrier.SettingBarrier(depthTextureData_.depthStencilResource.Get(),
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
@@ -180,7 +185,7 @@ void DirectXCommon::RenderTexturePostDraw()
     // ★追加: ID用テクスチャのバリアを元に戻す
     auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
     barrier.SettingBarrierRTVforSRV(renderTextureDataID.resource);
-
+    //barrier.SettingBarrier(renderTextureDataID.resource, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COPY_SOURCE);
     LogFile::Log("Rendertexture : PosDraw : SettingBarrier");
 }
 
@@ -235,6 +240,8 @@ void DirectXCommon::PostDraw()
     barrier.SettingBarrier(swapChainResources[backBufferIndex],
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT);
+
+
 
     //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     HRESULT hr = commandList->GetCommandList()->Close();
