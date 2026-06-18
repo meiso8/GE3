@@ -137,11 +137,10 @@ void Player::UpdateRay()
     raySprite_->UpdateRay(Ray{ .origin = eyeCollider_->GetWorldTransform().GetWorldPosition(),.diff = GetForward() });
 }
 
-void Player::Draw(Camera& camera, const LightMode& lightType)
+void Player::Draw(Camera& camera)
 {
 #ifdef _DEBUG
-    bodyPos_.SetLightMode(lightType);
-    bodyPos_.Draw(camera, kBlendModeNormal);
+    bodyPos_.Draw(camera);
     eyeCollider_->Draw(camera);
     ColliderDraw(camera);
 #endif

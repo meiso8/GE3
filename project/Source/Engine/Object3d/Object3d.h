@@ -10,6 +10,12 @@
 #include"Wave.h"
 #include"Transform.h"
 #include<memory>
+
+struct ObjectID {
+    uint32_t id;
+    uint32_t padding[3];
+};
+
 class Model;
 enum LightMode;
 class Object3d
@@ -36,6 +42,11 @@ protected:
     // ==============波データ==================
     Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_;
     Wave* waveData_ = nullptr;
+
+    // ==============ID情報==================
+    Microsoft::WRL::ComPtr <ID3D12Resource> idResource_ = nullptr;
+    ObjectID* idData_ = nullptr;
+
     //メッシュ情報
     Primitive* meshCommon_ = nullptr;
 private:
@@ -93,7 +104,7 @@ private:
     void CreateMaterial(const float temperature = 0.0f, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const uint32_t& lightType = LightMode::kLightModeHalfL);
     void CreateWaveData();
     void CreateBalloonData();
-
+    void CreateID();
 
 };
 

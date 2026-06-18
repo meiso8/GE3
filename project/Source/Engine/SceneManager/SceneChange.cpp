@@ -21,7 +21,9 @@ SceneChange::~SceneChange()
 
 SceneChange::SceneChange()
 {
-   
+    sprite_ = std::make_unique<Sprite>();
+    sprite_->Create(TextureFactory::WHITE_1X1, { 0.0f,0.0f }, { 0.0f,0.0f,0.0f,1.0f });
+    sprite_->SetSize(Vector2{ static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()) });
 }
 
 void SceneChange::SetState(State state, const float endTime)
@@ -35,9 +37,6 @@ void SceneChange::SetState(State state, const float endTime)
 
 void SceneChange::Initialize()
 {
-    sprite_ = std::make_unique<Sprite>();
-    sprite_->Create(TextureFactory::WHITE_1X1, { 0.0f,0.0f }, { 0.0f,0.0f,0.0f,1.0f });
-    sprite_->SetSize(Vector2{ static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()) });
     timer_ = 0.0f;
     state_ = kUnKnown;
 }

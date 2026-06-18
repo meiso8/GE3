@@ -28,7 +28,6 @@ void SkinningModel::PreDraw(
     const RootSignature::TYPE rootSignatureType,
     const DxcCompiler::VS_TYPE vsType,
     const DxcCompiler::PS_TYPE psType
-
 )
 {
     (void)maskMode;
@@ -53,7 +52,7 @@ void SkinningModel::Draw(ID3D12GraphicsCommandList* commandList)
     //IBVを設定
     commandList->IASetIndexBuffer(&indexBufferView_);//IBVを設定
     //cameraのCBufferの場所を設定 paletteResource 
-    SrvManager::SetGraphicsRootDescriptorTable(10, skinCluster_->paletteSrvIndex);
+    SrvManager::SetGraphicsRootDescriptorTable(11, skinCluster_->paletteSrvIndex);
 
     // 2. マテリアルごとにループを回して描画
     for (const auto& section : modelData_->sections) {

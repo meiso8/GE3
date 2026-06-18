@@ -88,6 +88,7 @@ void FreeTypeScene::Initialize()
 
 
     beam_->Initialize();
+    sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
     CreateParticle();
 }

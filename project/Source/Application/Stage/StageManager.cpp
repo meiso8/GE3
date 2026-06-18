@@ -9,6 +9,7 @@ StageManager::~StageManager()
     currentStage_ = nullptr;
     nextStage_ = nullptr;
     LogFile::Log("Destory StageManager");
+
 }
 
 void StageManager::Initialize()
@@ -52,6 +53,7 @@ void StageManager::TransitionStage()
 
     //次のステージがセットされていたら次のステージにする
     if (nextStage_) {
+        sceneChange_->Initialize();
         sceneChange_->SetState(SceneChange::kFadeOut,1.0f);
         LogFile::Log("Start FadeOut");
         //メモマネージャー
@@ -91,11 +93,6 @@ void StageManager::CheckCollision(CollisionManager& collisionManager)
     }
 }
 
-void StageManager::SetSceneChange(SceneChange* sceneChange)
-{
-    sceneChange_ = sceneChange;
-    assert(sceneChange_);
-}
 
 void StageManager::SetMemoManager(MemoManager* memoManager)
 {

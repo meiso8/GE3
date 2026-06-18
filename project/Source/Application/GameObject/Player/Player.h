@@ -28,7 +28,7 @@ public:
     Player();
     void Init(const Vector3& pos);
 
-    void Draw(Camera& camera, const LightMode& lightType);
+    void Draw(Camera& camera);
     void DrawRaySprite();
     void Update();
     void Debug();
