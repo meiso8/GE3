@@ -146,10 +146,8 @@ void MyEngine::Debug()
     ImGui::Begin("Debug");
 
     DebugUI::CheckFPS();
-    DebugUI::CheckInput();
-
     SceneManager::Debug();
-
+    DebugUI::CheckInput();
     DebugUI::CheckLights();
     DebugUI::CheckJsonFile();
 
