@@ -197,7 +197,7 @@ void MedjedStage::CreateParticle()
         particleEmitters_[i]->Initialize();
     }
 
-    ParticleManager::GetInstance()->Create();
+
 
     particleEmitters_[kMedjed_Particle]->SetName("medjedParticle");
     particleEmitters_[kSky_Particle]->SetName("people");

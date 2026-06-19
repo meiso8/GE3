@@ -103,9 +103,6 @@ void SceneManager::Debug()
             // 選択肢を表示（クリックされたら true を返す）
             if (ImGui::Selectable(name.c_str(), true)) {
                 // クリックされたらシーン切り替え関数を呼ぶ
-                    //メジェドを倒したらシーン切り替え
-
-                //すぐに移動する
                 currentScene_->SetStateEnd();
                 SetNextScene(name);
                 break;

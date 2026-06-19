@@ -14,7 +14,6 @@
 
 using namespace  Microsoft::WRL;
 
-ParticleManager* ParticleManager::instance_ = nullptr;
 ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
 std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager::particleGroups;
 
@@ -34,10 +33,6 @@ void ParticleManager::CreateAll()
 // ==========================================================================================================
 
 
-ParticleManager::ParticleManager()
-{
-
-}
 void ParticleManager::Create()
 {
     rootSignature_ = PSO::GetRootSignature();
@@ -454,10 +449,6 @@ void ParticleManager::Finalize()
         }
     }
 
-    if (instance_ != nullptr) {
-        delete instance_;
-        instance_ = nullptr;
-    }
 }
 
 
@@ -482,14 +473,6 @@ void ParticleManager::UpdateInstancingData(ParticleGroup& group, Particle& parti
 
 }
 
-
-ParticleManager* ParticleManager::GetInstance()
-{
-    if (instance_ == nullptr) {
-        instance_ = new ParticleManager();
-    }
-    return instance_;
-}
 
 void ParticleManager::Reset(const std::string& name)
 {

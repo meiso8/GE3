@@ -110,21 +110,24 @@ private:
     Matrix4x4 worldMatrix;
     Matrix4x4 worldViewProjectionMatrix;
 
-    static ParticleManager* instance_;
     Camera* camera_ = nullptr;
+
+private:
+    //コンストラク・タデストラクタの隠ぺい
+    ParticleManager() = default;
+    ~ParticleManager() = default;
 public:
 
     void CreateAll();
-
-    //コンストラク・タデストラクタの隠ぺい
-    ParticleManager();
-    ~ParticleManager() = default;
     //コピーコンストラクタの封印
     ParticleManager(ParticleManager&) = delete;
     //コピー代入演算子の封印
     ParticleManager& operator=(ParticleManager&) = delete;
     void Create();
-    static ParticleManager* GetInstance();
+    static ParticleManager* GetInstance() {
+        static ParticleManager instance;
+        return &instance;
+    };
     static void Reset(const std::string& name);
     static void ResetAll();
     static void Emit(Emitter& emitter);

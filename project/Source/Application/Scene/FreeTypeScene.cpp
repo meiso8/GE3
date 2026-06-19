@@ -178,7 +178,7 @@ void FreeTypeScene::DrawModel()
     DrawGrid::Draw(*currentCamera_);
 #endif //_DEVELOP
 
-    ObjectManager::GetInstance()->DrawAll(*currentCamera_);
+    //ObjectManager::GetInstance()->DrawAll(*currentCamera_);
 
     skyBoxObj_->Draw(*currentCamera_);
 
@@ -197,8 +197,6 @@ void FreeTypeScene::CreateParticle()
         particleEmitters_[i] = std::make_unique<ParticleEmitter>();
         particleEmitters_[i]->Initialize();
     }
-
-    ParticleManager::GetInstance()->Create();
 
     particleEmitters_[0]->SetName("particle1");
 
