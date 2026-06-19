@@ -7,6 +7,7 @@
 #include"Model.h"
 #include"SRVmanager/SrvManager.h"
 #include"ObjectManager.h"
+
 void Object3d::CreateMaterial(const float temperature, const Vector4& color, const uint32_t& lightType) {
 
     for (auto& textureHandle : textureHandles_) {
