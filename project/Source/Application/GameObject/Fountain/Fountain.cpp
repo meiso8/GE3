@@ -136,6 +136,7 @@ void Fountain::CreateParticle()
 
     auto& emitter1 = particleEmitter_[1]->GetEmitter();
     emitter1.isLoop_ = true;
+    emitter1.color = { 0.5f,1.0f,1.0f,1.0f };
     emitter1.movement = ParticleMovements::kParticleSphere;
     emitter1.transform.scale_ = { 0.1f,0.1f,0.1f };
     emitter1.frequency = 0.001f;
