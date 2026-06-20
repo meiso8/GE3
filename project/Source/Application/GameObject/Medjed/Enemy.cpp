@@ -66,7 +66,6 @@ Enemy::Enemy()
     colliders_["EnemyFoot_R"].collider_ = std::make_unique<Collider>();
     colliders_["EnemyHead"].collider_ = std::make_unique<Collider>();
 
-
     eyeMats_["eye_L"] = MakeIdentity4x4();
     eyeMats_["eye_R"] = MakeIdentity4x4();
 
