@@ -106,6 +106,8 @@ void DebugBone::Create(Skeleton& skeleton)
 
 void CheckJoint(Joint& joint, std::vector<Joint>& joints)
 {
+
+#ifdef USE_IMGUI
     ImGui::PushID(joint.index);
 
     // ツリーのノードを作成（名前を表示）
@@ -131,7 +133,7 @@ void CheckJoint(Joint& joint, std::vector<Joint>& joints)
     }
 
     ImGui::PopID();
-
+#endif
 }
 void DebugBone::Update(const Matrix4x4& parentMatrix)
 {

@@ -58,6 +58,32 @@ Vector3 ToTargetVector(const Vector3& target, const  Vector3& ownPos)
     return velocity;
 }
 
+
+Vector3 CalculateLookAtRotate(const Vector3& startPos, const Vector3& endPos) {
+    // 進行方向のベクトルを計算
+    Vector3 diff = endPos - startPos;
+
+    // XZ平面上（地面）での移動距離を計算（三平方の定理）
+    float horizontalLength = std::sqrt(diff.x * diff.x + diff.z * diff.z);
+
+    Vector3 rotate = { 0.0f, 0.0f, 0.0f };
+
+    // 1. Y軸まわりの回転 (Yaw: 左右の向き)
+    // Z前方を基準として、Xにどれだけ傾いているか
+    rotate.y = std::atan2(diff.x, diff.z);
+
+    // 2. X軸まわりの回転 (Pitch: 上下の傾き)
+    // 水平に進む距離に対して、Y（高さ）がどれだけ変化しているか
+    // ※DirectXの座標系に合わせて、下を向く（Yマイナス）のときにプラス回転になるよう符号を調整しています
+    rotate.x = std::atan2(-diff.y, horizontalLength);
+
+    // 3. Z軸まわりの回転 (Roll: ひねり)
+    // レーザーの軸回転は不要なので 0 固定
+    rotate.z = 0.0f;
+
+    return rotate;
+}
+
 Vector3 Normalize(const Vector3& v) {
     float length = Length(v);
     if (length != 0.0f) {

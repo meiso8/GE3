@@ -56,6 +56,7 @@ void TitleScene::Initialize()
     isHoverExitButton_ = false;
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
+
     Sound::bgmVolume_ = 0.5f;
     Sound::StopAllSound();
 

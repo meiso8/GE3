@@ -73,6 +73,7 @@ void SceneChange::SwitchScene()
     }
     if (state_ == kFadeOut || state_ == kWipeOut) {
         state_ = kSceneStart;
+        sprite_->SetColor({ 0.0f,0.0f,0.0f,0.0f});
     }
     if (state_ == kFadeIn || state_ == kWipeIn) {
         state_ = kSceneEnd;

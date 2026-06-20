@@ -42,12 +42,13 @@ struct SphericalMove {
     float polarSpeed;
 };
 
-struct ParticleForGPU {
-    Matrix4x4 WVP;
-    Matrix4x4 World;
-    Vector4 color;
-};
 
+struct ParticleForGPU
+{
+    float32_t4x4 WVP;
+    float32_t4x4 World;
+    float4 color;
+};
 
 enum ParticleMovements {
     kParticleNormal,
@@ -57,6 +58,7 @@ enum ParticleMovements {
 
 struct ParticleGroup {
     MaterialData materialData;
+    std::unique_ptr < MaterialResource> materialResource;
     std::list<Particle>particles;
     std::list<SphericalMove>sphericalCoordinates;
     uint32_t instanceSrvIndex;
@@ -67,6 +69,7 @@ struct ParticleGroup {
     bool useModel = false;
     bool useBillboard = true;
     bool useSpriteCamera = false;
+    bool useRadialEmission = false;
     Model* model = nullptr;
     std::unique_ptr<Primitive> primitive = nullptr;
     const WorldTransform* parentPos_ = nullptr;
@@ -79,9 +82,21 @@ struct ParticleGroup {
 
 std::list<SphericalMove> EmitCoordinate(uint32_t count, const float& radius, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);
 
-std::list<Particle> EmitParticles(const AABB& velocityAABB, const WorldTransform& transform, uint32_t count, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const AABB& rotateAABB, const AABB& scaleAABB);
-Particle MakeNewParticle(const AABB& velocityAABB,
-    const WorldTransform& transform, const Vector4& color, const float& lifeTime, const AABB& translateAABB, const AABB& rotateAABB, const AABB& scaleAABB);
+std::list<Particle> EmitParticles(
+    const AABB& velocityAABB, 
+    const WorldTransform& transform, 
+    const bool useRadialEmission,
+    uint32_t count,
+    const Vector4& color, 
+    const float& lifeTime, 
+    const AABB& translateAABB,
+    const AABB& rotateAABB,
+    const AABB& scaleAABB
+);
+Particle MakeNewParticle(
+    const AABB& velocityAABB,
+    const WorldTransform& transform, const bool useRadialEmission, const int& count, const int& maxCount,
+    const Vector4& color, const float& lifeTime, const AABB& translateAABB, const AABB& rotateAABB, const AABB& scaleAABB);
 
 SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, const int& maxCount, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);
 
@@ -101,9 +116,6 @@ private:
     RootSignature* rootSignature_ = nullptr;
     static ID3D12GraphicsCommandList* commandList_;
     static std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>particleGroups;
-
-
-    std::unique_ptr < MaterialResource> materialResource;
 
     Matrix4x4 backToFrontMatrix;
     Matrix4x4 billboardMatrix;
@@ -137,7 +149,7 @@ public:
         assert(particleGroups.contains(name));
         return particleGroups[name];
     };
-    void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle,const TopologyType& topoligyType, const bool& useModel = false, const std::string& modelFileName = "Box.obj");
+    void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle,const TopologyType& topoligyType, const bool& useModel = false, const float temperature = 1.0f, const std::string& modelFileName = "Box.obj");
 
     void Update(Camera& camera);
     void Draw();

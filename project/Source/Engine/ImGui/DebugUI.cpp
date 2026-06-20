@@ -96,6 +96,7 @@ void DebugUI::CheckCamera(Camera& camera, const char* label) {
 void DebugUI::CheckEmitter(Emitter& emitter, const char* label)
 {
 
+#ifdef USE_IMGUI
     ImGui::Begin("Particle");
 
     ParticleManager& particle = *ParticleManager::GetInstance();
@@ -119,6 +120,7 @@ void DebugUI::CheckEmitter(Emitter& emitter, const char* label)
         ImGui::SliderFloat("frequency", &emitter.frequency, 0.001f, 10.0f);
         ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
 
+        ImGui::Checkbox("useRadialEmission", &emitter.useRadialEmission_);
         ImGui::Separator();
         CheckWorldTransform(emitter.transform, "transform");
         ImGui::Separator();
@@ -152,6 +154,8 @@ void DebugUI::CheckEmitter(Emitter& emitter, const char* label)
     }
 
     ImGui::End();
+
+#endif
 }
 
 
@@ -515,12 +519,14 @@ void DebugUI::CheckXInput(const int& num)
 
 void DebugUI::CheckLights()
 {
+#ifdef USE_IMGUI
     if (ImGui::TreeNode("Lights")) {
         DebugUI::CheckDirectionalLight();
         DebugUI::CheckSpotLight();
         DebugUI::CheckPointLightData();
         ImGui::TreePop();
     }
+#endif
 
 }
 
@@ -728,7 +734,7 @@ void DebugUI::CheckParticle()
                 ImGui::Checkbox("useModel", &group->useModel);
                 ImGui::Checkbox("useBillboard", &group->useBillboard);
                 ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
-
+                CheckMaterial(*group->materialResource->GetMaterial(),"material");
                 ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
                 ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
                 ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);

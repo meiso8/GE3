@@ -6,7 +6,6 @@ struct VertexShaderOutput
     float4 color : COLOR0;
 };
 
-
 struct ParticleForGPU
 {
     float32_t4x4 WVP;

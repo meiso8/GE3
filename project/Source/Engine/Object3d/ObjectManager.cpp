@@ -56,6 +56,8 @@ void ObjectManager::DrawAll(Camera& camera) {
 
 void ObjectManager::ClickObject(Camera& camera)
 {
+
+#ifdef USE_IMGUI
     ImGui::Begin("Object3ds");
 
     clickedID_ = RenderTexture::GetInstance()->GetClickedObjectID();
@@ -70,6 +72,7 @@ void ObjectManager::ClickObject(Camera& camera)
     }
 
     ImGui::End();
+#endif
 }
 
 void ObjectManager::DebugAll()
