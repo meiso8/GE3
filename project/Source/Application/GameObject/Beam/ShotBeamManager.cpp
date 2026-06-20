@@ -35,10 +35,20 @@ void ShotBeamManager::Update()
 
     DebugUI::CheckEmitter(chargeParticleEmitter_->GetEmitter());
 
+
+    DebugUI::CheckEmitter(beamParticleEmitters_[0]->GetEmitter(),"EyeEmitter");
+
 #endif // !USE_IMGUI
+
+    auto& emitter0 = beamParticleEmitters_[0]->GetEmitter();
+    auto& emitter1 = beamParticleEmitters_[1]->GetEmitter();
 
     if (enemy_->GetPhase() != Enemy::BEAM) {
         currentTime_ = 0.0f;
+
+        emitter0.frequencyTime = 0.0f;
+        emitter1.frequencyTime = 0.0f;
+
         return;
     }
 
@@ -46,12 +56,21 @@ void ShotBeamManager::Update()
 
         currentTime_ -= Time::DeltaTime();
 
+        Matrix4x4* enemyEyeMatL = &enemy_->GetEyeMats().at("eye_L");
+        Matrix4x4* enemyEyeMatR = &enemy_->GetEyeMats().at("eye_R");
+
+        emitter0.transform.translate_ = GetWorldTransformByMatrix(*enemyEyeMatL);
+        emitter1.transform.translate_ = GetWorldTransformByMatrix(*enemyEyeMatR);
+  
+        
+        for (auto& emitter : beamParticleEmitters_) {
+            emitter->Update();
+        }
+
         if (currentTime_ <= 0.0f) {
 
             Vector3 target = raySprite_->ray_.origin;
 
-            Matrix4x4* enemyEyeMatL = &enemy_->GetEyeMats().at("eye_L");
-            Matrix4x4* enemyEyeMatR = &enemy_->GetEyeMats().at("eye_R");
             if (beamManager_->ShotBeam(target, enemyEyeMatL, Beam::kEnemy) && beamManager_->ShotBeam(target, enemyEyeMatR, Beam::kEnemy)) {
                 Sound::PlaySE(SoundFactory::BEAM);
                 Initialize();
@@ -62,6 +81,7 @@ void ShotBeamManager::Update()
            chargeParticleEmitter_->Update();
         }
     } 
+
 
 }
 bool IntersectsAABB(const Ray& ray, const AABB& aabb, const Vector3& pos, const float kMaxDistance)
@@ -143,5 +163,39 @@ void ShotBeamManager::CreateParticleEmitter()
     powerChargeGroup->accelerationField.acceleration.y = -0.25f;
     powerChargeGroup->accelerationField.area = { .min = {-10.0f,-1.0f,-10.0f},.max = {10.0f,10.0f,10.0f} };
     powerChargeGroup->useBillboard = true;
+
+
+    for (auto& emitter : beamParticleEmitters_) {
+        emitter = std::make_unique<ParticleEmitter>();
+        emitter->Initialize();
+        emitter->SetName("particle1");
+    }
+
+
+    auto& emitter0 = beamParticleEmitters_[0]->GetEmitter();
+
+
+    emitter0.count = 8;
+    emitter0.color = { 1.0f,1.0f,1.0f,1.0f };
+    emitter0.transform.scale_ = { 0.025f,0.5f,0.5f };
+    emitter0.transform.rotate_ = { 0.0f,0.0f,0.0f };
+    emitter0.transform.translate_ = { 0.0f,0.0f,0.0f };
+
+    emitter0.frequencyTime = 0.01f;
+    emitter0.frequency = 0.1f;
+    emitter0.lifeTime = 0.1f;
+    emitter0.blendMode = kBlendModeAdd;
+    emitter0.movement = ParticleMovements::kParticleNormal;
+    emitter0.rotateAABB_ = { .min = {0.0f,0.0f,-3.14f},.max = {0.0f,0.0f,3.14f} };
+    emitter0.scaleAABB_ = { .min = {0.0f,0.4f,0.0f},.max = {0.0f,1.5f,1.0f} };
+    emitter0.isLoop_ = true;
+
+    auto& emitter1 = beamParticleEmitters_[1]->GetEmitter();
+    emitter1 = emitter0;
+
+
+    auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
+    group->accelerationField.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
+    group->useBillboard = true;
 }
 
