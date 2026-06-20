@@ -3,9 +3,6 @@
 void ModelFactory::Load() {
 
     //モデルのロード
-
-    ModelManager::LoadModel("Resource/Models/playerGirl/playerGirl.gltf");
-
     ModelManager::LoadModel("Resource/Models/Box/Box.obj");
     ModelManager::LoadModel("Resource/Models/AmenRa/AmenRa.obj");
     ModelManager::LoadModel("Resource/Models/Medjed/medjed.gltf");
@@ -23,4 +20,7 @@ void ModelFactory::Load() {
     ModelManager::LoadModel("Resource/Models/Papyrus/Papyrus.obj");
     ModelManager::LoadModel("Resource/Models/Water/Water.obj");
 
+    ModelManager::LoadModel("Resource/Models/Fountain/Fountain.obj");
+    ModelManager::LoadModel("Resource/Models/Building/Building.obj");
+    ModelManager::LoadModel("Resource/Models/Water2/Water2.obj");
 };

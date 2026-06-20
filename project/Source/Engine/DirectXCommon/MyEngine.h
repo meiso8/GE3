@@ -34,7 +34,7 @@ private:
    static std::unique_ptr <Input> input;
 
     static std::unique_ptr<SrvManager> srvManager;
-    static std::unique_ptr<ParticleManager> particleManager_;
+    static ParticleManager* particleManager_;
     bool endRequest_ = false;
 protected:
 

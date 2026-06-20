@@ -23,16 +23,12 @@ private:
     Text text_;
     uint32_t handle_;
     Text pressSpaceText_;
-    uint32_t clickedID_ = 0;
     std::unique_ptr<Sprite>sprite_ = nullptr;
 
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
     std::unique_ptr<Object3d> object3d_ = nullptr;
-    std::unique_ptr<Object3d> object3d2_ = nullptr;
     std::unique_ptr<Primitive>cylinder_ = nullptr;
-
     std::unique_ptr<Beam>beam_ = nullptr;
-
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
 

@@ -107,8 +107,8 @@ void MedjedStage::Update()
 
 #ifdef USE_IMGUI
 
-    DebugUI::CheckParticle(*particleEmitters_[kSky_Particle], "SkyParticle");
-    DebugUI::CheckParticle(*particleEmitters_[kMedjed_Particle], "MedjedParticle");
+    DebugUI::CheckEmitter(particleEmitters_[kSky_Particle]->GetEmitter());
+    DebugUI::CheckEmitter(particleEmitters_[kMedjed_Particle]->GetEmitter());
 
 #endif // !USE_IMGUI
 
@@ -186,8 +186,7 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager)
 
 void MedjedStage::UpdateEmitter(const Particels& particles)
 {
-    particleEmitters_[particles]->UpdateTimer();
-    particleEmitters_[particles]->UpdateEmitter();
+    particleEmitters_[particles]->Update();
 }
 
 void MedjedStage::CreateParticle()
@@ -197,11 +196,8 @@ void MedjedStage::CreateParticle()
         particleEmitters_[i]->Initialize();
     }
 
-    ParticleManager::GetInstance()->Create();
-
     particleEmitters_[kMedjed_Particle]->SetName("medjedParticle");
     particleEmitters_[kSky_Particle]->SetName("people");
-
 
     auto& emitter0 = particleEmitters_[kMedjed_Particle]->GetEmitter();
     emitter0.count = 8;
@@ -213,6 +209,7 @@ void MedjedStage::CreateParticle()
     emitter0.radius = 3.0f;
     float pi = std::numbers::pi_v<float>;
     emitter0.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
+    emitter0.isLoop_ = true;
     auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
     group->accelerationField.acceleration.y = 5.0f;
     group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
@@ -227,6 +224,7 @@ void MedjedStage::CreateParticle()
     emitter1.blendMode = kBlendModeScreen;
     emitter1.velocityAABB = { { -10.0f,-10.0f,-10.0f }, { 10.0f,0.0f,10.0f } };
     emitter1.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
+    emitter1.isLoop_ = true;
 
     auto& enemyGroup = ParticleManager::GetInstance()->GetParticleGroup(emitter1.name);
     enemyGroup->accelerationField.acceleration.y = 10.0f;

@@ -35,7 +35,7 @@ public:
         return sceneChange_->IsEndScene(); 
     };
 
-    void SetStateEnd() { sceneChange_->SetState(SceneChange::kFadeIn , 0.0f); }
+    void SetStateEnd() { sceneChange_->SetState(SceneChange::kSceneEnd , 0.0f); }
 
     void SwitchCamera();
 };

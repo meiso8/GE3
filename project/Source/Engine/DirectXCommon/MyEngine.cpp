@@ -21,7 +21,7 @@ std::unique_ptr<Window> MyEngine::wc = nullptr;
 
 DirectXCommon* MyEngine::directXCommon = nullptr;
 std::unique_ptr<SrvManager> MyEngine::srvManager = nullptr;
-std::unique_ptr<ParticleManager>  MyEngine::particleManager_ = nullptr;
+ParticleManager*  MyEngine::particleManager_ = nullptr;
 std::unique_ptr<LogFile> MyEngine::logFile = nullptr;
 
 void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
@@ -104,9 +104,10 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     LogFile::Log("CreateDrawGrid");
 #endif
 
-    particleManager_ = std::make_unique <ParticleManager>();
+    particleManager_ = ParticleManager::GetInstance();
     particleManager_->Create();
     particleManager_->CreateAll();
+
     LogFile::Log("CreateparticleManager");
     //ファイルへのログ出力
     LogFile::Log("LoopStart");
@@ -150,6 +151,7 @@ void MyEngine::Debug()
     DebugUI::CheckInput();
     DebugUI::CheckLights();
     DebugUI::CheckJsonFile();
+    DebugUI::CheckParticle();
 
     ImGui::End();
 
@@ -224,7 +226,7 @@ void MyEngine::Finalize() {
     SceneManager::Finalize();
 
     particleManager_->Finalize();
-    particleManager_.reset();
+
 
     ModelManager::Finalize();
 

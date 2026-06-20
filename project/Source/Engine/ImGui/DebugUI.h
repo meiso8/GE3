@@ -20,7 +20,7 @@ class SphereMesh;
 class Camera;
 class Model;
 class ParticleManager;
-class ParticleEmitter;
+struct Emitter;
 class Object3d;
 class AnimationObject3d;
 struct Material;
@@ -91,7 +91,8 @@ public:
     /// @param camera 
     static void CheckCamera(Camera& camera, const char* label = "Camera");
 
-    static void CheckParticle(ParticleEmitter& particleEmitter, const char* label);
+    static void CheckParticle ();
+    static void CheckEmitter(Emitter& emitter, const char* label = "Emitter");
     /// @brief 色
     /// @param color 
     static void CheckColor(Vector4& color, const char* label);

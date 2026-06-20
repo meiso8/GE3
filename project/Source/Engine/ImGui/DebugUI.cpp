@@ -93,6 +93,67 @@ void DebugUI::CheckCamera(Camera& camera, const char* label) {
 #endif
 }
 
+void DebugUI::CheckEmitter(Emitter& emitter, const char* label)
+{
+
+    ImGui::Begin("Particle");
+
+    ParticleManager& particle = *ParticleManager::GetInstance();
+  
+    if (ImGui::TreeNode(label)) {
+
+        
+        if (ImGui::Button(emitter.name.c_str())) {
+            particle.Emit(emitter);
+        }
+
+        int movement = static_cast<int>(emitter.movement);
+        ImGui::SliderInt("movement", &movement, 0, 2);
+        emitter.movement = static_cast<ParticleMovements>(movement);
+        ImGui::Separator();
+        int count = emitter.count;
+        ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
+        emitter.count = count;
+        ImGui::Checkbox("isLoop", &emitter.isLoop_);
+        ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
+        ImGui::SliderFloat("frequency", &emitter.frequency, 0.001f, 10.0f);
+        ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
+
+        ImGui::Separator();
+        CheckWorldTransform(emitter.transform, "transform");
+        ImGui::Separator();
+        ImGui::SliderFloat3("scaleAABBMin", &emitter.scaleAABB_.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("scaleAABBMax", &emitter.scaleAABB_.max.x, 0.0f, 20.0f);
+        ImGui::Separator();
+        ImGui::SliderFloat3("rotateAABBMin", &emitter.rotateAABB_.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("rotateAABBMax", &emitter.rotateAABB_.max.x, 0.0f, 20.0f);
+        ImGui::Separator();
+        ImGui::SliderFloat3("translateMin", &emitter.translateAABB_.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("translateMax", &emitter.translateAABB_.max.x, 0.0f, 20.0f);
+        ImGui::Separator();
+        ImGui::SliderFloat3("velcityAABBMax", &emitter.velocityAABB.min.x, -20.0f, 0.0f);
+        ImGui::SliderFloat3("velcityAABBMin", &emitter.velocityAABB.max.x, 0.0f, 20.0f);
+        ImGui::Separator();
+
+        ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
+        ImGui::SliderFloat("radiusSpeed", &emitter.radiusSpeed, -100.f, 100.0f);
+
+        ImGui::Separator();
+        ImGui::SliderFloat("polarSpeed", &emitter.polarSpeed, -100.f, 100.0f);
+        ImGui::SliderFloat("polarSpeedAABBMin", &emitter.polarSpeedMinMax.min, -20.0f, 0.0f);
+        ImGui::SliderFloat("polarSpeedAABBMax", &emitter.polarSpeedMinMax.max, 0.0f, 20.0f);
+        ImGui::Separator();
+
+        CheckBlendMode(emitter.blendMode);
+        CheckColor(emitter.color, "color");
+        ImGui::SliderFloat("startAlpha", &emitter.startAlpha_, 0.0f, 1.0f);
+        ImGui::SliderFloat("endAlpha", &emitter.endAlpha_, 0.0f, 1.0f);
+        ImGui::TreePop();
+    }
+
+    ImGui::End();
+}
+
 
 void DebugUI::CheckJsonFile()
 {
@@ -651,60 +712,12 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 
 #endif
 }
-void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
+void DebugUI::CheckParticle()
 {
 #ifdef USE_IMGUI
 
     ParticleManager& particle = *ParticleManager::GetInstance();
     ImGui::Begin("Particle");
-
-    static  Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-    Emitter& emitter = particleEmitter.GetEmitter();
-
-    if (ImGui::TreeNode(label)) {
-        int movement = static_cast<int>(emitter.movement);
-        ImGui::SliderInt("movement", &movement, 0, 2);
-        emitter.movement = static_cast<ParticleMovements>(movement);
-        ImGui::Separator();
-        int count = emitter.count;
-        ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
-        emitter.count = count;
-
-        ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
-        ImGui::SliderFloat("frequency", &emitter.frequency, 0.1f, 10.0f);
-        ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
-
-        ImGui::Separator();
-        CheckWorldTransform(emitter.transform, "transform");
-        ImGui::Separator();
-        ImGui::SliderFloat3("scaleAABBMin", &emitter.scaleAABB_.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("scaleAABBMax", &emitter.scaleAABB_.max.x, 0.0f, 20.0f);
-        ImGui::Separator();
-        ImGui::SliderFloat3("rotateAABBMin", &emitter.rotateAABB_.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("rotateAABBMax", &emitter.rotateAABB_.max.x, 0.0f, 20.0f);
-        ImGui::Separator();
-        ImGui::SliderFloat3("translateMin", &emitter.translateAABB_.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("translateMax", &emitter.translateAABB_.max.x, 0.0f, 20.0f);
-        ImGui::Separator();
-        ImGui::SliderFloat3("velcityAABBMax", &emitter.velocityAABB.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("velcityAABBMin", &emitter.velocityAABB.max.x, 0.0f, 20.0f);
-        ImGui::Separator();
-
-        ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
-        ImGui::SliderFloat("radiusSpeed", &emitter.radiusSpeed, -100.f, 100.0f);
-
-        ImGui::Separator();
-        ImGui::SliderFloat("polarSpeed", &emitter.polarSpeed, -100.f, 100.0f);
-        ImGui::SliderFloat("polarSpeedAABBMin", &emitter.polarSpeedMinMax.min, -20.0f, 0.0f);
-        ImGui::SliderFloat("polarSpeedAABBMax", &emitter.polarSpeedMinMax.max, 0.0f, 20.0f);
-        ImGui::Separator();
-
-        CheckBlendMode(emitter.blendMode);
-        CheckColor(emitter.color, "color");
-
-        ImGui::TreePop();
-    }
-
 
     if (ImGui::TreeNode("Particles")) {
 
@@ -721,15 +734,11 @@ void DebugUI::CheckParticle(ParticleEmitter& particleEmitter, const char* label)
                 ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);
                 ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
-                if (ImGui::Button(name.c_str())) {
-                    particle.Emit(emitter);
-                }
                 for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
                     CheckTransform((*itr).transform, name.c_str());
                 }
                 ImGui::TreePop();
             }
-
 
         }
         ImGui::TreePop();

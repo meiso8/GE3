@@ -19,6 +19,8 @@
 #include"../Stage/WaterStage/WaterStage.h"
 #include"../Stage/MedjedStage/MedjedStage.h"
 #include"../Stage/AmenStage/AmenStage.h"
+#include"../Stage/AnubisStage/AnubisStage.h"
+
 
 
 SampleScene::SampleScene()
@@ -60,8 +62,7 @@ SampleScene::SampleScene()
     stageManager_->SetMap("WaterStage", std::move(std::make_unique<WaterStage>()));
     stageManager_->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
     stageManager_->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
-    /*   stageManager_->SetNestStage("AmenStage");*/
-
+    stageManager_->SetMap("AnubisStage", std::move(std::make_unique<AnubisStage>()));
 
     skyboxObject3d_ = std::make_unique<SkyboxObject3d>();
     skyboxObject3d_->Create();
@@ -84,11 +85,11 @@ void SampleScene::Initialize() {
     memoManager_->Initialize();
     //アメンステージにする
     stageManager_->SetNestStage("AmenStage");
-//#ifdef _DEVELOP
-//    stageManager_->SetNestStage("MummyStage");
-//#endif
+#ifdef _DEVELOP
+    stageManager_->SetNestStage("AnubisStage");
+#endif
     sceneChange_->Initialize();
- /*   sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);*/
+
     //現在のステージの初期化
     stageManager_->TransitionStage();
 }
@@ -200,22 +201,18 @@ void SampleScene::Debug()
 
     ImGui::Begin("Debug");
 
-    if (Input::IsTriggerKey(DIK_1)) {
+    if (ImGui::Button("SwitchCamera")) {
         SwitchCamera();
-    }
-
-    ImGui::Text("SwitchCamera : 1 key");
+    };
 
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
-    std::function<void()> func = [this]() { SwitchCamera(); };
-    DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckCamera(*currentCamera_);
 
-    const char* stages[] = { "AmenStage", "WaterStage", "MedjedStage","MummyStage" };
+    const char* stages[] = { "AmenStage", "WaterStage", "MedjedStage","MummyStage","AnubisStage"};
     int stageCurrent = 0;
 
     if (ImGui::Combo("CurrentStage", &stageCurrent, stages, IM_ARRAYSIZE(stages))) {
-        stageManager_->SetNestStage(stages[stageCurrent % 4]);
+        stageManager_->SetNestStage(stages[stageCurrent % 5]);
     };
 
     ImGui::End();

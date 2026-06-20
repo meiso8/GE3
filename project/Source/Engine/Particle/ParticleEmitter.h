@@ -11,6 +11,7 @@ class Camera;
 struct Emitter
 {
     std::string name = "unknown";
+    bool isLoop_ = false;
     WorldTransform transform;//エミッタのTransfrom
     AABB translateAABB_ = { 0.0f };
     AABB velocityAABB = {0.0f};
@@ -33,54 +34,27 @@ struct Emitter
     //経度の移動速度
     float polarSpeed = 0.0f;
     MinMax polarSpeedMinMax = { 0.0f,0.0f };
-
 };
 
 class ParticleEmitter
 {
 private:
-   static ParticleManager* particleManager_;
    Emitter emitter_{};
 public:
 public:
     ParticleEmitter();
     ~ParticleEmitter() = default;
     void Initialize();
-    void SetEmitterParam(
-        const Vector3& translate,
-        const Vector3& scale,
-        const Vector3& rotate,
-        const  AABB& translateAABB,
-        const AABB& velocityAABB,
-   const AABB& rotateAABB,
-   const AABB& scaleAABB,
-   const uint32_t& count,
-   const float& frequency,
-   const float& frequencyTime,
-   const Vector4& color,
-   const BlendMode& blendMode,
-   const ParticleMovements& movement,
-   const float& lifeTime,
-   const float& radius,
-   const float& radiusSpeed,
-   const MinMax& radiusSpeedMinMax,
-   const float& polarSpeed,
-   const MinMax& polarSpeedMinMax);
-
-    void UpdateTimer();
-    void InitTimer();
-    void SetTimer();
-    void UpdateEmitter();
+    void Update();
     void Emit();
-
     Emitter& GetEmitter() { return emitter_; };
     void SetName(const std::string name) { emitter_.name = name; }
     void SetMovement(ParticleMovements& movement) { emitter_.movement; }
     void SetParent(WorldTransform& parent);
 
     std::unique_ptr <ParticleGroup>& GetGroup();
-    static void Create();
-    static void Update(Camera& camera);
-    static void Draw();
+private:
+    void UpdateTimer();
+
 };
 

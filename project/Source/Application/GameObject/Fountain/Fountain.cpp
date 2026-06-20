@@ -1,0 +1,150 @@
+#include "Fountain.h"
+#include"ModelManager.h"
+#include"Model.h"
+#include"DebugUI.h"
+#include"TimeManager.h"
+
+namespace {
+    const float splashTime_ = 10.0f;
+}
+
+Fountain::Fountain()
+{
+    object_ = std::make_unique<Object3d>();
+    object_->Create();
+    object_->SetMeshAndMaterial(ModelManager::GetModel("Fountain"));
+    object_->SetTemperature(0.2f);
+
+    waterObject_ = std::make_unique<Object3d>();
+    waterObject_->Create();
+    waterObject_->SetMeshAndMaterial(ModelManager::GetModel("Water2"));
+    waterObject_->SetTemperature(0.1f);
+
+    AABB aabb = { .min = {-1.0f,0.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
+    SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
+    SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突
+
+    //サイズに合わせる
+    SetAABB(aabb);
+    SetWorldMatrix(object_->worldTransform_.matWorld_);
+
+    CreateParticle();
+}
+
+void Fountain::Initialize()
+{
+    object_->Initialize();
+    object_->worldTransform_.translate_ = { 0.0f,0.25f,0.0f };
+    splashTimer_ = splashTime_;
+
+    waterObject_->Initialize();
+    waterObject_->worldTransform_.translate_ = { 0.0f,0.3f,0.0f };
+    waterObject_->InitWaveData();
+    waterObject_->SetColor({ 0.0f,1.0f,1.0f,0.2f });
+}
+
+void Fountain::Update()
+{
+    object_->Update();
+
+    waterObject_->GetWaveData(0).frequency = 4.0f;
+    waterObject_->GetWaveData(0).amplitude = 0.03f;
+    waterObject_->GetWaveData(1).frequency = 4.0f;
+    waterObject_->GetWaveData(1).amplitude = 0.03f;
+
+    waterObject_->GetWaveData(1).direction = { 0.0f,0.0f,1.0f };
+
+
+    waterObject_->Update();
+
+    auto& group = ParticleManager::GetInstance()->GetParticleGroup(particleEmitter_[0]->GetEmitter().name);
+
+    splashTimer_ -= Time::DeltaTime();
+    waterObject_->GetWaveData(0).time += Time::DeltaTime()*2.0f;
+    //waterObject_->GetWaveData(1).time = splashTimer_;
+
+    if (splashTimer_ <= splashTime_ * 0.5f) {
+        group->accelerationField.acceleration.y = -4.0f;
+    } else {
+        group->accelerationField.acceleration.y = -3.0f;
+    }
+
+    if (splashTimer_ <= 0.0f) {
+        splashTimer_ = splashTime_;
+    } 
+ 
+    for (auto& emitter : particleEmitter_) {
+        emitter->Update();
+    } 
+ 
+
+    DebugUI::CheckObject3d(*object_, "Fountain");
+
+    DebugUI::CheckObject3d(*waterObject_, "Water");
+
+    DebugUI::CheckEmitter(particleEmitter_[1]->GetEmitter(),"water222222222");
+
+    ColliderUpdate();
+    //StageManager::GetInstance()->SetNestStage("MedjedStage");
+}
+
+void Fountain::Draw(Camera& camera)
+{
+    object_->Draw(camera);
+    waterObject_->Draw(camera);
+    ColliderDraw(camera);
+}
+
+void Fountain::OnCollision(Collider* collider)
+{
+    if (collider->GetCollisionAttribute() == kCollisionPlayer) {
+        // プレイヤーとぶつかったときの処理
+        
+    }
+
+    OnCollisionCollider();
+}
+
+void Fountain::CreateParticle()
+{
+    for (auto& emitter : particleEmitter_) {
+        emitter = std::make_unique<ParticleEmitter>();
+        emitter->Initialize();
+        emitter->SetParent(object_->worldTransform_);
+    }
+   
+    particleEmitter_[0]->SetName("fountain");
+    particleEmitter_[1]->SetName("fountain2");
+
+    //Objectにペアレントする
+
+    auto& emitter0 = particleEmitter_[0]->GetEmitter();
+    emitter0.isLoop_ = true;
+    emitter0.count = 5;
+    emitter0.color = { 1.0f,1.0f,1.0f,1.0f };
+    emitter0.frequency = 0.01f; 
+    emitter0.lifeTime = 1.5f;
+    emitter0.blendMode = kBlendModeAdd;
+    emitter0.movement = ParticleMovements::kParticleNormal;
+    emitter0.velocityAABB = { .min = {-0.2f,3.75f,-0.2f},.max = {0.2f,4.0f,0.2f} };
+    emitter0.transform.scale_ = { 0.1f,0.1f,0.1f };
+    emitter0.transform.translate_.y = 0.2f;
+    
+    auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
+    group->accelerationField.acceleration.y = -4.0f;
+    group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
+
+    auto& emitter1 = particleEmitter_[1]->GetEmitter();
+    emitter1.isLoop_ = true;
+    emitter1.movement = ParticleMovements::kParticleSphere;
+    emitter1.transform.scale_ = { 0.1f,0.1f,0.1f };
+    emitter1.frequency = 0.001f;
+    emitter1.velocityAABB = { .min = {0.0f,1.5f,0.0f},.max = {0.0f,2.0f,0.0f} };
+    emitter1.radius = 2.5f;
+    emitter1.radiusSpeed = { 0.05f };
+    emitter1.count = 7;
+    emitter1.lifeTime = 1.0f;
+    emitter1.polarSpeed = 0.0f;
+    auto& group1 = ParticleManager::GetInstance()->GetParticleGroup(emitter1.name);
+    group1->accelerationField.acceleration.y = -2.0f;
+}
