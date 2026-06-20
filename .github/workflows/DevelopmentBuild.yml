@@ -10,7 +10,7 @@ env:
   CONFIGURATION: Development
 jobs:
   build:
-    runs-on:  windows-2026
+    runs-on:  windows-2022
 
     steps:
       - name: Checkout
