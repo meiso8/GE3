@@ -12,6 +12,8 @@ struct Emitter
 {
     std::string name = "unknown";
     bool isLoop_ = false;
+    bool useRadialEmission_ = false;
+
     WorldTransform transform;//エミッタのTransfrom
     AABB translateAABB_ = { 0.0f };
     AABB velocityAABB = {0.0f};

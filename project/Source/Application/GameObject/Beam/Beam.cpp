@@ -8,7 +8,7 @@
 namespace {
     const float kBeamDuretion_ = 1.5f;
     const float kLigeDuration_ = 2.0f;
-    
+
 }
 
 Beam::Beam()
@@ -26,7 +26,7 @@ Beam::Beam()
 #ifdef _DEBUG
 
     lineObj_ = std::make_unique<LineObject3d>();
-    lineObj_->Create({-1.0f,0.0f,0.0f},{1.0f,0.0f,0.0f});
+    lineObj_->Create({ -1.0f,0.0f,0.0f }, { 1.0f,0.0f,0.0f });
     lineObj_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
 #endif
@@ -34,6 +34,8 @@ Beam::Beam()
 
 
     type_ = kEnemy;
+
+    CreateParticle();
 }
 
 void Beam::Initialize()
@@ -45,7 +47,7 @@ void Beam::Initialize()
     //親をなくす
     parent_ = nullptr;
     point_ = { 0.0f };
-    
+
     //場外移動する
     object3d_->Update();
     object3d_->SetLightMode(kLightModeNone);
@@ -60,31 +62,6 @@ void Beam::Initialize()
 
 }
 
-
-Vector3 CalculateLookAtRotate(const Vector3& startPos, const Vector3& endPos) {
-    // 進行方向のベクトルを計算
-    Vector3 diff = endPos - startPos;
-
-    // XZ平面上（地面）での移動距離を計算（三平方の定理）
-    float horizontalLength = std::sqrt(diff.x * diff.x + diff.z * diff.z);
-
-    Vector3 rotate = { 0.0f, 0.0f, 0.0f };
-
-    // 1. Y軸まわりの回転 (Yaw: 左右の向き)
-    // Z前方を基準として、Xにどれだけ傾いているか
-    rotate.y = std::atan2(diff.x, diff.z);
-
-    // 2. X軸まわりの回転 (Pitch: 上下の傾き)
-    // 水平に進む距離に対して、Y（高さ）がどれだけ変化しているか
-    // ※DirectXの座標系に合わせて、下を向く（Yマイナス）のときにプラス回転になるよう符号を調整しています
-    rotate.x = std::atan2(-diff.y, horizontalLength);
-
-    // 3. Z軸まわりの回転 (Roll: ひねり)
-    // レーザーの軸回転は不要なので 0 固定
-    rotate.z = 0.0f;
-
-    return rotate;
-}
 
 void Beam::Update()
 {
@@ -133,7 +110,7 @@ void Beam::Update()
         lifeTimer_ -= Time::DeltaTime();
     }
 
-    float time =  (kLigeDuration_ - lifeTimer_) / kBeamDuretion_;
+    float time = (kLigeDuration_ - lifeTimer_) / kBeamDuretion_;
     time = std::clamp(time, 0.0f, 1.0f);
 
     Vector3 pos = { 0.0f };
@@ -154,7 +131,7 @@ void Beam::Draw(Camera* camera)
 {
 
 #ifdef _DEBUG
-    lineObj_->Draw(*camera,false);
+    lineObj_->Draw(*camera, false);
 #endif
 
     if (!isActive_) {
@@ -200,6 +177,9 @@ void Beam::UpdateObject()
 
     ray_ = { .origin = point_.startPos,.diff = point_.endPos - point_.startPos };
 
+    emitter_->GetEmitter().transform.translate_ = point_.endPos;
+    emitter_->Update();
+
 #ifdef _DEBUG
     lineObj_->SetVertex(point_.startPos, point_.endPos);
     lineObj_->Update();
@@ -211,10 +191,38 @@ void Beam::UpdateObject()
     float scaleZ = Length(point_.endPos - point_.startPos);
     Vector3 centerPos = Lerp(point_.startPos, point_.endPos, 0.5f);
 
-    
+
     object3d_->worldTransform_.rotate_ = rotate;
     object3d_->worldTransform_.scale_ = { 1.0f,1.0f,scaleZ };
     object3d_->worldTransform_.translate_ = centerPos;
 
     object3d_->Update();
+}
+
+void Beam::CreateParticle()
+{
+    emitter_ = std::make_unique<ParticleEmitter>();
+    emitter_->Initialize();
+    emitter_->SetName("particle1");
+
+    auto& emitter0 = emitter_->GetEmitter();
+
+    emitter0.count = 8;
+    emitter0.color = { 1.0f,0.5f,0.5f,1.0f };
+    emitter0.transform.scale_ = { 0.0125f,0.25f,0.25f };
+    emitter0.transform.rotate_ = { 0.0f,0.0f,0.0f };
+    emitter0.transform.translate_ = { 0.0f,0.0f,0.0f };
+
+    emitter0.frequencyTime = 0.01f;
+    emitter0.frequency = 0.1f;
+    emitter0.lifeTime = 0.1f;
+    emitter0.blendMode = kBlendModeAdd;
+    emitter0.movement = ParticleMovements::kParticleNormal;
+    emitter0.rotateAABB_ = { .min = {0.0f,0.0f,-3.14f},.max = {0.0f,0.0f,3.14f} };
+    emitter0.scaleAABB_ = { .min = {0.0f,0.4f,0.0f},.max = {0.0f,1.5f,1.0f} };
+    emitter0.isLoop_ = true;
+
+    auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
+    group->accelerationField.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
+    group->useBillboard = true;
 }

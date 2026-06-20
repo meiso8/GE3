@@ -32,7 +32,7 @@ float Distance(const Vector3& v0, const Vector3& v1);
 Vector3 Normalize(const Vector3& v);
 //ターゲットに向かうベクトルを計算する
 Vector3 ToTargetVector(const Vector3& target, const  Vector3& ownPos);
-
+Vector3 CalculateLookAtRotate(const Vector3& startPos, const Vector3& endPos);
 /// @brief ベクトルがゼロベクトルかどうかを判定する関数
 /// @param v ベクトル
 /// @return ゼロベクトルであればtrue、そうでなければfalse

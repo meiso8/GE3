@@ -32,25 +32,21 @@ void ShotBeamManager::Update()
 {
 
 #ifdef USE_IMGUI
-
-    DebugUI::CheckEmitter(chargeParticleEmitter_->GetEmitter());
-
-
-    DebugUI::CheckEmitter(beamParticleEmitters_[0]->GetEmitter(),"EyeEmitter");
-
+    DebugUI::CheckEmitter(shockEmitter_->GetEmitter(),"shockEmitter");
 #endif // !USE_IMGUI
-
     auto& emitter0 = beamParticleEmitters_[0]->GetEmitter();
     auto& emitter1 = beamParticleEmitters_[1]->GetEmitter();
-
+    auto& emitter3 = shockEmitter_->GetEmitter();
     if (enemy_->GetPhase() != Enemy::BEAM) {
         currentTime_ = 0.0f;
 
         emitter0.frequencyTime = 0.0f;
         emitter1.frequencyTime = 0.0f;
-
+        emitter3.frequencyTime = 0.0f;
         return;
     }
+
+    //shockEmitter_->Update();
 
     if (enemy_->GetIsShotStart()) {
 
@@ -58,11 +54,9 @@ void ShotBeamManager::Update()
 
         Matrix4x4* enemyEyeMatL = &enemy_->GetEyeMats().at("eye_L");
         Matrix4x4* enemyEyeMatR = &enemy_->GetEyeMats().at("eye_R");
-
         emitter0.transform.translate_ = GetWorldTransformByMatrix(*enemyEyeMatL);
         emitter1.transform.translate_ = GetWorldTransformByMatrix(*enemyEyeMatR);
-  
-        
+
         for (auto& emitter : beamParticleEmitters_) {
             emitter->Update();
         }
@@ -76,9 +70,6 @@ void ShotBeamManager::Update()
                 Initialize();
             }
 
-        } else {
-            //ショットが開始されていないときはすぐに
-           chargeParticleEmitter_->Update();
         }
     } 
 
@@ -139,41 +130,13 @@ void ShotBeamManager::RayCastHit()
 void ShotBeamManager::CreateParticleEmitter()
 {
 
-    chargeParticleEmitter_ = std::make_unique<ParticleEmitter>();
-    chargeParticleEmitter_->SetName("powerCharge");
-    chargeParticleEmitter_->Initialize();
-
-    auto& emitter2 = chargeParticleEmitter_->GetEmitter();
-    emitter2.transform.Parent(enemy_->GetWorldTransform());
-    emitter2.count = 10;
-    emitter2.color = { 1.0f,0.5f,0.0f,1.0f };
-    emitter2.frequencyTime = 0.2f;
-    emitter2.lifeTime = 1.0f;
-    emitter2.blendMode = kBlendModeScreen;
-    emitter2.movement = ParticleMovements::kParticleSphere;
-    emitter2.radius = 7.0f;
-    emitter2.radiusSpeed = 0.5f;
-    emitter2.polarSpeed = 3.0f;
-    emitter2.transform.scale_ = { 0.25f,0.25f,0.25f };
-    emitter2.transform.translate_.y = 1.35f;
-    emitter2.translateAABB_ = { .min = {0.0f,-0.5f,0.0f},.max = {0.0f,0.5f,0.0f} };
-    //emitter2.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
-    emitter2.velocityAABB = { .min = {0.0f,-1.0f,0.0f},.max = {0.0f,2.0f,0.0f} };
-    auto& powerChargeGroup = ParticleManager::GetInstance()->GetParticleGroup(emitter2.name);
-    powerChargeGroup->accelerationField.acceleration.y = -0.25f;
-    powerChargeGroup->accelerationField.area = { .min = {-10.0f,-1.0f,-10.0f},.max = {10.0f,10.0f,10.0f} };
-    powerChargeGroup->useBillboard = true;
-
-
     for (auto& emitter : beamParticleEmitters_) {
         emitter = std::make_unique<ParticleEmitter>();
         emitter->Initialize();
         emitter->SetName("particle1");
     }
 
-
     auto& emitter0 = beamParticleEmitters_[0]->GetEmitter();
-
 
     emitter0.count = 8;
     emitter0.color = { 1.0f,1.0f,1.0f,1.0f };
@@ -197,5 +160,25 @@ void ShotBeamManager::CreateParticleEmitter()
     auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
     group->accelerationField.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
     group->useBillboard = true;
+
+    shockEmitter_ = std::make_unique<ParticleEmitter>();
+    shockEmitter_->SetName("shockParticle");
+    shockEmitter_->Initialize();
+
+    auto& emitter3 = shockEmitter_->GetEmitter();
+
+    emitter3.isLoop_ = true;
+    emitter3.useRadialEmission_ = true;
+    emitter3.transform.scale_ = { 0.1f,0.2f,0.1f };
+    emitter3.transform.translate_ = { 0.0f,0.2f,0.0f };
+    emitter3.radius = 5.0f;
+    emitter3.radiusSpeed = 0.2f;
+    emitter3.count = 20;
+    emitter3.lifeTime = 1.0f;
+    emitter3.movement = ParticleMovements::kParticleSphere;
+    emitter3.polarSpeed = 0.0f;
+    auto& group3 = ParticleManager::GetInstance()->GetParticleGroup(emitter3.name);
+    emitter3.transform.Parent(enemy_->GetWorldTransform());
+    group3->useBillboard = false;
 }
 

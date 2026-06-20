@@ -11,6 +11,7 @@ ParticleEmitter::ParticleEmitter()
 void ParticleEmitter::Initialize()
 {
     emitter_.isLoop_ = false;
+    emitter_.useRadialEmission_ = false;
     emitter_.count = 3;
     emitter_.frequency = 0.5f;
     emitter_.frequencyTime = 0.0f;

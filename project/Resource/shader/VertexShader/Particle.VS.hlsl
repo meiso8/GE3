@@ -18,5 +18,6 @@ VertexShaderOutput main(VertexShaderInput input,uint32_t instanceId : SV_Instanc
     output.texcoord = input.texcoord;
     output.normal = normalize(mul(input.normal, (float3x3) gParticle[instanceId].World));
     output.color = gParticle[instanceId].color;
+
     return output;
 }

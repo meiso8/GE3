@@ -4,7 +4,7 @@
 #include"LineObject3d/LineObject3d.h"
 #include"Line.h"
 
-
+#include "ParticleEmitter.h"
 
 class Beam
 {
@@ -28,6 +28,7 @@ public:
 
 private:
     void UpdateObject();
+    void CreateParticle();
 private:
 
     struct Point
@@ -48,7 +49,7 @@ private:
 
 #endif
 
-
+    std::unique_ptr < ParticleEmitter> emitter_ = nullptr;
 
     Vector3 endPos_ = { 0.0f };
     Vector3 startPos_ = { 0.0f };

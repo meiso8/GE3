@@ -196,7 +196,9 @@ void SampleScene::Debug()
     if (Input::IsTriggerKey(DIK_V)) {
         stageManager_->SetNestStage("MedjedStage");
     }
-
+    if (Input::IsTriggerKey(DIK_B)) {
+        stageManager_->SetNestStage("AnubisStage");
+    }
 #ifdef USE_IMGUI
 
     ImGui::Begin("Debug");

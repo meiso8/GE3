@@ -1,7 +1,10 @@
 #include "ImGuiClass.h"
+#ifdef USE_IMGUI
+#include"ImGuizmo.h"
+#endif
 #include"CommandList.h"
 #include"SRVmanager/SrvManager.h"
-#include"ImGuizmo.h"
+
 #include"Camera.h"
 #include"Object3d.h"
 #include"MakeMatrix.h"
