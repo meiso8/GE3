@@ -22,6 +22,7 @@ public:
     // 全オブジェクトの一括更新と描画
     void UpdateAll();
     void DrawAll(Camera& camera);
+    void ClickObject(Camera& camera);
     void DebugAll();
     // シーン切り替え時などの全クリア
     void Clear();
@@ -32,5 +33,7 @@ private:
     std::vector<Object3d* > objects_;
     std::unordered_map<uint32_t, Object3d* > idMap_;
     uint32_t nextID_ = 1; // 1から順にAllocateしていく
+    uint32_t clickedID_ = 0;
+
 };
 

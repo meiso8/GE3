@@ -1,13 +1,13 @@
 #include "AnubisStage.h"
 #include"Sound.h"
 #include"../StageManager.h"
-#include "ParticleEmitter.h"
+
 #include"DebugUI.h"
 
 AnubisStage::AnubisStage()
 {
     backGround_ = std::make_unique<BackGround>();
-    CreateParticle();
+    fountain_ = std::make_unique<Fountain>();
 }
 
 void AnubisStage::Initialize()
@@ -22,6 +22,8 @@ void AnubisStage::Initialize()
     itemManager_->Init();
 
     Sound::bgmVolume_ = 0.1f;
+
+    fountain_->Initialize();
 }
 
 void AnubisStage::Update()
@@ -32,11 +34,12 @@ void AnubisStage::Update()
 
     //ステージをMedjedStageにする
     //StageManager::GetInstance()->SetNestStage("MedjedStage");
-    DebugUI::CheckParticle(*particleEmitters_, "Fountain");
+    fountain_->Update();
 }
 
 void AnubisStage::Draw(Camera& camera)
 {
+    fountain_->Draw(camera);
     backGround_->Draw(camera);
 }
 
@@ -52,26 +55,7 @@ void AnubisStage::CheckCollision(CollisionManager& collisionManager)
     for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());
     }
+
+    collisionManager.AddCollider(fountain_.get());
 }
 
-void AnubisStage::CreateParticle()
-{
-
-    particleEmitters_ = std::make_unique<ParticleEmitter>();
-    particleEmitters_->SetName("medjedParticle");
-
-    auto& emitter0 = particleEmitters_->GetEmitter();
-    emitter0.count = 8;
-    emitter0.color = { 1.0f,0.75f,0.75f,1.0f };
-    emitter0.frequencyTime = 0.25f;
-    emitter0.lifeTime = 6.0f;
-    emitter0.blendMode = kBlendModeMultiply;
-    emitter0.movement = ParticleMovements::kParticleSphere;
-    emitter0.radius = 3.0f;
-    float pi = std::numbers::pi_v<float>;
-    emitter0.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
-    auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
-    group->accelerationField.acceleration.y = 5.0f;
-    group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
-
-}

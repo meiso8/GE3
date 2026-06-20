@@ -24,6 +24,7 @@ void BaseScene::Initialize()
 
 void BaseScene::Update()
 {
+
 }
 
 
@@ -113,7 +114,7 @@ void SceneManager::Debug()
     }
 
 
-    if (ImGui::Button("InitializeCurrentScene")) { currentScene_->Initialize(); }
+    if (ImGui::Button("Initialize")) { currentScene_->Initialize(); }
     ImGui::Separator();
 
     ImGui::End();

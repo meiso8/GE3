@@ -151,6 +151,7 @@ void MyEngine::Debug()
     DebugUI::CheckInput();
     DebugUI::CheckLights();
     DebugUI::CheckJsonFile();
+    DebugUI::CheckParticle();
 
     ImGui::End();
 

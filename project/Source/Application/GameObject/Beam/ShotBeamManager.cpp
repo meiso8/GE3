@@ -33,7 +33,7 @@ void ShotBeamManager::Update()
 
 #ifdef USE_IMGUI
 
-    DebugUI::CheckParticle(*chargeParticleEmitter_, "ChargeParticle");
+    DebugUI::CheckEmitter(chargeParticleEmitter_->GetEmitter());
 
 #endif // !USE_IMGUI
 
@@ -59,9 +59,7 @@ void ShotBeamManager::Update()
 
         } else {
             //ショットが開始されていないときはすぐに
-           chargeParticleEmitter_->UpdateTimer();
-           chargeParticleEmitter_->UpdateEmitter();
-
+           chargeParticleEmitter_->Update();
         }
     } 
 
@@ -122,8 +120,8 @@ void ShotBeamManager::CreateParticleEmitter()
 {
 
     chargeParticleEmitter_ = std::make_unique<ParticleEmitter>();
-    chargeParticleEmitter_->Initialize();
     chargeParticleEmitter_->SetName("powerCharge");
+    chargeParticleEmitter_->Initialize();
 
     auto& emitter2 = chargeParticleEmitter_->GetEmitter();
     emitter2.transform.Parent(enemy_->GetWorldTransform());

@@ -54,4 +54,7 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/night.dds", SKYBOX_TEX);
 
     Texture::LoadAndMapHandle("Resource/Textures/beam.png", BEAM);
+
+    Texture::LoadAndMapHandle("Resource/Textures/waterTexture.png", WATER_TEXTURE);
+    
 }

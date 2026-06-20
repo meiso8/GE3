@@ -53,6 +53,7 @@ public:
         WORLD,
         SKYBOX_TEX,
         BEAM,
+        WATER_TEXTURE,
         // ======================
         TEXTURES,
     };

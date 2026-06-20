@@ -13,9 +13,8 @@ void SceneFactory::Create()
     SceneManager::SetMap("Result", std::move(std::make_unique < ResultScene>()));
     SceneManager::SetNextScene("Title");
 #ifdef _DEVELOP
-    SceneManager::SetNextScene("FreeType");
+    SceneManager::SetNextScene("Sample");
  
 #endif
-
     SceneManager::InitScene();
 }

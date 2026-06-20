@@ -1,7 +1,7 @@
 #include "AmenRa.h"
 
 #include"Window.h"
-#include "CollisionConfig.h"
+
 #include"ModelManager.h"
 #include"Model.h"
 #include"DebugUI.h"

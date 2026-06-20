@@ -85,9 +85,9 @@ void SampleScene::Initialize() {
     memoManager_->Initialize();
     //アメンステージにする
     stageManager_->SetNestStage("AmenStage");
-//#ifdef _DEVELOP
-//    stageManager_->SetNestStage("MummyStage");
-//#endif
+#ifdef _DEVELOP
+    stageManager_->SetNestStage("AnubisStage");
+#endif
     sceneChange_->Initialize();
 
     //現在のステージの初期化
@@ -201,15 +201,11 @@ void SampleScene::Debug()
 
     ImGui::Begin("Debug");
 
-    if (Input::IsTriggerKey(DIK_1)) {
+    if (ImGui::Button("SwitchCamera")) {
         SwitchCamera();
-    }
-
-    ImGui::Text("SwitchCamera : 1 key");
+    };
 
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
-    std::function<void()> func = [this]() { SwitchCamera(); };
-    DebugUI::Button("ChangeCamera", func);
     DebugUI::CheckCamera(*currentCamera_);
 
     const char* stages[] = { "AmenStage", "WaterStage", "MedjedStage","MummyStage","AnubisStage"};

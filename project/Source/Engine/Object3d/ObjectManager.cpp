@@ -1,5 +1,6 @@
 #include "ObjectManager.h"
 #include"DebugUI.h"
+#include"RenderTexture/RenderTexture.h"
 
 ObjectManager* ObjectManager::GetInstance() {
     static ObjectManager instance;
@@ -53,8 +54,27 @@ void ObjectManager::DrawAll(Camera& camera) {
     }
 }
 
+void ObjectManager::ClickObject(Camera& camera)
+{
+    ImGui::Begin("Object3ds");
+
+    clickedID_ = RenderTexture::GetInstance()->GetClickedObjectID();
+
+    ImGui::Text("ClickedID : %d", clickedID_);
+
+    if (clickedID_ != 0) {
+        auto* selectedObj = ObjectManager::GetInstance()->FindObjectByID(clickedID_);
+        if (selectedObj) {
+            ImGuiClass::UpdateGuizmo(camera, *selectedObj);
+        }
+    }
+
+    ImGui::End();
+}
+
 void ObjectManager::DebugAll()
 {
+
     for (int i = 0; i < objects_.size();++i) {
         std::string name = "Object:" + std::to_string(objects_[i]->GetObjectID());
         DebugUI::CheckObject3d(*objects_[i], name.c_str());
@@ -66,4 +86,5 @@ void ObjectManager::Clear() {
     objects_.clear();
     idMap_.clear();
     nextID_ = 1; // IDのリセット
+    clickedID_ = 0;
 }

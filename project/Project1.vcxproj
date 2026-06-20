@@ -163,6 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Fountain\Fountain.cpp" />
     <ClCompile Include="Source\Application\Stage\AnubisStage\AnubisStage.cpp" />
     <ClCompile Include="Source\Engine\LineObject3d\LineObject3d.cpp" />
     <ClCompile Include="Source\Application\GameObject\Beam\ShotBeamManager.cpp" />
@@ -318,6 +319,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\StageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Fountain\Fountain.h" />
     <ClInclude Include="Source\Application\Stage\AnubisStage\AnubisStage.h" />
     <ClInclude Include="Source\Engine\LineObject3d\LineObject3d.h" />
     <ClInclude Include="Source\Application\GameObject\Beam\ShotBeamManager.h" />

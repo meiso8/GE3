@@ -28,6 +28,9 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, kPlane, true, "people");
 
     CreateParticleGroup("powerCharge", TextureFactory::CIRCLE, kPlane, false);
+
+    CreateParticleGroup("fountain", TextureFactory::WATER_TEXTURE, kPlane, false);
+    CreateParticleGroup("fountain2", TextureFactory::WATER_TEXTURE, kPlane, false);
 }
 
 // ==========================================================================================================
@@ -130,7 +133,7 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
     newParticleGroup->useModel = useModel;
     newParticleGroup->textureSize = { 100.0f,100.0f };
 
-    std::map<std::string,MaterialData> materials;
+    std::map<std::string, MaterialData> materials;
 
     if (newParticleGroup->useModel) {
         newParticleGroup->model = ModelManager::GetModel(modelTag);
@@ -140,7 +143,7 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
     //モデルのマテリアルがあれば
     if (!materials.empty()) {
 
-        for (auto& [name,material] : materials) {
+        for (auto& [name, material] : materials) {
             newParticleGroup->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex = material.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex;
         }
 
@@ -274,7 +277,7 @@ void ParticleManager::Normal(ParticleGroup& group)
             //経過時間を加算
             (*particleIterator).currentTime += deltaTime;
 
-            UpdateMatrix(*particleIterator, group);
+            worldMatrix = UpdateMatrix(*particleIterator, group);
 
             //ビュープロジェクション行列
             UpdateWVPMatrix(*camera_, group);
@@ -317,15 +320,13 @@ void ParticleManager::Sphere(ParticleGroup& group)
                 continue;
             }
 
-            Vector3 sphereCoordinate = TransformCoordinate(coordIterator->coordinate);
-
-            particleIterator->transform.translate = group.parentPos_->GetWorldPosition() + particleIterator->velocity + sphereCoordinate;
-
-            (*particleIterator).currentTime += Time::DeltaTime();
+            const float deltaTime = Time::DeltaTime();
+                particleIterator->transform.translate += particleIterator->velocity * deltaTime;
+            (*particleIterator).currentTime += deltaTime;
 
             IsCollisionFieldArea(*particleIterator, group);
 
-            UpdateMatrix(*particleIterator, group);
+            worldMatrix = UpdateSphereMatrix(*particleIterator,*coordIterator, group);
 
             UpdateWVPMatrix(*camera_, group);
 
@@ -366,15 +367,15 @@ void ParticleManager::Shock(ParticleGroup& group)
                 coordIterator->coordinate.radius += coordIterator->radiusSpeed;
             }
 
-            Vector3 sphereCoordinate = TransformCoordinate(coordIterator->coordinate);
 
-            particleIterator->transform.translate = group.parentPos_->GetWorldPosition() + particleIterator->velocity + sphereCoordinate;
+            const float deltaTime = Time::DeltaTime();
 
-            (*particleIterator).currentTime += Time::DeltaTime();
+            particleIterator->transform.translate += particleIterator->velocity * deltaTime;
+            (*particleIterator).currentTime += deltaTime;
 
             IsCollisionFieldArea(*particleIterator, group);
 
-            UpdateMatrix(*particleIterator, group);
+            worldMatrix = UpdateSphereMatrix(*particleIterator, *coordIterator, group);
 
             UpdateWVPMatrix(*camera_, group);
 
@@ -396,7 +397,7 @@ void ParticleManager::Shock(ParticleGroup& group)
 void ParticleManager::IsCollisionFieldArea(Particle& particleItr, ParticleGroup& group)
 {
     if (IsCollision(group.accelerationField.area, particleItr.transform.translate)) {
-        particleItr.velocity += group.accelerationField.acceleration *Time::DeltaTime();
+        particleItr.velocity += group.accelerationField.acceleration * Time::DeltaTime();
     }
 }
 
@@ -530,24 +531,33 @@ void ParticleManager::UpdateWVPMatrix(Camera& camera, ParticleGroup& group)
 
 }
 
-void ParticleManager::UpdateMatrix(Particle& particleItr, ParticleGroup& group)
+Matrix4x4 ParticleManager::UpdateMatrix(Particle& particleItr, ParticleGroup& group)
 {
     //ビルボード処理
     if (group.useBillboard) {
-        UpdateWorldMatrixForBillBord(particleItr, group);
+        return UpdateWorldMatrixForBillBord(particleItr, group);
     } else {
-        UpdateWorldMatrix(particleItr, group);
+        return UpdateWorldMatrix(particleItr, group);
     }
 }
-void ParticleManager::UpdateWorldMatrixForBillBord(Particle& particleItr, ParticleGroup& group)
+
+Matrix4x4  ParticleManager::UpdateSphereMatrix(Particle& particleItr, SphericalMove& sphericalMove, ParticleGroup& group) {
+
+    Vector3 spherePos = group.parentPos_->GetWorldPosition() + TransformCoordinate(sphericalMove.coordinate);
+    Matrix4x4 sphereMoveMat = MakeTranslateMatrix(spherePos);
+    Matrix4x4 child = UpdateMatrix(particleItr, group);
+    return child * sphereMoveMat;
+}
+
+Matrix4x4 ParticleManager::UpdateWorldMatrixForBillBord(Particle& particleItr, ParticleGroup& group)
 {
     Matrix4x4 scaleMatrix = MakeScaleMatrix(particleItr.transform.scale);
     Matrix4x4 translateMatrix = MakeTranslateMatrix(particleItr.transform.translate);
     Matrix4x4 rotateMatrix = MakeRotateXYZMatrix(particleItr.transform.rotate) * billboardMatrix;
-    worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
+    return scaleMatrix * rotateMatrix * translateMatrix;
 }
 
-void ParticleManager::UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group)
+Matrix4x4 ParticleManager::UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group)
 {
 
     if (group.useSpriteCamera) {
@@ -555,9 +565,10 @@ void ParticleManager::UpdateWorldMatrix(Particle& particleItr, ParticleGroup& gr
         translate = translate * group.textureSize;
         translate.x *= -1.0f;
 
-        worldMatrix = MakeAffineMatrix(particleItr.transform.scale * group.textureSize, particleItr.transform.rotate, translate);
+        return MakeAffineMatrix(particleItr.transform.scale * group.textureSize, particleItr.transform.rotate, translate);
     } else {
-        worldMatrix = MakeAffineMatrix(particleItr.transform.scale, particleItr.transform.rotate, particleItr.transform.translate);
+
+        return MakeAffineMatrix(particleItr.transform.scale, particleItr.transform.rotate, particleItr.transform.translate);
     }
 
 }

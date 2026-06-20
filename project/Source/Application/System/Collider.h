@@ -5,6 +5,7 @@
 #include"Object3d.h"
 #include"MeshCommon.h"
 #include"Line.h"
+#include "CollisionConfig.h"
 
 class Camera;
 

@@ -88,7 +88,7 @@ SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, 
 class ParticleManager
 {
 public:
-    static const uint32_t kNumMaxInstance = 100;//インスタンス数
+    static const uint32_t kNumMaxInstance = 1000;//インスタンス数
     enum TopologyType {
         kPlane,
         kCube,
@@ -146,7 +146,7 @@ public:
 
 protected:
     void UpdateBillBordMatrix(Camera& camera, ParticleGroup& group);
-    void UpdateMatrix(Particle& particleItr, ParticleGroup& group);
+    Matrix4x4 UpdateMatrix(Particle& particleItr, ParticleGroup& group);
 private:
     //メンバ関数ポインタテーブル
     std::unordered_map<ParticleMovements, std::function<void(ParticleGroup&)>> UpdateFunctions;
@@ -155,8 +155,9 @@ private:
     void Shock(ParticleGroup& group);
 
     void IsCollisionFieldArea(Particle& particleItr, ParticleGroup& group);
-    void UpdateWorldMatrixForBillBord(Particle& particleItr, ParticleGroup& group);
-    void UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group);
+    Matrix4x4 UpdateWorldMatrixForBillBord(Particle& particleItr, ParticleGroup& group);
+    Matrix4x4 UpdateWorldMatrix(Particle& particleItr, ParticleGroup& group);
+    Matrix4x4 UpdateSphereMatrix(Particle& particleItr, SphericalMove& sphericalMove, ParticleGroup& group);
     void UpdateWVPMatrix(Camera& camera, ParticleGroup& group);
     void UpdateInstancingData(ParticleGroup& group, Particle& particleItr);
 

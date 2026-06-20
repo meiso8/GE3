@@ -31,6 +31,7 @@ FreeTypeScene::FreeTypeScene()
 
 
     ObjectManager::GetInstance()->Clear();
+
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
 
@@ -45,12 +46,8 @@ FreeTypeScene::FreeTypeScene()
     object3d_->SetTextureHandle(TextureFactory::GRADATION_LINE);
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
 
-    object3d2_ = std::make_unique<Object3d>();
-    object3d2_->Create();
-    object3d2_->SetMeshAndMaterial(ModelManager::GetModel("playerGirl"));
-
     beam_ = std::make_unique<Beam>();
-
+   
     levelEditor_ = std::make_unique<LevelEditor>();
     levelEditor_->Load("test");
     //オブジェクトをセットする
@@ -71,7 +68,7 @@ FreeTypeScene::FreeTypeScene()
 
     }
 
-   clickedID_ = 0;
+
 }
 
 void FreeTypeScene::Initialize()
@@ -123,23 +120,12 @@ void FreeTypeScene::Update()
 
     DebugUI::CheckCamera(*currentCamera_);
 
-    DebugUI::CheckParticle(*particleEmitters_[0], "Emitter0");
-    DebugUI::CheckParticle(*particleEmitters_[1], "Emitter1");
-    DebugUI::CheckSRVIndex();
+    DebugUI::CheckEmitter(particleEmitters_[0]->GetEmitter());
+    DebugUI::CheckEmitter(particleEmitters_[1]->GetEmitter());
 
+    ObjectManager::GetInstance()->ClickObject(*currentCamera_);
     ObjectManager::GetInstance()->DebugAll();
 
-
-    clickedID_ = RenderTexture::GetInstance()->GetClickedObjectID();
-   
-    ImGui::Text("ClickedID : %d", clickedID_);
-
-    if (clickedID_ != 0) {
-        auto* selectedObj = ObjectManager::GetInstance()->FindObjectByID(clickedID_);
-        if (selectedObj) {
-            ImGuiClass::UpdateGuizmo(*currentCamera_, *selectedObj);
-        }
-    }
 #endif //_DEVELOP
 
 
@@ -152,9 +138,7 @@ void FreeTypeScene::Update()
     }
 
     for (int i = 0; i < particleEmitters_.size(); ++i) {
-        particleEmitters_[i]->UpdateTimer();
-        particleEmitters_[i]->UpdateEmitter();
-
+        particleEmitters_[i]->Update();
     }
 
     // 共通更新
@@ -178,7 +162,7 @@ void FreeTypeScene::DrawModel()
     DrawGrid::Draw(*currentCamera_);
 #endif //_DEVELOP
 
-    //ObjectManager::GetInstance()->DrawAll(*currentCamera_);
+    ObjectManager::GetInstance()->DrawAll(*currentCamera_);
 
     skyBoxObj_->Draw(*currentCamera_);
 
@@ -187,8 +171,6 @@ void FreeTypeScene::DrawModel()
     beam_->Draw(currentCamera_);
 
     ParticleManager::GetInstance()->Draw();
-
-
 }
 
 void FreeTypeScene::CreateParticle()
@@ -215,6 +197,7 @@ void FreeTypeScene::CreateParticle()
     emitter0.movement = ParticleMovements::kParticleNormal;
     emitter0.rotateAABB_ = { .min = {0.0f,0.0f,-3.14f},.max = {0.0f,0.0f,3.14f} };
     emitter0.scaleAABB_ = { .min = {0.0f,0.4f,0.0f},.max = {0.0f,1.5f,1.0f} };
+    emitter0.isLoop_ = true;
 
     auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
     group->accelerationField.acceleration.y = 0.0f;
@@ -237,6 +220,7 @@ void FreeTypeScene::CreateParticle()
     emitter1.blendMode = kBlendModeAdd;
     emitter1.movement = ParticleMovements::kParticleNormal;
     emitter1.rotateAABB_ = { .min = {0.0f,-3.14f,0.0f},.max = {0.0f,3.14f,0.0f} };
+    emitter1.isLoop_ = true;
 
     auto& group1 = ParticleManager::GetInstance()->GetParticleGroup(emitter1.name);
     group1->accelerationField.acceleration.y = 0.0f;
