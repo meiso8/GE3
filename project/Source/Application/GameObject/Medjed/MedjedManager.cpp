@@ -172,14 +172,14 @@ void MedjedManager::Update()
 void MedjedManager::PlaceLockersRandomly() {
     std::vector<Vector2> placedPositions;
 
-    for (auto& locker : dummyMedjeds_) {
-        locker->Init();
+    for (auto& dummy : dummyMedjeds_) {
+        dummy->Init();
 
         Vector2 pos;
 
         while (true) {
 
-            if (auto medjed = dynamic_cast<Medjed*>(locker.get())) {
+            if (auto medjed = dynamic_cast<Medjed*>(dummy.get())) {
                 Random random;
                 random.SetMinMax(rangeMin, rangeMax);
                 pos.x = random.Get();
@@ -194,7 +194,7 @@ void MedjedManager::PlaceLockersRandomly() {
 
             if (!IsOverlapping(pos, placedPositions)) {
                 placedPositions.push_back(pos);
-                locker->GetWorldTransform().translate_ = { pos.x, 0.0f, pos.y };
+                dummy->GetWorldTransform().eTransform_.translate = { pos.x, 0.0f, pos.y };
                 break; // 配置成功！ 
             }
         }

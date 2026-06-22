@@ -27,7 +27,7 @@ Water::Water() {
     AABB aabb = { .min = {-12.5f,-0.5f,-12.5f},.max = {12.5f,0.5f,12.5f} };
     SetCollisionAttribute(kCollisionWater);
     SetCollisionMask(kCollisionPlayer); // プレイヤー
-    SetWorldMatrix(object_->worldTransform_.matWorld_);
+    SetWorldMatrix(object_->GetWorldTransform().matWorld_);
     // memoのサイズに合わせる
     SetAABB(aabb);
 }
@@ -39,7 +39,7 @@ void Water::Initialize() {
     object_->GetWaveData(0).time = 0.0f;
     object_->GetWaveData(1).time = 0.0f;
     object_->Initialize();
-    object_->worldTransform_.translate_ = { 0.0f,0.75f,0.0f };
+    object_->SetTranslate({ 0.0f,0.75f,0.0f });
     object_->GetWaveData(0).amplitude = 0.2f;
     object_->GetWaveData(1).amplitude = 0.1f;
 }
@@ -58,7 +58,7 @@ void Water::Update() {
     isPlayerHit_ = false;
 
     if (isDrain_) {
-        object_->worldTransform_.translate_.y = Lerp(object_->worldTransform_.translate_.y, -0.625f, 0.01f);
+        object_->GetTransform().translate.y = Lerp(object_->GetTransform().translate.y, -0.625f, 0.01f);
         object_->GetWaveData(0).amplitude = Lerp(object_->GetWaveData(0).amplitude, 0.0f, 0.1f);
         object_->GetWaveData(1).amplitude = Lerp(object_->GetWaveData(1).amplitude, 0.0f, 0.1f);
     }

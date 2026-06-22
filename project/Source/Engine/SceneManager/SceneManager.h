@@ -11,8 +11,9 @@ class BaseScene
 protected:
     //カメラ
     bool isDebugCameraActive_ = false;
+
     std::unique_ptr<Camera> camera_ = nullptr;
-    std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
+
     Camera* currentCamera_ = nullptr;
     std::unique_ptr <SceneChange> sceneChange_ = nullptr;
     //レベルエディタ
@@ -20,6 +21,7 @@ protected:
     std::vector<std::unique_ptr<LevelEditor::ObjectSet>>objects_;
 
 public:
+    Camera* GetCurrentCamera() { return currentCamera_; };
     BaseScene();
     virtual ~BaseScene() = default;
     virtual void Initialize();
@@ -52,9 +54,8 @@ public:
     static void SetMap(const std::string& name, std::unique_ptr<BaseScene> scene);
     static void SetNextScene(const std::string& name);
     static void InitScene();
-
+    static Camera* GetCurrentCamera() { return currentScene_->GetCurrentCamera(); };
 private:
-
     static BaseScene* currentScene_;
     static BaseScene* nextScene_;
     static std::map < std::string, std::unique_ptr<BaseScene>> scenes_;

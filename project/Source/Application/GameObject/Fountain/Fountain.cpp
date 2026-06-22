@@ -26,7 +26,7 @@ Fountain::Fountain()
 
     //サイズに合わせる
     SetAABB(aabb);
-    SetWorldMatrix(object_->worldTransform_.matWorld_);
+    SetWorldMatrix(object_->GetWorldTransform());
 
     CreateParticle();
 }
@@ -34,11 +34,11 @@ Fountain::Fountain()
 void Fountain::Initialize()
 {
     object_->Initialize();
-    object_->worldTransform_.translate_ = { 0.0f,0.25f,0.0f };
+    object_->SetTranslate({ 0.0f,0.25f,0.0f });
     splashTimer_ = splashTime_;
 
     waterObject_->Initialize();
-    waterObject_->worldTransform_.translate_ = { 0.0f,0.3f,0.0f };
+    waterObject_->SetTranslate({0.0f,0.3f,0.0f });
     waterObject_->InitWaveData();
     waterObject_->SetColor({ 0.0f,1.0f,1.0f,0.2f });
 }
@@ -110,7 +110,7 @@ void Fountain::CreateParticle()
     for (auto& emitter : particleEmitter_) {
         emitter = std::make_unique<ParticleEmitter>();
         emitter->Initialize();
-        emitter->SetParent(object_->worldTransform_);
+        emitter->SetParent(object_->GetWorldTransform());
     }
    
     particleEmitter_[0]->SetName("fountain");
@@ -127,8 +127,8 @@ void Fountain::CreateParticle()
     emitter0.blendMode = kBlendModeAdd;
     emitter0.movement = ParticleMovements::kParticleNormal;
     emitter0.velocityAABB = { .min = {-0.2f,3.75f,-0.2f},.max = {0.2f,4.0f,0.2f} };
-    emitter0.transform.scale_ = { 0.1f,0.1f,0.1f };
-    emitter0.transform.translate_.y = 0.2f;
+    emitter0.transform.eTransform_.scale = { 0.1f,0.1f,0.1f };
+    emitter0.transform.eTransform_.translate.y = 0.2f;
     
     auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
     group->accelerationField.acceleration.y = -4.0f;
@@ -138,7 +138,7 @@ void Fountain::CreateParticle()
     emitter1.isLoop_ = true;
     emitter1.color = { 0.5f,1.0f,1.0f,1.0f };
     emitter1.movement = ParticleMovements::kParticleSphere;
-    emitter1.transform.scale_ = { 0.1f,0.1f,0.1f };
+    emitter1.transform.eTransform_.scale = { 0.1f,0.1f,0.1f };
     emitter1.frequency = 0.001f;
     emitter1.velocityAABB = { .min = {0.0f,1.5f,0.0f},.max = {0.0f,2.0f,0.0f} };
     emitter1.radius = 2.5f;

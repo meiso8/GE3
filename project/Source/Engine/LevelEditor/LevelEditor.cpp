@@ -64,10 +64,9 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
 
         newObjctData->obj_->Create();
         newObjctData->obj_->SetMeshAndMaterial(model);
-        auto& transform = newObjctData->obj_->worldTransform_;
-        transform.translate_ = objectData.transform.translate;
-        transform.scale_ = objectData.transform.scale;
-        transform.rotate_ = objectData.transform.rotate;
+        auto& transform = newObjctData->obj_->GetWorldTransform();
+
+        transform.eTransform_ = objectData.transform;
 
         //コライダーの設定
         newObjctData->collider_ = std::make_unique<Collider>();

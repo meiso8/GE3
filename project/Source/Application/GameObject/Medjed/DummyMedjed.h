@@ -27,7 +27,7 @@ public:
     void OnCollision(Collider* collider)override;
     virtual void Look(const Vector3& target);
     virtual WorldTransform& GetWorldTransform() const {
-        return object3d_->worldTransform_;
+        return object3d_->GetWorldTransform();
     };
 
     virtual void GoToTarget(const Vector3& target);

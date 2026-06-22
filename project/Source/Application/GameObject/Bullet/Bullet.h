@@ -23,7 +23,7 @@ public:
     Bullet();
     ~Bullet();
     void OnCollision(Collider* collider)override;
-    Vector3 GetWorldPosition() const;
+    Vector3 GetWorldPosition();
     void Initialize();
     void Update();
     void Draw(Camera& camera);

@@ -73,7 +73,16 @@ public:
 		assert(&worldMat);
 		worldMat_ = &worldMat;
 	};
+	/// @brief ワールドトランスフォーム用のマトリックスセット関数
+	/// @param worldTransform 
+	void SetWorldMatrix(WorldTransform& worldTransform) {
+		assert(&worldTransform);
+		SetWorldMatrix(worldTransform.matWorld_);
+	}
 
+	void SetWorldMatrix(Object3d& object3d) {
+		SetWorldMatrix(object3d.GetWorldTransform());
+	}
 	/// @brief 衝突半径を取得する
 	/// @return 衝突半径
 	float GetRadius() const { return radius_; }

@@ -12,7 +12,7 @@ public:
     void OnCollision(Collider* collider) override;
     void SetColor(const Vector4& color) { object_->SetColor(color); };
     Vector3 GetWorldPosition() {
-      return  object_->worldTransform_.GetWorldPosition();
+      return  object_->GetWorldTransform().GetWorldPosition();
     }
 private:
     std::unique_ptr<Object3d> object_ = nullptr;

@@ -6,24 +6,16 @@
 #include"Input.h"
 #include"DirectXCommon.h"
 #include"SRVmanager/SrvManager.h"
-
-#include"PSO.h"
-
-#include"ModelManager.h"
-
-#include"Sound.h"
-
-#include"CrashHandler.h"
 #include"Log.h"
-#include"DebugUI.h"
-
-
 #include<memory>
 
 #pragma endregion
 
 class MyEngine {
 private:
+    
+    D3DResourceLeakChecker leakChecker;
+
     static DirectXCommon* directXCommon;
 #ifdef USE_IMGUI
     ImGuiClass imGuiClass = {};
@@ -31,10 +23,8 @@ private:
 
     static std::unique_ptr<LogFile> logFile;
     static std::unique_ptr<Window> wc;
-   static std::unique_ptr <Input> input;
-
+    static std::unique_ptr <Input> input;
     static std::unique_ptr<SrvManager> srvManager;
-    static ParticleManager* particleManager_;
     bool endRequest_ = false;
 protected:
 
@@ -54,5 +44,6 @@ public:
     MyEngine& operator=(MyEngine&) = delete;
     virtual ~MyEngine() = default;
     void Run();
+
 };
 

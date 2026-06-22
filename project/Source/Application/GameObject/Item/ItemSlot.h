@@ -35,12 +35,12 @@ public:
     void DrawForSlotItem(Camera& camera);
     void OnCollision(Collider* collider)override;
     Vector3 GetWorldPosition() const {
-        return object_->worldTransform_.GetWorldPosition();
+        return object_->GetWorldTransform().GetWorldPosition();
     };
     void Rotate();
-    void SetRotate(const Vector3& rotate) { object_->worldTransform_.rotate_ = rotate; };
+    void SetRotate(const Vector3& rotate) { object_->SetRotate(rotate); };
     void Scale(const Vector3 start, const Vector3 end);
-    void SetScale(const Vector3& scale) { object_->worldTransform_.scale_ = scale; }
+    void SetScale(const Vector3& scale) { object_->SetScale(scale); }
     void SetScreenStartPos();
     void UpdateAniTimer(const float& endTime = 4.0f);
     float aniTimer_ = 0.0f;

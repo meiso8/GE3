@@ -14,7 +14,7 @@ public:
     virtual void Initialize();
     virtual void Update();
     virtual void Draw(Camera& camera);
-    WorldTransform& GetWorldTransform() { return object_->worldTransform_; };
+    WorldTransform& GetWorldTransform() { return object_->GetWorldTransform(); };
     void OnCollision(Collider* collider) override;
     std::unique_ptr<Primitive>cubeMesh_ = nullptr;
     void SetCubeAABB(const AABB& aabb) {

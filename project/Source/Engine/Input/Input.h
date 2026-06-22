@@ -45,7 +45,7 @@ public:
     static void SetShowCursor(const bool flag);
     HRESULT Initialize(Window& window);
     /// @brief キーを押した状態 
-    static bool IsPushKey(const uint8_t& key);
+    static bool IsPressKey(const uint8_t& key);
     /// @briefキーを押した瞬間
     static bool IsTriggerKey(const uint8_t& key);
     /// @briefキーを離した状態

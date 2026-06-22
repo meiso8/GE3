@@ -55,7 +55,7 @@ Enemy::Enemy()
     float halfScale = kScale_ * 0.25f;
     Init();
     SetAABB({ { -halfScale - halfScale * 1.5f ,-halfScale }, { halfScale ,halfScale * 1.5f ,halfScale } });
-    SetWorldMatrix(bodyPos_.worldTransform_.matWorld_);
+    SetWorldMatrix(bodyPos_.GetWorldTransform());
     SetCenter({ 0.0f,0.0f, 0.0f });
 
     SetCollisionAttribute(kCollisionEnemy);
@@ -108,7 +108,8 @@ void Enemy::Init()
     phase_ = APPEAR;
 
     bodyPos_.Initialize();
-    bodyPos_.worldTransform_.scale_ = { 0.0f };
+    bodyPos_.SetScale({ 0.0f,0.0f,0.0f });
+
     bodyPos_.SetAnimation("Nod");
 
     phaseTimer_ = 0.0f;
@@ -238,7 +239,7 @@ void Enemy::SoundFootStep(const SoundFactory::TAG tag)
         if (soundTimer_ <= 0.0f) {
 
             //距離によって変化させる
-            float distance = Distance(*target_, bodyPos_.worldTransform_.translate_);
+            float distance = Distance(*target_, bodyPos_.GetTranslate());
             distance /= 100.0f;
             distance = std::clamp(distance, 0.0f, 1.0f);
             Sound::PlaySE(tag, distance);
@@ -282,7 +283,7 @@ void Enemy::OnCollision(Collider* collider)
 Vector3 Enemy::GetToTarget()
 {
     if (target_) {
-        return ToTargetVector(*target_, bodyPos_.worldTransform_.GetWorldPosition());
+        return ToTargetVector(*target_, bodyPos_.GetWorldTransform().GetWorldPosition());
     }
 
     return { 0.0f };
@@ -309,8 +310,8 @@ void Enemy::SetPhase(const PHASE phase)
     }
 
     if (phase_ == FIREBALL) {
-
-        startRotateY_ = bodyPos_.worldTransform_.rotate_.y;
+        auto& transform = bodyPos_.GetTransform();
+        startRotateY_ = transform.rotate.y;
         endRotateY_ = startRotateY_ + std::numbers::pi_v<float>*2.0f;
 
         //ここを変更する
@@ -333,12 +334,12 @@ void Enemy::Appear()
     float time = phaseTimer_ / kApperTime_;
     time = std::clamp(time, 0.0f, 1.0f);
     Look();
-
-    bodyPos_.worldTransform_.scale_ = Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time);
+    auto& transform = bodyPos_.GetTransform();
+    transform.scale = Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time);
 
     if (phaseTimer_ >= kApperEndTime_) {
         SetPhase(ROUND);
-        bodyPos_.worldTransform_.scale_ = { kScale_,kScale_,kScale_ };
+        transform.scale = { kScale_,kScale_,kScale_ };
     }
 
 }
@@ -346,8 +347,8 @@ void Enemy::Appear()
 void Enemy::Round()
 {
     bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInBounce(0.0f,1.0f,fmod(phaseTimer_,1.0f)) });
-
-    bodyPos_.worldTransform_.translate_ = Lerp(bodyPos_.worldTransform_.translate_, { 0.0f,0.0f,0.0f }, 0.5f);
+    auto& transform = bodyPos_.GetTransform();
+   transform.translate = Lerp(transform.translate, { 0.0f,0.0f,0.0f }, 0.5f);
     Look();
     if (phaseTimer_ >= actionTime_) {
         SetPhase(FIREBALL);
@@ -421,8 +422,9 @@ void Enemy::AlphaWalk()
         velocity_ *= deltaTime * kMoveSpeed_;
 
         //Y軸方向には移動しない
-        bodyPos_.worldTransform_.translate_.x += velocity_.x;
-        bodyPos_.worldTransform_.translate_.z += velocity_.z;
+        auto& transform =bodyPos_.GetTransform();
+        transform.translate.x += velocity_.x;
+        transform.translate.z += velocity_.z;
 
         //足音の更新処理をここで呼び出す
         SoundFootStep(SoundFactory::MEDJED_FOOT_STEP_SMALL);
@@ -470,14 +472,14 @@ void Enemy::UpdateTimer()
 
 void Enemy::Look()
 {
-    TransformAni::LookTarget(bodyPos_.worldTransform_, *target_);
+    TransformAni::LookTarget(bodyPos_.GetWorldTransform(), *target_);
 }
 
 bool Enemy::PoyoPoyoUpdateAndGetEnd(const float& endTimer)
 {
     poyoAnimTimer_ += Time::DeltaTime();
     poyoAnimTimer_ = std::clamp(poyoAnimTimer_, 0.0f, endTimer);
-    TransformAni::PoyoPoyo(bodyPos_.worldTransform_, poyoAnimTimer_, kScale_);
+    TransformAni::PoyoPoyo(bodyPos_.GetWorldTransform(), poyoAnimTimer_, kScale_);
 
     return (poyoAnimTimer_ == endTimer);
 
@@ -513,10 +515,12 @@ void Enemy::HitUpdate()
 
 void Enemy::LerpScale()
 {
-    bodyPos_.worldTransform_.scale_ = Lerp(Vector3{ bodyPos_.worldTransform_.scale_ }, { kScale_,kScale_,kScale_ }, 0.5f);
+    auto& transform = bodyPos_.GetTransform();
+   transform.scale = Lerp(Vector3{ transform.scale }, { kScale_,kScale_,kScale_ }, 0.5f);
 }
 
 void Enemy::RotateY(const float& timer)
 {
-    bodyPos_.worldTransform_.rotate_.y = Easing::EaseInBack(startRotateY_, endRotateY_, timer);
+    auto& transform = bodyPos_.GetTransform();
+    transform.rotate.y = Easing::EaseInBack(startRotateY_, endRotateY_, timer);
 }

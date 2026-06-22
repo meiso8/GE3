@@ -14,7 +14,7 @@ Bullet::Bullet() {
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     SetAABB({ {-1.0f,-1.0f,-1.0f} ,{1.0f,1.0f,1.0f} });
     SetBulletType(kEnemyCold);
-    SetWorldMatrix(body_.worldTransform_.matWorld_);
+    SetWorldMatrix(body_.GetWorldTransform());
 }
 
 Bullet::~Bullet() {
@@ -24,7 +24,7 @@ void Bullet::Initialize() {
     //最初は冷たい
     SetBulletType(kEnemyCold);
     body_.Initialize();
-    body_.worldTransform_.translate_.y = -10.0f;
+    body_.GetTransform().translate.y = -10.0f;
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     moveDir_ = { 0.0f,0.0f,1.0f };
     moveSpeed_ = 0.2f;
@@ -34,7 +34,7 @@ void Bullet::Initialize() {
     size_ = 3.0f;
     body_.GetBalloonData().expansion = 0.0f;
 
-  
+
 }
 void Bullet::OnCollision(Collider* collider)
 {
@@ -44,14 +44,14 @@ void Bullet::OnCollision(Collider* collider)
 
     isActive_ = false;
     lifeTimer_ = 0.0f;
-    body_.worldTransform_.translate_ = { 0.0f,-10.0f,0.0f };
+    body_.SetTranslate({ 0.0f,-10.0f,0.0f });
     body_.Update();
     //デバック用
     OnCollisionCollider();
 }
-Vector3 Bullet::GetWorldPosition() const
+Vector3 Bullet::GetWorldPosition()
 {
-    return body_.worldTransform_.GetWorldPosition();
+    return body_.GetWorldTransform().GetWorldPosition();
 }
 void Bullet::Update() {
 
@@ -65,9 +65,9 @@ void Bullet::Update() {
     } else {
         lifeTimer_ -= 0.016f;
     }
-
-    body_.worldTransform_.rotate_ = moveDir_;
-    body_.worldTransform_.translate_ += moveDir_ * moveSpeed_;
+    auto& transform = body_.GetTransform();
+    transform.rotate = moveDir_;
+    transform.translate += moveDir_ * moveSpeed_;
     body_.Update();
 
 
@@ -87,8 +87,8 @@ void Bullet::Draw(Camera& camera) {
 
 void Bullet::SetBulletType(const BulletType& type)
 {
-    if (type == kPlayerCold||type == kPlayerHot) {
-        SetCollisionAttribute(type == kPlayerCold?kCollisionPlayerBulletCold:kCollisionPlayerBulletHot);
+    if (type == kPlayerCold || type == kPlayerHot) {
+        SetCollisionAttribute(type == kPlayerCold ? kCollisionPlayerBulletCold : kCollisionPlayerBulletHot);
         SetCollisionMask(kCollisionEnemy | kCollisionMedjed | kCollisionWall | kCollisionFloor);
     } else if (type) {
         SetCollisionAttribute(kCollisionEnemyBullet);
@@ -96,7 +96,7 @@ void Bullet::SetBulletType(const BulletType& type)
         SetCollisionMask(kCollisionPlayer | kCollisionWall | kCollisionFloor);
     }
 
-    if (type == kEnemyCold|| type == kPlayerCold) {
+    if (type == kEnemyCold || type == kPlayerCold) {
         body_.SetTemperature(0.375f);
 
     } else if (type == kEnemyHot || type == kPlayerHot) {
@@ -109,17 +109,19 @@ void Bullet::Shot(const Vector3& position, const Vector3& direction, const float
     SetBulletType(type);
     body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     type_ = type;
-  
-    body_.worldTransform_.translate_ = position;
-    body_.Update();
+
     moveDir_ = Normalize(direction);
     moveSpeed_ = speed;
     size_ = size;
-    body_.worldTransform_.rotate_ = moveDir_;
-    body_.worldTransform_.scale_ = { size_,size_,size_ };
+
+    auto& transform = body_.GetTransform();
+    transform.translate = position;
+    transform.rotate = moveDir_;
+    transform.scale = { size_,size_,size_ };
+    body_.Update();
+    
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
-
 }
 
 void Bullet::SetColor(const Vector4& color)

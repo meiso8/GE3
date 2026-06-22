@@ -4,6 +4,7 @@
 #include <memory>
 #include <unordered_map>
 #include "Object3d.h"
+#include"ObjectCommandManager.h"
 
 class ObjectManager
 {
@@ -19,17 +20,18 @@ public:
     // IDからオブジェクトを即座に検索（ピッキング用）
     Object3d* FindObjectByID(uint32_t id);
 
-    // 全オブジェクトの一括更新と描画
-    void UpdateAll();
-    void DrawAll(Camera& camera);
+    // オブジェクトチェック
     void ClickObject(Camera& camera);
+   
     void DebugAll();
     // シーン切り替え時などの全クリア
     void Clear();
+    void Initialize();
 private:
+    void UpdateImGuizmo(Camera& camera);
     ObjectManager() = default;
     ~ObjectManager() = default;
-
+    ObjectCommandManager objectCommandManager_;
     std::vector<Object3d* > objects_;
     std::unordered_map<uint32_t, Object3d* > idMap_;
     uint32_t nextID_ = 1; // 1から順にAllocateしていく

@@ -11,17 +11,18 @@ void DummyMedjed::Look(const Vector3& target)
 
     aniTimer_ += Time::DeltaTime() * 0.25f;
     aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
-    Vector3 direction = target - object3d_->worldTransform_.GetWorldPosition();
+    Vector3 direction = target - object3d_->GetWorldTransform().GetWorldPosition();
     float targetAngle = std::atan2(direction.x, direction.z);
     // 差分を最短経路に補正
     float delta = NormalizeAngle(targetAngle - startRotateY_);
 
-    object3d_->worldTransform_.rotate_.y = startRotateY_ + Easing::EaseInOutBounce(0.0f, delta, aniTimer_);
+    object3d_->GetTransform().rotate.y = startRotateY_ + Easing::EaseInOutBounce(0.0f, delta, aniTimer_);
 }
 
 void DummyMedjed::GoToTarget(const Vector3& target)
 {
-    object3d_->worldTransform_.translate_ = Lerp(object3d_->worldTransform_.translate_, target, 0.05f);
+    auto& transform = object3d_->GetTransform();
+   transform.translate = Lerp(transform.translate, target, 0.05f);
 }
 
 void DummyMedjed::Hide()
@@ -46,7 +47,7 @@ DummyMedjed::DummyMedjed()
     SetAABB(localAABB_);
     SetCollisionAttribute(kCollisionDummyMedjed);
     SetCollisionMask(kCollisionPlayer | kCollisionMedjed);
-    SetWorldMatrix(object3d_->worldTransform_.matWorld_);
+    SetWorldMatrix(object3d_->GetWorldTransform());
 
 }
 void DummyMedjed::Init()
@@ -57,8 +58,9 @@ void DummyMedjed::Init()
     Random random;
     random.SetMinMax(0.0f,rotateRange_);
     startRotateY_ = random.Get();
-    object3d_->worldTransform_.rotate_.y = startRotateY_;
-    object3d_->worldTransform_.translate_.y = startPosY_;
+    auto& transform = object3d_->GetTransform();
+    transform.rotate.y = startRotateY_;
+    transform.translate.y = startPosY_;
 }
 
 void DummyMedjed::Draw(Camera& camera)

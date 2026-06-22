@@ -129,9 +129,6 @@ void SampleScene::Update() {
     //ステージの更新処理
     stageManager_->Update();
 
-    // 共通更新
-    ParticleManager::GetInstance()->Update(*currentCamera_);
-
     itemManager_->Update();
     uIManager_->UpdatePauseScreen();
     memoManager_->Update();
@@ -238,8 +235,6 @@ void SampleScene::DrawModel() {
     stageManager_->DrawModel(currentCamera_);
     //プレイヤーの描画
     player_->Draw(*currentCamera_);
-
-    ParticleManager::GetInstance()->Draw();
     //アイテムを手前に描画する
     itemManager_->DrawGetItem();
 

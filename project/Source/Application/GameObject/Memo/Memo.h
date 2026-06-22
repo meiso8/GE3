@@ -15,17 +15,17 @@ public:
     void Initialize();
     void Update();
     void Draw(Camera& camera);
-    WorldTransform& GetWorldTransform() { return object_->worldTransform_; };
+    WorldTransform& GetWorldTransform() { return object_->GetWorldTransform(); };
     void OnCollision(Collider* collider) override;
     void SetTexture(const TextureFactory::Handle& handle) {
         object_->SetTextureHandle(handle);
     };
     void SetTranslate(const Vector3& translate) {
-        object_->worldTransform_.translate_ = translate;
+        object_->SetTranslate(translate);
     }
     void SetCubeSize(const AABB& aabb) {
         SetAABB(aabb);
-        object_->worldTransform_.scale_ = aabb.max - aabb.min;
+        object_->SetScale(aabb.max - aabb.min);
         object_->SetMeshAndMaterial(cubeMesh_.get());
     };
     void SetColor(const Vector4& color) { object_->SetColor(color); }

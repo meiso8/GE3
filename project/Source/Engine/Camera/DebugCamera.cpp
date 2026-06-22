@@ -82,27 +82,27 @@ void DebugCamera::UpdateProjectionMatrix()
 
 void DebugCamera::InputTranslate() {
 
-    if (Input::IsPushKey(DIK_A)) {
+    if (Input::IsPressKey(DIK_A)) {
         MoveX(-speed_);
     }
 
-    if (Input::IsPushKey(DIK_D)) {
+    if (Input::IsPressKey(DIK_D)) {
         MoveX(speed_);
     }
 
-    if (Input::IsPushKey(DIK_W)) {
+    if (Input::IsPressKey(DIK_W)) {
         MoveY(speed_);
     }
 
-    if (Input::IsPushKey(DIK_S)) {
+    if (Input::IsPressKey(DIK_S)) {
         MoveY(-speed_);
     }
 
-    if (Input::IsPushKey(DIK_Q)) {
+    if (Input::IsPressKey(DIK_Q)) {
         MoveZ(-speed_);
     }
 
-    if (Input::IsPushKey(DIK_E)) {
+    if (Input::IsPressKey(DIK_E)) {
         MoveZ(speed_);
     }
 
@@ -110,7 +110,7 @@ void DebugCamera::InputTranslate() {
 
 void DebugCamera::InputRotate() {
 
-    if (Input::IsPushKey(DIK_R)) {
+    if (Input::IsPressKey(DIK_R)) {
 
         if (Input::IsTriggerKey(DIK_UP)) {
             rotateSpeed_ *= -1.0f;
@@ -118,15 +118,15 @@ void DebugCamera::InputRotate() {
 
         const float deltaTime = Time::DeltaTime();
 
-        if (Input::IsPushKey(DIK_X)) {
+        if (Input::IsPressKey(DIK_X)) {
             deltaRotate_.x = rotateSpeed_* deltaTime;
         }
 
-        if (Input::IsPushKey(DIK_Y)) {
+        if (Input::IsPressKey(DIK_Y)) {
             deltaRotate_.y = rotateSpeed_ * deltaTime;
         }
 
-        if (Input::IsPushKey(DIK_Z)) {
+        if (Input::IsPressKey(DIK_Z)) {
             deltaRotate_.z = rotateSpeed_ * deltaTime;
         }
     }
@@ -148,7 +148,7 @@ void DebugCamera::MoveY(const float& speed) {
 
 void DebugCamera::MouseInputMove() {
 
-    if (Input::IsPressMouse(2) && Input::IsPushKey(DIK_LSHIFT)) {
+    if (Input::IsPressMouse(2) && Input::IsPressKey(DIK_LSHIFT)) {
         //視点の移動 offset をずらす
         //後でoffsetをくわえる
         Vector2 deltaOffset = { 0.0f,0.0f };

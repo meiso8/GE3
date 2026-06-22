@@ -215,8 +215,8 @@ void MedjedStage::CreateParticle()
     group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
 
     auto& emitter1 = particleEmitters_[kSky_Particle]->GetEmitter();
-    emitter1.transform.translate_.y = 30.0f;
-    emitter1.transform.scale_ = { 10.0f,10.0f,10.0f };
+    emitter1.transform.eTransform_.translate.y = 30.0f;
+    emitter1.transform.eTransform_.scale = { 10.0f,10.0f,10.0f };
     emitter1.count = 4;
     emitter1.color = { 1.0f,0.75f,0.75f,1.0f };
     emitter1.frequencyTime = 0.1f;

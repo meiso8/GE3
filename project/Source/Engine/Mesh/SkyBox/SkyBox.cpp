@@ -35,7 +35,7 @@ void SkyboxObject3d::Create()
 void SkyboxObject3d::Initialize()
 {
     worldTransform_.Initialize();
-    worldTransform_.scale_ = { 20.0f,20.0f,20.0f };
+    worldTransform_.eTransform_.scale = { 20.0f,20.0f,20.0f };
 }
 
 void SkyboxObject3d::Update()

@@ -60,8 +60,8 @@ public:
     bool GetIsShotStart() { return isShotStart_; }
     void SetIsShotStart(const bool flag) { isShotStart_ = flag; }
 
-    Vector3 GetWorldPos()const { return bodyPos_.worldTransform_.GetWorldPosition(); }
-    WorldTransform& GetWorldTransform() { return bodyPos_.worldTransform_; }
+    Vector3 GetWorldPos() { return  bodyPos_.GetWorldTransform().GetWorldPosition(); }
+    WorldTransform& GetWorldTransform() { return bodyPos_.GetWorldTransform(); }
     void OnCollision(Collider* collder)override;
 
     std::unordered_map <std::string, ColliderGroup>& GetColliderGroup() { return colliders_; };

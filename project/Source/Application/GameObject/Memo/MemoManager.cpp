@@ -115,14 +115,14 @@ void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handl
         }
 
         if (file.contains(key)) {
-            WorldTransform wt;
-            wt.translate_.x = file[key]["translate"]["x"];
-            wt.translate_.y = file[key]["translate"]["y"];
-            wt.translate_.z = file[key]["translate"]["z"];
-            wt.rotate_.x = file[key]["rotate"]["x"];
-            wt.rotate_.y = file[key]["rotate"]["y"];
-            wt.rotate_.z = file[key]["rotate"]["z"];
-            memo->GetWorldTransform() = wt;
+             EulerTransform transform;
+            transform.translate.x = file[key]["translate"]["x"];
+            transform.translate.y = file[key]["translate"]["y"];
+            transform.translate.z = file[key]["translate"]["z"];
+            transform.rotate.x = file[key]["rotate"]["x"];
+            transform.rotate.y = file[key]["rotate"]["y"];
+            transform.rotate.z = file[key]["rotate"]["z"];
+            memo->GetWorldTransform().eTransform_ = transform;
         }
 
         if (handle == TextureFactory::BOOK || handle == TextureFactory::BOOK2) {

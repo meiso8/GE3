@@ -15,9 +15,9 @@ void ParticleEmitter::Initialize()
     emitter_.count = 3;
     emitter_.frequency = 0.5f;
     emitter_.frequencyTime = 0.0f;
-    emitter_.transform.rotate_ = { 0.0f,0.0f,0.0f };
-    emitter_.transform.scale_ = { 1.0f,1.0f,1.0f };
-    emitter_.transform.translate_ = { 0.0f,0.0f,0.0f };
+    emitter_.transform.eTransform_.rotate = { 0.0f,0.0f,0.0f };
+    emitter_.transform.eTransform_.scale = { 1.0f,1.0f,1.0f };
+    emitter_.transform.eTransform_.translate = { 0.0f,0.0f,0.0f };
 
     emitter_.translateAABB_ = { 0.0f };
     emitter_.velocityAABB = { 0.0f};

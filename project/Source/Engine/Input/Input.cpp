@@ -88,7 +88,7 @@ HRESULT Input::Initialize(Window& window/*, int& fps*/) {
     return result;
 };
 
-bool Input::IsPushKey(const uint8_t& keyNum) {
+bool Input::IsPressKey(const uint8_t& keyNum) {
 
     if (key_[keyNum]) {
         return true;

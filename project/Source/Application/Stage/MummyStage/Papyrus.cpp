@@ -21,13 +21,13 @@ Papyrus::Papyrus() {
 
     // memoのサイズに合わせる
     SetAABB(aabb);
-    SetWorldMatrix(object_->worldTransform_.matWorld_);
+    SetWorldMatrix(object_->GetWorldTransform().matWorld_);
    
 }
 
 void Papyrus::Initialize() {
     object_->Initialize();
-    object_->worldTransform_.translate_ = { 0.0f,2.0f,5.0f };
+    object_->SetTranslate({ 0.0f,2.0f,5.0f });
 }
 
 void Papyrus::Update() {

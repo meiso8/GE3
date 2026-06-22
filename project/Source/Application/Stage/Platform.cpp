@@ -17,7 +17,7 @@ Platform::Platform() {
     object_->Create();// 台座用モデル
     object_->SetMeshAndMaterial(cubeMesh_.get());
     object_->SetTextureHandle(TextureFactory::PUZZLE);
-    SetWorldMatrix(object_->worldTransform_.matWorld_);
+    SetWorldMatrix(object_->GetWorldTransform().matWorld_);
 
 }
 

@@ -27,7 +27,7 @@ void Medjed::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == kCollisionWall || collider->GetCollisionAttribute() == kCollisionDummyMedjed) {
         velocity_ *= -0.8f;
-        ResolveCollision(aniObj_->worldTransform_.translate_, velocity_, GetCollisionInfo());
+        ResolveCollision(aniObj_->GetTransform().translate, velocity_, GetCollisionInfo());
     }
 
     OnCollisionCollider();
@@ -35,12 +35,13 @@ void Medjed::OnCollision(Collider* collider)
 
 Vector3 Medjed::GetWorldPosition() const
 {
-    return aniObj_->worldTransform_.GetWorldPosition();
+    return aniObj_->GetWorldTransform().GetWorldPosition();
 }
 
 void Medjed::GoToTarget(const Vector3& target)
 {
-    aniObj_->worldTransform_.translate_ = Lerp(aniObj_->worldTransform_.translate_, target, 0.05f);
+    auto& transform = aniObj_->GetTransform();
+   transform.translate = Lerp(transform.translate, target, 0.05f);
 }
 
 
@@ -64,13 +65,15 @@ Medjed::Medjed() {
     SetAABB(localAABB_);
     SetCollisionAttribute(kCollisionMedjed);
     SetCollisionMask(kCollisionPlayer | kCollisionWall | kCollisionDummyMedjed);
-    SetWorldMatrix(aniObj_->worldTransform_.matWorld_);
+    SetWorldMatrix(aniObj_->GetWorldTransform());
 }
 
 void Medjed::Look(const Vector3& target)
 {
     Vector3 direction = target - GetWorldPosition();
-    aniObj_->worldTransform_.rotate_.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
+
+   
+    aniObj_->GetTransform().rotate.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
 }
 
 void Medjed::Update()

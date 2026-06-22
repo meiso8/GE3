@@ -44,10 +44,10 @@ public:
     }
 
     WorldTransform& GetBodyWorldTransform() {
-        return bodyPos_.worldTransform_;
+        return bodyPos_.GetWorldTransform();
     }
-    void SetBodyRotate(const Vector3& rotate){ bodyPos_.worldTransform_.rotate_ = rotate; }
-    void SetBodyScale(const Vector3& scale) { bodyPos_.worldTransform_.scale_ = scale; }
+    void SetBodyRotate(const Vector3& rotate){ bodyPos_.SetRotate(rotate); }
+    void SetBodyScale(const Vector3& scale) { bodyPos_.SetScale(scale); }
     HPs* GetHpsPtr() { return &characterState_.hps; }
 
     EyeCollider* GetEyeCollider() {

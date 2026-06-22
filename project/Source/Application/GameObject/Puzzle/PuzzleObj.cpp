@@ -29,14 +29,14 @@ PuzzleObj::PuzzleObj() {
     object_->SetTextureHandle(TextureFactory::PUZZLE_NUM);
     object_->SetTemperature(0.75f);
 
-    SetWorldMatrix(object_->worldTransform_.matWorld_);
+    SetWorldMatrix(object_->GetWorldTransform().matWorld_);
 
 }
 
 void PuzzleObj::Initialize() {
 
     object_->Initialize();
-    object_->worldTransform_.translate_ = { -24.0f,0.25f,-24.0f };
+    object_->SetTranslate({ -24.0f,0.25f,-24.0f });
 
 }
 

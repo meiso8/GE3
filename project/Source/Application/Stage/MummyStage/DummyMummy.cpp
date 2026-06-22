@@ -18,7 +18,7 @@ DummyMummy::DummyMummy()
     object_->SetTemperature(1.0f);
     object_->SetModelAndLoadAnimation(model_);
     
-    SetWorldMatrix(object_->worldTransform_.matWorld_);
+    SetWorldMatrix(object_->GetWorldTransform().matWorld_);
     // ミイラのサイズに合わせてAABBを設定（仮のサイズ）
     SetAABB({ {-0.75f, 0.0f, -0.75f}, {0.75f, 2.0f, 0.75f} });
 }
@@ -55,16 +55,16 @@ void DummyMummy::Update()
 
         //ループアニメーション
         object_->UpdateAniTimer();
-
+        auto& transform = object_->GetTransform();
         if (isHitCollision_) {
             //倒れる
-            object_->worldTransform_.rotate_.x = Lerp(object_->worldTransform_.rotate_.x, 1.57f, 0.075f);
-            object_->worldTransform_.translate_.y = Lerp(object_->worldTransform_.translate_.y, 0.25f, 0.075f);
+            transform.rotate.x = Lerp(transform.rotate.x, 1.57f, 0.075f);
+            transform.translate.y = Lerp(transform.translate.y, 0.25f, 0.075f);
         } else {
             Look(*targetPos_);
-            velocity_ = *targetPos_ - object_->worldTransform_.GetWorldPosition();
+            velocity_ = *targetPos_ - object_->GetWorldTransform().GetWorldPosition();
             velocity_ = Normalize(Vector3{ velocity_.x, 0.0f, velocity_.z });
-            object_->worldTransform_.translate_ += velocity_ * Time::DeltaTime();
+           transform.translate += velocity_ * Time::DeltaTime();
         }
 
     }
@@ -89,7 +89,7 @@ void DummyMummy::OnCollision(Collider* collider)
     if (collider == this) { return; }
 
     if (collider->GetCollisionAttribute() == kCollisionWall) {
-        ResolveCollision(object_->worldTransform_.translate_, velocity_, GetCollisionInfo());
+        ResolveCollision(object_->GetTransform().translate, velocity_, GetCollisionInfo());
     }
 
     if (collider->GetCollisionAttribute() == kCollisionMummy) {
@@ -107,14 +107,14 @@ void DummyMummy::SetCollisionType()
 
 Vector3 DummyMummy::GetWorldPos()
 {
-    return object_->worldTransform_.GetWorldPosition();
+    return object_->GetWorldTransform().GetWorldPosition();
 }
 
 void DummyMummy::Look(const Vector3& target)
 {
     Vector3 direction = target - GetWorldPos();
     if (Length(direction) > 0.0f) {
-        object_->worldTransform_.rotate_.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
+        object_->GetTransform().rotate.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
     }
 
 
