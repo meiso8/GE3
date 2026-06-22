@@ -53,7 +53,6 @@ public:
     void SetName(const std::string name) { emitter_.name = name; }
     void SetMovement(ParticleMovements& movement) { emitter_.movement; }
     void SetParent(WorldTransform& parent);
-
     std::unique_ptr <ParticleGroup>& GetGroup();
 private:
     void UpdateTimer();

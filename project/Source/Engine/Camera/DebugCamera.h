@@ -13,11 +13,24 @@ private:
     //上下左右移動
     float speed_ = 0.0f;
 public:
-    DebugCamera();
+    // 2. コピーと代入を禁止する（インスタンスが2つに増えるのを防ぐため）
+    DebugCamera(const DebugCamera&) = delete;
+    DebugCamera& operator=(const DebugCamera&) = delete;
+    // 3. インスタンスを取得するための GetInstance 関数（必ず static にする）
+    static DebugCamera* GetInstance()
+    {
+        // 関数内の static 変数は、プログラム実行中に1回だけ作られる
+        // （C++11以降ではスレッドセーフが保証されているため安全です）
+        static DebugCamera instance;
+        return &instance;
+    }
+
     /// @brief 更新
     void UpdateMatrix()override;
     void Initialize(const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE)override;
 private:
+    DebugCamera();
+    ~DebugCamera() =default;
     void UpdateProjectionMatrix();
     void MouseInputMove();
     void InputTranslate();

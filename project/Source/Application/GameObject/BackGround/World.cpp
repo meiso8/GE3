@@ -22,7 +22,7 @@ void World::Init()
     object3d_->SetTextureHandle(TextureFactory::WORLD);
     object3d_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
     object3d_->Initialize();
-    object3d_->worldTransform_.scale_ = { 500.0f,500.0f,500.0f };
+    object3d_->SetScale({ 500.0f,500.0f,500.0f });
     timer_ = 0.0f;
 }
 

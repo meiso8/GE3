@@ -20,14 +20,15 @@ AmenRa::AmenRa() {
 
     //サイズに合わせる
     SetAABB(aabb);
-    SetWorldMatrix(object_->worldTransform_.matWorld_);
+    SetWorldMatrix(object_->GetWorldTransform().matWorld_);
 }
 
 void AmenRa::Initialize() {
 
     object_->Initialize();
-    object_->worldTransform_.translate_ = { 0.0f,0.0f,0.0f };
-    object_->worldTransform_.rotate_.y = std::numbers::pi_v<float>;
+    auto& transform = object_->GetTransform();
+    transform.translate = {0.0f,0.0f,0.0f};
+    transform.rotate.y = std::numbers::pi_v<float>;
 }
 
 void AmenRa::Update() {

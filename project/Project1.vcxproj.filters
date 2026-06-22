@@ -519,7 +519,7 @@
     <ClCompile Include="Source\Application\GameObject\Beam\ShotBeamManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Object3d\ObjectManager.cpp">
+    <ClCompile Include="Source\Engine\Object3d\ObjectManager\ObjectManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\LineObject3d\LineObject3d.cpp">
@@ -529,6 +529,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Fountain\Fountain.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Object3d\ObjectManager\ObjectCommandManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1049,7 +1052,7 @@
     <ClInclude Include="Source\Application\GameObject\Beam\ShotBeamManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Object3d\ObjectManager.h">
+    <ClInclude Include="Source\Engine\Object3d\ObjectManager\ObjectManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\LineObject3d\LineObject3d.h">
@@ -1059,6 +1062,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Fountain\Fountain.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Object3d\ObjectManager\ObjectCommandBase.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Object3d\ObjectManager\ObjectCommandManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

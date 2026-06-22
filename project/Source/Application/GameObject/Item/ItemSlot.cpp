@@ -21,7 +21,7 @@ Item::Item()
     SetAABB({ .min = { -0.5f,-0.5f,-0.5f},.max = { 0.5f,0.5f,0.5f } });
     SetCollisionAttribute(kCollisionItem);
     SetCollisionMask(!kCollisionItem);
-    SetWorldMatrix(object_->worldTransform_.matWorld_);
+    SetWorldMatrix(*object_);
   
 }
 void Item::SetModel(const std::string& fileName)
@@ -73,22 +73,23 @@ void Item::OnCollision(Collider* collider)
 void Item::Rotate()
 {
 
-    TransformAni::RotateY(object_->worldTransform_, 1.0f);
+    TransformAni::RotateY(object_->GetWorldTransform(), 1.0f);
 }
 
 void Item::Scale(const Vector3 start,const Vector3 end)
 {
     float localTime = (aniTimer_ - 2.0f) / 2.0f;
-
-    object_->worldTransform_.scale_ = Lerp(start, end, localTime);
+    object_->SetScale(Lerp(start, end, localTime));
 }
 
 void Item::SetScreenStartPos()
 {
     object_->Initialize();
-    object_->worldTransform_.translate_.z = 1.0f;
 
-    startPos_ = object_->worldTransform_.translate_;
+    auto& trnasform = object_->GetTransform();
+    trnasform.translate.z = 1.0f;
+
+    startPos_ = trnasform.translate;
     object_->Update();
 }
 
@@ -112,7 +113,7 @@ void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVP
     Vector3 worldPos = CoordinateTransform(screenPoint, matInverseVPV);
 
     // アイテムの位置を更新！ Trigger時に格納したstartPos
-    object_->worldTransform_.translate_ = Lerp(startPos_, worldPos, localTime);
+    object_->SetTranslate(Lerp(startPos_, worldPos, localTime));
 
 }
 

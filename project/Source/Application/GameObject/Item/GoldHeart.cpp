@@ -8,7 +8,8 @@ void GoldHeart::Init()
     isGet_ = false;
     aniTimer_ = 0.0f;
     object_->Initialize();
-    object_->worldTransform_.translate_.y = -1.2f;
+    auto& transform = object_->GetTransform();
+    transform.translate.y = -1.2f;
     //熱々
     object_->SetTemperature(1.0f);
     startPos_ = { 0.0f };
@@ -20,7 +21,7 @@ void GoldHeart::Update()
     if (isUsed_) {
         UpdateAniTimer(2.0f);
         float localTimer = aniTimer_ * 0.5f;
-        object_->worldTransform_.translate_ = Lerp(startPos_, endPos_, localTimer);
+        object_->SetTranslate(Lerp(startPos_, endPos_, localTimer));
     }
 
     object_->Update();

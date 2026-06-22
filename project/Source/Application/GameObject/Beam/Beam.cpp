@@ -177,7 +177,7 @@ void Beam::UpdateObject()
 
     ray_ = { .origin = point_.startPos,.diff = point_.endPos - point_.startPos };
 
-    emitter_->GetEmitter().transform.translate_ = point_.endPos;
+    emitter_->GetEmitter().transform.eTransform_.translate = point_.endPos;
     emitter_->Update();
 
 #ifdef _DEBUG
@@ -191,10 +191,10 @@ void Beam::UpdateObject()
     float scaleZ = Length(point_.endPos - point_.startPos);
     Vector3 centerPos = Lerp(point_.startPos, point_.endPos, 0.5f);
 
-
-    object3d_->worldTransform_.rotate_ = rotate;
-    object3d_->worldTransform_.scale_ = { 1.0f,1.0f,scaleZ };
-    object3d_->worldTransform_.translate_ = centerPos;
+    auto& transfrom = object3d_->GetTransform();
+    transfrom.rotate = rotate;
+    transfrom.scale = { 1.0f,1.0f,scaleZ };
+    transfrom.translate = centerPos;
 
     object3d_->Update();
 }
@@ -209,9 +209,9 @@ void Beam::CreateParticle()
 
     emitter0.count = 8;
     emitter0.color = { 1.0f,0.5f,0.5f,1.0f };
-    emitter0.transform.scale_ = { 0.0125f,0.25f,0.25f };
-    emitter0.transform.rotate_ = { 0.0f,0.0f,0.0f };
-    emitter0.transform.translate_ = { 0.0f,0.0f,0.0f };
+    emitter0.transform.eTransform_.scale = { 0.0125f,0.25f,0.25f };
+    emitter0.transform.eTransform_.rotate = { 0.0f,0.0f,0.0f };
+    emitter0.transform.eTransform_.translate = { 0.0f,0.0f,0.0f };
 
     emitter0.frequencyTime = 0.01f;
     emitter0.frequency = 0.1f;

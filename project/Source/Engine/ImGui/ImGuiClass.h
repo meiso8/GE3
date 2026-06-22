@@ -17,9 +17,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 #include"SwapChain.h"
 #include"RenderTargetView.h"
 
-class Object3d;
 class Camera;
-
 class CommandList;
 
 class ImGuiClass
@@ -34,7 +32,6 @@ public:
     void Render();
     void DrawImGui(ID3D12GraphicsCommandList* commandList);
     void ShutDown();
-   static  void UpdateGuizmo(Camera& camera, Object3d& targetObject);
    void DrawModelLoaderWindow();
    static void DropFiles(WPARAM wParam);
 };

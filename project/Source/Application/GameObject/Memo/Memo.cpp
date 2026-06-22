@@ -13,7 +13,7 @@ Memo::Memo() {
     object_->Create();
     object_->SetMeshAndMaterial(cubeMesh_.get());
     object_->SetTemperature(0.5f);
-    SetWorldMatrix(object_->worldTransform_.matWorld_);
+    SetWorldMatrix(object_->GetWorldTransform());
 }
 
 void Memo::Initialize() {

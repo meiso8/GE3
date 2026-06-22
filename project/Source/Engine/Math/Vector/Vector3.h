@@ -33,6 +33,12 @@ Vector3 Normalize(const Vector3& v);
 //ターゲットに向かうベクトルを計算する
 Vector3 ToTargetVector(const Vector3& target, const  Vector3& ownPos);
 Vector3 CalculateLookAtRotate(const Vector3& startPos, const Vector3& endPos);
+
+struct Matrix4x4;
+namespace Math {
+    Vector3 GetForward(const Matrix4x4& mat);
+}
+
 /// @brief ベクトルがゼロベクトルかどうかを判定する関数
 /// @param v ベクトル
 /// @return ゼロベクトルであればtrue、そうでなければfalse

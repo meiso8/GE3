@@ -20,7 +20,7 @@ void Block::Initialize()
     object_->Initialize();
     aniTimer_ = 0.0f;
     isPush_ = false;
-    SetWorldMatrix(object_->worldTransform_.matWorld_);
+    SetWorldMatrix(object_->GetWorldTransform().matWorld_);
 
 }
 
@@ -30,9 +30,9 @@ void Block::Update()
     aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
 
     if (isPush_) {
-        object_->worldTransform_.translate_.y = Easing::EaseInOut(startPosY_, endPosY_, aniTimer_);
+        object_->GetTransform().translate.y = Easing::EaseInOut(startPosY_, endPosY_, aniTimer_);
     } else {
-        object_->worldTransform_.translate_.y = Easing::EaseInOut(endPosY_, startPosY_, aniTimer_);
+        object_->GetTransform().translate.y = Easing::EaseInOut(endPosY_, startPosY_, aniTimer_);
     }
 
     object_->Update();
@@ -49,7 +49,7 @@ void Block::OnCollision(Collider* collider)
 
 void Block::SetPos(const Vector3& pos, const float& endOffset)
 {
-    object_->worldTransform_.translate_ = pos;
+    object_->SetTranslate(pos);
     startPosY_ = pos.y;
     SetEndPos(endOffset);
 }

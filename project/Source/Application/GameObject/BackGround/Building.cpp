@@ -114,7 +114,7 @@ FieldCollider::FieldCollider()
 
     SetCollisionAttribute(kCollisionWall);
     SetCollisionMask(kCollisionPlayer | kCollisionPlayerEye | kCollisionEnemy | kCollisionMedjed | kCollisionMummy);
-    SetWorldMatrix(object_->worldTransform_.matWorld_);
+    SetWorldMatrix(object_->GetWorldTransform());
 }
 
 void FieldCollider::Update()
@@ -146,10 +146,10 @@ void FieldCollider::OnCollision(Collider* collider)
 void FieldCollider::SettingAABB(const AABB& aabb)
 {
     SetAABB(aabb);
-    object_->worldTransform_.scale_ = aabb.max - aabb.min;
+    object_->SetScale(aabb.max - aabb.min);
 }
 
 void FieldCollider::SetPos(const Vector3& pos)
 {
-    object_->worldTransform_.translate_ = pos;
+    object_->SetTranslate(pos);
 }

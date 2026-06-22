@@ -1,10 +1,10 @@
 #include "FreeTypeScene.h"
 #include"Input.h"
 #include"AABB.h"
-#include"DrawGrid.h"
+
 #include"DebugUI.h"
 #include"Model.h"
-#include"Object3d/ObjectManager.h"
+#include"Object3d/ObjectManager/ObjectManager.h"
 
 FreeTypeScene::FreeTypeScene()
 {
@@ -28,9 +28,6 @@ FreeTypeScene::FreeTypeScene()
     sprite_ = std::make_unique<Sprite>();
     sprite_->Create(TextureFactory::NUMBERS, { 0,0 });
     sprite_->SetSize({ 1280,720 });
-
-
-    ObjectManager::GetInstance()->Clear();
 
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
@@ -61,11 +58,8 @@ FreeTypeScene::FreeTypeScene()
         enemy->Create();
         enemy->SetMeshAndMaterial(ModelManager::GetModel(enemyData.fileName));
         enemy->Initialize();
-        enemy->worldTransform_.translate_ = enemyData.transform.translate;
-        enemy->worldTransform_.rotate_ = enemyData.transform.rotate;
-        enemy->worldTransform_.scale_ = enemyData.transform.scale;
+        enemy->SetTransform(enemyData.transform);
         enemies_.push_back(std::move(enemy));
-
     }
 
 
@@ -111,25 +105,17 @@ void FreeTypeScene::Update()
         SceneManager::SetNextScene("Title");
     }
     currentCamera_->UpdateMatrix();
-    DirectXCommon::GetInstance()->SetRenderTextureCamera(currentCamera_);
+ 
 #ifdef _DEVELOP
 
     if (Input::IsTriggerKey(DIK_1)) {
         SwitchCamera();
     }
 
-    DebugUI::CheckCamera(*currentCamera_);
-
     DebugUI::CheckEmitter(particleEmitters_[0]->GetEmitter());
-    DebugUI::CheckEmitter(particleEmitters_[1]->GetEmitter());
-
-    ObjectManager::GetInstance()->ClickObject(*currentCamera_);
-    ObjectManager::GetInstance()->DebugAll();
+    DebugUI::CheckEmitter(particleEmitters_[1]->GetEmitter()); 
 
 #endif //_DEVELOP
-
-
-    ObjectManager::GetInstance()->UpdateAll();
 
     beam_->Update();
 
@@ -141,8 +127,6 @@ void FreeTypeScene::Update()
         particleEmitters_[i]->Update();
     }
 
-    // 共通更新
-    ParticleManager::GetInstance()->Update(*currentCamera_);
 }
 
 void FreeTypeScene::DrawSprite() {
@@ -157,20 +141,11 @@ void FreeTypeScene::DrawSprite() {
 void FreeTypeScene::DrawModel()
 {
 
-#ifdef _DEVELOP
-    // デバッグカメラ
-    DrawGrid::Draw(*currentCamera_);
-#endif //_DEVELOP
-
-    ObjectManager::GetInstance()->DrawAll(*currentCamera_);
-
     skyBoxObj_->Draw(*currentCamera_);
-
     object3d_->Draw(*currentCamera_,BlendMode::kBlendModeAdd,CullMode::kCullModeNone,MaskMode::kZero);
-
     beam_->Draw(currentCamera_);
 
-    ParticleManager::GetInstance()->Draw();
+
 }
 
 void FreeTypeScene::CreateParticle()
@@ -186,9 +161,9 @@ void FreeTypeScene::CreateParticle()
 
     emitter0.count = 8;
     emitter0.color = { 1.0f,1.0f,1.0f,1.0f };
-    emitter0.transform.scale_ = { 0.05f,1.0f,1.0f };
-    emitter0.transform.rotate_ = { 0.0f,0.0f,0.0f };
-    emitter0.transform.translate_ = { 0.5f,0.5f,-0.5f };
+    emitter0.transform.eTransform_.scale = { 0.05f,1.0f,1.0f };
+    emitter0.transform.eTransform_.rotate = { 0.0f,0.0f,0.0f };
+    emitter0.transform.eTransform_.translate = { 0.5f,0.5f,-0.5f };
 
     emitter0.frequencyTime = 0.0f;
     emitter0.frequency = 2.0f;
@@ -210,9 +185,9 @@ void FreeTypeScene::CreateParticle()
 
     emitter1.count = 1;
     emitter1.color = { 1.0f,1.0f,1.0f,1.0f };
-    emitter1.transform.scale_ = { 0.5f,0.5f,0.5f };
-    emitter1.transform.rotate_ = { 0.0f,0.0f,0.0f };
-    emitter1.transform.translate_ = { 0.5f,0.5f,0.0f };
+    emitter1.transform.eTransform_.scale = { 0.5f,0.5f,0.5f };
+    emitter1.transform.eTransform_.rotate = { 0.0f,0.0f,0.0f };
+    emitter1.transform.eTransform_.translate = { 0.5f,0.5f,0.0f };
 
     emitter1.frequencyTime = 0.0f;
     emitter1.frequency = 2.0f;

@@ -1,6 +1,7 @@
 #include "SceneManager.h"
-#include"Input.h"
 #include"DirectXCommon.h"
+#include"ObjectManager/ObjectManager.h"
+#include"DebugCamera.h"
 
 BaseScene::BaseScene()
 {
@@ -9,12 +10,6 @@ BaseScene::BaseScene()
     sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
 
     camera_ = std::make_unique<Camera>();
-#ifdef _DEVELOP
-    // デバッグカメラの初期化
-    debugCamera_ = std::make_unique<DebugCamera>();
-#endif //_DEVELOP
-
-    DirectXCommon::GetInstance()->SetRenderTextureCamera(camera_.get());
 }
 
 void BaseScene::Initialize()
@@ -37,7 +32,7 @@ void BaseScene::SceneChangeUpdate()
 void BaseScene::SwitchCamera()
 {
     isDebugCameraActive_ = !isDebugCameraActive_;
-    currentCamera_ = (isDebugCameraActive_) ? debugCamera_.get() : camera_.get();
+    currentCamera_ = (isDebugCameraActive_) ? DebugCamera::GetInstance() : camera_.get();
 }
 
 // =========================================================================================
@@ -85,7 +80,7 @@ void SceneManager::Debug()
 
     ImGui::Begin("Debug");
 
-    ImGui::Separator();
+
     std::string currentSceneName = "None";
 
     for (const auto& [name, scene] : scenes_) {
@@ -113,12 +108,9 @@ void SceneManager::Debug()
         ImGui::EndCombo();
     }
 
-
     if (ImGui::Button("Initialize")) { currentScene_->Initialize(); }
-    ImGui::Separator();
 
     ImGui::End();
-
 
 #endif // USE_IMGUI
 
@@ -143,5 +135,12 @@ void SceneManager::InitScene()
         nextScene_ = nullptr;
     }
 
+    //コマンドを初期化する
+    ObjectManager::GetInstance()->Initialize();
+    //オブジェクトをクリアする
+    ObjectManager::GetInstance()->Clear();
+   
     currentScene_->Initialize();
+
 }
+

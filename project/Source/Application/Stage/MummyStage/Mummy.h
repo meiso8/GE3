@@ -22,7 +22,7 @@ public:
     };
     virtual WorldTransform& GetWorldTransform()
     {
-        return object_->worldTransform_;
+        return object_->GetWorldTransform();
     }
 private:
     std::unique_ptr<Object3d> object_;

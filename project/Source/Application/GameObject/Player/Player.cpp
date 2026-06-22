@@ -16,6 +16,8 @@
 #include"InputBind.h"
 #include"TimeManager.h"
 #include"RenderTexture/RenderTexture.h"
+#include"Sound.h"
+#include"DebugUI.h"
 
 void Player::OnCollision(Collider* collider)
 {
@@ -47,7 +49,7 @@ void Player::OnCollision(Collider* collider)
 
         ) {
 
-        ResolveCollision(bodyPos_.worldTransform_.translate_, velocity_, GetCollisionInfo());
+        ResolveCollision(bodyPos_.GetTransform().translate, velocity_, GetCollisionInfo());
 
     }
 
@@ -73,13 +75,12 @@ Player::Player() {
     //それぞれのObject3d（WorldTransform）を作る
     bodyPos_.Create();
     bodyPos_.SetMeshAndMaterial(model_);
-    SetWorldMatrix(bodyPos_.worldTransform_.matWorld_);
-
+    SetWorldMatrix(bodyPos_.GetWorldTransform());
 
     raySprite_ = std::make_unique<RaySprite>();
     eyeCollider_ = std::make_unique<EyeCollider>();
     //体の位置を親に設定
-    eyeCollider_->SetParent(bodyPos_.worldTransform_);
+    eyeCollider_->SetParent(bodyPos_.GetWorldTransform());
 
     isInvincible_ = false;
 #ifdef _DEBUG
@@ -98,8 +99,7 @@ void Player::Init(const Vector3& pos)
     
     //体の位置初期化
     bodyPos_.Initialize();
-
-    bodyPos_.worldTransform_.translate_ = pos;
+    bodyPos_.SetTranslate(pos);
 
     bodyPos_.Update();
 
@@ -249,8 +249,9 @@ void Player::Move()
      // x, z 成分だけ正規化 
         Vector3 horizontal = Normalize(Vector3{ velocity_.x, 0.0f, velocity_.z });
 
-        bodyPos_.worldTransform_.translate_ += forward * horizontal.z * kSpeed_;
-        bodyPos_.worldTransform_.translate_ += right * horizontal.x * kSpeed_;
+        auto& transform = bodyPos_.GetTransform();
+        transform.translate += forward * horizontal.z * kSpeed_;
+        transform.translate += right * horizontal.x * kSpeed_;
     } else {
         eyeCollider_->WalkStop();
     }
@@ -280,7 +281,9 @@ void Player::Jump()
 
 
     velocity_.y -= Time::DeltaTime() * 0.98f;
-    bodyPos_.worldTransform_.translate_.y += velocity_.y;
+  
+    auto& transform = bodyPos_.GetTransform();
+    transform.translate.y += velocity_.y;
 }
 
 void Player::Zoom()
@@ -326,6 +329,7 @@ Vector3& Player::GetForward()
 
 void Player::LookBack()
 {
+    auto& transform = bodyPos_.GetTransform();
 
     if (InputBind::IsClickR()) {
         isLookBack_ = true;
@@ -333,8 +337,8 @@ void Player::LookBack()
         if (isLookBackEnd_) {
             isLookBackEnd_ = false;
             lookBackTime_ = 0.0f;
-            startRotateY = bodyPos_.worldTransform_.rotate_.y;
-            endRotateY_ = bodyPos_.worldTransform_.rotate_.y + std::numbers::pi_v<float>;
+            startRotateY = transform.rotate.y;
+            endRotateY_ = transform.rotate.y + std::numbers::pi_v<float>;
         }
 
     }
@@ -357,7 +361,7 @@ void Player::LookBack()
                 isLookBackEnd_ = true;
             }
         }
-        bodyPos_.worldTransform_.rotate_.y = Easing::EaseOutBack(startRotateY, endRotateY_, lookBackTime_);
+        transform.rotate.y = Easing::EaseOutBack(startRotateY, endRotateY_, lookBackTime_);
 
     } else {
         if (lookBackTime_ > 0.0f) {
@@ -367,7 +371,7 @@ void Player::LookBack()
             isLookBack_ = false;
         }
 
-        bodyPos_.worldTransform_.rotate_.y = Easing::EaseOutQuad(startRotateY, endRotateY_, lookBackTime_);
+        transform.rotate.y = Easing::EaseOutQuad(startRotateY, endRotateY_, lookBackTime_);
 
     }
 
@@ -442,8 +446,8 @@ void Player::MouseLook()
         cameraRotateX_,
         -std::numbers::pi_v<float> *0.5f,
         std::numbers::pi_v<float> *0.5f);
-
-    bodyPos_.worldTransform_.rotate_.y = Lerp(bodyPos_.worldTransform_.rotate_.y, cameraRotateY_, 0.5f);
+    auto& transform = bodyPos_.GetTransform();
+    transform.rotate.y = Lerp(transform.rotate.y, cameraRotateY_, 0.5f);
     eyeCollider_->MouseLook(cameraRotateX_);
 
 }

@@ -54,8 +54,8 @@ void ShotBeamManager::Update()
 
         Matrix4x4* enemyEyeMatL = &enemy_->GetEyeMats().at("eye_L");
         Matrix4x4* enemyEyeMatR = &enemy_->GetEyeMats().at("eye_R");
-        emitter0.transform.translate_ = GetWorldTransformByMatrix(*enemyEyeMatL);
-        emitter1.transform.translate_ = GetWorldTransformByMatrix(*enemyEyeMatR);
+        emitter0.transform.eTransform_.translate = GetWorldTransformByMatrix(*enemyEyeMatL);
+        emitter1.transform.eTransform_.translate = GetWorldTransformByMatrix(*enemyEyeMatR);
 
         for (auto& emitter : beamParticleEmitters_) {
             emitter->Update();
@@ -140,9 +140,9 @@ void ShotBeamManager::CreateParticleEmitter()
 
     emitter0.count = 8;
     emitter0.color = { 1.0f,1.0f,1.0f,1.0f };
-    emitter0.transform.scale_ = { 0.025f,0.5f,0.5f };
-    emitter0.transform.rotate_ = { 0.0f,0.0f,0.0f };
-    emitter0.transform.translate_ = { 0.0f,0.0f,0.0f };
+    emitter0.transform.eTransform_.scale = { 0.025f,0.5f,0.5f };
+    emitter0.transform.eTransform_.rotate = { 0.0f,0.0f,0.0f };
+    emitter0.transform.eTransform_.translate = { 0.0f,0.0f,0.0f };
 
     emitter0.frequencyTime = 0.01f;
     emitter0.frequency = 0.1f;
@@ -169,8 +169,8 @@ void ShotBeamManager::CreateParticleEmitter()
 
     emitter3.isLoop_ = true;
     emitter3.useRadialEmission_ = true;
-    emitter3.transform.scale_ = { 0.1f,0.2f,0.1f };
-    emitter3.transform.translate_ = { 0.0f,0.2f,0.0f };
+    emitter3.transform.eTransform_.scale = { 0.1f,0.2f,0.1f };
+    emitter3.transform.eTransform_.translate = { 0.0f,0.2f,0.0f };
     emitter3.radius = 5.0f;
     emitter3.radiusSpeed = 0.2f;
     emitter3.count = 20;

@@ -690,8 +690,8 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     ImGui::Begin("Object3ds");
 
     if (ImGui::TreeNode(label)) {
-        CheckWorldTransform(object3d.worldTransform_, label);
-        ShowMatrix4x4(object3d.worldTransform_.matWorld_);
+        CheckWorldTransform(object3d.GetWorldTransform(), label);
+        ShowMatrix4x4(object3d.GetWorldMatrix());
 
         CheckMaterial(object3d.GetMaterial(), "material");
         CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
@@ -793,7 +793,7 @@ void DebugUI::CheckTransform(EulerTransform& transform, const char* label)
 
 void DebugUI::CheckWorldTransform(WorldTransform& worldTransform, const char* label) {
 
-    CheckTransforms(worldTransform.scale_, worldTransform.rotate_, worldTransform.translate_, label);
+    CheckTransforms(worldTransform.eTransform_.scale, worldTransform.eTransform_.rotate, worldTransform.eTransform_.translate, label);
 
 };
 

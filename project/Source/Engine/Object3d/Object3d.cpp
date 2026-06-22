@@ -6,7 +6,7 @@
 #include"Lights/SpotLightManager.h"
 #include"Model.h"
 #include"SRVmanager/SrvManager.h"
-#include"ObjectManager.h"
+#include"ObjectManager/ObjectManager.h"
 
 void Object3d::CreateMaterial(const float temperature, const Vector4& color, const uint32_t& lightType) {
 

@@ -1,5 +1,6 @@
 #include"Vector3.h"
 #include <cmath>
+#include"Matrix4x4.h"
 
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
 
@@ -129,3 +130,7 @@ Vector3 operator/(const Vector3& v, float s) { return Multiply(1.0f / s, v); }
 Vector3 operator-(const Vector3& v) { return { -v.x,-v.y,-v.z }; }
 Vector3 operator+(const Vector3& v) { return v; }
 
+Vector3 Math::GetForward(const Matrix4x4& mat)
+{
+    return Normalize({ mat.m[2][0],mat.m[2][1], mat.m[2][2] });
+}

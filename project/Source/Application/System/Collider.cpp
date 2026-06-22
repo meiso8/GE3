@@ -42,7 +42,7 @@ const Vector3& Collider::CalculateWorldPos()
     tempWorldTransform_ = GetWorldTransformByMatrix(child);
 
 #ifdef _DEBUG
-    object3d_.worldTransform_.translate_ = tempWorldTransform_;
+    object3d_.SetTranslate(tempWorldTransform_);
 #endif // _DEBUG
 
     //計算終了

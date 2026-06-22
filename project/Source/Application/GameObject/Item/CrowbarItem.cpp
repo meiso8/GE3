@@ -18,6 +18,7 @@ void CrowbarItem::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matIn
     Vector3 screenPoint = { screenPos.x, screenPos.y, -0.92f };
     Vector3 worldPos = CoordinateTransform(screenPoint, matInverseVPV);
     // アイテムの位置を更新！ Trigger時に格納したstartPos
-    object_->worldTransform_.translate_ = Lerp(startPos_, worldPos, localTime);
-    object_->worldTransform_.scale_ = Lerp(Vector3{ 1.0f,1.0f,1.0f }, { 0.75f,0.75f,0.5f }, localTime);
+    object_->SetScale(Lerp(Vector3{ 1.0f,1.0f,1.0f }, { 0.75f,0.75f,0.5f }, localTime));
+    object_->SetTranslate(Lerp(startPos_, worldPos, localTime));
+
 }

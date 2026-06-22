@@ -2,9 +2,11 @@
 #include"SpriteCommon.h"
 #include"Texture.h"
 #include"SpriteCamera.h"
+#include"ModelManager.h"
 #include"DrawGrid.h"
 #include"Particle.h"
 #include"JsonFile.h"
+#include"Sound.h"
 #include"VibrateManager.h"
 #include"Lights/PointLightManager.h"
 #include"Lights/DirectionalLightManager.h"
@@ -15,13 +17,19 @@
 #include"Application/Loader/SoundFactory.h"
 #include"Application/Loader/TextureFactory.h"
 #include"Engine/FreeTypeManager/FreeTypeManager.h"
+#include"ObjectManager/ObjectManager.h"
+
+#include"PSO.h"
+#include"CrashHandler.h"
+
+#include"DebugUI.h"
+#include"DebugCamera.h"
 
 std::unique_ptr <Input> MyEngine::input = nullptr;
 std::unique_ptr<Window> MyEngine::wc = nullptr;
 
 DirectXCommon* MyEngine::directXCommon = nullptr;
 std::unique_ptr<SrvManager> MyEngine::srvManager = nullptr;
-ParticleManager*  MyEngine::particleManager_ = nullptr;
 std::unique_ptr<LogFile> MyEngine::logFile = nullptr;
 
 void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
@@ -48,7 +56,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     //コントローラー
     VibrateManager::Initialize();
 
-    directXCommon =DirectXCommon::GetInstance();
+    directXCommon = DirectXCommon::GetInstance();
     directXCommon->Initialize(*wc);
     LogFile::Log("CreateDirectXCommon");
     srvManager = std::make_unique<SrvManager>();
@@ -104,21 +112,36 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     LogFile::Log("CreateDrawGrid");
 #endif
 
-    particleManager_ = ParticleManager::GetInstance();
-    particleManager_->Create();
-    particleManager_->CreateAll();
+    auto* particleManager = ParticleManager::GetInstance();
+    particleManager->Create();
+    particleManager->CreateAll();
 
     LogFile::Log("CreateparticleManager");
     //ファイルへのログ出力
-    LogFile::Log("LoopStart");
 
+#ifdef _DEVELOP
+    // デバッグカメラの初期化
+    DebugCamera::GetInstance();
+    LogFile::Log("Create DebugCamera");
+#endif //_DEVELOP
+
+    //オブジェクト管理の初期化
+    ObjectManager::GetInstance()->Initialize();
+    LogFile::Log("ObjectManager Initialize");
 
     // =============================================
-// シーンの生成
-// =============================================
-
+    // シーンの生成
+    // =============================================
     SceneFactory::Create();
+    LogFile::Log("CreateScene");
 
+    auto* camera = SceneManager::GetCurrentCamera();
+    if (camera) {
+        DirectXCommon::GetInstance()->SetRenderTextureCamera(camera);
+        LogFile::Log("Set RenderTexture Camera");
+    }
+
+    LogFile::Log("LoopStart");
 }
 
 void MyEngine::Update() {
@@ -137,7 +160,25 @@ void MyEngine::Update() {
 #endif
     VibrateManager::Update();
     SceneManager::Update();
+
+#ifdef _DEVELOP
+    auto* camera = SceneManager::GetCurrentCamera();
+    if (camera) {
+        //カメラがあるならクリックする
+        ObjectManager::GetInstance()->ClickObject(*camera);
+        LogFile::Log("ObjectManager ClickObject");
+        // 共通更新
+        ParticleManager::GetInstance()->Update(*camera);
+        LogFile::Log("ParticleManager Update");
+    }
+
+#endif //_DEVELOP
+
+    //全てのオブジェクトの更新
+    ObjectManager::GetInstance()->UpdateAll();
+
     directXCommon->UpdateRenderTexture();
+
 }
 
 void MyEngine::Debug()
@@ -147,6 +188,13 @@ void MyEngine::Debug()
     ImGui::Begin("Debug");
 
     DebugUI::CheckFPS();
+
+    auto* camera = SceneManager::GetCurrentCamera();
+
+    if (camera) {
+        DebugUI::CheckCamera(*camera);
+    }
+
     SceneManager::Debug();
     DebugUI::CheckInput();
     DebugUI::CheckLights();
@@ -154,6 +202,8 @@ void MyEngine::Debug()
     DebugUI::CheckParticle();
 
     ImGui::End();
+
+    ObjectManager::GetInstance()->DebugAll();
 
     //Loaderをここで
     imGuiClass.DrawModelLoaderWindow();
@@ -193,10 +243,24 @@ void MyEngine::PreCommandSet() {
     //ImGuiの内部コマンドを生成する
     imGuiClass.Render();
 #endif
-   //ポストエフェクトの前設定
+    //ポストエフェクトの前設定
     directXCommon->RenderTexturePreDraw();
+
+#ifdef _DEVELOP
+    // デバッグカメラ
+    auto* camera = SceneManager::GetCurrentCamera();
+    if (camera) {
+        DrawGrid::Draw(*camera);
+        ObjectManager::GetInstance()->DrawAll(*camera);
+    }
+
+#endif //_DEVELOP
+
     // シーンの描画
     SceneManager::DrawModel();
+    //パーティクルの描画
+    ParticleManager::GetInstance()->Draw();
+
     //ポストエフェクトとのあと設定
     directXCommon->RenderTexturePostDraw();
 
@@ -225,7 +289,7 @@ void MyEngine::Finalize() {
 
     SceneManager::Finalize();
 
-    particleManager_->Finalize();
+    ParticleManager::GetInstance()->Finalize();
 
 
     ModelManager::Finalize();

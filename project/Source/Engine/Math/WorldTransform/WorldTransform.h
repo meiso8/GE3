@@ -4,12 +4,16 @@
 #include"Matrix4x4.h"
 #include"Matrix3x3.h"
 #include<numbers>
+#include"Transform.h"
 
 class WorldTransform {
 public://一旦public
-    Vector3 scale_ = { 1.0f,1.0f,1.0f };
-    Vector3 rotate_ = {0.0f};
-    Vector3 translate_ = { 0.0f };
+
+    EulerTransform eTransform_ = {
+        .scale = {1.0f,1.0f,1.0f},
+        .rotate = {0.0f,0.0f,0.0f},
+        .translate = {0.0f,0.0f,0.0f} 
+    };
     Matrix4x4 matWorld_ = {0.0f};
     const WorldTransform* parent_ = nullptr;
 public:

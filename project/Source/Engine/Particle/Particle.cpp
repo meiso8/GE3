@@ -79,7 +79,7 @@ Particle MakeNewParticle(
     random.SetMinMax(scaleAABB.min.z, scaleAABB.max.z);
     float scaleZ = random.Get();
 
-    particle.transform.scale = transform.scale_ + Vector3{ scaleX ,scaleY, scaleZ };
+    particle.transform.scale = transform.eTransform_.scale + Vector3{ scaleX ,scaleY, scaleZ };
 
     Vector3 newTransform = transform.GetWorldPosition();
     random.SetMinMax(translateAABB.min.x, translateAABB.max.x);
@@ -98,9 +98,9 @@ Particle MakeNewParticle(
        float leanAmount = halfPi;
 
        // 3. 回転を適用（Y軸は0、または基準の回転）
-       particle.transform.rotate.x = (rotateX * halfPi)+ halfPi + transform.rotate_.x;
-       particle.transform.rotate.y = longitudeAngle + transform.rotate_.y;
-       particle.transform.rotate.z = -(rotateZ * halfPi) + halfPi + transform.rotate_.z;
+       particle.transform.rotate.x = (rotateX * halfPi)+ halfPi + transform.eTransform_.rotate.x;
+       particle.transform.rotate.y = longitudeAngle + transform.eTransform_.rotate.y;
+       particle.transform.rotate.z = -(rotateZ * halfPi) + halfPi + transform.eTransform_.rotate.z;
     } else {
         random.SetMinMax(rotateAABB.min.x, rotateAABB.max.x);
         float rotateX = random.Get();
@@ -108,7 +108,7 @@ Particle MakeNewParticle(
         float rotateY = random.Get();
         random.SetMinMax(rotateAABB.min.z, rotateAABB.max.z);
         float rotateZ = random.Get();
-        particle.transform.rotate = Vector3{ rotateX ,rotateY , rotateZ } + transform.rotate_;
+        particle.transform.rotate = Vector3{ rotateX ,rotateY , rotateZ } + transform.eTransform_.rotate;
     }
    
 

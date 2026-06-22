@@ -63,3 +63,4 @@ Matrix4x4 operator*(const Matrix4x4 &m1, float s) {
 	}
 	return result;
 }
+

@@ -21,9 +21,9 @@ enum LightMode;
 class Object3d
 {
 
-public:
-    WorldTransform worldTransform_;
+
 protected:
+    WorldTransform worldTransform_;
     // ==============位置情報==================
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
     TransformationMatrixFor3D* transformationMatrixData_ = nullptr;
@@ -52,10 +52,21 @@ private:
 
 public:
     ~Object3d();
+    // ==============位置情報==================
+    WorldTransform& GetWorldTransform() { return worldTransform_; };
+    EulerTransform& GetTransform() { return worldTransform_.eTransform_; }
+    void SetTransform(const EulerTransform& transform) { worldTransform_.eTransform_ = transform; }
+    const Matrix4x4& GetWorldMatrix() { return worldTransform_.matWorld_; };
+    const Vector3& GetScale()const { return worldTransform_.eTransform_.scale; };
+    const Vector3& GetRotate()const { return worldTransform_.eTransform_.rotate; };
+    const Vector3& GetTranslate() const { return worldTransform_.eTransform_.translate; };
+    void SetScale(const Vector3& scale) { worldTransform_.eTransform_.scale = scale; };
+    void SetRotate(const Vector3& rotate) { worldTransform_.eTransform_.rotate = rotate; };
+    void SetTranslate(const Vector3& translate) { worldTransform_.eTransform_.translate = translate; };
 
     // IDの設定と取得
-    void SetObjectID(uint32_t id) { idData_->id = id; }
-    uint32_t GetObjectID() const { return idData_->id; }
+    void SetObjectID(uint32_t id) { if (idData_) { idData_->id = id; } }
+    uint32_t GetObjectID() const { if (idData_) { return idData_->id; }; return 0; }
 
     // ==============膨張データ==================
 
@@ -98,7 +109,7 @@ public:
     virtual void Draw(Camera& camera,
         const BlendMode& blendMode = kBlendModeNormal,
         const CullMode& cullMode = kCullModeBack,
-        const MaskMode maskMode = kAll, 
+        const MaskMode maskMode = kAll,
         const bool usePSOKey = false,
         const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX);
 private:

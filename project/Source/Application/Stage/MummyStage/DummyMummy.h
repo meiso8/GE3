@@ -22,8 +22,8 @@ public:
         return isOpen_;
     };
     static void SetTargetPosPtr(Vector3* pos) { targetPos_ = pos; };
-    void SetPosition(const Vector3& pos) { object_->worldTransform_.translate_ = pos; };
-    void SetRotateY(const float& rotate) { object_->worldTransform_.rotate_.y = rotate; };
+    void SetPosition(const Vector3& pos) { object_->SetTranslate(pos); };
+    void SetRotateY(const float& rotate) { object_->GetTransform().rotate.y = rotate; };
     const bool& GetIsHitCollision() {
         return isHitCollision_;
     };

@@ -19,9 +19,11 @@ Mummy::Mummy() {
     aniObj_->SetMeshAndMaterial(coffinModel_);
 
     aniObj_->SetTemperature(0.1f);
+
+
     //ペアレント
-    object_->worldTransform_.Parent(platform_->GetWorldTransform());
-    aniObj_->worldTransform_.Parent(platform_->GetWorldTransform());
+    object_->GetWorldTransform().Parent(platform_->GetWorldTransform());
+    aniObj_->GetWorldTransform().Parent(platform_->GetWorldTransform());
 
     aniObj_->SetModelAndLoadAnimation(coffinModel_);
 
@@ -29,7 +31,7 @@ Mummy::Mummy() {
     SetCollisionMask(kCollisionPlayer | kCollisionEnemy|kCollisionMummy); // プレイヤーや壁と衝突
 
     SetAABB({ {-1.0f, 0.0f, -0.25f}, {1.0f, 0.5f, 0.25f} });
-    SetWorldMatrix(aniObj_->worldTransform_.matWorld_);
+    SetWorldMatrix(aniObj_->GetWorldTransform().matWorld_);
 
 }
 
@@ -40,12 +42,16 @@ void Mummy::Initialize() {
 
     aniObj_->Initialize();
     object_->Initialize();
-    object_->worldTransform_.rotate_.y = 1.57f;
-    aniObj_->worldTransform_.rotate_.y = 1.57f;
+
+    auto& transform = object_->GetTransform();
+    auto& aniTransform = aniObj_->GetTransform();
+
+    transform.rotate.y = 1.57f;
+    aniTransform.rotate.y = 1.57f;
     // 台の高さを取得してオフセット 
     float platformHeight = platform_->GetAABB().max.y-platform_->GetAABB().min.y;
-    object_->worldTransform_.translate_.y = platformHeight;
-    aniObj_->worldTransform_.translate_.y = platformHeight;
+    transform.translate.y = platformHeight;
+    aniTransform.translate.y = platformHeight;
 
 
 }
