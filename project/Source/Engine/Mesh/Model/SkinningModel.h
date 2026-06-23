@@ -2,7 +2,7 @@
 
 #include"Bone.h"
 #include"SkinCluster.h"
-#include"MeshCommon.h"
+#include"Primitive.h"
 #include<memory>
 #include"Depth.h"
 

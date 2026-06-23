@@ -90,8 +90,6 @@ void ImGuiClass::Initialize(Window& window,
     colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
     colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
 
-
-
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowRounding = 8;
     style.FrameRounding = 8;

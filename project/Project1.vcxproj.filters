@@ -240,9 +240,6 @@
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\MeshCommon\MeshCommon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Application\System\CollisionManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -534,13 +531,13 @@
     <ClCompile Include="Source\Engine\Object3d\ObjectManager\ObjectCommandManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Mesh\Primitive\Primitive.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Math\Structs\AABB.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\MeshCommon\Balloon.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Camera\Camera.h">
       <Filter>ヘッダー ファイル\Engine\Camera</Filter>
@@ -616,9 +613,6 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\WorldTransform\WorldTransform.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\MeshCommon\Wave.h">
-      <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Sound\Sound.h">
       <Filter>ヘッダー ファイル\Engine\Sound</Filter>
@@ -740,9 +734,6 @@
     <ClInclude Include="Source\Engine\Camera\SpriteCamera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\MeshCommon\MeshCommon.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Math\Random\Random.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -771,9 +762,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Object3d\Object3d.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\MeshCommon\VertexData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h">
@@ -1068,6 +1056,18 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Object3d\ObjectManager\ObjectCommandManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Mesh\MeshCommon\VertexData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Mesh\MeshCommon\Balloon.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Mesh\MeshCommon\Wave.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Mesh\Primitive\Primitive.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

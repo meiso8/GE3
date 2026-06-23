@@ -3,7 +3,7 @@
 #include <cstdint>
 #include"AABB.h"
 #include"Object3d.h"
-#include"MeshCommon.h"
+#include"Primitive.h"
 #include"Line.h"
 #include "CollisionConfig.h"
 

@@ -3,7 +3,7 @@
 #include<array>
 #include"Object3d.h"
 #include<memory>
-#include"MeshCommon.h"
+#include"Primitive.h"
 #include"LineObject3d/LineObject3d.h"
 
 class DrawGrid {

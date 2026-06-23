@@ -1,5 +1,5 @@
 #pragma once
-#include"VertexData.h"
+#include"MeshCommon/VertexData.h"
 #include<wrl.h>
 #include<d3d12.h>
 #include"PSO.h"  

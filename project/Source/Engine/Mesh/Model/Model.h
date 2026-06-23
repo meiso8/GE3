@@ -1,5 +1,5 @@
 #pragma once
-#include"MeshCommon.h"
+#include"Primitive.h"
 #include"ModelManager.h"
 #include"ModelData.h"
 #include<memory>

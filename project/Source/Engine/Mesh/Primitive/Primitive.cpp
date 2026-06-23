@@ -1,4 +1,4 @@
-#include "MeshCommon.h"
+#include "Primitive.h"
 #include"DirectXCommon.h"
 #include"Texture.h"
 #include"PSO.h"

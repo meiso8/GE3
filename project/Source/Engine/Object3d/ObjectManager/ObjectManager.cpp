@@ -47,9 +47,9 @@ Object3d* ObjectManager::FindObjectByID(uint32_t id) {
 
 void ConvertMatArray(const Matrix4x4& srcMatrix, float dstArray[16])
 {
-    // 行列のメモリ構造をそのまま16個のfloat配列にコピー
-    std::memcpy(dstArray, &srcMatrix.m[0][0], sizeof(float) * 16);
-
+        // 行列のメモリ構造をそのまま16個のfloat配列にコピー
+        std::memcpy(dstArray, &srcMatrix.m[0][0], sizeof(float) * 16);
+   
 }
 
 void ObjectManager::ClickObject(Camera& camera)
@@ -58,47 +58,47 @@ void ObjectManager::ClickObject(Camera& camera)
 
     ImGui::Begin("Object3ds");
 
-
     bool isClicked = false;
 
     ImGui::Text("ClickedID : %d", clickedID_);
 
     bool isTriggerCtrlZ = Input::IsPressKey(DIK_LCONTROL) && Input::IsTriggerKey(DIK_Z);
-
-    if (ImGui::Button("Redo")|| Input::IsPressKey(DIK_LSHIFT) && isTriggerCtrlZ) {
-        objectCommandManager_.ReDo();
-    } else if(ImGui::Button("Undo")|| isTriggerCtrlZ) {
-        objectCommandManager_.UnDo();
-    }
   
+    bool doRedo = (Input::IsPressKey(DIK_LSHIFT) && isTriggerCtrlZ);
+    bool doUndo = isTriggerCtrlZ && !doRedo;
+
+    // 2. Undoボタンの描画 ＆ クリック判定
+    if (ImGui::Button("Undo")) {
+        doUndo = true;
+    }
+    ImGui::SameLine();
+
+    // 3. Redoボタンの描画 ＆ クリック判定
+    if (ImGui::Button("Redo")) {
+        doRedo = true;
+    }
+
+    if (doUndo) {
+        objectCommandManager_.UnDo();
+    } else if (doRedo) {
+        objectCommandManager_.ReDo();
+    }
+
     if (clickedID_ != 0) {
-        isClicked =   UpdateImGuizmo(camera);
+        isClicked = UpdateImGuizmo(camera);
     }
 
     auto* selectedObj = ObjectManager::GetInstance()->FindObjectByID(clickedID_);
     DebugUI::CheckObject3d(*selectedObj, "selectObject");
 
-    if (!isClicked&& !ImGui::GetIO().WantCaptureMouse) {
-        //ImGuiを使用していないとき
+    if (!isClicked && !ImGui::GetIO().WantCaptureMouse) {
+        //ImGuiでどこにもマウスがキャプチャーしてないとき
         clickedID_ = RenderTexture::GetInstance()->GetClickedObjectID();
     }
-
-
-
 
     ImGui::End();
 
 #endif
-}
-
-void ObjectManager::DebugAll()
-{
-
-    //for (int i = 0; i < objects_.size(); ++i) {
-    //    std::string name = "Object:" + std::to_string(objects_[i]->GetObjectID());
-    //    DebugUI::CheckObject3d(*objects_[i], name.c_str());
-    //}
-
 }
 
 void ObjectManager::Clear() {
@@ -127,10 +127,26 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera)
 
     static ImGuizmo::MODE currentMode = ImGuizmo::LOCAL;
     static ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;// TRANSLATE, ROTATE, SCALE
+    
+    static int currentOp = 0; // 0: TRANSLATE, 1: ROTATE, 2: SCALE
 
-    if (ImGui::IsKeyPressed(ImGuiKey_T)) currentOperation = ImGuizmo::TRANSLATE;
-    if (ImGui::IsKeyPressed(ImGuiKey_R)) currentOperation = ImGuizmo::ROTATE;
-    if (ImGui::IsKeyPressed(ImGuiKey_S)) currentOperation = ImGuizmo::SCALE;
+    if (ImGui::RadioButton("Translate (T)", &currentOp, 0)|| ImGui::IsKeyPressed(ImGuiKey_T)) {
+        currentOperation = ImGuizmo::TRANSLATE;
+        currentOp = 0;
+    }
+    ImGui::SameLine(); // 横並びにする場合
+
+    if (ImGui::RadioButton("Rotate (R)", &currentOp, 1)|| ImGui::IsKeyPressed(ImGuiKey_R)) {
+        currentOperation = ImGuizmo::ROTATE;
+        currentOp = 1;
+    }
+    ImGui::SameLine();
+
+    if (ImGui::RadioButton("Scale (S)", &currentOp, 2)|| ImGui::IsKeyPressed(ImGuiKey_S)) {
+        currentOperation = ImGuizmo::SCALE;
+        currentOp = 2;
+    }
+
 
     ImGuiIO& io = ImGui::GetIO();
     //画面全域に合わせる
@@ -168,12 +184,32 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera)
         nullptr                     // (任意) 境界ボックス用のスナップ
     )) {
 
+        // 一度ローカルの配列で安全に受け取る
+        float targetTranslation[3] = { 0.0f };
+        float targetRotation[3] = { 0.0f }; // ※これは「度（Degree）」で返ってくる
+        float targetScale[3] = { 0.0f };
+
         ImGuizmo::DecomposeMatrixToComponents(
             worldMat,
-            &selectedObj->GetTransform().translate.x,
-            &selectedObj->GetTransform().rotate.x, // ラジアン（または度、ライブラリの仕様に合わせて調整）
-            &selectedObj->GetTransform().scale.x
+            targetTranslation,
+            targetRotation,
+            targetScale
         );
+
+        // オブジェクトのTransformへの書き戻し
+        // (注: GetTransform() が値をコピーではなく「参照(&)」を返す関数であることを前提としています)
+        auto& transform = selectedObj->GetTransform();
+
+        transform.translate = { targetTranslation[0], targetTranslation[1], targetTranslation[2] };
+        transform.scale = { targetScale[0], targetScale[1], targetScale[2] };
+
+        //DegreeからラジアンRadianへ変換して代入
+        constexpr float ToRadian = std::numbers::pi_v<float> / 180.0f;
+        transform.rotate = {
+            targetRotation[0] * ToRadian,
+            targetRotation[1] * ToRadian,
+            targetRotation[2] * ToRadian
+        };
 
         //if (targetObject.worldTransform_.parent_) {
         //    // 親の逆行列を掛けることで、親から見たローカルな行列に変換する
