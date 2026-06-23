@@ -3,7 +3,7 @@
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-    std::unique_ptr<MyEngine> game = std::make_unique<Game>();
+    std::unique_ptr<ButtobiEngine> game = std::make_unique<Game>();
 
     game->Run();
 

@@ -67,7 +67,7 @@ void TitleScene::Update()
 {
     Sound::PlayBGM(SoundFactory::BGM_ArabRuins);
 
-    timer_ += Time::DeltaTime();
+    timer_ += TimeManager::DeltaTime();
     float scale = sinf(timer_) * 0.125f+1.25f;
     titleSprite_->SetScale({ scale,scale });
 

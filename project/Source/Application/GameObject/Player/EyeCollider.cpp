@@ -58,7 +58,7 @@ Vector3& EyeCollider::GetForward()
 void EyeCollider::Walk(const float& speed)
 {
     //移動時の縦揺れを再現　速さによって揺れの周期を変更
-    walkingTheta_ += Time::DeltaTime() * 15.0f * speed;
+    walkingTheta_ += TimeManager::DeltaTime() * 15.0f * speed;
 
     object_->GetTransform().translate.y = kEyeDefaultPosY_ + sinf(walkingTheta_) * 0.125f;
 }

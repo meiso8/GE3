@@ -107,7 +107,7 @@ void Beam::Update()
         Initialize();
         return;
     } else {
-        lifeTimer_ -= Time::DeltaTime();
+        lifeTimer_ -= TimeManager::DeltaTime();
     }
 
     float time = (kLigeDuration_ - lifeTimer_) / kBeamDuretion_;

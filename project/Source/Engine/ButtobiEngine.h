@@ -1,33 +1,30 @@
 #pragma once
-
-#pragma region //自作関数
-
-#include"Input.h"
+#include<memory>
+#include"D3DResourceLeakChecker.h"
+#include<string>
+#include<stdint.h>
+#include"ImGuiClass.h"
 #include"DirectXCommon.h"
+#include"TimeManager.h"
 #include"SRVmanager/SrvManager.h"
 #include"Rtvmanager/Rtvmanager.h"
+#include"Input.h"
 #include"Log.h"
-#include<memory>
 
-#include"D3DResourceLeakChecker.h"
-
-#pragma endregion
-
-class MyEngine {
+class ButtobiEngine {
 private:
     D3DResourceLeakChecker leakChecker;
-
-
     static DirectXCommon* directXCommon;
 #ifdef USE_IMGUI
     ImGuiClass imGuiClass = {};
 #endif // USE_IMGUI
 
-    static std::unique_ptr<LogFile> logFile;
-    static std::unique_ptr<Window> wc;
-    static std::unique_ptr <Input> input;
-    static std::unique_ptr<SrvManager> srvManager;
-    static std::unique_ptr<RtvManager> rtvManager;
+    std::unique_ptr<LogFile> logFile = nullptr;
+    std::unique_ptr<Window> wc = nullptr;
+    std::unique_ptr <Input> input = nullptr;
+    std::unique_ptr<SrvManager> srvManager = nullptr;
+    std::unique_ptr<RtvManager> rtvManager = nullptr;
+    std::unique_ptr<TimeManager> time_ = nullptr;
     bool endRequest_ = false;
 protected:
 
@@ -42,11 +39,10 @@ protected:
     virtual void Debug();
     bool IsEndRequest() { return endRequest_; }
 public:
-    MyEngine() = default;
-    MyEngine(MyEngine&) = delete;
-    MyEngine& operator=(MyEngine&) = delete;
-    virtual ~MyEngine() = default;
+    ButtobiEngine() = default;
+    ButtobiEngine(ButtobiEngine&) = delete;
+    ButtobiEngine& operator=(ButtobiEngine&) = delete;
+    virtual ~ButtobiEngine() = default;
     void Run();
-
 };
 

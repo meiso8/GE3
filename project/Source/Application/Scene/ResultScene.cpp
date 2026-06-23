@@ -72,7 +72,7 @@ void ResultScene::Update()
 
 
     symbolSprite_->Update();
-    const float deltaTime = Time::DeltaTime();
+    const float deltaTime = TimeManager::DeltaTime();
     lookTimer_ += deltaTime;
     timer_ += deltaTime;
 

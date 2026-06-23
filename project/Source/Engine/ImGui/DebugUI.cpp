@@ -1,8 +1,8 @@
 #define NOMINMAX
 #include "DebugUI.h"
 #include"CharacterState.h"
+#include"SrvManager/SrvManager.h"
 
-#include"MyEngine.h"
 #include"Input.h"
 #include"Sprite.h"
 #include"Primitive.h"
@@ -24,6 +24,7 @@
 #include"PSO.h"
 #include"Camera.h"
 #include"JsonFile.h"
+#include"TimeManager.h"
 
 #include<numbers>
 #include<algorithm>
@@ -933,7 +934,7 @@ void DebugUI::CheckFPS() {
     ImGui::Begin("Debug");
     ImVec4 color = (ImGui::GetIO().Framerate < 55.0f) ? ImVec4(1, 0, 0, 1) : ImVec4(0, 1, 0, 1);
     ImGui::TextColored(color, "FPS : %0.1f", ImGui::GetIO().Framerate);
-    ImGui::TextColored(color, "DeltaTime : %f", DirectXCommon::GetDeltaTime());
+    ImGui::TextColored(color, "DeltaTime : %f", TimeManager::DeltaTime());
     ImGui::End();
 #endif
 }

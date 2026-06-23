@@ -116,7 +116,7 @@ void DebugCamera::InputRotate() {
             rotateSpeed_ *= -1.0f;
         }
 
-        const float deltaTime = Time::DeltaTime();
+        const float deltaTime = TimeManager::DeltaTime();
 
         if (Input::IsPressKey(DIK_X)) {
             deltaRotate_.x = rotateSpeed_* deltaTime;
@@ -153,7 +153,7 @@ void DebugCamera::MouseInputMove() {
         //後でoffsetをくわえる
         Vector2 deltaOffset = { 0.0f,0.0f };
         deltaOffset += Input::GetMousePos();
-        const float deltaTime = Time::DeltaTime();
+        const float deltaTime = TimeManager::DeltaTime();
         offset_ += { deltaOffset.x* deltaTime, deltaOffset.y* deltaTime * 2.0f };
     } else if (Input::IsPressMouse(2)) {
         //視点の回転
@@ -170,7 +170,7 @@ void DebugCamera::MouseInputMove() {
 
     if (Input::isDragging_) {
         Vector2 currentPos = Input::GetMousePosFiltered();
-        const float deltaTime = Time::DeltaTime();
+        const float deltaTime = TimeManager::DeltaTime();
         sphericalCoordinate_.polar += currentPos.x * deltaTime *0.5f;
         sphericalCoordinate_.azimuthal -= currentPos.y * deltaTime *0.25f;
         rotate_.y = sphericalCoordinate_.polar;

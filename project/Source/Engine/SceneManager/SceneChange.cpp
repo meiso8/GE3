@@ -93,7 +93,7 @@ void SceneChange::TimerUpdate()
 {
     if (timer_ == endTime_) { return; }
 
-    timer_+= Time::DeltaTime();
+    timer_+= TimeManager::DeltaTime();
 
     if (timer_ >= endTime_) {
         timer_ = endTime_;

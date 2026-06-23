@@ -33,7 +33,7 @@ void VibrateManager::Update()
         leftMotor_ = 0;
         rightMotor_ = 0;
     } else {
-        timer_ -= Time::DeltaTime();
+        timer_ -= TimeManager::DeltaTime();
     }
 
     Input::VibrateController(0, leftMotor_, rightMotor_);

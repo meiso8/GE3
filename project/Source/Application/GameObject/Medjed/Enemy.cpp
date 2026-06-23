@@ -217,7 +217,7 @@ void Enemy::Update()
 void Enemy::SoundFootStep(const SoundFactory::TAG tag)
 {
 
-    soundTimer_ -= Time::DeltaTime();
+    soundTimer_ -= TimeManager::DeltaTime();
 
 
     bool isCollided = false;
@@ -418,7 +418,7 @@ void Enemy::AlphaWalk()
 
 
         velocity_ = GetToTarget();
-        const float deltaTime = Time::DeltaTime();
+        const float deltaTime = TimeManager::DeltaTime();
         velocity_ *= deltaTime * kMoveSpeed_;
 
         //Y軸方向には移動しない
@@ -467,7 +467,7 @@ void Enemy::Beam()
 
 void Enemy::UpdateTimer()
 {
-    phaseTimer_ += Time::DeltaTime();
+    phaseTimer_ += TimeManager::DeltaTime();
 }
 
 void Enemy::Look()
@@ -477,7 +477,7 @@ void Enemy::Look()
 
 bool Enemy::PoyoPoyoUpdateAndGetEnd(const float& endTimer)
 {
-    poyoAnimTimer_ += Time::DeltaTime();
+    poyoAnimTimer_ += TimeManager::DeltaTime();
     poyoAnimTimer_ = std::clamp(poyoAnimTimer_, 0.0f, endTimer);
     TransformAni::PoyoPoyo(bodyPos_.GetWorldTransform(), poyoAnimTimer_, kScale_);
 

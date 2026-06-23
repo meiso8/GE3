@@ -1,11 +1,9 @@
 #include "Bullet.h"
 #include"ModelManager.h"
-#include"Model.h"
-#include"MyEngine.h"
 #include"Easing.h"
 #include<algorithm>
 #include"CollisionConfig.h"
-
+#include"Model.h"
 Bullet::Bullet() {
     model_ = ModelManager::GetModel("people");
 

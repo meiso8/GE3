@@ -55,7 +55,7 @@ void HPIcon::Update()
         }
 
         if (timer_ < 3.0f) {
-            timer_ += Time::DeltaTime();
+            timer_ += TimeManager::DeltaTime();
             theta_ += timer_ * std::numbers::phi_v<float>*2.0f;
         } else {
             timer_ = 3.0f;

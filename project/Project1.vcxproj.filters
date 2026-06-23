@@ -159,7 +159,7 @@
     <ClCompile Include="Source\Engine\Math\Matrix\Matrix4x4.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp">
+    <ClCompile Include="Source\Engine\ButtobiEngine.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\PSO\PSO.cpp">
@@ -680,7 +680,7 @@
     <ClInclude Include="Source\Engine\DirectXCommon\Log.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h">
+    <ClInclude Include="Source\Engine\ButtobiEngine.h">
       <Filter>ヘッダー ファイル\Engine\DirectXCommon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Particle\Particle.h">

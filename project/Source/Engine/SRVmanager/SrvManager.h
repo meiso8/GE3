@@ -19,6 +19,7 @@ private:
 public:
     void Initialize();
     ~SrvManager();
+
     static void PreDraw();
     static uint32_t Allocate();
     static bool IsMaxCount();

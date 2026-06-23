@@ -3,7 +3,7 @@
 #include "Viewport.h"
 #include "ScissorRect.h"
 #include<cassert>
-#include <thread>
+
 #include"SRVmanager/SrvManager.h"
 #include"RtvManager/RtvManager.h"
 
@@ -19,7 +19,6 @@ uint32_t DirectXCommon::descriptorSizeDSV = 0;
 std::unique_ptr< DxcCompiler> DirectXCommon::dxcCompiler = nullptr;
 std::unique_ptr<CommandList> DirectXCommon::commandList = nullptr;
 
-float DirectXCommon::deltaTime_ = 1.0f / 60.0f;
 
 DirectXCommon::~DirectXCommon()
 {
@@ -49,7 +48,6 @@ void DirectXCommon::PreInitialize(Window& window)
 
     window_ = &window;
 
-    InitializeFixFPS();
     InitializeDevice();
     InitializeCommand();
     CreateSwapChain();
@@ -270,11 +268,11 @@ void DirectXCommon::PostDraw()
     //画面の更新が終わった直後GPUにシグナルを送る
     fence.SendSignal(commandQueue);
 
-    UpdateFixFPS();
+}
 
-    //7.次のフレーム用のコマンドリストを準備
+void DirectXCommon::PrepareCommand()
+{    //7.次のフレーム用のコマンドリストを準備
     commandList->PrepareCommand();
-
 }
 
 void DirectXCommon::EndFrame()
@@ -430,44 +428,6 @@ void DirectXCommon::CreateDXCCompiler()
 
 }
 
-void DirectXCommon::InitializeFixFPS()
-{
-    reference_ = std::chrono::steady_clock::now();
-    LogFile::Log("InitializeFixFPS");
-}
-
-void DirectXCommon::UpdateFixFPS()
-{
-    //1/60秒ピッタリ
-    const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
-    //1/60秒よりわずかに短い時間
-    const std::chrono::microseconds kMinCheckTime(uint64_t(1000000.0f / 65.0f));
-    //現在時間を取得する
-    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-    //前回記録からの経過時間を取得する
-    std::chrono::microseconds elapsed =
-        std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
-
-
-    if (elapsed < kMinCheckTime) {
-        //1/60秒経過するまで微小なスリープを繰り返す
-        while (std::chrono::steady_clock::now() - reference_ < kMinTime) {
-            //1μ秒スリープ
-            std::this_thread::sleep_for(std::chrono::microseconds(1));
-        }
-    }
-
-
-    // スリープを抜けた現在時間を確定させる
-    std::chrono::steady_clock::time_point frame_end = std::chrono::steady_clock::now();
-
-    // 実際に1フレームにかかった時間を「秒単位のfloat」で取得
-    deltaTime_ = std::chrono::duration<float>(frame_end - reference_).count();
-
-    //現在の時間を記録する
-    reference_ = frame_end;
-
-}
 
 void DirectXCommon::InitializeRenderTexture(RtvManager& rtvManager)
 {

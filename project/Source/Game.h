@@ -1,9 +1,8 @@
 #pragma once
-#include"MyEngine.h"
+#include"ButtobiEngine.h"
 #include<map>
-#include<unordered_map>
 #include"SceneManager.h"
-class Game:public MyEngine
+class Game:public ButtobiEngine
 {
 public:
     void Initialize()override;

@@ -25,7 +25,7 @@ void Field::Init()
 
 void Field::Update()
 {
-    uvTranslate_ += Time::DeltaTime();
+    uvTranslate_ += TimeManager::DeltaTime();
     object3d_->GetUVTransform().translate.y = uvTranslate_;
     object3d_->UpdateUV();
     object3d_->Update();

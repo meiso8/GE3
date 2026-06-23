@@ -85,7 +85,7 @@ void Medjed::Update()
 
     isHit_ = false;
     if (isFind_) {
-        aniTimer_ += Time::DeltaTime() * 0.25f;
+        aniTimer_ += TimeManager::DeltaTime() * 0.25f;
         aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
         aniObj_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOut(0.0f,1.0f,aniTimer_) });
     } else {

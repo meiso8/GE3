@@ -254,7 +254,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Mesh\Model\ModelManager.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
     <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\MyEngine.cpp" />
+    <ClCompile Include="Source\Engine\ButtobiEngine.cpp" />
     <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Grid\DrawGrid.cpp" />
     <ClCompile Include="Source\Engine\Math\Collision\Collision.cpp" />
@@ -422,7 +422,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\DirectXCommon\DirectXCommon.h" />
     <ClInclude Include="Source\Engine\hlslTypeToCpp.h" />
     <ClInclude Include="Source\Engine\Particle\Particle.h" />
-    <ClInclude Include="Source\Engine\DirectXCommon\MyEngine.h" />
+    <ClInclude Include="Source\Engine\ButtobiEngine.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\Balloon.h" />
     <ClInclude Include="Source\Engine\PSO\BlendState.h" />
     <ClInclude Include="Source\Engine\Camera\Camera.h" />

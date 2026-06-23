@@ -114,7 +114,7 @@ void MedjedManager::UpdateEnemyApperTime()
         return;
     }
 
-    enemyApperTime_ += Time::DeltaTime();
+    enemyApperTime_ += TimeManager::DeltaTime();
     enemyApperTime_ = std::clamp(enemyApperTime_, 0.0f, dummyMedjedHideTime_);
 
     if (enemyApperTime_ >= kEnemyApperMaxTime_) {

@@ -111,7 +111,7 @@ void AnimationObject3d::UpdateAnimation()
 }
 void AnimationObject3d::UpdateAniTimer(const bool& isLoop)
 {
-    animationTime_ += Time::DeltaTime();
+    animationTime_ += TimeManager::DeltaTime();
 
     ModelData* modelData = skinningModel_->GetModelData();
 
