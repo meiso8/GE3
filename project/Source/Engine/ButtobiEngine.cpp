@@ -157,6 +157,9 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     if (camera) {
         DirectXCommon::GetInstance()->SetRenderTextureCamera(camera);
         LogFile::Log("Set RenderTexture Camera");
+    } else {
+        DirectXCommon::GetInstance()->SetRenderTextureCamera(DebugCamera::GetInstance());
+        LogFile::Log("Set Debug Camera");
     }
 
     LogFile::Log("LoopStart");
