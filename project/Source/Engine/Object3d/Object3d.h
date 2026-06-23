@@ -47,7 +47,7 @@ protected:
     ObjectID* idData_ = nullptr;
 
     //メッシュ情報
-    Primitive* meshCommon_ = nullptr;
+    Primitive* primitive_ = nullptr;
 private:
 
 public:
@@ -100,11 +100,19 @@ public:
     virtual void SetTextureHandle(const TextureFactory::Handle& textureHandle, const TEXTURE_USAGE& textureUsage = TEXTURE_USAGE_DIFFUSE) {
         textureHandles_[textureUsage] = Texture::GetSRVHandle(textureHandle);
     };
+
+    // ==============メッシュ==================
+    Primitive* GetPrimitive() { return primitive_; }
+
     // ==============重要==================
+
+ 
+
 
     void SetMeshAndMaterial(Primitive* mesh);
     void Create();
     virtual void Initialize();
+    void RegisterObject();
     virtual void Update();
     virtual void Draw(Camera& camera,
         const BlendMode& blendMode = kBlendModeNormal,

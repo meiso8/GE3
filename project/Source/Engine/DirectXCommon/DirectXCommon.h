@@ -103,6 +103,9 @@ public:
     void DrawRenderTexture();
     void RenderTexturePostDraw();
     void SetRenderTextureCamera(Camera* camera);
+    void SettingIdTextureBarrierPre();
+    void SettingIdTextureBarrierPost();
+
     /// @brief 描画前処理
     void PreDraw();
     /// @brief 描画後処理

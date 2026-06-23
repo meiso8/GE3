@@ -479,10 +479,13 @@ void ParticleManager::InitAccelerationField(ParticleGroup& group)
 void ParticleManager::Finalize()
 {
     for (auto& [name, group] : particleGroups) {
-        if (group->instancingResource != nullptr) {
-            group->instancingResource = nullptr;
-            group.reset();
+        if (group->instancingResource) {
+            group->instancingResource.Reset();
         }
+        if (group->materialResource != nullptr) {
+            group->materialResource.reset();
+        }
+        group.reset();
     }
 
 }

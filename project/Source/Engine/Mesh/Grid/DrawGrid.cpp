@@ -4,7 +4,7 @@
 #include"Texture.h"
 #include"AABB.h"
 
- std::array <std::unique_ptr<Primitive>, 2> DrawGrid::cube_;
+std::array <std::unique_ptr<Primitive>, 2> DrawGrid::cube_;
 std::array< std::unique_ptr<Object3d>, 2> DrawGrid::cubes_;
 std::array< std::unique_ptr<LineObject3d>, 102>DrawGrid::lineTransforms2_;
 

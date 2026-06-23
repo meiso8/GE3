@@ -339,6 +339,21 @@ void RenderTexture::SetCamera(Camera* camera)
     camera_ = camera;
 }
 
+void RenderTexture::Clear()
+{// すべての ComPtr を Reset して参照を外す
+    for (auto& data : renderTextureDatas_) {
+        data.resource.Reset();
+    }
+    thermographyTextureData_.resource.Reset();
+
+    for (auto& mat : materialResource_) {
+        // 必要ならここで 各ポインタの Unmap() を行う
+        mat.Reset();
+    }
+    idReadbackResource_.Reset();
+    materialResourceRandom_.Reset();
+}
+
 void RenderTexture::CreateMaterialBufferForGrayScale()
 {
     //マテリアル用のリソースを作る。

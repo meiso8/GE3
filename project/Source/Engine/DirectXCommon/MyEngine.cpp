@@ -164,18 +164,19 @@ void MyEngine::Update() {
 #ifdef _DEVELOP
     auto* camera = SceneManager::GetCurrentCamera();
     if (camera) {
+        directXCommon->SettingIdTextureBarrierPre();
+        LogFile::Log("SettingIdTextureBarrierPre");
         //カメラがあるならクリックする
         ObjectManager::GetInstance()->ClickObject(*camera);
         LogFile::Log("ObjectManager ClickObject");
+        directXCommon->SettingIdTextureBarrierPost();
+        LogFile::Log("SettingIdTextureBarrierPost");
         // 共通更新
         ParticleManager::GetInstance()->Update(*camera);
         LogFile::Log("ParticleManager Update");
     }
 
 #endif //_DEVELOP
-
-    //全てのオブジェクトの更新
-    ObjectManager::GetInstance()->UpdateAll();
 
     directXCommon->UpdateRenderTexture();
 
@@ -251,7 +252,6 @@ void MyEngine::PreCommandSet() {
     auto* camera = SceneManager::GetCurrentCamera();
     if (camera) {
         DrawGrid::Draw(*camera);
-        ObjectManager::GetInstance()->DrawAll(*camera);
     }
 
 #endif //_DEVELOP

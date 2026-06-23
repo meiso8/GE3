@@ -28,7 +28,7 @@ public:
     void Clear();
     void Initialize();
 private:
-    void UpdateImGuizmo(Camera& camera);
+    bool UpdateImGuizmo(Camera& camera);
     ObjectManager() = default;
     ~ObjectManager() = default;
     ObjectCommandManager objectCommandManager_;

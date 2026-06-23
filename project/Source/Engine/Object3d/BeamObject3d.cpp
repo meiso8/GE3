@@ -15,9 +15,9 @@ void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMo
 
     auto* commandlist = DirectXCommon::GetCommandList();
 
-    if (meshCommon_) {
+    if (primitive_) {
 
-        meshCommon_->PreDraw(commandlist, blendMode, cullMode, maskMode, true, RootSignature::BEAM, DxcCompiler::VS_Beam, DxcCompiler::PS_Beam);
+        primitive_->PreDraw(commandlist, blendMode, cullMode, maskMode, true, RootSignature::BEAM, DxcCompiler::VS_Beam, DxcCompiler::PS_Beam);
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
         commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
@@ -28,7 +28,7 @@ void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMo
         //ID
         commandlist->SetGraphicsRootConstantBufferView(4, idResource_->GetGPUVirtualAddress());
 
-        meshCommon_->Draw(commandlist);
+        primitive_->Draw(commandlist);
     }
 
 }

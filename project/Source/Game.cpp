@@ -1,11 +1,11 @@
 #include "Game.h"
 
-
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
 
 void Game::Initialize()
 {
+    
     //エンジンの生成
     MyEngine::Create(L"LE3A_19_ヨシダ_トモカ_打ち倒すもの", WIN_WIDTH, WIN_HEIGHT);
 }

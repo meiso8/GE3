@@ -1,7 +1,6 @@
 #pragma once
 
 #pragma region //自作関数
-#include"D3DResourceLeakChecker.h"
 
 #include"Input.h"
 #include"DirectXCommon.h"
@@ -9,12 +8,14 @@
 #include"Log.h"
 #include<memory>
 
+#include"D3DResourceLeakChecker.h"
+
 #pragma endregion
 
 class MyEngine {
 private:
-    
     D3DResourceLeakChecker leakChecker;
+
 
     static DirectXCommon* directXCommon;
 #ifdef USE_IMGUI
