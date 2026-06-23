@@ -1,5 +1,5 @@
 #pragma once
-#include"MeshCommon.h"
+#include"Primitive.h"
 
 class LineMesh : public Primitive
 {

@@ -3,7 +3,7 @@
 #include<wrl.h>
 #include"TransformationMatrix.h"  
 #include"Camera.h"  
-#include"MeshCommon.h"
+#include"Primitive.h"
 #include"WorldTransform.h"
 #include"MaterialResource.h"  
 #include"Balloon.h"

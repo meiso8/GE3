@@ -22,8 +22,6 @@ public:
 
     // オブジェクトチェック
     void ClickObject(Camera& camera);
-   
-    void DebugAll();
     // シーン切り替え時などの全クリア
     void Clear();
     void Initialize();

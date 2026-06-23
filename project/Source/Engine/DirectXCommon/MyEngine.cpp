@@ -204,8 +204,6 @@ void MyEngine::Debug()
 
     ImGui::End();
 
-    ObjectManager::GetInstance()->DebugAll();
-
     //Loaderをここで
     imGuiClass.DrawModelLoaderWindow();
 

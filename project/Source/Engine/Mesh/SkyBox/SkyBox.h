@@ -1,5 +1,5 @@
 #pragma once
-#include"MeshCommon.h"
+#include"Primitive.h"
 #include<d3d12.h>
 #include<wrl.h>
 #include"TransformationMatrix.h"  

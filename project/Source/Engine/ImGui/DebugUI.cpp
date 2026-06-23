@@ -5,7 +5,7 @@
 #include"MyEngine.h"
 #include"Input.h"
 #include"Sprite.h"
-#include"MeshCommon.h"
+#include"Primitive.h"
 #include"Model.h"
 #include"Particle/Particle.h"
 #include"Particle/ParticleEmitter.h"

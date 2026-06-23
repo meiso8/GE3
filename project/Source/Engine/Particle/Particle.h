@@ -16,7 +16,7 @@
 #include<memory>
 #include<cstdint>
 #include<memory>
-#include"MeshCommon.h"
+#include"Primitive.h"
 
 class Camera;
 class ShaderResourceView;
