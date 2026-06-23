@@ -1,7 +1,9 @@
 #include "ObjectManager.h"
 #include"DebugUI.h"
 #include"RenderTexture/RenderTexture.h"
+#ifdef USE_IMGUI
 #include"ImGuizmo.h"
+#endif 
 #include"Input.h"
 
 ObjectManager* ObjectManager::GetInstance() {
