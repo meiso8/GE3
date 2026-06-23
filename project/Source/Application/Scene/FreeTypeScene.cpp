@@ -85,6 +85,11 @@ void FreeTypeScene::Initialize()
     //player_->Update();
 
     beam_->Initialize();
+   
+    object3d_->RegisterObject();
+    for (auto& obj : objects_) {
+        obj->obj_->RegisterObject();
+    }
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
     CreateParticle();
@@ -121,11 +126,19 @@ void FreeTypeScene::Update()
 
     for (auto& obj : objects_) {
         obj->obj_->SetTemperature(1.0f);
+        obj->obj_->Update();
     }
+
+    for (auto& obj : enemies_) {
+        obj->Update();
+    }
+    
+    object3d_->Update();
 
     for (int i = 0; i < particleEmitters_.size(); ++i) {
         particleEmitters_[i]->Update();
     }
+
 
 }
 
@@ -142,8 +155,17 @@ void FreeTypeScene::DrawModel()
 {
 
     skyBoxObj_->Draw(*currentCamera_);
+
     object3d_->Draw(*currentCamera_,BlendMode::kBlendModeAdd,CullMode::kCullModeNone,MaskMode::kZero);
     beam_->Draw(currentCamera_);
+
+    for (auto& obj : objects_) {
+        obj->obj_->Draw(*currentCamera_);
+    }
+
+    for (auto& obj : enemies_) {
+        obj->Draw(*currentCamera_);
+    }
 
 
 }

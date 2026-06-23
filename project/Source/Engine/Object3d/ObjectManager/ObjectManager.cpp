@@ -55,9 +55,11 @@ void ConvertMatArray(const Matrix4x4& srcMatrix, float dstArray[16])
 void ObjectManager::ClickObject(Camera& camera)
 {
 #ifdef USE_IMGUI
+
     ImGui::Begin("Object3ds");
 
-    clickedID_ = RenderTexture::GetInstance()->GetClickedObjectID();
+
+    bool isClicked = false;
 
     ImGui::Text("ClickedID : %d", clickedID_);
 
@@ -69,10 +71,20 @@ void ObjectManager::ClickObject(Camera& camera)
         objectCommandManager_.UnDo();
     }
   
-
     if (clickedID_ != 0) {
-        UpdateImGuizmo(camera);
+        isClicked =   UpdateImGuizmo(camera);
     }
+
+    auto* selectedObj = ObjectManager::GetInstance()->FindObjectByID(clickedID_);
+    DebugUI::CheckObject3d(*selectedObj, "selectObject");
+
+    if (!isClicked&& !ImGui::GetIO().WantCaptureMouse) {
+        //ImGuiを使用していないとき
+        clickedID_ = RenderTexture::GetInstance()->GetClickedObjectID();
+    }
+
+
+
 
     ImGui::End();
 
@@ -82,10 +94,10 @@ void ObjectManager::ClickObject(Camera& camera)
 void ObjectManager::DebugAll()
 {
 
-    for (int i = 0; i < objects_.size(); ++i) {
-        std::string name = "Object:" + std::to_string(objects_[i]->GetObjectID());
-        DebugUI::CheckObject3d(*objects_[i], name.c_str());
-    }
+    //for (int i = 0; i < objects_.size(); ++i) {
+    //    std::string name = "Object:" + std::to_string(objects_[i]->GetObjectID());
+    //    DebugUI::CheckObject3d(*objects_[i], name.c_str());
+    //}
 
 }
 
@@ -101,13 +113,13 @@ void ObjectManager::Initialize()
     objectCommandManager_.Initialize();
 }
 
-void ObjectManager::UpdateImGuizmo(Camera& camera)
+bool ObjectManager::UpdateImGuizmo(Camera& camera)
 {
 
     auto* selectedObj = FindObjectByID(clickedID_);
 
     if (selectedObj == nullptr) {
-        return;
+        return false;
     }
 #ifdef USE_IMGUI
     // 1. ImGuizmoのフレーム開始宣言（内部のコンテキストを初期化・更新します）
@@ -163,7 +175,6 @@ void ObjectManager::UpdateImGuizmo(Camera& camera)
             &selectedObj->GetTransform().scale.x
         );
 
-
         //if (targetObject.worldTransform_.parent_) {
         //    // 親の逆行列を掛けることで、親から見たローカルな行列に変換する
         //    Matrix4x4 invParent = Inverse(targetObject.worldTransform_.parent_->matWorld_);
@@ -201,6 +212,7 @@ void ObjectManager::UpdateImGuizmo(Camera& camera)
     // 状態を次のフレームへ引き継ぐ
     isUsingPrev = isUsingNow;
 
+    return isUsingPrev;
 
 #endif
 }

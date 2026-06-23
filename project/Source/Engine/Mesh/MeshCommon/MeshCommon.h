@@ -44,6 +44,8 @@ public:
        const DxcCompiler::PS_TYPE psType =  DxcCompiler::PS_TYPE::PS_Normal);
     virtual void Draw(ID3D12GraphicsCommandList* commandList);  
     virtual void DrawCallForParticle(ID3D12GraphicsCommandList* commandList, const uint32_t numInstance);
+
+    ~Primitive();
 protected:
 
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};

@@ -100,10 +100,10 @@ void DebugUI::CheckEmitter(Emitter& emitter, const char* label)
     ImGui::Begin("Particle");
 
     ParticleManager& particle = *ParticleManager::GetInstance();
-  
+
     if (ImGui::TreeNode(label)) {
 
-        
+
         if (ImGui::Button(emitter.name.c_str())) {
             particle.Emit(emitter);
         }
@@ -686,9 +686,9 @@ void DebugUI::CheckPointLightData()
 void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 {
 #ifdef USE_IMGUI
-
-    ImGui::Begin("Object3ds");
-
+    if (! &object3d) {
+        return;
+    }
     if (ImGui::TreeNode(label)) {
         CheckWorldTransform(object3d.GetWorldTransform(), label);
         ShowMatrix4x4(object3d.GetWorldMatrix());
@@ -699,6 +699,33 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
         CheckWaveData(object3d.GetWaveData(0), "wave0");
         CheckWaveData(object3d.GetWaveData(1), "wave1");
         CheckBalloonData(object3d.GetBalloonData());
+
+        auto* primitive = object3d.GetPrimitive();
+        if (primitive) {
+            if (auto model = dynamic_cast<Model*>(primitive)) {
+
+                std::string currentModelName = "unknow";
+                for (const auto& [name, managerModel] : ModelManager::GetModels()) {
+                    if (model == managerModel.get()) {
+                        currentModelName = name.string().c_str();
+                    }
+                }
+                if (ImGui::BeginCombo("Models", currentModelName.c_str())) {
+                    // マップ内のすべてのシーンをループして選択肢を作る
+                    for (const auto& [name, scene] : ModelManager::GetModels()) {
+                        // 選択肢を表示（クリックされたら true を返す）
+                        if (ImGui::Selectable(name.string().c_str(), true)) {
+                            // クリックされたらシーン切り替え関数を呼ぶ
+                            object3d.SetMeshAndMaterial(ModelManager::GetModel(name));
+                            break;
+                        }
+                    }
+
+                    ImGui::EndCombo();
+                }
+
+            }
+        }
 
         if (auto* aniObj = dynamic_cast<AnimationObject3d*>(&object3d)) {
             if (ImGui::TreeNode("Animation")) {
@@ -714,7 +741,7 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
         ImGui::TreePop();
     }
 
-    ImGui::End();
+
 
 #endif
 }
@@ -734,7 +761,7 @@ void DebugUI::CheckParticle()
                 ImGui::Checkbox("useModel", &group->useModel);
                 ImGui::Checkbox("useBillboard", &group->useBillboard);
                 ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
-                CheckMaterial(*group->materialResource->GetMaterial(),"material");
+                CheckMaterial(*group->materialResource->GetMaterial(), "material");
                 ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
                 ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
                 ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);

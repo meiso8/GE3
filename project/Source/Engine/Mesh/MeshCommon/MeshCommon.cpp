@@ -906,4 +906,17 @@ void Primitive::DrawCallForParticle(ID3D12GraphicsCommandList* commandList, cons
     }
 }
 
+Primitive::~Primitive()
+{
+  
+    if (vertexResource_) {
+        vertexResource_.Reset();
+        vertexResource_ = nullptr;
+    }
+    if (indexResource_) {
+        indexResource_.Reset();
+        indexResource_ = nullptr;
+    }
+}
+
 

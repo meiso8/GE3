@@ -28,6 +28,8 @@ float DirectXCommon::deltaTime_ = 1.0f / 60.0f;
 DirectXCommon::~DirectXCommon()
 {
 
+    renderTexture_->Clear();
+
     if (depthTextureData_.depthStencilResource) {
         depthTextureData_.depthStencilResource.Reset();
     }
@@ -137,6 +139,8 @@ void DirectXCommon::RenderTexturePreDraw()
     //シザー矩形の設定
     commandList->GetCommandList()->RSSetScissorRects(1, &scissorRect);//Scirssorを設定
 
+
+
 }
 #include "PostProcessManager/PostProcessManager.h"
 
@@ -192,6 +196,18 @@ void DirectXCommon::RenderTexturePostDraw()
 void DirectXCommon::SetRenderTextureCamera(Camera* camera)
 {
     renderTexture_->SetCamera(camera);
+}
+
+void DirectXCommon::SettingIdTextureBarrierPost()
+{
+    auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
+    barrier.SettingBarrier(renderTextureDataID.resource,  D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+}
+
+void DirectXCommon::SettingIdTextureBarrierPre()
+{
+    auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
+    barrier.SettingBarrier(renderTextureDataID.resource, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_SOURCE);
 }
 
 void DirectXCommon::PreDraw()
@@ -472,6 +488,7 @@ void DirectXCommon::InitializeRenderTexture()
 
 void DirectXCommon::UpdateRenderTexture()
 {
+
     renderTexture_->Update();
 #ifdef USE_IMGUI
     ImGui::Begin("PosEffect");

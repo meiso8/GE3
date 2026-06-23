@@ -158,7 +158,7 @@ public:
     MaterialForDissolve* GetMaterialDissolve() { return materialForDissolve_; };
 
     MaterialForGaussianFilter* GetMaterialGaussianFilter() { return materialForGaussianFilter_; };
-
+    void Clear();
 protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;

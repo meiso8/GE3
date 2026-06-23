@@ -128,8 +128,8 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
 
     auto* commandlist = DirectXCommon::GetCommandList();
 
-    if (meshCommon_) {
-        meshCommon_->PreDraw(commandlist, blendMode, cullMode, maskMode, usePSOKey);
+    if (primitive_) {
+        primitive_->PreDraw(commandlist, blendMode, cullMode, maskMode, usePSOKey);
 
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
         commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
@@ -151,7 +151,7 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         SpotLightManager::SetGraphicsRootDescriptorTable(9);
         SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
 
-        meshCommon_->Draw(commandlist);
+        primitive_->Draw(commandlist);
     }
 }
 
@@ -159,11 +159,11 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
 
 void Object3d::SetMeshAndMaterial(Primitive* mesh)
 {
-    meshCommon_ = mesh;
-    assert(meshCommon_);
+    primitive_ = mesh;
+    assert(primitive_);
     assert(materialResource_);
 
-    if (auto model = dynamic_cast<Model*>(meshCommon_)) {
+    if (auto model = dynamic_cast<Model*>(primitive_)) {
         //一旦マテリアル0
         for (auto& [name, material] : model->GetModelData()->materials) {
             for (int i = 0; i < material.textureData_.size(); ++i) {
@@ -201,6 +201,11 @@ void Object3d::Create()
 void Object3d::Initialize()
 {
     worldTransform_.Initialize();
+
+}
+
+void Object3d::RegisterObject()
+{
     ObjectManager::GetInstance()->RegisterObject(this);
 }
 
