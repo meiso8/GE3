@@ -41,7 +41,7 @@ void HPGage::Update()
     }
 
     if (timer_ < 1.0f) {
-        timer_ += Time::DeltaTime();
+        timer_ += TimeManager::DeltaTime();
     } else {
         timer_ = 1.0f;
     }

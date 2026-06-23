@@ -28,7 +28,7 @@ const bool MummyStage::IsClear() const
 
 void MummyStage::TimerUpdate()
 {
-    heartSetEndTime_ -= Time::DeltaTime();
+    heartSetEndTime_ -= TimeManager::DeltaTime();
     heartSetEndTime_ = std::clamp(heartSetEndTime_, 0.0f, maxTime_);
 
 }

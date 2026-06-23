@@ -5,7 +5,7 @@
 void TransformAni::RotateY(WorldTransform& worldTransform, const float& rotateSpeed)
 {
     worldTransform.eTransform_.rotate.x = 1.0f;
-    worldTransform.eTransform_.rotate.y += Time::DeltaTime() * std::numbers::pi_v<float>*rotateSpeed;
+    worldTransform.eTransform_.rotate.y += TimeManager::DeltaTime() * std::numbers::pi_v<float>*rotateSpeed;
 }
 
 void TransformAni::PoyoPoyo(WorldTransform& worldTransform,const float& timer,const float&defaultScale)

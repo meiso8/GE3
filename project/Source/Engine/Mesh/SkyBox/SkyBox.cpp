@@ -1,8 +1,8 @@
 #include "Skybox.h"
 #include"DirectXCommon.h"
-#include"MyEngine.h"
 #include"AABB.h"
 #include"MakeMatrix.h"
+#include"SrvManager/SrvManager.h"
 
 ID3D12GraphicsCommandList* SkyboxObject3d::commandList_ = nullptr;
 

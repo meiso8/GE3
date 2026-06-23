@@ -48,7 +48,7 @@ void LightingManager::UpdatePointLight()
 void LightingManager::DirectionalLightUpdate()
 {
     if (DirectionalLightManager::GetDirectionalLightData()->intensity < 1.0f) {
-        DirectionalLightManager::GetDirectionalLightData()->intensity += Time::DeltaTime() * 2.0f;
+        DirectionalLightManager::GetDirectionalLightData()->intensity += TimeManager::DeltaTime() * 2.0f;
     } else {
         DirectionalLightManager::GetDirectionalLightData()->intensity = 1.0f;
         isPointLightOn_ = false;

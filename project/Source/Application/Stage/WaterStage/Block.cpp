@@ -26,7 +26,7 @@ void Block::Initialize()
 
 void Block::Update()
 {
-    aniTimer_ += Time::DeltaTime();
+    aniTimer_ += TimeManager::DeltaTime();
     aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
 
     if (isPush_) {

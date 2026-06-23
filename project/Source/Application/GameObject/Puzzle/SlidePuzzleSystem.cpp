@@ -34,7 +34,7 @@ void SlidePuzzleSystem::Update(const Vector2& screenPos)
             SoundManager::PlayCorrectSE();
         }
 
-        clearTimer_ -= Time::DeltaTime();
+        clearTimer_ -= TimeManager::DeltaTime();
         clearTimer_ = std::clamp(clearTimer_, 0.0f, maxTimer_);
 
         if (clearTimer_ == 0.0f) {

@@ -1,4 +1,9 @@
-#include "MyEngine.h"
+#include "ButtobiEngine.h"
+
+#include"DirectXCommon.h"
+#include"Input.h"
+#include"Log.h"
+
 #include"SpriteCommon.h"
 #include"Texture.h"
 #include"SpriteCamera.h"
@@ -18,6 +23,7 @@
 #include"Application/Loader/TextureFactory.h"
 #include"Engine/FreeTypeManager/FreeTypeManager.h"
 #include"ObjectManager/ObjectManager.h"
+#include"TimeManager.h"
 
 #include"PSO.h"
 #include"CrashHandler.h"
@@ -25,15 +31,9 @@
 #include"DebugUI.h"
 #include"DebugCamera.h"
 
-std::unique_ptr <Input> MyEngine::input = nullptr;
-std::unique_ptr<Window> MyEngine::wc = nullptr;
+DirectXCommon* ButtobiEngine::directXCommon = nullptr;
 
-DirectXCommon* MyEngine::directXCommon = nullptr;
-std::unique_ptr<SrvManager> MyEngine::srvManager = nullptr;
-std::unique_ptr<RtvManager>MyEngine::rtvManager = nullptr;
-std::unique_ptr<LogFile> MyEngine::logFile = nullptr;
-
-void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
+void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
 
 
     //誰も捕捉しなかった場合に(Unhandled),補足する関数を登録
@@ -56,6 +56,10 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     LogFile::Log("CreateInput");
     //コントローラー
     VibrateManager::Initialize();
+
+    time_ = std::make_unique<TimeManager>();
+    time_->Initialize();
+    LogFile::Log("Time Manager Initialize");
 
     directXCommon = DirectXCommon::GetInstance();
     directXCommon->PreInitialize(*wc);
@@ -80,7 +84,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     imGuiClass.Initialize(*wc, directXCommon->GetDevice().Get(), directXCommon->GetSwapChain(), directXCommon->GetSwapChainRtv());
     LogFile::Log("InitImGui");
 #endif
-    
+
     directXCommon->InitializeRenderTexture(*rtvManager);
     directXCommon->CreateDepthStencilResourceSRV();
 
@@ -93,7 +97,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     LogFile::Log("CreateDirectionalLightResource");
     PointLightManager::CreateData();
     SpotLightManager::Create();
-    ////共通のスプライト
+    //共通のスプライト
     SpriteCommon::Initialize();
     LogFile::Log("InitializeSpriteCommon");
 
@@ -158,7 +162,7 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     LogFile::Log("LoopStart");
 }
 
-void MyEngine::Update() {
+void ButtobiEngine::Update() {
 
 
     if (Window::ProcessMassage()) {
@@ -196,7 +200,7 @@ void MyEngine::Update() {
 
 }
 
-void MyEngine::Debug()
+void ButtobiEngine::Debug()
 {
 #ifdef USE_IMGUI
 
@@ -225,7 +229,7 @@ void MyEngine::Debug()
 
 }
 
-void MyEngine::Run() {
+void ButtobiEngine::Run() {
 
     Initialize();
 
@@ -250,7 +254,7 @@ void MyEngine::Run() {
 
 }
 
-void MyEngine::PreCommandSet() {
+void ButtobiEngine::PreCommandSet() {
 
 #ifdef USE_IMGUI
     //ImGuiの内部コマンドを生成する
@@ -279,7 +283,7 @@ void MyEngine::PreCommandSet() {
     directXCommon->PreDraw();
 }
 
-void MyEngine::PostCommandSet() {
+void ButtobiEngine::PostCommandSet() {
 
     //ポストエフェクト
     directXCommon->DrawRenderTexture();
@@ -292,11 +296,14 @@ void MyEngine::PostCommandSet() {
 
 #endif // _DEBUG
     directXCommon->PostDraw();
-
+    //時間の更新を入れる
+    time_->Update();
+    //次のコマンド準備をする
+    directXCommon->PrepareCommand();
     FreeTypeManager::ResetFontUsage();
 };
 
-void MyEngine::Finalize() {
+void ButtobiEngine::Finalize() {
 
     //シーンマネージャーの終了処理
     SceneManager::Finalize();

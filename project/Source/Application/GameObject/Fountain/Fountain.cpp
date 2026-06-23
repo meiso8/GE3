@@ -59,8 +59,8 @@ void Fountain::Update()
 
     auto& group = ParticleManager::GetInstance()->GetParticleGroup(particleEmitter_[0]->GetEmitter().name);
 
-    splashTimer_ -= Time::DeltaTime();
-    waterObject_->GetWaveData(0).time += Time::DeltaTime()*2.0f;
+    splashTimer_ -= TimeManager::DeltaTime();
+    waterObject_->GetWaveData(0).time += TimeManager::DeltaTime()*2.0f;
     //waterObject_->GetWaveData(1).time = splashTimer_;
 
     if (splashTimer_ <= splashTime_ * 0.5f) {

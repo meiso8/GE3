@@ -50,7 +50,7 @@ void ShotBeamManager::Update()
 
     if (enemy_->GetIsShotStart()) {
 
-        currentTime_ -= Time::DeltaTime();
+        currentTime_ -= TimeManager::DeltaTime();
 
         Matrix4x4* enemyEyeMatL = &enemy_->GetEyeMats().at("eye_L");
         Matrix4x4* enemyEyeMatR = &enemy_->GetEyeMats().at("eye_R");

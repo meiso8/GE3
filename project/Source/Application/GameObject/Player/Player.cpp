@@ -3,7 +3,7 @@
 #include "Player.h"
 #include"ModelManager.h"
 #include"Model.h"
-#include"MyEngine.h"
+
 #include"Easing.h"
 #include<algorithm>
 #include"Collision.h"
@@ -156,7 +156,7 @@ void Player::Update()
 
     if (characterState_.isHit) {
         if (hitTimer_ > 0.0f) {
-            hitTimer_ -= Time::DeltaTime();
+            hitTimer_ -= TimeManager::DeltaTime();
         } else {
             hitTimer_ = 0.0f;
             characterState_.isHit = false;
@@ -280,7 +280,7 @@ void Player::Jump()
     velocity_.y = std::clamp(velocity_.y, -1.0f, kJumpSpeed_);
 
 
-    velocity_.y -= Time::DeltaTime() * 0.98f;
+    velocity_.y -= TimeManager::DeltaTime() * 0.98f;
   
     auto& transform = bodyPos_.GetTransform();
     transform.translate.y += velocity_.y;
@@ -288,7 +288,7 @@ void Player::Jump()
 
 void Player::Zoom()
 {
-    const float deltaTime = Time::DeltaTime();
+    const float deltaTime = TimeManager::DeltaTime();
 
     if (InputBind::IsClickPress()) {
 
@@ -348,7 +348,7 @@ void Player::LookBack()
     }
 
 
-    const float deltaTime = Time::DeltaTime();
+    const float deltaTime = TimeManager::DeltaTime();
 
 
     if (InputBind::IsClickPressR()) {
@@ -397,7 +397,7 @@ void Player::Thermography()
     }
 
 
-    const float deltaTime = Time::DeltaTime();
+    const float deltaTime = TimeManager::DeltaTime();
 
     if (InputBind::IsClickPressR()) {
 
@@ -431,7 +431,7 @@ void Player::MouseLook()
 
     Vector2 controllerPos = { cameraRotateY_ ,cameraRotateX_ };
 
-    const float kDeltaTime = Time::DeltaTime();
+    const float kDeltaTime = TimeManager::DeltaTime();
 
     if (Input::IsControllerStickPosMove(BUTTON_RIGHT, 0, &controllerPos)) {
         cameraRotateY_ += controllerPos.x * kDeltaTime * cameraSpeed_ * 2.0f;

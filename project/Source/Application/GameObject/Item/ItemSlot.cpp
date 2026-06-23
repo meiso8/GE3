@@ -100,7 +100,7 @@ void Item::UpdateAniTimer(const float& endTime)
         return;
     }
 
-    aniTimer_ += Time::DeltaTime();
+    aniTimer_ += TimeManager::DeltaTime();
     aniTimer_ = std::clamp(aniTimer_, 0.0f, endTime);
 }
 

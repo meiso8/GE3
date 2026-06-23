@@ -283,7 +283,7 @@ void ParticleManager::Normal(ParticleGroup& group)
 
             //場の処理
             IsCollisionFieldArea(*particleIterator, group);
-            const float deltaTime = Time::DeltaTime();
+            const float deltaTime = TimeManager::DeltaTime();
             //移動処理
             (*particleIterator).transform.translate += (*particleIterator).velocity * deltaTime;
             //経過時間を加算
@@ -332,7 +332,7 @@ void ParticleManager::Sphere(ParticleGroup& group)
                 continue;
             }
    
-            const float deltaTime = Time::DeltaTime();
+            const float deltaTime = TimeManager::DeltaTime();
             particleIterator->transform.translate += particleIterator->velocity * deltaTime;
             (*particleIterator).currentTime += deltaTime;
 
@@ -381,7 +381,7 @@ void ParticleManager::Shock(ParticleGroup& group)
             }
 
 
-            const float deltaTime = Time::DeltaTime();
+            const float deltaTime = TimeManager::DeltaTime();
 
    
 
@@ -412,7 +412,7 @@ void ParticleManager::Shock(ParticleGroup& group)
 void ParticleManager::IsCollisionFieldArea(Particle& particleItr, ParticleGroup& group)
 {
     if (IsCollision(group.accelerationField.area, particleItr.transform.translate)) {
-        particleItr.velocity += group.accelerationField.acceleration * Time::DeltaTime();
+        particleItr.velocity += group.accelerationField.acceleration * TimeManager::DeltaTime();
     }
 }
 

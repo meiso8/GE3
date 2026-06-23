@@ -64,7 +64,7 @@ void DummyMummy::Update()
             Look(*targetPos_);
             velocity_ = *targetPos_ - object_->GetWorldTransform().GetWorldPosition();
             velocity_ = Normalize(Vector3{ velocity_.x, 0.0f, velocity_.z });
-           transform.translate += velocity_ * Time::DeltaTime();
+           transform.translate += velocity_ * TimeManager::DeltaTime();
         }
 
     }

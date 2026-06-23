@@ -411,13 +411,10 @@ Vector2& Input::GetMousePosFiltered()
 }
 
 float Input::GetMouseWheel() {
-    return  static_cast<float>(mouseState_.lZ) * Time::DeltaTime();
+    return  static_cast<float>(mouseState_.lZ) * TimeManager::DeltaTime();
 }
 
-
-
 Input::~Input() {
-
     mouse_->Unacquire();
     mouse_->Release();
     mouse_ = nullptr;

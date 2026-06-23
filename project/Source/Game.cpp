@@ -7,28 +7,28 @@ void Game::Initialize()
 {
     
     //エンジンの生成
-    MyEngine::Create(L"LE3A_19_ヨシダ_トモカ_打ち倒すもの", WIN_WIDTH, WIN_HEIGHT);
+    ButtobiEngine::Create(L"LE3A_19_ヨシダ_トモカ_打ち倒すもの", WIN_WIDTH, WIN_HEIGHT);
 }
 
 void Game::Finalize()
 {
     // エンジンの終了
-    MyEngine::Finalize();
+    ButtobiEngine::Finalize();
 }
 
 void Game::Update()
 {
     // エンジンの更新処理
-    MyEngine::Update();
+    ButtobiEngine::Update();
 }
 
 void Game::Draw()
 {
     // エンジンの描画前処理
-    MyEngine::PreCommandSet();
+    ButtobiEngine::PreCommandSet();
 
     // エンジンの描画後処理
-    MyEngine::PostCommandSet();
+    ButtobiEngine::PostCommandSet();
 }
 
 void Game::Debug()
@@ -36,7 +36,7 @@ void Game::Debug()
 
 #ifdef USE_IMGUI
     // デバック用
-    MyEngine::Debug();
+    ButtobiEngine::Debug();
 #endif // USE_IMGUI
 
 }

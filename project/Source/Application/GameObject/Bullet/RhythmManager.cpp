@@ -21,7 +21,7 @@ void RhythmManager::Initialize() {
 
 void RhythmManager::Update() {
 
-    timer_ += Time::DeltaTime();
+    timer_ += TimeManager::DeltaTime();
 
     if (!Sound::IsPlaying(tag_)) {
         //音が鳴ってなかったら初期化する

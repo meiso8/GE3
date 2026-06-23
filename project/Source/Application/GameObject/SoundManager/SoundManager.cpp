@@ -28,7 +28,7 @@ void SoundManager::PlayCancelSE()
 void SoundManager::ApperMedjedUpdate()
 {
     if (Sound::bgmVolume_ < 0.5f) {
-        Sound::bgmVolume_ += Time::DeltaTime() * 0.25f;
+        Sound::bgmVolume_ += TimeManager::DeltaTime() * 0.25f;
     }
     Sound::Stop(SoundFactory::HORROR2);
     Sound::PlayBGM(SoundFactory::BGM_ArabRuins);

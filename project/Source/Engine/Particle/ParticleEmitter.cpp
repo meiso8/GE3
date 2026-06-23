@@ -32,7 +32,7 @@ void ParticleEmitter::Initialize()
     emitter_.movement = ParticleMovements::kParticleNormal;
     emitter_.lifeTime = -1.0f;
     emitter_.radius = 5.0f;
-    const float deltaTime = Time::DeltaTime();
+    const float deltaTime = TimeManager::DeltaTime();
     emitter_.radiusSpeed = deltaTime;
     emitter_.polarSpeed = deltaTime;
     emitter_.polarSpeedMinMax = { 0.0f,0.0f };
@@ -47,7 +47,7 @@ void ParticleEmitter::UpdateTimer()
         return;
     }
 
-    emitter_.frequencyTime += Time::DeltaTime();
+    emitter_.frequencyTime += TimeManager::DeltaTime();
 
     if (emitter_.frequency <= emitter_.frequencyTime) {
         emitter_.frequencyTime = 0.0f;

@@ -23,7 +23,7 @@ void ShotBulletManager::Initialize() {
 // Update内で時間を進める
 void ShotBulletManager::Update() {
 
-    currentTime_ += Time::DeltaTime();
+    currentTime_ += TimeManager::DeltaTime();
 
     if (currentTime_ >= rhythmManager_->kEndSoundTime_) {
         Initialize();

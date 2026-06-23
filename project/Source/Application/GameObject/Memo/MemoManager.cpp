@@ -44,7 +44,7 @@ void MemoManager::Update()
             controllerPos.y += Input::GetMouseWheel();
         }
 
-        controllerPos.y *= Time::DeltaTime();
+        controllerPos.y *= TimeManager::DeltaTime();
         spriteScale_ += { controllerPos.y, controllerPos.y };
         spriteScale_.x = std::clamp(spriteScale_.x, minSpriteScale_, maxSpriteScale_);
         spriteScale_.y = std::clamp(spriteScale_.y, minSpriteScale_, maxSpriteScale_);

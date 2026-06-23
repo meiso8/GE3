@@ -143,7 +143,7 @@ void PauseScreen::TimerUpdate()
         return;
     }
 
-    pauseTimer_ += Time::DeltaTime();
+    pauseTimer_ += TimeManager::DeltaTime();
     pauseTimer_ = std::clamp(pauseTimer_, 0.0f, 1.0f);
 }
 
