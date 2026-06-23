@@ -9,6 +9,7 @@ class ModelManager
 {
 private:
 public:
+    static const uint32_t kMaxModelCount = 512;
     /// @brief モデルを取得します
     /// @param handle モデルハンドル
     /// @return Modelのポインタ

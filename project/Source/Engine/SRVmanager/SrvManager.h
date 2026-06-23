@@ -29,7 +29,6 @@ public:
 
     static void CreateSRVforTexture(uint32_t srvIndex, ID3D12Resource* pResource, DirectX::TexMetadata& metadata);
     static void CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource,UINT numElements, UINT structureByteStride);
-
     static void SetGraphicsRootDescriptorTable(UINT RootParameterIndex, uint32_t srvIndex);
 };
 

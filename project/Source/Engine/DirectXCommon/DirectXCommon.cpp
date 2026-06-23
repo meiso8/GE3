@@ -5,20 +5,16 @@
 #include<cassert>
 #include <thread>
 #include"SRVmanager/SrvManager.h"
+#include"RtvManager/RtvManager.h"
+
 #include"DebugUI.h"
 #include"Input.h"
 
 using namespace Microsoft::WRL;
 ComPtr<ID3D12Device> DirectXCommon::device = nullptr;
 
-ComPtr<ID3D12DescriptorHeap> DirectXCommon::rtvDescriptorHeap = nullptr;
 ComPtr<ID3D12DescriptorHeap> DirectXCommon::dsvDescriptorHeap = nullptr;
-
-const uint32_t DirectXCommon::kMaxSoundCount = 128;
-const uint32_t DirectXCommon::kMaxModelCount = 128;
-uint32_t DirectXCommon::descriptorSizeRTV = 0;
 uint32_t DirectXCommon::descriptorSizeDSV = 0;
-
 
 std::unique_ptr< DxcCompiler> DirectXCommon::dxcCompiler = nullptr;
 std::unique_ptr<CommandList> DirectXCommon::commandList = nullptr;
@@ -37,7 +33,6 @@ DirectXCommon::~DirectXCommon()
     dxcCompiler.reset();
     dsvDescriptorHeap.Reset();
 
-    rtvDescriptorHeap.Reset();
 
     for (auto& resource : swapChainResources) {
         resource.Reset();
@@ -48,7 +43,7 @@ DirectXCommon::~DirectXCommon()
 
 }
 
-void DirectXCommon::Initialize(Window& window)
+void DirectXCommon::PreInitialize(Window& window)
 {
     assert(&window);
 
@@ -60,7 +55,10 @@ void DirectXCommon::Initialize(Window& window)
     CreateSwapChain();
     CreateDepthBuffer();
     DescriptorHeapSettings();
-    InitializeRenderTargetView();
+    
+}
+void DirectXCommon::PostInitialize()
+{
     InitializeDepthStencilView();
     InitializeFence();
     InitializeViewPort();
@@ -68,7 +66,6 @@ void DirectXCommon::Initialize(Window& window)
     CreateDXCCompiler();
 
 }
-
 void DirectXCommon::CreateDepthStencilResourceSRV()
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC depthTextureSrvDesc{};
@@ -163,7 +160,7 @@ void DirectXCommon::DrawRenderTexture()
     //描画先を画面(バックバッファ)のRTVにする
     // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
-    auto backBufferRTV = GetRTVCPUDescriptorHandle(backBufferIndex);
+    auto backBufferRTV = RtvManager::GetCPUDescriptorHandle(backBufferIndex);
 
     ppm.Execute(renderTexture_, backBufferRTV, &barrier, depthTextureData_.srvIndex, kBlendModeMultiply);
 }
@@ -372,15 +369,8 @@ void DirectXCommon::CreateDepthBuffer()
 
 void DirectXCommon::DescriptorHeapSettings()
 {
-    //DescriptorSizeを取得しておく
-    descriptorSizeRTV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-    descriptorSizeDSV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
-    //DescriptorHeapを生成する
-    if (rtvDescriptorHeap == nullptr) {
-        rtvDescriptorHeap = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 64, false);
-        LogFile::Log("Create RTV DescriptorHeap");
-    }
+    descriptorSizeDSV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
     //DSV用ヒープでディスクリプタの数は1。DSVはShader内で触るものではないので、ShaderVisibleはfalse
     if (dsvDescriptorHeap == nullptr) {
@@ -388,13 +378,12 @@ void DirectXCommon::DescriptorHeapSettings()
         LogFile::Log("Create DSV DescriptorHeap");
     }
 
-
 }
 
-void DirectXCommon::InitializeRenderTargetView()
+void DirectXCommon::InitializeRenderTargetView(RtvManager& rtvManager)
 {
     //RTVを作る
-    rtvClass.Create(swapChainResources);
+    rtvClass.Create(swapChainResources, rtvManager);
     LogFile::Log("CreateRTV");
 
 }
@@ -480,10 +469,10 @@ void DirectXCommon::UpdateFixFPS()
 
 }
 
-void DirectXCommon::InitializeRenderTexture()
+void DirectXCommon::InitializeRenderTexture(RtvManager& rtvManager)
 {
     renderTexture_ = RenderTexture::GetInstance();
-    renderTexture_->Create();
+    renderTexture_->Create(rtvManager);
 }
 
 void DirectXCommon::UpdateRenderTexture()
@@ -711,15 +700,6 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::UploadTextureData(const Mi
 }
 
 
-D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetRTVCPUDescriptorHandle(uint32_t index)
-{
-    return GetCPUDescriptorHandle(rtvDescriptorHeap.Get(), descriptorSizeRTV, index);
-}
-
-D3D12_GPU_DESCRIPTOR_HANDLE DirectXCommon::GetRTVGPUDescriptorHandle(uint32_t index)
-{
-    return  GetGPUDescriptorHandle(rtvDescriptorHeap.Get(), descriptorSizeRTV, index);
-}
 
 D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetDSVCPUDescriptorHandle(uint32_t index)
 {

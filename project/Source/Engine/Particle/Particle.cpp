@@ -24,17 +24,17 @@ std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager
 
 void ParticleManager::CreateAll()
 {
-    CreateParticleGroup("particle1", TextureFactory::CIRCLE, kPlane, false);
+    CreateParticleGroup("particle1", TextureFactory::CIRCLE, Primitive::kPlane, false);
 
-    CreateParticleGroup("people", TextureFactory::UV_CHECKER, kPlane, true,1.0f, "people");
-    CreateParticleGroup("ring", TextureFactory::GRADATION_LINE, kRing);
-    CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, kPlane, true,1.0f, "people");
+    CreateParticleGroup("people", TextureFactory::UV_CHECKER, Primitive::kPlane, true,1.0f, "people");
+    CreateParticleGroup("ring", TextureFactory::GRADATION_LINE, Primitive::kRing);
+    CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, Primitive::kPlane, true,1.0f, "people");
 
-    CreateParticleGroup("powerCharge", TextureFactory::CIRCLE, kPlane, false);
+    CreateParticleGroup("powerCharge", TextureFactory::CIRCLE, Primitive::kPlane, false);
 
-    CreateParticleGroup("fountain", TextureFactory::WATER_TEXTURE, kPlane,false,0.01f);
-    CreateParticleGroup("fountain2", TextureFactory::WATER_TEXTURE, kPlane, false,0.01f);
-    CreateParticleGroup("shockParticle", TextureFactory::CIRCLE, kPlane, false);
+    CreateParticleGroup("fountain", TextureFactory::WATER_TEXTURE, Primitive::kPlane,false,0.01f);
+    CreateParticleGroup("fountain2", TextureFactory::WATER_TEXTURE, Primitive::kPlane, false,0.01f);
+    CreateParticleGroup("shockParticle", TextureFactory::CIRCLE, Primitive::kPlane, false);
 }
 
 // ==========================================================================================================
@@ -139,7 +139,7 @@ SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, 
     return spherical;
 }
 
-void ParticleManager::CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle, const TopologyType& topologyType, const bool& useModel, const float temperature, const std::string& modelTag)
+void ParticleManager::CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle, const Primitive::TopologyType& topologyType, const bool& useModel, const float temperature, const std::string& modelTag)
 {
 
     assert(!particleGroups.contains(name));
@@ -175,28 +175,10 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
         newParticleGroup->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex = Texture::GetSRVHandle(textureHandle);
     }
   
-
-
     newParticleGroup->primitive = std::make_unique<Primitive>();
     assert(newParticleGroup->primitive);
 
-    MeshData meshData;
-    switch (topologyType)
-    {
-    case TopologyType::kPlane:
-        meshData = PrimitiveGenerator::CreatePlane({ 2.0f,2.0f });
-        break;
-    case TopologyType::kCube:
-        meshData = PrimitiveGenerator::CreateCube();
-        break;
-    case TopologyType::kSphere:
-        meshData = PrimitiveGenerator::CreateSphere();
-        break;
-    case TopologyType::kRing:
-        meshData = PrimitiveGenerator::CreateRing();
-        break;
-    }
-
+    MeshData meshData = Primitive::CreatePrimitive(topologyType);
     newParticleGroup->primitive->Create(meshData);
 
     //Instancing用のTransformationMatrixリソースを作成
@@ -210,7 +192,6 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
         newParticleGroup->instancingData[index].WVP = MakeIdentity4x4();
         newParticleGroup->instancingData[index].World = MakeIdentity4x4();
         newParticleGroup->instancingData[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
-
     }
 
     newParticleGroup->instancingResource->Unmap(0, nullptr);

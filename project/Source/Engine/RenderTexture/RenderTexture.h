@@ -9,79 +9,80 @@
 #include"Texture.h"
 #include"TransitionBarrier.h"
 
-struct MaterialForRenderTexture {
-    float4 color;
-    bool useEffect = false;
-    uint32_t type = false;
-    bool padding[2] = { };
-};
-
-struct MaterialForVignette
-{
-    float correctVal;
-    float viignetteVal;
-    float padding[2];
-};
-
-
-struct MaterialForBoxFilter
-{
-    float kernel;
-    float padding[3];
-};
-
-
-struct MaterialForGaussianFilter
-{
-    int32_t kernel;
-    float sigma;
-    float padding[2];
-};
-
-struct MaterialForLuminanceBasedOutline
-{
-    float weightVal;
-    float padding[3];
-};
-
-struct MaterialForDepthBasedOutline
-{
-    float32_t4x4 projectionInverse;
-    float32_t lineWidth;
-    float32_t3 color;
-};
-
-
-struct MaterialForRadialBlur
-{
-    float32_t2 center;
-    int32_t numSamples;
-    float32_t blurWidth;
-};
-
-struct MaterialForDissolve
-{
-    float32_t maskVal;
-    float32_t3 rgb;
-};
-
-struct MaterialForRandom
-{
-    float time;
-    float padding[3];
-};
-struct MaterialForThermography
-{
-    float alpha;
-    int32_t kernel;
-    float sigma;
-    float padding[1];
-};
+class RtvManager;
 
 class RenderTexture
 
 {
 public:
+    struct MaterialForRenderTexture {
+        float4 color;
+        bool useEffect = false;
+        uint32_t type = false;
+        bool padding[2] = { };
+    };
+
+    struct MaterialForVignette
+    {
+        float correctVal;
+        float viignetteVal;
+        float padding[2];
+    };
+
+
+    struct MaterialForBoxFilter
+    {
+        float kernel;
+        float padding[3];
+    };
+
+
+    struct MaterialForGaussianFilter
+    {
+        int32_t kernel;
+        float sigma;
+        float padding[2];
+    };
+
+    struct MaterialForLuminanceBasedOutline
+    {
+        float weightVal;
+        float padding[3];
+    };
+
+    struct MaterialForDepthBasedOutline
+    {
+        float32_t4x4 projectionInverse;
+        float32_t lineWidth;
+        float32_t3 color;
+    };
+
+
+    struct MaterialForRadialBlur
+    {
+        float32_t2 center;
+        int32_t numSamples;
+        float32_t blurWidth;
+    };
+
+    struct MaterialForDissolve
+    {
+        float32_t maskVal;
+        float32_t3 rgb;
+    };
+
+    struct MaterialForRandom
+    {
+        float time;
+        float padding[3];
+    };
+    struct MaterialForThermography
+    {
+        float alpha;
+        int32_t kernel;
+        float sigma;
+        float padding[1];
+    };
 
     enum RenderTextureType {
         kNormal0,
@@ -129,9 +130,8 @@ public:
     };
 
     Microsoft::WRL::ComPtr<ID3D12Resource>& GetMaterialResouce(const PSO::EffectType& effectType);
-    void Create();
-    void CreateResource(const uint32_t index, DXGI_FORMAT format, bool createSRV);
-
+    void Create(RtvManager& rtvManager);
+  
 
     // 1. 描画コマンドの最後にコピー命令を積む関数 (PostDrawの直前に呼ぶ)
     void CopyClickPixelCommand(int mouseX, int mouseY);
@@ -163,6 +163,7 @@ protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
 private:
+    void CreateResource(const uint32_t index, RtvManager& rtvManager, DXGI_FORMAT format, bool createSRV);
     void CreateMaterialBufferForGrayScale();
     void CreateMaterialBufferForVignette();
     void CreateMaterialBufferForBoxFilter();

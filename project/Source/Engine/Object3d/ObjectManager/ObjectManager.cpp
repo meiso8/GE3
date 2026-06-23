@@ -11,12 +11,14 @@ ObjectManager* ObjectManager::GetInstance() {
 
 void ObjectManager::RegisterObject(Object3d* gameObject) {
     if (!gameObject) return;
-    if (gameObject->GetObjectID() != 0) {
-        //あいでぃーあり
-        return;
+
+    uint32_t allocatedID = gameObject->GetObjectID();
+
+    if (allocatedID == 0) {
+        // 新しいIDを割り当てる（Allocate）
+        allocatedID = nextID_++;
     }
-    // 新しいIDを割り当てる（Allocate）
-    uint32_t allocatedID = nextID_++;
+
     gameObject->SetObjectID(allocatedID);
 
     // 管理用コンテナに追加
@@ -47,9 +49,9 @@ Object3d* ObjectManager::FindObjectByID(uint32_t id) {
 
 void ConvertMatArray(const Matrix4x4& srcMatrix, float dstArray[16])
 {
-        // 行列のメモリ構造をそのまま16個のfloat配列にコピー
-        std::memcpy(dstArray, &srcMatrix.m[0][0], sizeof(float) * 16);
-   
+    // 行列のメモリ構造をそのまま16個のfloat配列にコピー
+    std::memcpy(dstArray, &srcMatrix.m[0][0], sizeof(float) * 16);
+
 }
 
 void ObjectManager::ClickObject(Camera& camera)
@@ -63,7 +65,7 @@ void ObjectManager::ClickObject(Camera& camera)
     ImGui::Text("ClickedID : %d", clickedID_);
 
     bool isTriggerCtrlZ = Input::IsPressKey(DIK_LCONTROL) && Input::IsTriggerKey(DIK_Z);
-  
+
     bool doRedo = (Input::IsPressKey(DIK_LSHIFT) && isTriggerCtrlZ);
     bool doUndo = isTriggerCtrlZ && !doRedo;
 
@@ -89,7 +91,9 @@ void ObjectManager::ClickObject(Camera& camera)
     }
 
     auto* selectedObj = ObjectManager::GetInstance()->FindObjectByID(clickedID_);
-    DebugUI::CheckObject3d(*selectedObj, "selectObject");
+    if (selectedObj) {
+        DebugUI::CheckObject3d(*selectedObj, "selectObject");
+    }
 
     if (!isClicked && !ImGui::GetIO().WantCaptureMouse) {
         //ImGuiでどこにもマウスがキャプチャーしてないとき
@@ -127,22 +131,22 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera)
 
     static ImGuizmo::MODE currentMode = ImGuizmo::LOCAL;
     static ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;// TRANSLATE, ROTATE, SCALE
-    
+
     static int currentOp = 0; // 0: TRANSLATE, 1: ROTATE, 2: SCALE
 
-    if (ImGui::RadioButton("Translate (T)", &currentOp, 0)|| ImGui::IsKeyPressed(ImGuiKey_T)) {
+    if (ImGui::RadioButton("Translate (T)", &currentOp, 0) || ImGui::IsKeyPressed(ImGuiKey_T)) {
         currentOperation = ImGuizmo::TRANSLATE;
         currentOp = 0;
     }
     ImGui::SameLine(); // 横並びにする場合
 
-    if (ImGui::RadioButton("Rotate (R)", &currentOp, 1)|| ImGui::IsKeyPressed(ImGuiKey_R)) {
+    if (ImGui::RadioButton("Rotate (R)", &currentOp, 1) || ImGui::IsKeyPressed(ImGuiKey_R)) {
         currentOperation = ImGuizmo::ROTATE;
         currentOp = 1;
     }
     ImGui::SameLine();
 
-    if (ImGui::RadioButton("Scale (S)", &currentOp, 2)|| ImGui::IsKeyPressed(ImGuiKey_S)) {
+    if (ImGui::RadioButton("Scale (S)", &currentOp, 2) || ImGui::IsKeyPressed(ImGuiKey_S)) {
         currentOperation = ImGuizmo::SCALE;
         currentOp = 2;
     }

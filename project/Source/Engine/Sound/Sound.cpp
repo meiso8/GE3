@@ -13,7 +13,6 @@
 #pragma comment(lib, "xaudio2.lib") // xaudio2.libをリンクする。  
 #include"Log.h"
 
-
 using namespace Microsoft::WRL;
 
 ComPtr<IXAudio2> Sound::xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
@@ -260,7 +259,7 @@ bool Sound::LoadFile(const std::filesystem::path& path)
     }
 
     //テクスチャ枚数上限チェック
-    assert(soundDatas_.size() < DirectXCommon::kMaxSoundCount);
+    assert(soundDatas_.size() < kMaxSoundCount_);
 
     std::wstring filePathW = path.wstring();
 
@@ -350,7 +349,7 @@ void Sound::Initialize()
     result = MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
     assert(SUCCEEDED(result));
 
-    soundDatas_.reserve(DirectXCommon::kMaxSoundCount);
+    soundDatas_.reserve(kMaxSoundCount_);
 }
 
 void Sound::Finalize()

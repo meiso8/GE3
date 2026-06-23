@@ -30,6 +30,7 @@ std::unique_ptr<Window> MyEngine::wc = nullptr;
 
 DirectXCommon* MyEngine::directXCommon = nullptr;
 std::unique_ptr<SrvManager> MyEngine::srvManager = nullptr;
+std::unique_ptr<RtvManager>MyEngine::rtvManager = nullptr;
 std::unique_ptr<LogFile> MyEngine::logFile = nullptr;
 
 void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
@@ -57,17 +58,30 @@ void MyEngine::Create(const std::wstring& title, const int32_t clientWidth, cons
     VibrateManager::Initialize();
 
     directXCommon = DirectXCommon::GetInstance();
-    directXCommon->Initialize(*wc);
-    LogFile::Log("CreateDirectXCommon");
+    directXCommon->PreInitialize(*wc);
+    LogFile::Log("DirectXCommon PreInitialize");
+
+    rtvManager = std::make_unique<RtvManager>();
+    rtvManager->Initialize();
+    LogFile::Log("CreateRtvManager");
+
+    directXCommon->InitializeRenderTargetView(*rtvManager);
+    LogFile::Log("DirectXCommon InitializeRenderTargetView");
+
+    directXCommon->PostInitialize();
+    LogFile::Log("DirectXCommon PostInitialize");
+
     srvManager = std::make_unique<SrvManager>();
     srvManager->Initialize();
     LogFile::Log("CreateSrvManager");
+
 #ifdef USE_IMGUI
     //ImGuiの初期化。
     imGuiClass.Initialize(*wc, directXCommon->GetDevice().Get(), directXCommon->GetSwapChain(), directXCommon->GetSwapChainRtv());
     LogFile::Log("InitImGui");
 #endif
-    directXCommon->InitializeRenderTexture();
+    
+    directXCommon->InitializeRenderTexture(*rtvManager);
     directXCommon->CreateDepthStencilResourceSRV();
 
     auto* pso = PSO::GetInstance();
@@ -284,44 +298,50 @@ void MyEngine::PostCommandSet() {
 
 void MyEngine::Finalize() {
 
-
+    //シーンマネージャーの終了処理
     SceneManager::Finalize();
-
+    //パーティクルの終了処理
     ParticleManager::GetInstance()->Finalize();
-
-
+    //モデルの終了処理
     ModelManager::Finalize();
 
 #ifdef _DEVELOP
     //グリットを解放
     DrawGrid::Finalize();
-
 #endif
+    //テキストの終了処理
     FreeTypeManager::Finalize();
-
+    //テクスチャの終了処理
     Texture::Finalize();
+    //音の終了処理
     Sound::Finalize();
+    //スプライトの終了処理
     SpriteCommon::Finalize();
-
+    //スポットライトの終了処理
     SpotLightManager::Finalize();
+    //ポイントライトの終了処理
     PointLightManager::Finalize();
+    //方向ライトの終了処理
     DirectionalLightManager::Finalize();
 
 #ifdef USE_IMGUI
     //ImGuiの終了処理 ゲームループが終わったら行う
     imGuiClass.ShutDown();
 #endif
-
+    //DirectXCommonの終了処理
     directXCommon->EndFrame();
-
+    //RTVManagerのリセット
+    rtvManager.reset();
+    //SRVManagerのリセット
     srvManager.reset();
-
+    //バイブレーションの終了処理
     VibrateManager::Finalize();
+    //入力クラスの終了処理
     input.reset();
-
+    //ウィンドウクラスの終了処理
     wc->Finalize();
     wc.reset();
-
+    //ログファイルのリセット
     logFile.reset();
 
 }

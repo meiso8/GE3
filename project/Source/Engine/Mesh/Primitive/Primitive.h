@@ -27,11 +27,20 @@ public:
 class Primitive {
 
 public:
+    enum TopologyType {
+        kPlane,
+        kCube,
+        kSphere,
+        kRing,
+        kCylinder,
+        kMaxTopology,
+    };
+
     enum class MeshType {
         kNormal, // 三角形ポリゴン
         kLine    // ライン
     };
-
+    static MeshData CreatePrimitive(const TopologyType& topologyType);
     virtual void Create(const MeshData& meshData);
     virtual void PreDraw(
         ID3D12GraphicsCommandList* commandList,
@@ -44,10 +53,8 @@ public:
        const DxcCompiler::PS_TYPE psType =  DxcCompiler::PS_TYPE::PS_Normal);
     virtual void Draw(ID3D12GraphicsCommandList* commandList);  
     virtual void DrawCallForParticle(ID3D12GraphicsCommandList* commandList, const uint32_t numInstance);
-
     ~Primitive();
 protected:
-
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     D3D12_INDEX_BUFFER_VIEW  indexBufferView_{};
     D3D_PRIMITIVE_TOPOLOGY topology_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;

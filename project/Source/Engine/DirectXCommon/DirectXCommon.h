@@ -26,15 +26,11 @@
 #include<chrono>
 
 #include"Vector4.h"
-
+class RtvManager;
 class DirectXCommon
 {
 public:
-    static uint32_t descriptorSizeRTV;
     static uint32_t descriptorSizeDSV;
-
-    static const uint32_t kMaxSoundCount;
-    static const uint32_t kMaxModelCount;
 private:
 
     struct DepthTextureData {
@@ -48,7 +44,6 @@ private:
     DXGIFactory dxgiFactory = {};
 
     static Microsoft::WRL::ComPtr<ID3D12Device> device;
-    static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
 
     static Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap;
     static std::unique_ptr< DxcCompiler> dxcCompiler;
@@ -95,7 +90,8 @@ public:
 
     /// @brief 初期化
     /// @param window windowクラスを渡す
-    void Initialize(Window& window);
+    void PreInitialize(Window& window);
+    void PostInitialize();
     void CreateDepthStencilResourceSRV();
     /// @brief 描画前処理
 /// @param color 画面の色を指定する
@@ -121,7 +117,10 @@ public:
         return rtvClass
             ;
     }
-    void InitializeRenderTexture();
+    
+    void InitializeRenderTexture(RtvManager& rtvManager);
+    void InitializeRenderTargetView(RtvManager& rtvManager);
+
     void UpdateRenderTexture();
     /// @brief BufferResourceの作成関数
     /// @param sizeInBytes 
@@ -185,14 +184,7 @@ public:
     /// @brief コマンドリストの取得関数
     /// @return コマンドリスト
     static ID3D12GraphicsCommandList* GetCommandList() { return commandList->GetCommandList().Get(); };
-    /// @brief RTVのCPUディスクリプタハンドルの取得関数
-    /// @param index 
-    /// @return RTVのCPUディスクリプタハンドル
-    static D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);
-    /// @brief RTVのGPUディスクリプタハンドルの取得関数
-    /// @param index 
-    /// @return RTVのGPUディスクリプタハンドル
-    static D3D12_GPU_DESCRIPTOR_HANDLE GetRTVGPUDescriptorHandle(uint32_t index);
+
     /// @brief DSVのCPUディスクリプタハンドルの取得関数
     /// @param index 
     /// @return DSVのCPUディスクリプタハンドル
@@ -220,7 +212,7 @@ private:
     void CreateSwapChain();
     void CreateDepthBuffer();
     void DescriptorHeapSettings();
-    void InitializeRenderTargetView();
+
     void InitializeDepthStencilView();
     void InitializeFence();
     void InitializeViewPort();
