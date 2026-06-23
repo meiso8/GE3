@@ -104,12 +104,7 @@ class ParticleManager
 {
 public:
     static const uint32_t kNumMaxInstance = 1000;//インスタンス数
-    enum TopologyType {
-        kPlane,
-        kCube,
-        kSphere,
-        kRing, 
-    };
+
 
 private:
 
@@ -149,7 +144,7 @@ public:
         assert(particleGroups.contains(name));
         return particleGroups[name];
     };
-    void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle,const TopologyType& topoligyType, const bool& useModel = false, const float temperature = 1.0f, const std::string& modelFileName = "Box.obj");
+    void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle,const Primitive::TopologyType& topoligyType, const bool& useModel = false, const float temperature = 1.0f, const std::string& modelFileName = "Box.obj");
 
     void Update(Camera& camera);
     void Draw();

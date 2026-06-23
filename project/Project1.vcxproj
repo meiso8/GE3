@@ -163,6 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\RtvManager\RtvManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Primitive\Primitive.cpp" />
     <ClCompile Include="Source\Engine\Object3d\ObjectManager\ObjectCommandManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Fountain\Fountain.cpp" />
@@ -320,6 +321,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\StageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\RtvManager\RtvManager.h" />
     <ClInclude Include="Source\Engine\Mesh\Primitive\Primitive.h" />
     <ClInclude Include="Source\Engine\Object3d\ObjectManager\ObjectCommandManager.h" />
     <ClInclude Include="Source\Engine\Object3d\ObjectManager\ObjectCommandBase.h" />

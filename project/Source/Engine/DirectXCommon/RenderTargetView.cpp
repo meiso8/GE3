@@ -2,9 +2,10 @@
 #include<cassert>
 #pragma comment(lib,"d3d12.lib")
 #include "DirectXCommon.h"
+#include"RtvManager/RtvManager.h"
 
 void RenderTargetView::Create(
-   const std::array< Microsoft::WRL::ComPtr <ID3D12Resource>,2>swapChainResources) {
+   const std::array< Microsoft::WRL::ComPtr <ID3D12Resource>,2>swapChainResources, RtvManager& rtvManager) {
 
     //Descriptorは必ずDescriptorHandleというポインタのようなものを介して扱う必要がある
     //Viewを作るときは、どこのDescriptorに情報を格納するかを明示的に指定する必要がる
@@ -13,7 +14,8 @@ void RenderTargetView::Create(
 
     //2つ作る。
     for (int i = 0; i < 2; ++i) {
-        rtvHandles_[i] = DirectXCommon::GetRTVCPUDescriptorHandle(i);
+        uint32_t index = rtvManager.Allocate();
+        rtvHandles_[i] = rtvManager.GetCPUDescriptorHandle(index);
         DirectXCommon::GetDevice()->CreateRenderTargetView(swapChainResources[i].Get(), &rtvDesc_, rtvHandles_[i]);
     }
 

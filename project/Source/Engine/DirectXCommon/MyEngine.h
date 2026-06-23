@@ -5,6 +5,7 @@
 #include"Input.h"
 #include"DirectXCommon.h"
 #include"SRVmanager/SrvManager.h"
+#include"Rtvmanager/Rtvmanager.h"
 #include"Log.h"
 #include<memory>
 
@@ -26,6 +27,7 @@ private:
     static std::unique_ptr<Window> wc;
     static std::unique_ptr <Input> input;
     static std::unique_ptr<SrvManager> srvManager;
+    static std::unique_ptr<RtvManager> rtvManager;
     bool endRequest_ = false;
 protected:
 

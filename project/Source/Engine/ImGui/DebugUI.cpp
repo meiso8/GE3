@@ -11,6 +11,8 @@
 #include"Particle/ParticleEmitter.h"
 #include"Object3d.h"
 #include"AnimationObject3d.h"
+#include"ObjectManager/ObjectManager.h"
+
 #include"Sound.h"
 
 #include"Lights/Light.h"
@@ -689,60 +691,88 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     if (! &object3d) {
         return;
     }
+
     if (ImGui::TreeNode(label)) {
-        CheckWorldTransform(object3d.GetWorldTransform(), label);
+
+        // 直前に描画した要素が右クリックされたら、ポップアップを開く
+        if (ImGui::BeginPopupContextItem("ObjectContextMenu")) // "ObjectContextMenu"はポップアップの一意のID
+        {
+            if (ImGui::Selectable("Delete"))
+            {
+                ObjectManager::GetInstance()->UnregisterObject(&object3d);
+            }
+            ImGui::EndPopup();
+        }
+
+        CheckWorldTransform(object3d.GetWorldTransform(), "WorldTransform");
         ShowMatrix4x4(object3d.GetWorldMatrix());
-
-        CheckMaterial(object3d.GetMaterial(), "material");
-        CheckTransform(object3d.GetUVTransform(), "uvTransfrom");
-
-        CheckWaveData(object3d.GetWaveData(0), "wave0");
-        CheckWaveData(object3d.GetWaveData(1), "wave1");
+        CheckMaterial(object3d.GetMaterial(), "Material");
+        CheckTransform(object3d.GetUVTransform(), "UVTransfrom");
+        CheckWaveData(object3d.GetWaveData(0), "Wave0");
+        CheckWaveData(object3d.GetWaveData(1), "Wave1");
         CheckBalloonData(object3d.GetBalloonData());
 
         auto* primitive = object3d.GetPrimitive();
+       
         if (primitive) {
+
+            std::string currentModelName = "unknow";
             if (auto model = dynamic_cast<Model*>(primitive)) {
 
-                std::string currentModelName = "unknow";
                 for (const auto& [name, managerModel] : ModelManager::GetModels()) {
                     if (model == managerModel.get()) {
                         currentModelName = name.string().c_str();
                     }
                 }
-                if (ImGui::BeginCombo("Models", currentModelName.c_str())) {
-                    // マップ内のすべてのシーンをループして選択肢を作る
-                    for (const auto& [name, scene] : ModelManager::GetModels()) {
-                        // 選択肢を表示（クリックされたら true を返す）
-                        if (ImGui::Selectable(name.string().c_str(), true)) {
-                            // クリックされたらシーン切り替え関数を呼ぶ
-                            object3d.SetMeshAndMaterial(ModelManager::GetModel(name));
-                            break;
-                        }
-                    }
+            }
 
-                    ImGui::EndCombo();
+            if (ImGui::BeginCombo("Models", currentModelName.c_str())) {
+                // マップ内のすべてのシーンをループして選択肢を作る
+                for (const auto& [name, scene] : ModelManager::GetModels()) {
+                    // 選択肢を表示（クリックされたら true を返す）
+                    if (ImGui::Selectable(name.string().c_str(), true)) {
+                        // クリックされたらシーン切り替え関数を呼ぶ
+                        object3d.SetMeshAndMaterial(ModelManager::GetModel(name));
+                        break;
+                    }
                 }
 
+                ImGui::EndCombo();
             }
+
+            const char* topologyType[Primitive::kMaxTopology] =
+            {
+            "Plane",
+            "Cube",
+            "Sphere",
+            "Ring",
+            "Cylinder"
+            };
+
+            int currentPrimitive = 0;
+
+           /* if (ImGui::Combo("Primitive", &currentPrimitive, topologyType, IM_ARRAYSIZE(topologyType))) {
+                Primitive::TopologyType topo = static_cast<Primitive::TopologyType>(currentPrimitive % Primitive::kMaxTopology);
+                std::unique_ptr<Primitive>  q11 = std::make_unique<Primitive>();
+                primitive->Create(Primitive::CreatePrimitive(topo));
+                object3d.SetMeshAndMaterial(primitive.get());
+            };*/
         }
 
         if (auto* aniObj = dynamic_cast<AnimationObject3d*>(&object3d)) {
+            
             if (ImGui::TreeNode("Animation")) {
+
                 for (auto& [name, animations] : aniObj->GetAnimations()) {
                     ImGui::Text(name.c_str());
                     ImGui::SliderFloat("duration", &animations.duration, 0.0f, 1000000.0f);
                 }
+               
                 ImGui::TreePop();
             }
-
         }
-
         ImGui::TreePop();
     }
-
-
-
 #endif
 }
 void DebugUI::CheckParticle()

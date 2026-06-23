@@ -1,6 +1,7 @@
 #include "RenderTexture.h"
 #include"DirectXCommon.h"
 #include"Engine/SRVManager/SRVManager.h"
+#include"Engine/RtvManager/RtvManager.h"
 #include"PSO.h"
 #ifdef _DEVELOP
 #include "DebugUI.h"
@@ -16,16 +17,16 @@ Microsoft::WRL::ComPtr<ID3D12Resource>& RenderTexture::GetMaterialResouce(const 
 }
 
 
-void RenderTexture::Create()
+void RenderTexture::Create(RtvManager& rtvManager)
 {
     kRenderTargetClearValue_ = { 1.0f,0.0f,0.0f,1.0f };
 
-    CreateResource(kNormal0, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,true);
-    CreateResource(kNormal1, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,true);
+    CreateResource(kNormal0,rtvManager, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
+    CreateResource(kNormal1,rtvManager, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
     //サーモグラフィー用テクスチャ
-    CreateResource(kThermography, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,true);
+    CreateResource(kThermography, rtvManager,DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
     //ObjectID用テクスチャ　
-    CreateResource(kObjectID, DXGI_FORMAT_R32_UINT, false);
+    CreateResource(kObjectID, rtvManager,DXGI_FORMAT_R32_UINT, false);
     //ObjectID用リソース
     idReadbackResource_ = DirectXCommon::CreateReadbackBufferResource(sizeof(uint32_t));
 
@@ -42,8 +43,8 @@ void RenderTexture::Create()
     CreateMaterialThermography();
 }
 
-void RenderTexture::CreateResource(const uint32_t index, DXGI_FORMAT format, bool createSRV)
-{ 
+void RenderTexture::CreateResource(const uint32_t index, RtvManager& rtvManager,DXGI_FORMAT format, bool createSRV)
+{
     //rtvの作成
     renderTextureDatas_[index].resource =
         DirectXCommon::CreateRenderTextureResource(
@@ -58,7 +59,8 @@ void RenderTexture::CreateResource(const uint32_t index, DXGI_FORMAT format, boo
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
     rtvDesc.Format = format;
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-    renderTextureDatas_[index].rtvHandleCPU = DirectXCommon::GetRTVCPUDescriptorHandle(index + 3);
+    uint32_t rtvIndex = rtvManager.Allocate();
+    renderTextureDatas_[index].rtvHandleCPU = rtvManager.GetCPUDescriptorHandle(rtvIndex);
     DirectXCommon::GetDevice()->CreateRenderTargetView(renderTextureDatas_[index].resource.Get(), &rtvDesc, renderTextureDatas_[index].rtvHandleCPU);
 
     LogFile::Log("Rendertexture : CreateRTVDesc");
@@ -305,7 +307,7 @@ void RenderTexture::Update()
 
         ImGui::DragFloat2("center", &materialForRadialBlur_->center.x, 0.01f, 0.0f, 1.0f);
         ImGui::DragInt("numSamples", &materialForRadialBlur_->numSamples, 1.0f, 1);
-        ImGui::DragFloat("blurWidth", &materialForRadialBlur_->blurWidth,0.01f);
+        ImGui::DragFloat("blurWidth", &materialForRadialBlur_->blurWidth, 0.01f);
         ImGui::TreePop();
     }
 
@@ -445,7 +447,7 @@ void RenderTexture::CreateMaterialDepthBasedOutline()
     HRESULT result = materialResource_[PSO::kEffectDepthBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForDepthBasedOutline_));
     materialForDepthBasedOutline_->projectionInverse = MakeIdentity4x4();
     materialForDepthBasedOutline_->lineWidth = 10000.0f;
-    materialForDepthBasedOutline_->color = { 0.0f,0.0f,0.0f};
+    materialForDepthBasedOutline_->color = { 0.0f,0.0f,0.0f };
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : DepthBasedOutline");
 }
@@ -475,11 +477,9 @@ void RenderTexture::CreateMaterialDissolve() {
 
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectDissolve]->Map(0, nullptr, reinterpret_cast<void**>(&materialForDissolve_));
-    materialForDissolve_->maskVal = 0.5f;
-    materialForDissolve_->rgb = { 8.0f/255.0f, 16.0f / 255.0f,0.0f };
-
+    materialForDissolve_->maskVal = 1.0f;
+    materialForDissolve_->rgb = { 8.0f / 255.0f, 16.0f / 255.0f,0.0f };
     LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve");
-
 }
 void RenderTexture::CreateMaterialRandom()
 {

@@ -26,6 +26,8 @@ struct SoundData {
 
 class Sound {
 public:
+    static const uint32_t kMaxSoundCount_ = 512;
+public:
     /// @brief BGＭを再生する
     /// @param tag タグ
     /// @param volumeOffset offset

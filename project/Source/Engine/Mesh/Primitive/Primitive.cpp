@@ -828,6 +828,30 @@ void Primitive::PreDraw(
 
 }
 
+MeshData Primitive::CreatePrimitive(const TopologyType& topologyType)
+{
+    switch (topologyType)
+    {
+    case Primitive::TopologyType::kPlane:
+        return  PrimitiveGenerator::CreatePlane({ 2.0f,2.0f });
+        break;
+    case Primitive::TopologyType::kCube:
+        return PrimitiveGenerator::CreateCube();
+        break;
+    case Primitive::TopologyType::kSphere:
+        return PrimitiveGenerator::CreateSphere();
+        break;
+    case Primitive::TopologyType::kRing:
+        return PrimitiveGenerator::CreateRing();
+        break;
+    case Primitive::TopologyType::kCylinder:
+        return PrimitiveGenerator::CreateCylinder();
+        break;
+    }
+
+    return  PrimitiveGenerator::CreatePlane({ 1.0f,1.0f });
+}
+
 void Primitive::Create(const MeshData& meshData)
 {
 
