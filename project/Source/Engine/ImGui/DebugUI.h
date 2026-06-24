@@ -22,8 +22,9 @@ class Model;
 class ParticleManager;
 struct Emitter;
 class Object3d;
-class AnimationObject3d;
 struct Material;
+class AnimationObject3d;
+
 struct PointLight;
 struct QuaternionTransform;
 class MeshCommon;
@@ -96,7 +97,15 @@ public:
     /// @brief 色
     /// @param color 
     static void CheckColor(Vector4& color, const char* label);
-    static void CheckMaterial(Material& material, const char* label);
+    static void CheckObject3dMaterial(
+        Vector4& color,
+        int32_t& lightMode,
+        float& shininess,
+        float& tempereture,
+        Matrix4x4& uvMatrix,
+        float& environmentCoefficient,
+        const char* label
+    );
     static void CheckLightMode(int32_t& lightMode, const char* label);
     static void CheckBlendMode(BlendMode& blendMode);
 

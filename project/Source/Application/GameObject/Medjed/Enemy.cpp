@@ -117,7 +117,7 @@ void Enemy::Init()
 
 }
 
-void Enemy::Draw(Camera& camera, const LightMode& lightMode)
+void Enemy::Draw(Camera& camera, const Object3d::LightMode& lightMode)
 {
     if (!isAppear_) { return; }
 

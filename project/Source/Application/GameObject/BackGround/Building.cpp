@@ -13,7 +13,7 @@ Building::Building() {
     buildingPos_ = std::make_unique<Object3d>();
     buildingPos_->Create();
     buildingPos_->SetMeshAndMaterial(model_);
-    buildingPos_->SetLightMode(kLightModeNone);
+    buildingPos_->SetLightMode(Object3d::LightMode::kLightModeNone);
 
     fieldPoses_[Wall0] = std::make_unique<FieldCollider>();
     fieldPoses_[Wall1] = std::make_unique<FieldCollider>();

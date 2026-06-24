@@ -4,9 +4,7 @@
 struct Material
 {
     float4 color;
-    int32_t lightType;
     float32_t4x4 uvTransform;
-
 };
 
 //ConstantBufferを定義する

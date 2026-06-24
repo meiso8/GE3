@@ -103,7 +103,7 @@ void MedjedManager::Draw(Camera& camera)
 
     GetMedjed()->Draw(camera);
 
-    enemy_->Draw(camera, kLightModeHalfL);
+    enemy_->Draw(camera, Object3d::kLightModeHalfL);
 
 }
 

@@ -4,7 +4,7 @@
 #include"PSO.h"  
 #include"Transform.h"  
 #include"TransformationMatrix.h"  
-#include"MaterialResource.h"  
+
 #include"Vector2.h"  
 #include"RootSignature.h"  
 
@@ -16,14 +16,20 @@
 class Sprite
 {
 public:
+
+    struct Material
+    {
+        float4 color;
+        float32_t4x4 uvTransform;
+    };
+
     ~Sprite();
     void Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
     void Update();
     void UpdateAnchorPoint();
     static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
-    void Draw(const LightMode& lightMode = LightMode::kLightModeNone
-    );
+    void Draw();
 
     void SetColor(const Vector4& color);
     void SetTexture(const TextureFactory::Handle& textureHandle);
@@ -42,12 +48,12 @@ public:
     Vector2& GetPosition() { return position_; };
     const Vector2& GetPosition() const { return position_; };
 
-    Material* GetMaterial() { return materialResource_.GetMaterial(); };
+    Material* GetMaterial() { return material_; };
     Vector3& GetUVScale() { return uvTransform_.scale; };
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
-    Vector4& GetColor() { return materialResource_.GetMaterial()->color; }
-    const Vector4& GetColor() const { return materialResource_.GetMaterial()->color; }
+    Vector4& GetColor() { return material_->color; }
+    const Vector4& GetColor() const { return material_->color; }
 
     Vector2& GetAnchorPoint() { return anchorPoint_; }
     /// @brief アンカーポイント
@@ -96,9 +102,8 @@ private:
     EulerTransform uvTransform_ = { 0.0f };
     Matrix4x4 uvTransformMatrix_{};
 
-    MaterialResource materialResource_{};
-
-
+    Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
+    Material* material_ = nullptr;
 };
 
 //Spriteとposとの当たり判定

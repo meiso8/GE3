@@ -3,6 +3,7 @@
 #include"Camera.h"
 #include"MakeMatrix.h"
 #include"PSO.h"
+#include"PrimitiveFactory/PrimitiveFactory.h"
 
 #include"Collision.h"
 #include"SRVmanager/SrvManager.h"
@@ -11,6 +12,7 @@
 #include"ParticleEmitter.h"
 #include"TimeManager.h"
 #include"Lerp.h"
+#include"Object3d.h"
 
 using namespace  Microsoft::WRL;
 namespace {
@@ -153,9 +155,7 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
     newParticleGroup->useModel = useModel;
     newParticleGroup->textureSize = { 100.0f,100.0f };
 
-    //マテリアルリソースを作成 //ライトなし
-    newParticleGroup->materialResource = std::make_unique<MaterialResource>();
-    newParticleGroup->materialResource->CreateMaterial(temperature, { 1.0f,1.0f,1.0f,1.0f }, LightMode::kLightModeNone);
+    CreateMaterial(*newParticleGroup,temperature);
 
     std::map<std::string, MaterialData> materials;
 
@@ -178,7 +178,7 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
     newParticleGroup->primitive = std::make_unique<Primitive>();
     assert(newParticleGroup->primitive);
 
-    MeshData meshData = Primitive::CreatePrimitive(topologyType);
+    MeshData meshData = PrimitiveFactory::GetMeshData(topologyType);
     newParticleGroup->primitive->Create(meshData);
 
     //Instancing用のTransformationMatrixリソースを作成
@@ -241,12 +241,9 @@ std::list<SphericalMove> EmitCoordinate(uint32_t count, const float& radius, con
 
 }
 
-
 void ParticleManager::Emit(Emitter& emitter)
 {
     assert(particleGroups.contains(emitter.name));
-
-   
     particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityAABB, emitter.transform, emitter.useRadialEmission_, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateAABB_, emitter.scaleAABB_));
 
     particleGroups[emitter.name]->movement = emitter.movement;
@@ -306,8 +303,6 @@ void ParticleManager::Normal(ParticleGroup& group)
 
 void ParticleManager::Sphere(ParticleGroup& group)
 {
-
-
     group.numInstance = 0;
     auto particleIterator = group.particles.begin();
     auto coordIterator = group.sphericalCoordinates.begin();
@@ -419,18 +414,17 @@ void ParticleManager::IsCollisionFieldArea(Particle& particleItr, ParticleGroup&
 
 void ParticleManager::Draw()
 {
-    int drawCallCount = 0;
+  
     for (const auto& [name, group] : particleGroups) {
 
         if (group->numInstance > 0) {
             //rootSignatureの設定
             commandList_->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
             commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateParticle(group->blendMode).Get());
-            //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-            commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+            //形状を設定。
 
             //マテリアルの設定
-            commandList_->SetGraphicsRootConstantBufferView(0, group->materialResource->GetMaterialResource()->GetGPUVirtualAddress());
+            commandList_->SetGraphicsRootConstantBufferView(0, group->materialResource->GetGPUVirtualAddress());
             //粒ごとのトランスフォーム
             SrvManager::SetGraphicsRootDescriptorTable(1, group->instanceSrvIndex);
             //テスクチャ
@@ -439,11 +433,23 @@ void ParticleManager::Draw()
 
             if (group->model != nullptr && group->useModel) {
 
-                commandList_->IASetVertexBuffers(0, 1, &group->model->GetVBV());
-                commandList_->DrawInstanced(UINT(group->model->GetModelData()->vertices.size()), group->numInstance, 0, 0);
+                auto* model = group->model;
+                commandList_->IASetPrimitiveTopology(model->GetTopology());
+                commandList_->IASetVertexBuffers(0, 1, &model->GetVertexBufferView());
+                commandList_->DrawInstanced(UINT(model->GetModelData()->vertices.size()), group->numInstance, 0, 0);
+
             } else {
-                drawCallCount++;
-                group->primitive->DrawCallForParticle(commandList_, group->numInstance);
+          
+                auto& primitive = group->primitive;
+                commandList_->IASetPrimitiveTopology(primitive->GetTopology());
+                commandList_->IASetVertexBuffers(0, 1, &primitive->GetVertexBufferView());
+
+                if (primitive->GetIndexCount() > 0) {
+                    commandList_->IASetIndexBuffer(&primitive->GetIndexBufferView());
+                    commandList_->DrawIndexedInstanced(primitive->GetIndexCount(), group->numInstance, 0, 0, 0);
+                } else {
+                    commandList_->DrawInstanced(primitive->GetVertexCount(), group->numInstance, 0, 0); // ラインなどインデックスが無い場合
+                }
             }
         }
 
@@ -459,19 +465,20 @@ void ParticleManager::InitAccelerationField(ParticleGroup& group)
 
 void ParticleManager::Finalize()
 {
+
     for (auto& [name, group] : particleGroups) {
         if (group->instancingResource) {
             group->instancingResource.Reset();
         }
+
         if (group->materialResource != nullptr) {
-            group->materialResource.reset();
+            group->materialResource->Unmap(0, nullptr);
+            group->materialResource = nullptr;
         }
         group.reset();
     }
 
 }
-
-
 
 // ==========================================================================================================
 
@@ -490,6 +497,24 @@ void ParticleManager::UpdateInstancingData(ParticleGroup& group, Particle& parti
     group.instancingResource->Unmap(0, nullptr);
 
     ++group.numInstance;
+
+}
+
+void ParticleManager::CreateMaterial(ParticleGroup& group,const float temperature)
+{
+    //マテリアル用のリソースを作る。
+    group.materialResource = DirectXCommon::CreateBufferResource(sizeof(Object3d::Material));
+    //マテリアルにデータを書き込む
+
+    //書き込むためのアドレスを取得
+    HRESULT result = group.materialResource->Map(0, nullptr, reinterpret_cast<void**>(&group.material));
+    group.material->color = { 1.0f,1.0f,1.0f,1.0f };
+    group.material->lightMode = Object3d::LightMode::kLightModeNone;
+    group.material->uvTransform = MakeIdentity4x4();
+    group.material->shininess = 50.0f;
+    group.material->environmentCoefficient = 0.0f;
+    //体温
+    group.material->temperature = temperature;
 
 }
 

@@ -70,7 +70,7 @@ void DummyMedjed::Draw(Camera& camera)
         return;
     }
 
-    object3d_->SetLightMode(kLightModeHalfL);
+    object3d_->SetLightMode(Object3d::kLightModeHalfL);
     object3d_->Draw(camera);
 
     //ColliderDraw(camera);

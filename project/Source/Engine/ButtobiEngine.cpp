@@ -39,7 +39,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     //誰も捕捉しなかった場合に(Unhandled),補足する関数を登録
     //main関数始まってすぐに登録すると良い
     SetUnhandledExceptionFilter(ExportDump);
-
+    //ログファイルの生成
     logFile = std::make_unique<LogFile>();
     logFile->Create();
     LogFile::Log("CreateLogFile");
@@ -56,15 +56,15 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     LogFile::Log("CreateInput");
     //コントローラー
     VibrateManager::Initialize();
-
+    //FPSや時間管理の生成
     time_ = std::make_unique<TimeManager>();
     time_->Initialize();
     LogFile::Log("Time Manager Initialize");
-
+    //DirectXCommon
     directXCommon = DirectXCommon::GetInstance();
     directXCommon->PreInitialize(*wc);
     LogFile::Log("DirectXCommon PreInitialize");
-
+    //rtvManagerの生成
     rtvManager = std::make_unique<RtvManager>();
     rtvManager->Initialize();
     LogFile::Log("CreateRtvManager");
@@ -119,9 +119,17 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     //モデル読み込み
     ModelFactory::Load();
     LogFile::Log("LoadAllModel");
+
+    //プリミティブ生成
+    primitiveFactory_ = std::make_unique<PrimitiveFactory>();
+    primitiveFactory_->CreateAllPrimitive();
+    LogFile::Log("CreatePrimitive");
+
     //JsonFileの読み込み
     JsonFile::LoadAllJsonFile();
     LogFile::Log("LoadAllJsonFile");
+
+    //テキストの初期化
     FreeTypeManager::Initialize();
     LogFile::Log("InitializeFreeTypeManager");
 #ifdef _DEVELOP
@@ -130,6 +138,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     LogFile::Log("CreateDrawGrid");
 #endif
 
+    //パーティクル管理
     auto* particleManager = ParticleManager::GetInstance();
     particleManager->Create();
     particleManager->CreateAll();

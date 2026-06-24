@@ -8,7 +8,7 @@ public:
         name_ = "GoldHeart";
         description_ = "何かにはめ込むことで力を発揮する。";
         SetModel("hart");
-        object_->SetLightMode(kLightModeLReflectance);
+        object_->SetLightMode(Object3d::kLightModeLReflectance);
     }
     void Update()override;
     void Use() override;

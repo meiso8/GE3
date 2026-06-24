@@ -1,14 +1,13 @@
 #include "../Hlsli/Sprite.hlsli"
 
-struct Material
+
+struct MaterialForFont
 {
     float4 color;
-    int lightType;
     float32_t4x4 uvTransform;
-
 };
 
-ConstantBuffer<Material> gMaterial : register(b0);
+ConstantBuffer<MaterialForFont> gMaterial : register(b0);
 Texture2D<float4> gTexture : register(t2); 
 SamplerState gSampler : register(s0);
 

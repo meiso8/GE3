@@ -21,7 +21,7 @@ PapyrusWall::PapyrusWall()
 
 void PapyrusWall::Draw(Camera& camera)
 {
-    buildingPos_->SetLightMode(kLightModeHalfL);
+    buildingPos_->SetLightMode(Object3d::kLightModeHalfL);
     buildingPos_->Draw(camera);
 
     /* for (const auto& [type, pos] : fieldPoses_) {

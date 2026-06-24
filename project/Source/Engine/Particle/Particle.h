@@ -2,7 +2,7 @@
 #include "ModelData.h"
 #include"commandList.h"
 #include"WorldTransform.h"
-#include"MaterialResource.h"
+
 #include"Transform.h"
 #include"RootSignature.h"
 #include "BlendState.h"
@@ -17,6 +17,7 @@
 #include<cstdint>
 #include<memory>
 #include"Primitive.h"
+#include"Object3d.h"
 
 class Camera;
 class ShaderResourceView;
@@ -58,7 +59,9 @@ enum ParticleMovements {
 
 struct ParticleGroup {
     MaterialData materialData;
-    std::unique_ptr < MaterialResource> materialResource;
+    Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
+    Object3d::Material* material = nullptr;
+
     std::list<Particle>particles;
     std::list<SphericalMove>sphericalCoordinates;
     uint32_t instanceSrvIndex;
@@ -104,8 +107,6 @@ class ParticleManager
 {
 public:
     static const uint32_t kNumMaxInstance = 1000;//インスタンス数
-
-
 private:
 
     RootSignature* rootSignature_ = nullptr;
@@ -167,6 +168,9 @@ private:
     Matrix4x4 UpdateSphereMatrix(Particle& particleItr, SphericalMove& sphericalMove, ParticleGroup& group);
     void UpdateWVPMatrix(Camera& camera, ParticleGroup& group);
     void UpdateInstancingData(ParticleGroup& group, Particle& particleItr);
-
+    /// @brief マテリアル生成
+    /// @param group グループを入れる
+    /// @param temperature 温度
+    void CreateMaterial(ParticleGroup& group, const float temperature);
 };
 

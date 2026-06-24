@@ -85,6 +85,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(ProjectDir)externals\freetype\src;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\freetype\include;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\DirectXCommon;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh\MeshCommon;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source\Engine\Mesh\Primitive;$(ProjectDir)Source\Engine\Object3d;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\PSO;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Particle;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\Camera;$(ProjectDir)Source\Application/Scene;$(ProjectDir)Source\Application/Object;$(ProjectDir)Source\Application/GameObject;$(ProjectDir)Source\Application/Physics;$(ProjectDir)Source\Application/System;$(ProjectDir)Source\Engine\Math\Lerp;$(ProjectDir)Source\Engine\Mesh\Sphere;$(ProjectDir)Source\Engine\Mesh\Circle;$(ProjectDir)Source\Engine\Math\Random;$(ProjectDir)Source\Engine\Math\Structs;$(ProjectDir)Source\Engine\Math\Collision;$(ProjectDir)Source\Engine\Math\Matrix;$(ProjectDir)Source\Engine\Math\Vector;$(ProjectDir)Source\Engine\Mesh\Grid;$(ProjectDir)Source\Engine\Mesh\Model;$(ProjectDir)Source\Engine\Mesh\Cube;$(ProjectDir)Source\Engine\Mesh\Sprite;$(ProjectDir)Source\Engine\Math\SphericalCoordinate;$(ProjectDir)Source\Engine\Math\WorldTransform;$(ProjectDir)Source\Engine\Mesh\Line;$(ProjectDir)Source\Engine\Math\Cotangent;$(ProjectDir)Source\Engine\Math\CoordinateTransform;$(ProjectDir)Source\Engine\Mesh\Plane;$(ProjectDir)Source\Engine\SceneManager;$(ProjectDir)externals\;$(ProjectDir)Source\Engine\JsonFile;$(ProjectDir)Source\Engine\Animation;$(ProjectDir)Source\Engine\Math\Quaternion;$(ProjectDir)Source\Engine\Time;$(ProjectDir)Source\Engine\TimeManager</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USE_IMGUI;_DEVELOP;FT2_BUILD_LIBRARY;_CRT_SECURE_NO_WARNINGS;FT_CONFIG_OPTION_USE_MODULE_ERRORS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -145,6 +146,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\freetype\include;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\DirectXCommon;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh\MeshCommon;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source\Engine\Mesh\Primitive;$(ProjectDir)Source\Engine\Object3d;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\PSO;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Particle;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\Camera;$(ProjectDir)Source\Application/Scene;$(ProjectDir)Source\Application/Object;$(ProjectDir)Source\Application/GameObject;$(ProjectDir)Source\Application/Physics;$(ProjectDir)Source\Application/System;$(ProjectDir)Source\Engine\Math\Lerp;$(ProjectDir)Source\Engine\Mesh\Sphere;$(ProjectDir)Source\Engine\Mesh\Circle;$(ProjectDir)Source\Engine\Math\Random;$(ProjectDir)Source\Engine\Math\Structs;$(ProjectDir)Source\Engine\Math\Collision;$(ProjectDir)Source\Engine\Math\Matrix;$(ProjectDir)Source\Engine\Math\Vector;$(ProjectDir)Source\Engine\Mesh\Grid;$(ProjectDir)Source\Engine\Mesh\Model;$(ProjectDir)Source\Engine\Mesh\Cube;$(ProjectDir)Source\Engine\Mesh\Sprite;$(ProjectDir)Source\Engine\Math\SphericalCoordinate;$(ProjectDir)Source\Engine\Math\Quaternion;$(ProjectDir)Source\Engine\Math\WorldTransform;$(ProjectDir)Source\Engine\Mesh\Line;$(ProjectDir)Source\Engine\Math\Cotangent;$(ProjectDir)Source\Engine\Math\CoordinateTransform;$(ProjectDir)Source\Engine\Mesh\Plane;$(ProjectDir)Source\Engine\SceneManager;$(ProjectDir)externals\;$(ProjectDir)Source\Engine\JsonFile;$(ProjectDir)Source\Engine\Animation;$(ProjectDir)Source\Engine\Time;$(ProjectDir)Source\Engine\TimeManager</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,6 +165,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.cpp" />
     <ClCompile Include="Source\Engine\RtvManager\RtvManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Primitive\Primitive.cpp" />
     <ClCompile Include="Source\Engine\Object3d\ObjectManager\ObjectCommandManager.cpp" />
@@ -264,7 +267,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\PSO\InputLayout.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp" />
     <ClCompile Include="Source\Engine\ImGui\ImGuiClass.cpp" />
-    <ClCompile Include="Source\Engine\Surface\MaterialResource.cpp" />
     <ClCompile Include="Source\Engine\Math\Lerp\Easing.cpp" />
     <ClCompile Include="Source\Engine\Math\Lerp\Lerp.cpp" />
     <ClCompile Include="Source\Engine\Math\Matrix\Matrix4x4.cpp" />
@@ -321,6 +323,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\StageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.h" />
     <ClInclude Include="Source\Engine\RtvManager\RtvManager.h" />
     <ClInclude Include="Source\Engine\Mesh\Primitive\Primitive.h" />
     <ClInclude Include="Source\Engine\Object3d\ObjectManager\ObjectCommandManager.h" />
@@ -444,7 +447,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\PSO\InputLayout.h" />
     <ClInclude Include="Source\Engine\DirectXCommon\Log.h" />
     <ClInclude Include="Source\Engine\Surface\MaterialData.h" />
-    <ClInclude Include="Source\Engine\Surface\MaterialResource.h" />
     <ClInclude Include="Source\Engine\Math\Structs\AABB.h" />
     <ClInclude Include="Source\Engine\Math\Collision\Collision.h" />
     <ClInclude Include="Source\Engine\Math\CoordinateTransform\CoordinateTransform.h" />

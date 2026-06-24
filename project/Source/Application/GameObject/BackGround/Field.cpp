@@ -15,7 +15,7 @@ Field::Field()
     object3d_->SetMeshAndMaterial(circleMesh_.get());
     object3d_->SetTextureHandle(TextureFactory::NUMBERS);
 
-    object3d_->SetLightMode(kLightModeNone);
+    object3d_->SetLightMode(Object3d::kLightModeNone);
 }
 
 void Field::Init()
