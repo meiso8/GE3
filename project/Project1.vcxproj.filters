@@ -225,7 +225,7 @@
     <ClCompile Include="Source\Engine\Surface\Texture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\Model\ModelManager.cpp">
+    <ClCompile Include="Source\Engine\Mesh\ModelManager\ModelManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\SceneManager\SceneManager.cpp">
@@ -246,7 +246,7 @@
     <ClCompile Include="Source\Engine\SceneManager\SceneChange.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Object3d\Object3d.cpp">
+    <ClCompile Include="Source\Engine\Object3d\Object3d\Object3d.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp">
@@ -336,7 +336,7 @@
     <ClCompile Include="Source\Engine\Animation\Animation.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Object3d\AnimationObject3d.cpp">
+    <ClCompile Include="Source\Engine\Object3d\AnimationObject3d\AnimationObject3d.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Animation\Bone.cpp">
@@ -477,7 +477,7 @@
     <ClCompile Include="Source\Engine\Mesh\Font\Font.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\SkyBox\Skybox.cpp">
+    <ClCompile Include="Source\Engine\Object3d\SkyBoxObject3d\SkyboxObject3d.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\RenderTexture\RenderTexture.cpp">
@@ -504,7 +504,7 @@
     <ClCompile Include="Source\Application\GameObject\Beam\Beam.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Object3d\BeamObject3d.cpp">
+    <ClCompile Include="Source\Engine\Object3d\BeamObject3d\BeamObject3d.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Beam\BeamManager.cpp">
@@ -513,10 +513,10 @@
     <ClCompile Include="Source\Application\GameObject\Beam\ShotBeamManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Object3d\ObjectManager\ObjectManager.cpp">
+    <ClCompile Include="Source\Engine\ObjectManager\ObjectManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\LineObject3d\LineObject3d.cpp">
+    <ClCompile Include="Source\Engine\Object3d\LineObject3d\LineObject3d.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\Stage\AnubisStage\AnubisStage.cpp">
@@ -525,7 +525,7 @@
     <ClCompile Include="Source\Application\GameObject\Fountain\Fountain.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Object3d\ObjectManager\ObjectCommandManager.cpp">
+    <ClCompile Include="Source\Engine\ObjectManager\ObjectCommandManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\Primitive\Primitive.cpp">
@@ -722,7 +722,7 @@
     <ClInclude Include="Source\Engine\hlslTypeToCpp.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\Model\ModelManager.h">
+    <ClInclude Include="Source\Engine\Mesh\ModelManager\ModelManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\SceneManager\SceneManager.h">
@@ -761,7 +761,7 @@
     <ClInclude Include="Source\Engine\SceneManager\SceneChange.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Object3d\Object3d.h">
+    <ClInclude Include="Source\Engine\Object3d\Object3d\Object3d.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h">
@@ -863,7 +863,7 @@
     <ClInclude Include="Source\Engine\Animation\NodeAnimation.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Object3d\AnimationObject3d.h">
+    <ClInclude Include="Source\Engine\Object3d\AnimationObject3d\AnimationObject3d.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Animation\Bone.h">
@@ -1010,7 +1010,7 @@
     <ClInclude Include="Source\Engine\Mesh\Font\Font.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Mesh\SkyBox\Skybox.h">
+    <ClInclude Include="Source\Engine\Object3d\SkyBoxObject3d\SkyboxObject3d.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\RenderTexture\RenderTexture.h">
@@ -1031,7 +1031,7 @@
     <ClInclude Include="Source\Application\GameObject\Beam\Beam.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Object3d\BeamObject3d.h">
+    <ClInclude Include="Source\Engine\Object3d\BeamObject3d\BeamObject3d.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Beam\BeamManager.h">
@@ -1040,10 +1040,10 @@
     <ClInclude Include="Source\Application\GameObject\Beam\ShotBeamManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Object3d\ObjectManager\ObjectManager.h">
+    <ClInclude Include="Source\Engine\ObjectManager\ObjectManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\LineObject3d\LineObject3d.h">
+    <ClInclude Include="Source\Engine\Object3d\LineObject3d\LineObject3d.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\Stage\AnubisStage\AnubisStage.h">
@@ -1052,10 +1052,10 @@
     <ClInclude Include="Source\Application\GameObject\Fountain\Fountain.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Object3d\ObjectManager\ObjectCommandBase.h">
+    <ClInclude Include="Source\Engine\ObjectManager\ObjectCommandBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Object3d\ObjectManager\ObjectCommandManager.h">
+    <ClInclude Include="Source\Engine\ObjectManager\ObjectCommandManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\VertexData.h">

@@ -4,7 +4,7 @@
 
 #include"DebugUI.h"
 #include"Model.h"
-#include"Object3d/ObjectManager/ObjectManager.h"
+#include"ObjectManager/ObjectManager.h"
 
 FreeTypeScene::FreeTypeScene()
 {
