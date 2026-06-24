@@ -1,10 +1,7 @@
 #include "Primitive.h"
 #include"DirectXCommon.h"
-#include"Texture.h"
 #include"PSO.h"
-#include"SRVmanager/SrvManager.h"
 #include<numbers>
-
 
 MeshData PrimitiveGenerator::CreateCube(const AABB& aabb)
 {
@@ -779,7 +776,7 @@ MeshData PrimitiveGenerator::CreateBeam(const float firstSize)
     return data;
 }
 
-void Primitive::PreDraw(
+void Primitive::SetRootSignatureAndGraphicsPipeline(
     ID3D12GraphicsCommandList* commandList,
     const BlendMode& blendMode,
     const CullMode& cullMode,
@@ -825,31 +822,6 @@ void Primitive::PreDraw(
 
     }
 
-
-}
-
-MeshData Primitive::CreatePrimitive(const TopologyType& topologyType)
-{
-    switch (topologyType)
-    {
-    case Primitive::TopologyType::kPlane:
-        return  PrimitiveGenerator::CreatePlane({ 2.0f,2.0f });
-        break;
-    case Primitive::TopologyType::kCube:
-        return PrimitiveGenerator::CreateCube();
-        break;
-    case Primitive::TopologyType::kSphere:
-        return PrimitiveGenerator::CreateSphere();
-        break;
-    case Primitive::TopologyType::kRing:
-        return PrimitiveGenerator::CreateRing();
-        break;
-    case Primitive::TopologyType::kCylinder:
-        return PrimitiveGenerator::CreateCylinder();
-        break;
-    }
-
-    return  PrimitiveGenerator::CreatePlane({ 1.0f,1.0f });
 }
 
 void Primitive::Create(const MeshData& meshData)
@@ -900,33 +872,6 @@ void Primitive::Create(const MeshData& meshData)
         indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexMap));
         std::memcpy(indexMap, meshData.indices.data(), indexBufferSize);
         indexResource_->Unmap(0, nullptr);
-    }
-}
-
-void Primitive::Draw(ID3D12GraphicsCommandList* commandList)
-{
-    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList->IASetPrimitiveTopology(topology_);
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-
-    if (indexCount_ > 0) {
-        commandList->IASetIndexBuffer(&indexBufferView_);
-        commandList->DrawIndexedInstanced(indexCount_, 1, 0, 0, 0);
-    } else {
-        commandList->DrawInstanced(vertexCount_, 1, 0, 0); // ラインなどインデックスが無い場合
-    }
-}
-
-void Primitive::DrawCallForParticle(ID3D12GraphicsCommandList* commandList, const uint32_t numInstance)
-{
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-    //SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
-
-    if (indexCount_ > 0) {
-        commandList->IASetIndexBuffer(&indexBufferView_);
-        commandList->DrawIndexedInstanced(indexCount_, numInstance, 0, 0, 0);
-    } else {
-        commandList->DrawInstanced(vertexCount_, numInstance, 0, 0); // ラインなどインデックスが無い場合
     }
 }
 

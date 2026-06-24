@@ -3,6 +3,11 @@
 #include"MakeMatrix.h"
 #include"SRVmanager/SrvManager.h"
 
+BeamObject3d::~BeamObject3d()
+{
+    Object3d::Finalize();
+}
+
 void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, const TextureFactory::Handle skyBoxTexture)
 {
 
@@ -17,9 +22,9 @@ void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMo
 
     if (primitive_) {
 
-        primitive_->PreDraw(commandlist, blendMode, cullMode, maskMode, true, RootSignature::BEAM, DxcCompiler::VS_Beam, DxcCompiler::PS_Beam);
+        primitive_->SetRootSignatureAndGraphicsPipeline(commandlist, blendMode, cullMode, maskMode, true, RootSignature::BEAM, DxcCompiler::VS_Beam, DxcCompiler::PS_Beam);
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-        commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
         commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
         SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
@@ -27,8 +32,8 @@ void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMo
         commandlist->SetGraphicsRootConstantBufferView(3, camera.GetResource()->GetGPUVirtualAddress());
         //ID
         commandlist->SetGraphicsRootConstantBufferView(4, idResource_->GetGPUVirtualAddress());
-
-        primitive_->Draw(commandlist);
+        //メッシュデータの描画
+        MeshDraw(commandlist);
     }
 
 }

@@ -153,9 +153,6 @@
     <ClCompile Include="Source\Engine\Surface\MaterialData.cpp">
       <Filter>ソース ファイル\Engine\Surface</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Surface\MaterialResource.cpp">
-      <Filter>ソース ファイル\Engine\Surface</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Math\Matrix\Matrix4x4.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
@@ -537,6 +534,9 @@
     <ClCompile Include="Source\Engine\RtvManager\RtvManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Math\Structs\AABB.h">
@@ -582,9 +582,6 @@
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Surface\MaterialData.h">
-      <Filter>ヘッダー ファイル\Engine\Surface</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Surface\MaterialResource.h">
       <Filter>ヘッダー ファイル\Engine\Surface</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\Model\Model.h">
@@ -1074,6 +1071,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\RtvManager\RtvManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

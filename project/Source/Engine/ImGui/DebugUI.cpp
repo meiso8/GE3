@@ -2,6 +2,8 @@
 #include "DebugUI.h"
 #include"CharacterState.h"
 #include"SrvManager/SrvManager.h"
+#include"PrimitiveFactory/PrimitiveFactory.h"
+
 
 #include"Input.h"
 #include"Sprite.h"
@@ -707,7 +709,16 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 
         CheckWorldTransform(object3d.GetWorldTransform(), "WorldTransform");
         ShowMatrix4x4(object3d.GetWorldMatrix());
-        CheckMaterial(object3d.GetMaterial(), "Material");
+        auto& material = object3d.GetMaterial();
+
+        CheckObject3dMaterial(
+            material.color, 
+            material.lightMode,
+            material.shininess,
+            material.temperature,
+            material.uvTransform,
+            material.environmentCoefficient, "Material");
+
         CheckTransform(object3d.GetUVTransform(), "UVTransfrom");
         CheckWaveData(object3d.GetWaveData(0), "Wave0");
         CheckWaveData(object3d.GetWaveData(1), "Wave1");
@@ -727,7 +738,7 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
                 }
             }
 
-            if (ImGui::BeginCombo("Models", currentModelName.c_str())) {
+            if (ImGui::BeginCombo("Set Model", currentModelName.c_str())) {
                 // マップ内のすべてのシーンをループして選択肢を作る
                 for (const auto& [name, scene] : ModelManager::GetModels()) {
                     // 選択肢を表示（クリックされたら true を返す）
@@ -752,12 +763,10 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 
             int currentPrimitive = 0;
 
-           /* if (ImGui::Combo("Primitive", &currentPrimitive, topologyType, IM_ARRAYSIZE(topologyType))) {
+            if (ImGui::Combo("Set Primitive", &currentPrimitive, topologyType, IM_ARRAYSIZE(topologyType))) {
                 Primitive::TopologyType topo = static_cast<Primitive::TopologyType>(currentPrimitive % Primitive::kMaxTopology);
-                std::unique_ptr<Primitive>  q11 = std::make_unique<Primitive>();
-                primitive->Create(Primitive::CreatePrimitive(topo));
-                object3d.SetMeshAndMaterial(primitive.get());
-            };*/
+                object3d.SetMeshAndMaterial(PrimitiveFactory::GetPrimitive(topo));
+            };
         }
 
         if (auto* aniObj = dynamic_cast<AnimationObject3d*>(&object3d)) {
@@ -792,7 +801,9 @@ void DebugUI::CheckParticle()
                 ImGui::Checkbox("useModel", &group->useModel);
                 ImGui::Checkbox("useBillboard", &group->useBillboard);
                 ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
-                CheckMaterial(*group->materialResource->GetMaterial(), "material");
+                auto& material = group->material;
+                CheckObject3dMaterial(
+                    material->color, material->lightMode,material->shininess,material->temperature,material->uvTransform,material->environmentCoefficient,"Material");
                 ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
                 ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
                 ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);
@@ -828,16 +839,15 @@ void DebugUI::CheckColor(Vector4& color, const char* label) {
 #endif
 }
 
-void DebugUI::CheckMaterial(Material& material, const char* label) {
+void DebugUI::CheckObject3dMaterial(Vector4& color, int32_t& lightMode, float& shininess,float& tempereture,Matrix4x4& uvMatrix,float& environmentCoefficient, const char* label) {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
-        CheckColor(material.color, "color");
-        CheckLightMode(material.lightMode, "lightMode");
-        ImGui::SliderFloat("shininess", &material.shininess, 0.0f, 100.0f);
-        ImGui::SliderFloat("temperature", &material.temperature, 0.0f, 1.0f);
-        ShowMatrix4x4(material.uvTransform, "uvMatrix");
-        ImGui::SliderFloat("environmentCoefficient", &material.environmentCoefficient, 0.0f, 1.0f);
-
+        CheckColor(color, "color");
+        CheckLightMode(lightMode, "lightMode");
+        ImGui::SliderFloat("shininess", &shininess, 0.0f, 100.0f);
+        ImGui::SliderFloat("temperature", &tempereture, 0.0f, 1.0f);
+        ShowMatrix4x4(uvMatrix, "uvMatrix");
+        ImGui::SliderFloat("environmentCoefficient", &environmentCoefficient, 0.0f, 1.0f);
         ImGui::TreePop();
     }
 #endif

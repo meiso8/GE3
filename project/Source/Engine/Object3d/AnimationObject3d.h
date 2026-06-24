@@ -13,6 +13,7 @@ class AnimationObject3d :public Object3d
 {
 public:
     AnimationObject3d();
+    ~AnimationObject3d();
     void Initialize()override;
     void InitTime();
     void SetModelAndLoadAnimation(Model* model);
@@ -22,6 +23,9 @@ public:
     void UpdateAniTimer(const bool& isLoop = true);
     bool IsAnimEnd();
     void Draw(Camera& camera, const BlendMode& blendMode = kBlendModeNormal, const CullMode& cullMode = kCullModeBack, const MaskMode maskMode = kAll,const bool usePSOKye =false, const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX)override;
+    /// @brief メッシュデータのドロー
+    /// @param commandList コマンドリストをセットする
+    void MeshDraw(ID3D12GraphicsCommandList* commandList)override;
     void SetSkinning(const bool& flag) { isSkinning_ = flag; }
     void SetAnimation(const std::string animName) {
         currentAnimation_ = animName;

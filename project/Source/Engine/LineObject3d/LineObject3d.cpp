@@ -49,17 +49,22 @@ void LineObject3d::Draw(Camera& camera,
     transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
     transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
     auto* commandlist = DirectXCommon::GetCommandList();
-    line_->PreDraw(commandlist,blendMode,cullMode,maskMode,usePSOKey,rootSignatureType,vsType,psType);
- 
-    //commandlist->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(LINE));
-    //commandlist->SetPipelineState(PSO::GetGraphicsPipelineStateLine().Get());
-    
+
+    line_->SetRootSignatureAndGraphicsPipeline(commandlist,blendMode,cullMode,maskMode,usePSOKey,rootSignatureType,vsType,psType);
+
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
     commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
     //wvp用のCBufferの場所を設定
     commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-    line_->Draw(commandlist);
 
+#pragma region MeshDraw
+    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+    commandlist->IASetPrimitiveTopology(line_->GetTopology());
+    commandlist->IASetVertexBuffers(0, 1, &line_->GetVertexBufferView());
+    //ラインはインデックス関係なく2点のみのためこれ
+    commandlist->DrawInstanced(line_->GetVertexCount(), 1, 0, 0);
+#pragma endregion
+    
 }
 
 void LineObject3d::CreateTransformationMatrix()

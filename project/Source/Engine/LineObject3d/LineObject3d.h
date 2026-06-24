@@ -8,15 +8,16 @@
 #include<memory>
 #include"Mesh/LineMesh/LineMesh.h"
 
-struct MaterialForLine
-{
-    float4 color;
-};
 
 class LineObject3d
 {
 
 public:
+    struct MaterialForLine
+    {
+        float4 color;
+    };
+
     WorldTransform worldTransform_;
 protected:
 

@@ -48,7 +48,7 @@ void DrawGrid::Create()
     for (auto& cubeTransform : cubes_) {
         cubeTransform = std::make_unique<Object3d>();
         cubeTransform->Create();
-        cubeTransform->SetLightMode(kLightModeNone);
+        cubeTransform->SetLightMode(Object3d::kLightModeNone);
     }
 
     for (size_t i = 0; i < lineTransforms2_.size(); ++i) {

@@ -20,6 +20,11 @@ Sprite::~Sprite()
         transformationMatrixResource_->Unmap(0, nullptr);
         transformationMatrixResource_.Reset();
     }
+
+    if (materialResource_) {
+        materialResource_->Unmap(0, nullptr);
+        materialResource_.Reset();
+    }
 }
 
 void Sprite::Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color)
@@ -84,7 +89,7 @@ void Sprite::UpdateAnchorPoint()
 }
 
 void Sprite::SetColor(const Vector4& color) {
-    materialResource_.SetColor(color);
+    material_->color = color;
 }
 
 void Sprite::SetTexture(const TextureFactory::Handle& textureHandle)
@@ -101,10 +106,10 @@ void Sprite::PreDraw(uint32_t blendMode) {
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void Sprite::Draw(const LightMode& lightMode
+void Sprite::Draw(
 ) {
 
-    materialResource_.SetLightMode(lightMode);
+
     transform_.scale = { scale_.x * size_.x,scale_.y * size_.y,1.0f };
     transform_.rotate = { 0.0f,0.0f,rotate_ };
     transform_.translate = { position_.x,position_.y,0.0f };
@@ -118,7 +123,7 @@ void Sprite::Draw(const LightMode& lightMode
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
     SpriteCommon::SetIndexBuffer(commandList);
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_.GetMaterialResource()->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
@@ -200,14 +205,17 @@ void Sprite::CreateTransformationMatrix() {
 
 void Sprite::CreateMaterial(const Vector4& color) {
 
-    //マテリアルリソースを作成 //ライトなし
-    materialResource_.CreateMaterial(1.0f,color, LightMode::kLightModeNone);
+    //Matrix4x4　1つ分のサイズを用意
+    materialResource_ = DirectXCommon::CreateBufferResource(sizeof(Material));
+    materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&material_));
 
+    material_->color = color;
+    material_->uvTransform = MakeIdentity4x4();
 }
 
 void Sprite::UpdateUV() {
     uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
-    materialResource_.SetUV(uvTransformMatrix_);
+    material_->uvTransform = uvTransformMatrix_;
 }
 
 void Sprite::AdjustTextureSize()

@@ -4,7 +4,7 @@
 #include"PSO.h"  
 #include"Transform.h"  
 #include"TransformationMatrix.h"  
-#include"MaterialResource.h"  
+
 #include"Vector2.h"  
 #include"RootSignature.h"  
 
@@ -12,10 +12,17 @@
 #include"SpriteCommon.h"
 
 #include"Texture.h"
+#include"hlslTypeToCpp.h"
 
 class Font
 {
 public:
+
+    struct MaterialForFont {
+        float4 color;
+        float32_t4x4 uvTransform;
+    };
+
     Font();
     ~Font();
     void Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },  const Vector2& size = {64.0f,64.0f},const Vector2& anchorPoint = {0.0f,0.0f});
@@ -23,18 +30,12 @@ public:
     void Update();
     void UpdateAnchorPoint();
     static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
-    void Draw(const LightMode& lightMode = LightMode::kLightModeNone);
+    void Draw();
 
-    void SetColor(const Vector4& color);
-    void SetTexture(const TextureFactory::Handle& textureHandle);
     void SetSize(const Vector2& size) { size_ = size; };
     void SetPosition(const Vector2& position) { position_ = position; }
     void SetRotate(const float& rotate) { rotate_ = rotate; }
     void SetScale(const Vector2& scale) { scale_ = scale; };
-
-    void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; };
-    void SetUVRotate(const Vector3& rotate) { uvTransform_.rotate = rotate; };
-    void SetUVTranslate(const Vector3& translate) { uvTransform_.translate = translate; };
 
     Vector2& GetSize() { return size_; }
     Vector2& GetScale() { return scale_; };
@@ -42,14 +43,20 @@ public:
     Vector2& GetPosition() { return position_; };
     const Vector2& GetPosition() const { return position_; };
 
-    Material* GetMaterial() { return materialResource_.GetMaterial(); };
+    void SetTexture(const TextureFactory::Handle& textureHandle);
+
+    Vector4& GetColor() { return material_->color; };
+    void SetColor(const Vector4& color) { material_->color = color; };
+
+    void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; };
+    void SetUVRotate(const Vector3& rotate) { uvTransform_.rotate = rotate; };
+    void SetUVTranslate(const Vector3& translate) { uvTransform_.translate = translate; };
     Vector3& GetUVScale() { return uvTransform_.scale; };
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
-    Vector4& GetColor() { return materialResource_.GetMaterial()->color; }
-    const Vector4& GetColor() const { return materialResource_.GetMaterial()->color; }
 
     Vector2& GetAnchorPoint() { return anchorPoint_; }
+
     /// @brief アンカーポイント
     /// @param anchorPoint 0.0f~1.0f
     
@@ -69,6 +76,7 @@ public:
     void AdjustTextureSize(const Vector2& size);
     void SetInUse(bool inUse) { inUse_ = inUse; }
     bool IsInUse() const { return inUse_; }
+
 private:
     void CreateVertex();
     void CreateUVTransformationMatrix();
@@ -103,8 +111,8 @@ private:
     EulerTransform uvTransform_ = { 0.0f };
     Matrix4x4 uvTransformMatrix_{};
 
-    MaterialResource materialResource_{};
-
+    Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
+    MaterialForFont* material_ = nullptr;
 
 };
 

@@ -23,6 +23,11 @@ AnimationObject3d::AnimationObject3d() {
 #endif
 }
 
+AnimationObject3d::~AnimationObject3d()
+{
+    Object3d::Finalize();
+}
+
 void AnimationObject3d::Initialize()
 {
     animationTime_ = 0.0f;
@@ -42,9 +47,7 @@ void AnimationObject3d::InitTime()
 
 std::map<std::string, Animation>& AnimationObject3d::GetAnimations()
 {
-
- return skinningModel_->GetModelData()->animations_;
-
+    return skinningModel_->GetModelData()->animations_;
 }
 
 Matrix4x4 AnimationObject3d::GetWorldJointMatrix(const std::string name)
@@ -86,7 +89,6 @@ void AnimationObject3d::UpdateAnimation()
         }
     }
   
-
     if (animation) {
         //アニメーションがあったら
 
@@ -97,7 +99,6 @@ void AnimationObject3d::UpdateAnimation()
         //SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
         UpdateSkinCluster(*skinCluster, *skeleton);
     }
-
 
     if (isSkinning_) {
         worldMatrix_ = worldTransform_.matWorld_;
@@ -171,10 +172,10 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
     if (skinningModel_) {
 
         auto* commandlist = DirectXCommon::GetCommandList();
-        skinningModel_->PreDraw(commandlist, blendMode, cullMode,maskMode,usePSOKey);
+        skinningModel_->SetRootSignatureAndGraphicsPipeline(commandlist, blendMode, cullMode,maskMode,usePSOKey);
        
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-        commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetMaterialResource()->GetGPUVirtualAddress());
+        commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
         commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
         SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
@@ -192,14 +193,31 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
         PointLightManager::SetGraphicsRootDescriptorTable(8);
         SpotLightManager::SetGraphicsRootDescriptorTable(9);
         SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
-
         //ここでテクスチャの設定をする
-        skinningModel_->Draw(commandlist);
+        MeshDraw(commandlist);
     }
 
 #ifdef _DEBUG
     debugBone_->Draw(camera);
 #endif
+
+}
+
+void AnimationObject3d::MeshDraw(ID3D12GraphicsCommandList* commandList)
+{
+    commandList->IASetPrimitiveTopology(primitive_->GetTopology());
+    //スキンクラスター
+    auto* skinCluster = skinningModel_->GetSkinCluster();
+
+    D3D12_VERTEX_BUFFER_VIEW vbvs[2] = { primitive_->GetVertexBufferView(), skinCluster->influenceBufferView };
+    commandList->IASetVertexBuffers(0, 2, vbvs);//VBVを設定
+
+    //cameraのCBufferの場所を設定 paletteResource 
+    SrvManager::SetGraphicsRootDescriptorTable(11, skinCluster->paletteSrvIndex);
+ 
+    //モデルデータの取得
+    auto* modelData = skinningModel_->GetModelData();
+    DrawModel(modelData, commandList);
 
 }
 

@@ -10,6 +10,7 @@
 #include"Rtvmanager/Rtvmanager.h"
 #include"Input.h"
 #include"Log.h"
+#include"PrimitiveFactory/PrimitiveFactory.h"
 
 class ButtobiEngine {
 private:
@@ -25,6 +26,7 @@ private:
     std::unique_ptr<SrvManager> srvManager = nullptr;
     std::unique_ptr<RtvManager> rtvManager = nullptr;
     std::unique_ptr<TimeManager> time_ = nullptr;
+    std::unique_ptr<PrimitiveFactory> primitiveFactory_ = nullptr;
     bool endRequest_ = false;
 protected:
 

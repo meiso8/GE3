@@ -13,8 +13,6 @@
 
 class Model;
 class Camera;
-enum LightMode;
-
 
 class Enemy :public Collider
 {
@@ -48,7 +46,7 @@ public:
     //初期化
     void Init();
     //描画
-    void Draw(Camera& camera, const LightMode& lightMode);
+    void Draw(Camera& camera, const Object3d::LightMode& lightMode);
     //更新
     void Update();
 
@@ -74,8 +72,6 @@ public:
     HPs* GetHpsPtr() { return &characterState_.hps; }
     const bool& GetIsDead() { return characterState_.isDead; }
     const PHASE GetPhase() { return phase_; }
-
-
 
 private:
     //キャラクターの共通でもつ状態

@@ -50,7 +50,7 @@ void Beam::Initialize()
 
     //場外移動する
     object3d_->Update();
-    object3d_->SetLightMode(kLightModeNone);
+    object3d_->SetLightMode(Object3d::kLightModeNone);
 
 
 #ifdef _DEBUG
@@ -138,7 +138,7 @@ void Beam::Draw(Camera* camera)
         return;
     }
 
-    object3d_->SetLightMode(kLightModeNone);
+    object3d_->SetLightMode(Object3d::kLightModeNone);
     object3d_->Draw(*camera);
 
 

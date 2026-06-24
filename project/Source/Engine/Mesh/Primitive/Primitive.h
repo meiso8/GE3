@@ -35,14 +35,13 @@ public:
         kCylinder,
         kMaxTopology,
     };
-
     enum class MeshType {
         kNormal, // 三角形ポリゴン
         kLine    // ライン
     };
-    static MeshData CreatePrimitive(const TopologyType& topologyType);
+
     virtual void Create(const MeshData& meshData);
-    virtual void PreDraw(
+    virtual void SetRootSignatureAndGraphicsPipeline(
         ID3D12GraphicsCommandList* commandList,
         const BlendMode& blendMode, 
         const CullMode& cullMode,
@@ -51,21 +50,21 @@ public:
         const RootSignature::TYPE rootSignatureType = RootSignature::TYPE::NORMAL,
        const DxcCompiler::VS_TYPE vsType =  DxcCompiler::VS_TYPE::VS_Normal,
        const DxcCompiler::PS_TYPE psType =  DxcCompiler::PS_TYPE::PS_Normal);
-    virtual void Draw(ID3D12GraphicsCommandList* commandList);  
-    virtual void DrawCallForParticle(ID3D12GraphicsCommandList* commandList, const uint32_t numInstance);
     ~Primitive();
+    D3D12_VERTEX_BUFFER_VIEW& GetVertexBufferView() { return vertexBufferView_; };
+    D3D12_INDEX_BUFFER_VIEW& GetIndexBufferView() { return  indexBufferView_; };
+    UINT GetIndexCount() { return indexCount_; };
+    UINT GetVertexCount() { return vertexCount_; };
+    D3D_PRIMITIVE_TOPOLOGY& GetTopology() {return topology_; }
+    
 protected:
+    UINT vertexCount_ = 0;
+    Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
+private:
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     D3D12_INDEX_BUFFER_VIEW  indexBufferView_{};
     D3D_PRIMITIVE_TOPOLOGY topology_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-
-    Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     Microsoft::WRL::ComPtr <ID3D12Resource> indexResource_{};
-
-    UINT vertexCount_ = 0;
-private:
-
-
     MeshType meshType_ = MeshType::kNormal; // デフォルトはNormal
     UINT indexCount_ = 0;
 };
