@@ -3,7 +3,7 @@
 #include"../Engine/FreeTypeManager/Text.h"
 #include<string>
 #include"Object3d/Object3d.h"
-#include"Mesh/Skybox/Skybox.h"
+#include"SkyboxObject3d.h"
 #include"Particle/ParticleEmitter.h"
 #include"../GameObject/Player/Player.h"
 #include"../GameObject/Beam/Beam.h"

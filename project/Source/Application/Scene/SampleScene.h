@@ -5,8 +5,8 @@
 #include<array>
 
 #include"Object3d.h"
+#include"SkyBoxObject3d.h"
 
-#include"Mesh/Skybox/Skybox.h"
 #pragma region//ゲームオブジェクト
 #include"Player/Player.h"
 #include"UI/UIManager.h"
@@ -23,7 +23,6 @@ class PlaneMesh;
 class SphereMesh;
 class CubeMesh;
 class Model;
-
 
 class SampleScene :public BaseScene {
 

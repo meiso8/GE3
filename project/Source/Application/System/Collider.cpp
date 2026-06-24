@@ -62,7 +62,7 @@ void Collider::ColliderUpdate()
 void Collider::ColliderDraw(Camera& camera)
 {
 #ifdef _DEBUG
-    object3d_.SetLightMode(kLightModeNone);
+    object3d_.SetLightMode(Object3d::kLightModeNone);
     object3d_.Draw(camera);
 #endif // _DEBUG
 }

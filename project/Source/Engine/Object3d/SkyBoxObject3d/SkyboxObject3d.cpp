@@ -1,4 +1,4 @@
-#include "Skybox.h"
+#include "SkyboxObject3d.h"
 #include"DirectXCommon.h"
 #include"AABB.h"
 #include"SrvManager/SrvManager.h"

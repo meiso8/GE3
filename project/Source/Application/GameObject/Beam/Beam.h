@@ -1,7 +1,7 @@
 #pragma once
 #include<Object3d.h>
-#include"../../../Engine/Object3d/BeamObject3d.h"
-#include"LineObject3d/LineObject3d.h"
+#include"BeamObject3d.h"
+#include"LineObject3d.h"
 #include"Line.h"
 
 #include "ParticleEmitter.h"
