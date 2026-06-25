@@ -9,6 +9,8 @@ struct JsonData {
     std::string path;
     bool modified = false; // ← 変更されたかどうかを記録！
 };
+struct Vector3;
+struct EulerTransform;
 
 class JsonFile {
 public:
@@ -33,6 +35,9 @@ public:
         jsonFiles_[tag].modified = false;
     }
 
+    static   nlohmann::json Vector3ToJson(const Vector3& vector);
+
+    static  nlohmann::json EulerTransformToJson(const EulerTransform& eTransform);
 private:
     static std::unordered_map <std::string, JsonData > jsonFiles_;
 

@@ -14,6 +14,14 @@ struct Vector3 {
     }
 };
 
+namespace Math {
+    static const Vector3 ZERO(0.0f, 0.0f, 0.0f);
+    static const Vector3 RIGHT(1.0f, 0.0f, 0.0f);
+    static const Vector3 UP(0.0f, 1.0f, 0.0f);
+    static const Vector3 FORWARD(0.0f, 0.0f, 1.0f);
+    static const Vector3 UNIT_SCALE(1.0f, 1.0f, 1.0f);
+};
+
 Vector3 Add(const Vector3& v1, const Vector3& v2);
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 Vector3 Multiply(const float scalar, const Vector3& v);
@@ -34,15 +42,10 @@ Vector3 Normalize(const Vector3& v);
 Vector3 ToTargetVector(const Vector3& target, const  Vector3& ownPos);
 Vector3 CalculateLookAtRotate(const Vector3& startPos, const Vector3& endPos);
 
-struct Matrix4x4;
-namespace Math {
-    Vector3 GetForward(const Matrix4x4& mat);
-}
-
 /// @brief ベクトルがゼロベクトルかどうかを判定する関数
 /// @param v ベクトル
 /// @return ゼロベクトルであればtrue、そうでなければfalse
-bool IsZero(const Vector3 &v);
+bool IsZero(const Vector3& v);
 
 /// @brief 垂直ベクトルのうちの一つを求める関数
 /// @param vector ベクトル

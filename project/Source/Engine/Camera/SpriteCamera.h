@@ -16,6 +16,5 @@ public:
     static Matrix4x4& GetViewProjectionMatrix() {
         return viewProjectionMat_;
     };
-
 };
 

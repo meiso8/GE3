@@ -4,6 +4,7 @@
 #include"TimeManager.h"
 #include"Easing.h"
 #include"Sound.h"
+#include"LineObject3d.h"
 
 namespace {
     const float kBeamDuretion_ = 1.5f;
@@ -116,7 +117,7 @@ void Beam::Update()
     Vector3 pos = { 0.0f };
 
     if (parent_) {
-        pos = GetWorldTransformByMatrix(*parent_);
+        pos = Math::GetWorldTransformByMatrix(*parent_);
     } else {
         pos = startPos_;
     }
@@ -156,7 +157,7 @@ bool Beam::Shot(const Vector3& target, const  BeamType& type, const Vector3& sta
     Vector3 pos = { 0.0f };
 
     if (parent_) {
-        pos = GetWorldTransformByMatrix(*parent_);
+        pos = Math::GetWorldTransformByMatrix(*parent_);
     } else {
         pos = startPos_;
     }
@@ -221,8 +222,6 @@ void Beam::CreateParticle()
     emitter0.rotateAABB_ = { .min = {0.0f,0.0f,-3.14f},.max = {0.0f,0.0f,3.14f} };
     emitter0.scaleAABB_ = { .min = {0.0f,0.4f,0.0f},.max = {0.0f,1.5f,1.0f} };
     emitter0.isLoop_ = true;
-
-    auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
-    group->accelerationField.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
-    group->useBillboard = true;
+    emitter0.accelerationField_.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
+    emitter0.useBillboard_ = true;
 }

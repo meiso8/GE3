@@ -11,7 +11,7 @@ void WorldTransform::Initialize() {
 
 Vector3 WorldTransform::GetWorldPosition() const
 {
-    return { matWorld_.m[3][0], matWorld_.m[3][1], matWorld_.m[3][2] };
+    return Math::GetWorldTransformByMatrix(matWorld_);
 }
 
 void WorldTransform::Parent(const WorldTransform& parentWorldTransform)
@@ -31,7 +31,7 @@ void WorldTransform2D::Initialize()
 
 Vector2 WorldTransform2D::GetWorldPosition() const
 {
-    return { matWorld_.m[2][0], matWorld_.m[2][1] };
+    return Math::GetWorldTransformByMatrix(matWorld_);
 }
 
 void WorldTransformUpdate(WorldTransform& worldTransform)

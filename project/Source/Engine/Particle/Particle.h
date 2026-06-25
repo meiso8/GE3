@@ -22,6 +22,8 @@
 class Camera;
 class ShaderResourceView;
 struct Emitter;
+class CommandList;
+
 
 struct Particle {
     EulerTransform transform;
@@ -105,47 +107,43 @@ SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, 
 
 class ParticleManager
 {
-public:
-    static const uint32_t kNumMaxInstance = 1000;//インスタンス数
 private:
 
     RootSignature* rootSignature_ = nullptr;
-    static ID3D12GraphicsCommandList* commandList_;
+    ID3D12GraphicsCommandList* commandList_ = nullptr;
+    Camera* camera_ = nullptr;
+
+    static const uint32_t kNumMaxInstance = 1000;//インスタンス数
     static std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>particleGroups;
 
     Matrix4x4 backToFrontMatrix;
     Matrix4x4 billboardMatrix;
     Matrix4x4 worldMatrix;
     Matrix4x4 worldViewProjectionMatrix;
-
-    Camera* camera_ = nullptr;
-
-private:
-    //コンストラク・タデストラクタの隠ぺい
-    ParticleManager() = default;
-    ~ParticleManager() = default;
 public:
-
-    void CreateAll();
-    //コピーコンストラクタの封印
-    ParticleManager(ParticleManager&) = delete;
-    //コピー代入演算子の封印
-    ParticleManager& operator=(ParticleManager&) = delete;
-    void Create();
-    static ParticleManager* GetInstance() {
-        static ParticleManager instance;
-        return &instance;
-    };
+    static const uint32_t GetMaxInstance() { return kNumMaxInstance; };
     static void Reset(const std::string& name);
     static void ResetAll();
-    static void Emit(Emitter& emitter);
+    
+    void Emit(Emitter& emitter);
 
     std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>& GetParticleGroups();
     std::unique_ptr <ParticleGroup>& GetParticleGroup(const std::string& name) {
         assert(particleGroups.contains(name));
         return particleGroups[name];
     };
-    void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle,const Primitive::TopologyType& topoligyType, const bool& useModel = false, const float temperature = 1.0f, const std::string& modelFileName = "Box.obj");
+
+    ParticleManager() = default;
+    ~ParticleManager() = default;
+    //コピーコンストラクタの封印
+    ParticleManager(ParticleManager&) = delete;
+    //コピー代入演算子の封印
+    ParticleManager& operator=(ParticleManager&) = delete;
+
+    void CreateAll();
+    void Create( RootSignature* rootSignature);
+    void SetCommandList(ID3D12GraphicsCommandList* commandList);
+    void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle,const Primitive::MeshType& topoligyType, const bool& useModel = false, const float temperature = 1.0f, const std::string& modelFileName = "Box.obj");
 
     void Update(Camera& camera);
     void Draw();
@@ -153,7 +151,7 @@ public:
     void Finalize();
 
 protected:
-    void UpdateBillBordMatrix(Camera& camera, ParticleGroup& group);
+    void UpdateBillBordMatrix(Camera& camera);
     Matrix4x4 UpdateMatrix(Particle& particleItr, ParticleGroup& group);
 private:
     //メンバ関数ポインタテーブル

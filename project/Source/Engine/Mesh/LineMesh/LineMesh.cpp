@@ -1,5 +1,12 @@
 #include "LineMesh.h"
-#include"DirectXCommon.h"
+
+LineMesh::LineMesh()
+{
+}
+
+LineMesh::~LineMesh()
+{
+}
 
 void LineMesh::Create(const Vector3& startPos, const Vector3& endPos)
 {

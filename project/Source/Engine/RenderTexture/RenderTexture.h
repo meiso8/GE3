@@ -10,6 +10,7 @@
 #include"TransitionBarrier.h"
 
 class RtvManager;
+class CommandList;
 
 class RenderTexture
 
@@ -101,6 +102,7 @@ public:
 
 
 private:
+
     Camera* camera_ = nullptr;
     Vector4 kRenderTargetClearValue_ = { 1.0f,1.0f,1.0f,1.0f };
     const Vector4 sepiaColor_ = { 1.0f,74.0f / 107.0f,43.0f / 107.0f,1.0f };
@@ -109,7 +111,6 @@ private:
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, PSO::kCountOfEffect> materialResource_;
     //ID用リソース
     Microsoft::WRL::ComPtr<ID3D12Resource> idReadbackResource_;
-
 
     MaterialForRenderTexture* materialForGrayScale_ = nullptr;
     MaterialForVignette* materialForVignette_ = nullptr;
@@ -123,6 +124,7 @@ private:
     MaterialForThermography* materialForThermography_ = nullptr;
     Microsoft::WRL::ComPtr <ID3D12Resource>materialResourceRandom_;
     MaterialForRandom* materialForRandom_ = nullptr;
+    ID3D12GraphicsCommandList* commandList_ = nullptr;
 public:
     static RenderTexture* GetInstance() {
         static RenderTexture instance;
@@ -132,6 +134,7 @@ public:
     Microsoft::WRL::ComPtr<ID3D12Resource>& GetMaterialResouce(const PSO::EffectType& effectType);
     void Create(RtvManager& rtvManager);
   
+    void SetCommandList(ID3D12GraphicsCommandList* commandList);
 
     // 1. 描画コマンドの最後にコピー命令を積む関数 (PostDrawの直前に呼ぶ)
     void CopyClickPixelCommand(int mouseX, int mouseY);
@@ -147,11 +150,11 @@ public:
     }
     std::array< RenderTextureData, kMaxRenderTexutre>& GetRenderTextureDatas() { return renderTextureDatas_; };
     void Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
-    void DrawOutLine(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex);
-    void DrawDissolve(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const TextureFactory::Handle& textureHandle);
-    void DrawRandom(const BlendMode& blendMode, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
+    void DrawOutLine( const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex);
+    void DrawDissolve( const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const TextureFactory::Handle& textureHandle);
+    void DrawRandom( const BlendMode& blendMode, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
     // サーモグラフィー用
-    void DrawThermo(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle);
+    void DrawThermo( const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle);
     void Update();
     void SetCamera(Camera* camera);
     MaterialForThermography* GetMaterialThermography() { return materialForThermography_; };

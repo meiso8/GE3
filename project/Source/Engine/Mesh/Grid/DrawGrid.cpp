@@ -1,7 +1,4 @@
 #include"DrawGrid.h"
-#include<numbers>
-#include"MakeMatrix.h"
-#include"Texture.h"
 #include"AABB.h"
 
 std::array <std::unique_ptr<Primitive>, 2> DrawGrid::cube_;

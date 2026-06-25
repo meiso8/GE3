@@ -1,44 +1,52 @@
 #include"Camera.h"
 #include"MakeMatrix.h"
 #include"DirectXCommon.h"
+#include"DebugUI.h"
 
-float Camera::width_;
-float Camera::height_;
+const float Camera::kFovAngle = Math::kQPi;
 
 void Camera::Initialize(const PROJECTION_TYPE& type) {
 
-    projectionType_ = type;
-    nearZ_ = 0.1f;
-    farZ_ = 1000.0f;
-    offset_ = { 0.0f };
+    cameraData_.projectionType = type;
+    cameraData_.nearZ = 0.1f;
+    cameraData_.farZ = 1000.0f;
+    cameraData_.offset = { 0.0f };
+
     InitializeTransform();
     UpdateProjectionMatrix();
 
-    sphericalCoordinate_.radius = 0.0f;
-    sphericalCoordinate_.azimuthal = 0.0f;
-    sphericalCoordinate_.polar = 0.0f;
+   cameraData_.sphericalCoordinate.radius = 0.0f;
+   cameraData_.sphericalCoordinate.azimuthal = 0.0f;
+   cameraData_.sphericalCoordinate.polar = 0.0f;
 
 }
 
 Vector3 Camera::GetWorldPos() {
-    return { worldMat_.m[3][0], worldMat_.m[3][1], worldMat_.m[3][2] };
+    return Math::GetWorldTransformByMatrix(cameraMatrix_.worldMat);;
 }
 
 void Camera::InitializeTransform()
 {
-    scale_ = { 1.0f,1.0f,1.0f };
-    rotate_ = { 0.0f,0.0f,0.0f };
-    translate_ = { 0.0f,0.0f,-10.0f };
-    worldMat_ = MakeIdentity4x4();
+    cameraData_.eTransform.scale = { 1.0f,1.0f,1.0f };
+    cameraData_.eTransform.rotate = { 0.0f,0.0f,0.0f };
+    cameraData_.eTransform.translate = { 0.0f,0.0f,-10.0f };
+    cameraMatrix_.worldMat = MakeIdentity4x4();
+}
+
+const Matrix4x4& Camera::GetViewProjectionMatrix() {
+    return cameraMatrix_.viewProjectionMat;
 }
 
 const Matrix4x4& Camera::GetProjectionMatrixForOutline()
 {
- 
-    return projectionMat_;
+    return cameraMatrix_.projectionMat;
 }
 
 void Camera::UpdateMatrix() {
+
+#ifdef USE_IMGUI
+    DebugUI::CheckCamera(cameraMatrix_, cameraData_,"Main Camera");
+#endif
 
     UpdateWorldMatrix();
     UpdateViewProjectionMatrix();
@@ -46,33 +54,28 @@ void Camera::UpdateMatrix() {
 
 void Camera::UpdateWorldMatrix()
 {
-    worldMat_ = MakeAffineMatrix(scale_, rotate_, translate_);
+    cameraMatrix_.worldMat = MakeAffineMatrix(cameraData_.eTransform.scale, cameraData_.eTransform.rotate, cameraData_.eTransform.translate);
     //カメラデータを挿入
     UpdateData();
 }
 
 void Camera::CreateResource()
 {
-
     cameraResource_ = DirectXCommon::CreateBufferResource(sizeof(CameraForGPU));
-
     UpdateData();
-
 }
 
 void Camera::UpdateData()
 {
     //書き込むためのアドレスを取得
-    cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraData_));
-    cameraData_->worldPosition = GetWorldPos();
-    ////書き込むためのアドレスを取得
-    //cameraResource_->Unmap(0, nullptr);
+    cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+    cameraForGPU_->worldPosition = GetWorldPos();
 }
 
 void Camera::SetScreenSize(const float& width, const float& height)
 {
-    width_ = width;
-    height_ = height;
+   cameraData_.width = width;
+   cameraData_.height = height;
 }
 
 Camera::Camera()
@@ -86,26 +89,26 @@ Camera::Camera()
 
 void Camera::UpdateViewMatrix()
 {
-    viewMat_ = Inverse(worldMat_);
+    cameraMatrix_.viewMat = Inverse(cameraMatrix_.worldMat);
 }
 
 void Camera::UpdateProjectionMatrix()
 {
 
-    if (projectionType_ == PERSPECTIVE) {
+    if (cameraData_.projectionType == PERSPECTIVE) {
         //投資投影
-        projectionMat_ = MakePerspectiveFovMatrix(fovAngleY_, width_ / height_, nearZ_, farZ_);
+        cameraMatrix_.projectionMat = MakePerspectiveFovMatrix(cameraData_.fovAngleY, cameraData_.width / cameraData_.height, cameraData_.nearZ, cameraData_.farZ);
 
-    } else if (projectionType_ == PARALLEL) {
+    } else if (cameraData_.projectionType == PARALLEL) {
         //平行投影
-        float halfWidth = width_ * 0.5f;
-        float halfHeight = height_ * 0.5f;
+        float halfWidth = cameraData_.width * 0.5f;
+        float halfHeight = cameraData_.height * 0.5f;
 
-        projectionMat_ = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, nearZ_, farZ_);
+        cameraMatrix_. projectionMat = MakeOrthographicMatrix(halfWidth, halfHeight, -halfWidth, -halfHeight, cameraData_. nearZ, cameraData_.farZ);
     }
 
-    projectionMat_.m[3][0] += offset_.x;
-    projectionMat_.m[3][1] -= offset_.y;
+    cameraMatrix_.projectionMat.m[3][0] += cameraData_.offset.x;
+    cameraMatrix_.projectionMat.m[3][1] -= cameraData_.offset.y;
 
 }
 
@@ -115,9 +118,6 @@ void Camera::UpdateViewProjectionMatrix()
 
     UpdateProjectionMatrix();
 
-    viewProjectionMat_ = Multiply(viewMat_, projectionMat_);
+    cameraMatrix_.viewProjectionMat = Multiply(cameraMatrix_.viewMat, cameraMatrix_. projectionMat);
 }
 
-Matrix4x4& Camera::GetViewProjectionMatrix() {
-    return viewProjectionMat_;
-}

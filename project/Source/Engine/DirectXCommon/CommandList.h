@@ -8,12 +8,12 @@ class CommandList
 {
 public:
     void Create();
-    static Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList>& GetCommandList() { return commandList_; };
+    Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList>& GetCommandList() { return commandList_; };
+    ID3D12GraphicsCommandList* Get() { return commandList_.Get(); };
     void PrepareCommand();
-    ~CommandList();
 private:
-    static Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList> commandList_;
+    Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList> commandList_ = nullptr;
     //コマンドアロケータを生成する(Allocate 割り当てる)
-   static Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_;
+    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_ = nullptr;
 };
 

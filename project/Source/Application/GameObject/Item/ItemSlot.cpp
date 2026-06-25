@@ -1,8 +1,7 @@
 #include "ItemSlot.h"
-#include"DebugUI.h"
 #include"Sound.h"
 #include"SoundManager/SoundManager.h"
-#include"SpriteCamera.h"
+
 #include"Model.h"
 #include"Input.h"
 using namespace std;
@@ -13,7 +12,7 @@ using namespace std;
 #include"CoordinateTransform.h"
 #include"MakeMatrix.h"
 #include<algorithm>
-#include"Easing.h"
+
 Item::Item()
 {
     object_ = std::make_shared<Object3d>();
@@ -26,8 +25,6 @@ Item::Item()
 }
 void Item::SetModel(const std::string& fileName)
 {
-
- 
     object_->SetMeshAndMaterial(ModelManager::GetModel(fileName));
 }
 void Item::Init()
@@ -40,6 +37,7 @@ void Item::Init()
     startPos_ = { 0.0f };
     endPos_ = { 0.0f };
 }
+
 void Item::DrawInfoUI()
 {
 //#ifdef USE_IMGUI
@@ -138,12 +136,13 @@ ItemSlot::ItemSlot()
     //カメラについての
     itemCamera_ = std::make_unique<Camera>();
     itemCamera_->Initialize();
-    itemCamera_->nearZ_ = 0.1f;
-    itemCamera_->farZ_ = 100.0f;
     float scales = 0.005f;
-    itemCamera_->scale_ = { scales,scales,scales };
-    //itemCamera_->translate_.z = -10.0f;
-    itemCamera_->UpdateMatrix();
+
+    itemCamera_->SetTransform(
+        { .scale = { scales,scales,scales },
+        .rotate = {Math::ZERO},
+        .translate = { 0.0f,0.0f,-10.0f } }
+    );
 
     matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);
     matInverseVPV = Inverse(itemCamera_->GetViewProjectionMatrix() * matViewport);
@@ -191,11 +190,7 @@ void ItemSlot::Update()
 
     }
 
-#ifdef USE_IMGUI
-    ImGui::Begin("Debug");
-    DebugUI::CheckCamera(*itemCamera_,"Item Camera");
-    ImGui::End();
-#endif
+
 
 }
 

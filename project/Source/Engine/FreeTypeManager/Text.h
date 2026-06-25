@@ -3,21 +3,24 @@
 #include <vector>
 #include "Vector2.h"
 #include "Vector4.h"
-#include "FreeTypeManager.h"
-#include"Engine/Mesh/Font/Font.h"
-enum class TextAlign {
-    Left,
-    Center,
-    Right
-};
-enum class VerticalAlign { 
-    Top,
-    Middle,
-    Bottom
-};
+#include"BlendMode.h"
+class FreeTypeManager;
+class Font;
+struct GlyphRun;
 
 class Text {
 public:
+    enum class TextAlign {
+        Left,
+        Center,
+        Right
+    };
+    enum class VerticalAlign {
+        Top,
+        Middle,
+        Bottom
+    };
+
     void Initialize(uint32_t fontHandle);
     void SetString(const std::u32string& text);
     void SetPosition(const Vector2& pos);
@@ -28,10 +31,8 @@ public:
     void SetSize(const Vector2 size) { size_ = size; }
     void Draw();
     void Debug();
-
 private:
     void UpdateLayout();
-
 private:
     uint32_t fontHandle_ = 0;
     std::u32string text_;

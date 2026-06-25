@@ -5,6 +5,7 @@
 #include"DebugUI.h"
 #include"Model.h"
 #include"ObjectManager/ObjectManager.h"
+#include"FreeTypeManager/FreeTypeManager.h"
 
 FreeTypeScene::FreeTypeScene()
 {
@@ -17,13 +18,13 @@ FreeTypeScene::FreeTypeScene()
     text_.SetString(U"\U00013000ButtobiEngine");
     text_.SetPosition({ 640, 360 });
     text_.SetColor({ 1, 0, 0, 1 });
-    text_.SetAlign(TextAlign::Center);
+    text_.SetAlign(Text::TextAlign::Center);
     text_.SetBlendMode(BlendMode::kBlendModeNormal);
 
     pressSpaceText_.SetString(U"SPACE");
     pressSpaceText_.SetPosition({ 640, 360 + 128 });
     pressSpaceText_.SetColor({ 1, 0, 0, 1 });
-    pressSpaceText_.SetAlign(TextAlign::Center);
+    pressSpaceText_.SetAlign(Text::TextAlign::Center);
     pressSpaceText_.SetBlendMode(BlendMode::kBlendModeNormal);
     sprite_ = std::make_unique<Sprite>();
     sprite_->Create(TextureFactory::NUMBERS, { 0,0 });
@@ -44,7 +45,7 @@ FreeTypeScene::FreeTypeScene()
     object3d_->GetMaterial().environmentCoefficient = 0.5f;
 
     beam_ = std::make_unique<Beam>();
-   
+
     levelEditor_ = std::make_unique<LevelEditor>();
     levelEditor_->Load("test");
     //オブジェクトをセットする
@@ -85,7 +86,7 @@ void FreeTypeScene::Initialize()
     //player_->Update();
 
     beam_->Initialize();
-   
+
     object3d_->RegisterObject();
     for (auto& obj : objects_) {
         obj->obj_->RegisterObject();
@@ -110,7 +111,7 @@ void FreeTypeScene::Update()
         SceneManager::SetNextScene("Title");
     }
     currentCamera_->UpdateMatrix();
- 
+
 #ifdef _DEVELOP
 
     if (Input::IsTriggerKey(DIK_1)) {
@@ -118,7 +119,7 @@ void FreeTypeScene::Update()
     }
 
     DebugUI::CheckEmitter(particleEmitters_[0]->GetEmitter());
-    DebugUI::CheckEmitter(particleEmitters_[1]->GetEmitter()); 
+    DebugUI::CheckEmitter(particleEmitters_[1]->GetEmitter());
 
 #endif //_DEVELOP
 
@@ -132,7 +133,7 @@ void FreeTypeScene::Update()
     for (auto& obj : enemies_) {
         obj->Update();
     }
-    
+
     object3d_->Update();
 
     for (int i = 0; i < particleEmitters_.size(); ++i) {
@@ -156,7 +157,7 @@ void FreeTypeScene::DrawModel()
 
     skyBoxObj_->Draw(*currentCamera_);
 
-    object3d_->Draw(*currentCamera_,BlendMode::kBlendModeAdd,CullMode::kCullModeNone,MaskMode::kZero);
+    object3d_->Draw(*currentCamera_, BlendMode::kBlendModeAdd, CullMode::kCullModeNone, MaskMode::kZero);
     beam_->Draw(currentCamera_);
 
     for (auto& obj : objects_) {
@@ -194,12 +195,13 @@ void FreeTypeScene::CreateParticle()
     emitter0.movement = ParticleMovements::kParticleNormal;
     emitter0.rotateAABB_ = { .min = {0.0f,0.0f,-3.14f},.max = {0.0f,0.0f,3.14f} };
     emitter0.scaleAABB_ = { .min = {0.0f,0.4f,0.0f},.max = {0.0f,1.5f,1.0f} };
+  
     emitter0.isLoop_ = true;
+    emitter0.useBillboard_ = true;
 
-    auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
-    group->accelerationField.acceleration.y = 0.0f;
-    group->accelerationField.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
-    group->useBillboard = true;
+    emitter0.accelerationField_.acceleration.y = 0.0f;
+    emitter0.accelerationField_.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
+
 
     particleEmitters_[1]->SetName("ring");
 
@@ -217,10 +219,11 @@ void FreeTypeScene::CreateParticle()
     emitter1.blendMode = kBlendModeAdd;
     emitter1.movement = ParticleMovements::kParticleNormal;
     emitter1.rotateAABB_ = { .min = {0.0f,-3.14f,0.0f},.max = {0.0f,3.14f,0.0f} };
+   
     emitter1.isLoop_ = true;
+    emitter1.useBillboard_ = false;
 
-    auto& group1 = ParticleManager::GetInstance()->GetParticleGroup(emitter1.name);
-    group1->accelerationField.acceleration.y = 0.0f;
-    group1->accelerationField.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
-    group1->useBillboard = false;
+    emitter1.accelerationField_.acceleration.y = 0.0f;
+    emitter1.accelerationField_.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
+
 }

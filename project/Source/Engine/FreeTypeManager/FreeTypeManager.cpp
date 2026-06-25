@@ -5,6 +5,7 @@
 #include<cassert>
 #include"DirectXCommon.h"
 #include"SRVmanager/SrvManager.h"
+#include"Mesh/Font/Font.h"
 #include"Log.h"
 
 using namespace std;
@@ -12,25 +13,34 @@ using namespace std;
 FT_Library FreeTypeManager::library_;
 
 // フォントごとのFTData（faceとfontData）
-std::unordered_map<uint32_t, FTData> FreeTypeManager::fontFaces_;
-unordered_map<GlyphKey, FTTextureData> FreeTypeManager::glyphTextures_;
+std::unordered_map<uint32_t, FreeTypeManager::FTData> FreeTypeManager::fontFaces_;
+unordered_map<GlyphKey, FreeTypeManager::FTTextureData> FreeTypeManager::glyphTextures_;
 std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Font>>> FreeTypeManager::fontPool_;
 
-void FreeTypeManager::Initialize()
-{
-    //ライブラリの初期化　error　== 0 で成功
+ID3D12GraphicsCommandList* FreeTypeManager::commandList_ = nullptr;
+
+FreeTypeManager::FreeTypeManager()
+{    
+    //ライブラリの初期化　error　== 0 で成功 
     FT_Error error = FT_Init_FreeType(&library_);
 
     if (error == 0) {
         //初期化に成功
-        DebugLog("FT_Init_FreeType Success!\n");
+        LogFile::Log("FT_Init_FreeType Success!\n");
     } else {
         //失敗
         std::string msg = "FT_Init_FreeType failed!: " + std::to_string(error) + "\n";
-        DebugLog(msg);
+        LogFile::Log(msg);
         assert(false);
     }
 
+    LogFile::Log("Initialize FreeType Manager");
+}
+
+FreeTypeManager::~FreeTypeManager()
+{
+
+    LogFile::Log("Delete FreeType Manager");
 }
 
 
@@ -52,7 +62,7 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
         std::ifstream file(fontPath, std::ios::binary | std::ios::ate);
         if (!file) {
             std::string msg = "Cannot Open File: " + fontPath + "\n";
-            DebugLog(msg);
+            LogFile::Log(msg);
             assert(false);
         }
 
@@ -62,7 +72,7 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
         data.fontData.resize(static_cast<size_t>(size));
 
         if (!file.read(reinterpret_cast<char*>(data.fontData.data()), size)) {
-            DebugLog("CannotLoadFontData\n");
+            LogFile::Log("CannotLoadFontData\n");
             assert(false);
         }
 
@@ -78,11 +88,11 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
 
     if (err == FT_Err_Unknown_File_Format)
     {
-        DebugLog("FT_Err_Unknown_File_Format\n");
+        LogFile::Log("FT_Err_Unknown_File_Format\n");
     } else if (err)
     {
         std::string msg = "FT_New_Memory_Face failed!: " + std::to_string(err) + "\n";
-        DebugLog(msg);
+        LogFile::Log(msg);
     }
 
     assert(!err);
@@ -93,6 +103,17 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
     //ハンドルを返す
     return handle;
 
+}
+
+void FreeTypeManager::SetCommandList(ID3D12GraphicsCommandList* commandList)
+
+{    //コマンドリストをセットする
+    commandList_ = commandList;
+    assert(commandList_);
+    
+    LogFile::Log("SetCommandList to FreeType");
+
+    Font::SetCommandList(commandList_);
 }
 
 void FreeTypeManager::Finalize()
@@ -126,11 +147,8 @@ void FreeTypeManager::Finalize()
 
     //libraryの破棄
     FT_Done_FreeType(library_);
-}
 
-FreeTypeManager::~FreeTypeManager()
-{
-    Finalize();
+    LogFile::Log("Finalize FreeType Manager");
 }
 
 void FreeTypeManager::GetBitMapGlyph(uint32_t faceHandle, FT_UInt glyphIndex)
@@ -140,7 +158,7 @@ void FreeTypeManager::GetBitMapGlyph(uint32_t faceHandle, FT_UInt glyphIndex)
 
     if (!LoadAndRenderGlyph(ftData.face, glyphIndex, FT_RENDER_MODE_NORMAL))
     {
-        DebugLog("LoadAndRenderGlyph faild\n");
+        LogFile::Log("LoadAndRenderGlyph faild\n");
         return;
     };
 
@@ -153,26 +171,26 @@ void FreeTypeManager::GetOutLineGlyph(uint32_t faceIndex, FT_UInt glyphIndex, ui
     FT_Face face = ftData.face;
 
     //生のアウトラインデータを取得する場合
-    if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_NO_SCALE | FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP)) { DebugLog("Failed to Load_Glyph\n"); return; }
+    if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_NO_SCALE | FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP)) { LogFile::Log("Failed to Load_Glyph\n"); return; }
 
     if (!face) {
         std::string msg = "face[" + std::to_string(faceIndex) + "] is invalid\n";
-        DebugLog(msg);
+        LogFile::Log(msg);
         assert(false);
     }
 
     auto& glyph = face->glyph;
 
     if (glyph->format != FT_GLYPH_FORMAT_OUTLINE) {
-        DebugLog("This Glyph is not OutLineGlyph type\n");
+        LogFile::Log("This Glyph is not OutLineGlyph type\n");
         assert(false);
     }
 
     //サイズにスケーリング・ヒンティングしたものを取得する場合
-    if (FT_Set_Pixel_Sizes(face, width, height)) { DebugLog("Failed to Set_Pixel_Sizes\n");  assert(false); }
+    if (FT_Set_Pixel_Sizes(face, width, height)) { LogFile::Log("Failed to Set_Pixel_Sizes\n");  assert(false); }
 
     //(オプション)glyph->outlineをラスタライズする
-    if (FT_Render_Glyph(glyph, FT_RENDER_MODE_LCD)) { DebugLog("Glyph rasterization failed!\n");  assert(false); }
+    if (FT_Render_Glyph(glyph, FT_RENDER_MODE_LCD)) { LogFile::Log("Glyph rasterization failed!\n");  assert(false); }
 }
 
 void FreeTypeManager::Draw(uint32_t faceIndex, FT_UInt glyphIndex)
@@ -196,13 +214,13 @@ bool FreeTypeManager::LoadAndRenderGlyph(FT_Face& face, FT_UInt glyphIndex, FT_R
 
     //グリフの読み込み
     if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT|FT_LOAD_COLOR)) {
-        DebugLog("FT_Load_Glyph faild\n"); 
+        LogFile::Log("FT_Load_Glyph faild\n"); 
         assert(false);
         return false;
     }
 
     if (FT_Render_Glyph(face->glyph, mode)) {
-        DebugLog("FT_Render_Glyph failed!\n");
+        LogFile::Log("FT_Render_Glyph failed!\n");
         assert(false);
         return false;
     }
@@ -211,7 +229,7 @@ bool FreeTypeManager::LoadAndRenderGlyph(FT_Face& face, FT_UInt glyphIndex, FT_R
     if (glyph->format == FT_GLYPH_FORMAT_BITMAP &&
         glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA) {
         //カラー絵文字（PNG） face->glyph->bitmapにBGRAビットマップが入ってる
-        DebugLog("This is color glyph\n");
+        LogFile::Log("This is color glyph\n");
     }
 
     return true;
@@ -223,7 +241,7 @@ void FreeTypeManager::ShowFontSize(uint32_t faceHandle)
     FT_Face face = ftData.face;
 
     for (int i = 0; i < face->num_fixed_sizes; ++i) {
-        DebugLog("Size[" + to_string(i) + "]:" + to_string(face->available_sizes[i].width) + "x" + to_string(face->available_sizes[i].height) + "\n");
+        LogFile::Log("Size[" + to_string(i) + "]:" + to_string(face->available_sizes[i].width) + "x" + to_string(face->available_sizes[i].height) + "\n");
     }
 }
 
@@ -236,7 +254,7 @@ void FreeTypeManager::ResetFontUsage()
     }
 }
 
-const FTTextureData& FreeTypeManager::GetGlyphTextures(const GlyphKey& key) {
+const FreeTypeManager::FTTextureData& FreeTypeManager::GetGlyphTextures(const GlyphKey& key) {
 
 
     if (!glyphTextures_.contains(key)) {
@@ -248,7 +266,7 @@ const FTTextureData& FreeTypeManager::GetGlyphTextures(const GlyphKey& key) {
     auto it = glyphTextures_.find(key);
     if (it == glyphTextures_.end()) {
 
-        DebugLog("Glyph texture not found for key: " + std::to_string(key.handle) + ", " + std::to_string(key.glyphIndex) + "\n");
+        LogFile::Log("Glyph texture not found for key: " + std::to_string(key.handle) + ", " + std::to_string(key.glyphIndex) + "\n");
         assert(false); // or return a default value if you prefer
     }
     return it->second;
@@ -273,13 +291,9 @@ void FreeTypeManager::ReleaseResource(FTResource& resource)
         resource.resource.Reset();
         resource.resource = nullptr;
     }
-    if (resource.intermediateResource != nullptr) {
-        resource.intermediateResource.Reset();
-        resource.intermediateResource = nullptr;
-    }
 }
 
-FTResource FreeTypeManager::CreateResourceFromFTBitmap(const FT_Bitmap& bitmap)
+FreeTypeManager::FTResource FreeTypeManager::CreateResourceFromFTBitmap(const FT_Bitmap& bitmap)
 {
     using namespace Microsoft::WRL;
 
@@ -318,7 +332,7 @@ FTResource FreeTypeManager::CreateResourceFromFTBitmap(const FT_Bitmap& bitmap)
     );
 
     if (FAILED(hr)) {
-        DebugLog("Texture creation failed!\n");
+        LogFile::Log("Texture creation failed!\n");
     }
 
     // 2. アップロードヒープにデータをコピー
@@ -339,7 +353,7 @@ FTResource FreeTypeManager::CreateResourceFromFTBitmap(const FT_Bitmap& bitmap)
     );
 
     if (FAILED(hr)) {
-        DebugLog("Create　IntermediateResource failed!\n");
+        LogFile::Log("Create　IntermediateResource failed!\n");
     }
 
 
@@ -350,11 +364,11 @@ FTResource FreeTypeManager::CreateResourceFromFTBitmap(const FT_Bitmap& bitmap)
     subResourceData.SlicePitch =bitmap.pitch * bitmap.rows;
 
     if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY) {
-        DebugLog("bitmap.pixel_mode is not GRAY!\n");
+        LogFile::Log("bitmap.pixel_mode is not GRAY!\n");
     }
 
-    auto cmdList = CommandList::GetCommandList();
-    UpdateSubresources(cmdList.Get(), result.resource.Get(), result.intermediateResource.Get(), 0, 0, 1, &subResourceData);
+
+    UpdateSubresources(commandList_, result.resource.Get(), result.intermediateResource.Get(), 0, 0, 1, &subResourceData);
 
     // 4. コピー先を PIXEL_SHADER_RESOURCE に遷移 テクスチャをシェーダーで使える状態に切り替える
     CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
@@ -362,7 +376,7 @@ FTResource FreeTypeManager::CreateResourceFromFTBitmap(const FT_Bitmap& bitmap)
         D3D12_RESOURCE_STATE_COPY_DEST,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
-    cmdList->ResourceBarrier(1, &barrier);
+    commandList_->ResourceBarrier(1, &barrier);
 
     return result;
 }
@@ -386,7 +400,7 @@ void FreeTypeManager::CreateGlyphTexture(uint32_t faceHandle, FT_UInt glyphIndex
     //faceからBitMapを取得
     FT_Bitmap& bitmap = face->glyph->bitmap;
     if (!bitmap.buffer) {
-        DebugLog("bitmap.buffer is null\n");
+        LogFile::Log("bitmap.buffer is null\n");
         assert(false);
     }
 
@@ -444,11 +458,11 @@ void FreeTypeManager::SetPixelSizes(uint32_t faceHandle, uint32_t width, uint32_
 {
     auto& face = fontFaces_.at(faceHandle).face;
 
-    if (!face) { DebugLog("face is null!\n"); return; }
+    if (!face) { LogFile::Log("face is null!\n"); return; }
 
     FT_Error err = FT_Set_Pixel_Sizes(face, width, height);
     if (err) {
-        DebugLog("Failed to Set_Pixel_Sizes: error code = " + std::to_string(err) + "\n");
+        LogFile::Log("Failed to Set_Pixel_Sizes: error code = " + std::to_string(err) + "\n");
         return;
     }
 }
@@ -468,13 +482,13 @@ FT_UInt FreeTypeManager::GetGlyphID(uint32_t faceHandle, uint32_t unicode, uint3
         FT_UInt glyphIndex = FT_Get_Char_Index(face, unicode);
 
         if (glyphIndex == 0) {
-            DebugLog("Glyph not found: U+" + std::to_string(unicode) + "\n");
+            LogFile::Log("Glyph not found: U+" + std::to_string(unicode) + "\n");
 
             // フォールバック文字（例: '?'）
             glyphIndex = FT_Get_Char_Index(face, '?');
 
             if (glyphIndex == 0) {
-                DebugLog("Fallback glyph '?' not found either!\n");
+                LogFile::Log("Fallback glyph '?' not found either!\n");
             }
 
         }

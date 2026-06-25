@@ -5,32 +5,9 @@
 #include"PSO.h"
 #include"SRVmanager/SrvManager.h"
 #include"SpriteCamera.h"  
-#include"ImGuiClass.h"
+#include"Log.h"
 
-ID3D12GraphicsCommandList* Font::commandList = nullptr;
-
-Font::Font()
-{
-    commandList = DirectXCommon::GetCommandList();
-}
-
-Font::~Font()
-{
-    if (vertexResource_) {
-        vertexResource_->Unmap(0, nullptr);
-        vertexResource_.Reset();
-    }
-
-    if (transformationMatrixResource_) {
-        transformationMatrixResource_->Unmap(0, nullptr);
-        transformationMatrixResource_.Reset();
-    }
-
-    if (materialResource_) {
-        materialResource_->Unmap(0, nullptr);
-        materialResource_.Reset();
-    }
-}
+ID3D12GraphicsCommandList* Font::commandList_  = nullptr;
 
 void Font::Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color, const Vector2& size, const Vector2& anchorPoint)
 {
@@ -46,8 +23,6 @@ void Font::Create(const TextureFactory::Handle& textureHandle, const Vector2& po
     CreateTransformationMatrix();
 
     AdjustTextureSize(size);
-
-
 }
 
 void Font::Update()
@@ -100,16 +75,21 @@ void Font::SetTexture(const TextureFactory::Handle& textureHandle)
     textureHandle_ = Texture::GetSRVHandle(textureHandle);
 }
 
+void Font::SetCommandList(ID3D12GraphicsCommandList* commandList)
+{
+    commandList_ = commandList;
+    assert(commandList);
+    LogFile::Log("Font SetCommandList");
+}
+
 void Font::PreDraw(uint32_t blendMode) {
 
-    if (commandList == nullptr) {
-        commandList = DirectXCommon::GetCommandList();
-    }
-    SpriteCommon::PreDraw(commandList);
-
-    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateFont(blendMode).Get());//PSOを設定
-    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //フォント用のRootSignature
+    commandList_->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::FONT));
+    //Font用のPSOの設定
+    commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateFont(blendMode).Get());//PSOを設定
+    //形状を設定。
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void Font::Draw(
@@ -124,16 +104,16 @@ void Font::Draw(
     *transformationMatrixData_ = { Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix()),worldMatrix_ };
 
     //頂点バッファビューを設定
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-    SpriteCommon::SetIndexBuffer(commandList);
+    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    //スプライト共通の処理
+    SpriteCommon::SetIndexBuffer(commandList_);
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-    //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
-
-    SpriteCommon::DrawCall(commandList);
+    commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+    //SRVのDescriptorTableの先頭を設定。rootParameter[2]。
+    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_,commandList_);
+    SpriteCommon::DrawCall(commandList_);
 
 };
 

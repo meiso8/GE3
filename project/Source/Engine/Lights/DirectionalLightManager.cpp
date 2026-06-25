@@ -1,12 +1,12 @@
 #include "DirectionalLightManager.h"
 #include"DirectXCommon.h"
+#include"Log.h"
 
 DirectionalLight* DirectionalLightManager::directionalLightData = nullptr;
 Microsoft::WRL::ComPtr <ID3D12Resource> DirectionalLightManager::directionalLightResource = nullptr;
 
-void DirectionalLightManager::Create()
-{
-    //平行光源用のResourceを作成する
+DirectionalLightManager::DirectionalLightManager()
+{    //平行光源用のResourceを作成する
     directionalLightResource = DirectXCommon::CreateBufferResource(sizeof(DirectionalLight));
     //書き込むためのアドレスを取得
     directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
@@ -17,6 +17,8 @@ void DirectionalLightManager::Create()
     directionalLightData->intensity = 1.0f;
     //書き込み終了！
     directionalLightResource->Unmap(0, nullptr);
+
+    LogFile::Log("Create DirectionalLightManage");
 }
 
 void DirectionalLightManager::Finalize()
@@ -25,11 +27,12 @@ void DirectionalLightManager::Finalize()
         directionalLightResource.Reset();
     }
 
+    LogFile::Log("Finalize DirectionalLightManage");
 }
 
-void DirectionalLightManager::SetGraphicsRootConstantBufferView(const UINT rootParameterIndex)
+void DirectionalLightManager::SetGraphicsRootConstantBufferView(const UINT rootParameterIndex, ID3D12GraphicsCommandList* commandList )
 {
     //LightのCBufferの場所を設定
-    DirectXCommon::GetCommandList()->SetGraphicsRootConstantBufferView(rootParameterIndex, directionalLightResource->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(rootParameterIndex, directionalLightResource->GetGPUVirtualAddress());
 
 }

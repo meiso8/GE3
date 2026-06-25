@@ -5,15 +5,16 @@
 #include"Lights/Light.h"
 #include<cstdint>
 #include<cassert>
+
 class PointLightManager
 {
 public:
-    static void CreateData();
-    static void SetGraphicsRootDescriptorTable(const UINT rootParameterIndex);
+    void Finalize();
+    PointLightManager();
+    static void SetGraphicsRootDescriptorTable(const UINT rootParameterIndex, ID3D12GraphicsCommandList* commandList);
     static void InitData(const uint32_t& index);
     static void InitDatas();
     static PointLight& GetData(const uint32_t& index) { assert(index < kMaxData_); return pointLightData_[index]; };
-    static void Finalize();
 public:
     static const uint32_t kMaxData_ = 20;
 private:

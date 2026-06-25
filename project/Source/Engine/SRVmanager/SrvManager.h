@@ -5,6 +5,7 @@
 #include<stdint.h>
 #include"DirectXTex.h"
 
+class CommandList;
 
 class SrvManager
 {
@@ -17,12 +18,12 @@ private:
     static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap;
 
 public:
-    void Initialize();
+    SrvManager();
     ~SrvManager();
 
-    static void PreDraw();
+    static void PreDraw(ID3D12GraphicsCommandList* commandList);
     static uint32_t Allocate();
-    static bool IsMaxCount();
+    static bool CanCreateSRV();
 
     static ID3D12DescriptorHeap* GetDescriptorHeap() { return descriptorHeap.Get(); }
     static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index);
@@ -30,6 +31,6 @@ public:
 
     static void CreateSRVforTexture(uint32_t srvIndex, ID3D12Resource* pResource, DirectX::TexMetadata& metadata);
     static void CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource,UINT numElements, UINT structureByteStride);
-    static void SetGraphicsRootDescriptorTable(UINT RootParameterIndex, uint32_t srvIndex);
+    static void SetGraphicsRootDescriptorTable(UINT RootParameterIndex, uint32_t srvIndex, ID3D12GraphicsCommandList* commandList);
 };
 

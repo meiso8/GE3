@@ -6,11 +6,13 @@
 class PrimitiveFactory
 {
 public:
-    static Primitive* GetPrimitive(const Primitive::TopologyType& topologyType);
+    static Primitive* GetPrimitive(const Primitive::MeshType& topologyType);
     static Primitive* GetPrimitiveForName(const std::string name);
-    static MeshData GetMeshData(const Primitive::TopologyType& topologyType);
+    static MeshData GetMeshData(const Primitive::MeshType& topologyType);
     void CreateAllPrimitive();
 private:
+    void CreateAndSetMeshType(const Primitive::MeshType& topologyType);
    static std::unordered_map<std::string, Primitive>primitives_;
+   static std::unordered_map<Primitive::MeshType ,std::string>meshType_;
 };
 

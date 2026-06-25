@@ -3,6 +3,8 @@
 #include"TimeManager.h"
 #include"Easing.h"
 #include<algorithm>
+#include"MakeMatrix.h"
+
 EyeCollider::EyeCollider()
 {
     object_ = std::make_unique<Object3d>();
@@ -52,7 +54,6 @@ Vector3& EyeCollider::GetForward()
     static Vector3 forward;
     forward = Math::GetForward(object_->GetWorldMatrix());
     return forward;
-
 }
 
 void EyeCollider::Walk(const float& speed)

@@ -1,6 +1,8 @@
 #include "SpriteCommon.h"
 #include"DirectXCommon.h"
 #include"PSO.h"
+#include"CommandList.h"
+#include"Log.h"
 
 RootSignature* SpriteCommon::rootSignature_ = nullptr;
 
@@ -11,12 +13,14 @@ uint32_t* SpriteCommon::indexData_ = nullptr;
 void SpriteCommon::Finalize()
 {
     indexResource_.Reset();
+    LogFile::Log("Finalize SpriteCommon");
 }
 
-void SpriteCommon::Initialize()
+void SpriteCommon::Initialize(RootSignature* rootSignature)
 {
-    rootSignature_ = PSO::GetRootSignature();
+    rootSignature_ = rootSignature;
     CreateIndexResource();
+    LogFile::Log("Initialize SpriteCommon");
 }
 
 void SpriteCommon::SetIndexBuffer(ID3D12GraphicsCommandList* commandList)
@@ -26,14 +30,12 @@ void SpriteCommon::SetIndexBuffer(ID3D12GraphicsCommandList* commandList)
 
 }
 
-void SpriteCommon::PreDraw(ID3D12GraphicsCommandList* commandList)
+void SpriteCommon::PreDraw(uint32_t blendMode,ID3D12GraphicsCommandList* commandList)
 {
     commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::SPRITE));
-}
-
-void SpriteCommon::PreFontDraw(ID3D12GraphicsCommandList* commandList)
-{
-    commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::FONT));
+    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateSprite(blendMode).Get());//PSOを設定
+    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void SpriteCommon::DrawCall(ID3D12GraphicsCommandList* commandList)

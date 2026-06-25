@@ -4,6 +4,7 @@
 #include"MakeMatrix.h"
 #include"PSO.h"
 #include"PrimitiveFactory/PrimitiveFactory.h"
+#include"Log.h"
 
 #include"Collision.h"
 #include"SRVmanager/SrvManager.h"
@@ -13,13 +14,13 @@
 #include"TimeManager.h"
 #include"Lerp.h"
 #include"Object3d.h"
+#include"CommandList.h"
 
 using namespace  Microsoft::WRL;
 namespace {
-    const float pi = std::numbers::pi_v<float>;
-    const float halfPi = pi * 0.5f;
+    const float halfPi = Math::kPi * 0.5f;
 }
-ID3D12GraphicsCommandList* ParticleManager::commandList_ = nullptr;
+
 std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager::particleGroups;
 
 // ==========================================================================================================
@@ -27,13 +28,10 @@ std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager
 void ParticleManager::CreateAll()
 {
     CreateParticleGroup("particle1", TextureFactory::CIRCLE, Primitive::kPlane, false);
-
     CreateParticleGroup("people", TextureFactory::UV_CHECKER, Primitive::kPlane, true,1.0f, "people");
     CreateParticleGroup("ring", TextureFactory::GRADATION_LINE, Primitive::kRing);
     CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, Primitive::kPlane, true,1.0f, "people");
-
     CreateParticleGroup("powerCharge", TextureFactory::CIRCLE, Primitive::kPlane, false);
-
     CreateParticleGroup("fountain", TextureFactory::WATER_TEXTURE, Primitive::kPlane,false,0.01f);
     CreateParticleGroup("fountain2", TextureFactory::WATER_TEXTURE, Primitive::kPlane, false,0.01f);
     CreateParticleGroup("shockParticle", TextureFactory::CIRCLE, Primitive::kPlane, false);
@@ -42,18 +40,22 @@ void ParticleManager::CreateAll()
 // ==========================================================================================================
 
 
-void ParticleManager::Create()
+void ParticleManager::Create(RootSignature* rootSignature)
 {
-    rootSignature_ = PSO::GetRootSignature();
-    commandList_ = DirectXCommon::GetCommandList();
+    rootSignature_ = rootSignature;
+    assert(rootSignature_);
 
     UpdateFunctions = {
         {kParticleNormal, [this](ParticleGroup& group) { Normal(group); }},
         {kParticleSphere, [this](ParticleGroup& group) { Sphere(group); }},
         {kParticleShock, [this](ParticleGroup& group) { Shock(group); }},
     };
+}
 
-
+void ParticleManager::SetCommandList(ID3D12GraphicsCommandList* commandList)
+{
+    commandList_ = commandList;
+    assert(commandList_);
 }
 
 Particle MakeNewParticle(
@@ -92,7 +94,7 @@ Particle MakeNewParticle(
     particle.transform.translate.z = random.Get() + newTransform.z;
 
     if (useRadialEmission) {
-        float longitudeAngle = ((float)count / (float)maxCount) * (2.0f * pi);
+        float longitudeAngle = ((float)count / (float)maxCount) * (2.0f * Math::kPi);
        //// 2. X軸とZ軸の回転量を計算
        float rotateX = std::cos(longitudeAngle);
        float rotateZ = std::sin(longitudeAngle);
@@ -132,7 +134,7 @@ SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, 
     SphericalMove spherical;
     Random random;
     spherical.coordinate.azimuthal = 0.0f;
-    spherical.coordinate.polar = std::numbers::pi_v<float>*2.0f / maxCount * count;
+    spherical.coordinate.polar = Math::kPi*2.0f / maxCount * count;
     spherical.coordinate.radius = radius;
     random.SetMinMax(polarSpeedMinMax.min, polarSpeedMinMax.max);
     spherical.polarSpeed = polarSpeed + random.Get();
@@ -141,7 +143,7 @@ SphericalMove MakeNewSphericalCoordinate(const float& radius, const int& count, 
     return spherical;
 }
 
-void ParticleManager::CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle, const Primitive::TopologyType& topologyType, const bool& useModel, const float temperature, const std::string& modelTag)
+void ParticleManager::CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle, const Primitive::MeshType& topologyType, const bool& useModel, const float temperature, const std::string& modelTag)
 {
 
     assert(!particleGroups.contains(name));
@@ -151,7 +153,6 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
 
     newParticleGroup->useBillboard = true;
     newParticleGroup->useSpriteCamera = false;
-
     newParticleGroup->useModel = useModel;
     newParticleGroup->textureSize = { 100.0f,100.0f };
 
@@ -201,6 +202,7 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
     //名前とパーティクルをセットにする
     particleGroups.insert(std::make_pair(name, std::move(newParticleGroup)));
 
+    LogFile::Log("Create Particle Group\n");
 }
 
 void ParticleManager::Update(Camera& camera)
@@ -214,7 +216,7 @@ void ParticleManager::Update(Camera& camera)
             group->useBillboard = false;
         }
 
-        UpdateBillBordMatrix(camera, *group);
+        UpdateBillBordMatrix(camera);
 
         UpdateFunctions[group->movement](*group); // ← それぞれの動きに応じて更新！
     }
@@ -243,21 +245,29 @@ std::list<SphericalMove> EmitCoordinate(uint32_t count, const float& radius, con
 
 void ParticleManager::Emit(Emitter& emitter)
 {
+    
     assert(particleGroups.contains(emitter.name));
-    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityAABB, emitter.transform, emitter.useRadialEmission_, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateAABB_, emitter.scaleAABB_));
 
+    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityAABB, emitter.transform, emitter.useRadialEmission_, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateAABB_, emitter.scaleAABB_));
+    //どのように動くかの設定
     particleGroups[emitter.name]->movement = emitter.movement;
     //放射線にするかどうか
     particleGroups[emitter.name]->useRadialEmission = emitter.useRadialEmission_;
-
+    //ビルボードにするかどうか
+    particleGroups[emitter.name]->useBillboard = emitter.useBillboard_;
+    
+    //位置の設定
     particleGroups[emitter.name]->parentPos_ = &emitter.transform;
-
+    //ブレンドモードの設定
     particleGroups[emitter.name]->blendMode = emitter.blendMode;
-
+    //カラーの設定
     particleGroups[emitter.name]->startAlpha_ = emitter.startAlpha_;
     particleGroups[emitter.name]->endAlpha_ = emitter.endAlpha_;
 
 
+    //加速場の設定
+    particleGroups[emitter.name]->accelerationField = emitter.accelerationField_;
+    //動きによって球面座標をEmittする
     if (emitter.movement == kParticleSphere || emitter.movement == kParticleShock) {
         particleGroups[emitter.name]->sphericalCoordinates.splice(particleGroups[emitter.name]->sphericalCoordinates.end(), EmitCoordinate(emitter.count, emitter.radius, emitter.radiusSpeed, emitter.polarSpeed, emitter.polarSpeedMinMax, emitter.radiusSpeedMinMax));
     }
@@ -414,7 +424,7 @@ void ParticleManager::IsCollisionFieldArea(Particle& particleItr, ParticleGroup&
 
 void ParticleManager::Draw()
 {
-  
+
     for (const auto& [name, group] : particleGroups) {
 
         if (group->numInstance > 0) {
@@ -426,9 +436,9 @@ void ParticleManager::Draw()
             //マテリアルの設定
             commandList_->SetGraphicsRootConstantBufferView(0, group->materialResource->GetGPUVirtualAddress());
             //粒ごとのトランスフォーム
-            SrvManager::SetGraphicsRootDescriptorTable(1, group->instanceSrvIndex);
+            SrvManager::SetGraphicsRootDescriptorTable(1, group->instanceSrvIndex, commandList_);
             //テスクチャ
-            SrvManager::SetGraphicsRootDescriptorTable(2, group->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex);
+            SrvManager::SetGraphicsRootDescriptorTable(2, group->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex,commandList_);
             //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
 
             if (group->model != nullptr && group->useModel) {
@@ -471,12 +481,15 @@ void ParticleManager::Finalize()
             group->instancingResource.Reset();
         }
 
-        if (group->materialResource != nullptr) {
-            group->materialResource->Unmap(0, nullptr);
-            group->materialResource = nullptr;
+        if (group->materialResource) {
+            group->materialResource.Reset();
         }
         group.reset();
     }
+
+    particleGroups.clear();
+
+    LogFile::Log("Finalize ParticleManager\n");
 
 }
 
@@ -541,27 +554,18 @@ void ParticleManager::ResetAll()
     for (auto& [name, group] : particleGroups) {
         Reset(name);
     }
-
 }
-
 
 std::unordered_map<std::string, std::unique_ptr<ParticleGroup>>& ParticleManager::GetParticleGroups()
 {
     return particleGroups;
 }
 
-// ==========================================================================================================
+// ======================================//行列の更新//====================================================================
 
-void ParticleManager::UpdateBillBordMatrix(Camera& camera, ParticleGroup& group)
+void ParticleManager::UpdateBillBordMatrix(Camera& camera)
 {
-
-    backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
-
-    billboardMatrix = Multiply(backToFrontMatrix, camera.worldMat_);
-    billboardMatrix.m[3][0] = 0.0f;
-    billboardMatrix.m[3][1] = 0.0f;
-    billboardMatrix.m[3][2] = 0.0f;
-
+    billboardMatrix = Math::GetBillBordMatrix(camera.GetWorldMatrix());
 }
 
 void ParticleManager::UpdateWVPMatrix(Camera& camera, ParticleGroup& group)
@@ -617,4 +621,3 @@ Matrix4x4 ParticleManager::UpdateWorldMatrix(Particle& particleItr, ParticleGrou
 
 }
 
-// ==========================================================================================================

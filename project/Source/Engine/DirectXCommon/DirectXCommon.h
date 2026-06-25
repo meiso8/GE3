@@ -46,7 +46,7 @@ private:
 
     static Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap;
     static std::unique_ptr< DxcCompiler> dxcCompiler;
-    static std::unique_ptr<CommandList> commandList;
+    std::unique_ptr<CommandList> commandList_ = nullptr;
 
     CommandQueue commandQueue = {};
     SwapChain swapChainClass;
@@ -63,26 +63,11 @@ private:
     D3D12_VIEWPORT viewport = {};
     D3D12_RECT scissorRect = {};
     TransitionBarrier barrier = {};
-
-private:
-    // 1. コンストラクタとデストラクタを private にして、外部で new できないようにする
-    DirectXCommon() = default;
-    ~DirectXCommon();
-
 public:
 
-    // 2. コピーと代入を禁止する（インスタンスが2つに増えるのを防ぐため）
-    DirectXCommon(const DirectXCommon&) = delete;
-    DirectXCommon& operator=(const DirectXCommon&) = delete;
-    // 3. インスタンスを取得するための GetInstance 関数（必ず static にする）
-    static DirectXCommon* GetInstance()
-    {
-        // 関数内の static 変数は、プログラム実行中に1回だけ作られる
-        // （C++11以降ではスレッドセーフが保証されているため安全です）
-        static DirectXCommon instance;
-        return &instance;
-    }
-
+    void Finalize();
+    ~DirectXCommon();
+    
     /// @brief 初期化
     /// @param window windowクラスを渡す
     void PreInitialize(Window& window);
@@ -103,8 +88,6 @@ public:
     void PostDraw();
     /// @brief 次フレームの準備
     void PrepareCommand();
-    /// @brief フレーム終了処理
-    void EndFrame();
     /// @brief スワップチェインの取得関数
     /// @return スワップチェイン
     SwapChain& GetSwapChain() { return swapChainClass; };
@@ -170,6 +153,7 @@ public:
     /// @return テクスチャデータ中間リソース
     [[nodiscard]]
     static Microsoft::WRL::ComPtr<ID3D12Resource> UploadTextureData(
+        ID3D12GraphicsCommandList* commandList,
         const Microsoft::WRL::ComPtr<ID3D12Resource>& texture,
         const DirectX::ScratchImage& mipImages);
     /// @brief デバイスの取得関数
@@ -180,8 +164,10 @@ public:
     static DxcCompiler* GetDxcCompiler() { return dxcCompiler.get(); }
     /// @brief コマンドリストの取得関数
     /// @return コマンドリスト
-    static ID3D12GraphicsCommandList* GetCommandList() { return commandList->GetCommandList().Get(); };
-
+    ID3D12GraphicsCommandList* GetCommandList() { return commandList_->GetCommandList().Get(); };
+    /// @brief コマンドリストクラスの取得関数
+/// @return コマンドリスト
+    CommandList* GetCommandListClass() { return commandList_.get(); };
     /// @brief DSVのCPUディスクリプタハンドルの取得関数
     /// @param index 
     /// @return DSVのCPUディスクリプタハンドル

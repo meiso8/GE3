@@ -4,10 +4,10 @@
 
 float TimeManager::deltaTime_ = 1.0f / 60.0f;
 
-void TimeManager::Initialize()
+TimeManager::TimeManager()
 {
     reference_ = std::chrono::steady_clock::now();
-    LogFile::Log("InitializeFixFPS");
+    LogFile::Log("Create TimeManager FixFPS");
 }
 
 void TimeManager::Update()
@@ -41,7 +41,8 @@ void TimeManager::Update()
     reference_ = frame_end;
 }
 
- float TimeManager::DeltaTime()
+float TimeManager::DeltaTime()
 {
     return deltaTime_;
 }
+

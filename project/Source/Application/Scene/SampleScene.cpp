@@ -21,8 +21,6 @@
 #include"../Stage/AmenStage/AmenStage.h"
 #include"../Stage/AnubisStage/AnubisStage.h"
 
-
-
 SampleScene::SampleScene()
 {
     // 現在のカメラを設定
@@ -104,8 +102,9 @@ void SampleScene::Update() {
     if (isDebugCameraActive_) {
         currentCamera_->UpdateMatrix();
     } else {
-        camera_->worldMat_ = player_->GetEyeMatrix();
-        camera_->fovAngleY_ = Easing::EaseOutBack(camera_->kFovAngle_, camera_->kFovAngle_ * 0.5f, player_->zoomTimer_);
+        //プレイヤーの目の位置をカメラの位置とする
+        camera_->SetWorldMatrix(player_->GetEyeMatrix());
+        camera_->SetFovAngleY(Easing::EaseOutBack(Camera::kFovAngle, Camera::kFovAngle * 0.5f, player_->zoomTimer_));
         camera_->UpdateViewProjectionMatrix();
     }
 
@@ -205,7 +204,6 @@ void SampleScene::Debug()
     };
 
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
-    DebugUI::CheckCamera(*currentCamera_);
 
     const char* stages[] = { "AmenStage", "WaterStage", "MedjedStage","MummyStage","AnubisStage"};
     int stageCurrent = 0;
@@ -228,7 +226,6 @@ void SampleScene::DrawModel() {
 #endif
 
     skyboxObject3d_->Draw(*currentCamera_);
-
     memoManager_->Draw(*currentCamera_);
     itemManager_->Draw(*currentCamera_);
     //ステージごとの描画
@@ -237,17 +234,13 @@ void SampleScene::DrawModel() {
     player_->Draw(*currentCamera_);
     //アイテムを手前に描画する
     itemManager_->DrawGetItem();
-
-
 }
 
 void SampleScene::DrawSprite() {
 
-
     Sprite::PreDraw();
 
     itemManager_->DrawUI();
-
     uIManager_->DrawPauseScreen();
     //ステージごとのスプライトを描画する
     stageManager_->DrawSprite();
@@ -257,8 +250,6 @@ void SampleScene::DrawSprite() {
     player_->DrawRaySprite();
 
     uIManager_->DrawEffect();
-
     sceneChange_->Draw();
-
 
 }

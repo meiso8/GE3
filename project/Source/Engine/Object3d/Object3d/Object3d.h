@@ -11,18 +11,16 @@
 #include"Transform.h"
 #include<memory>
 
-struct ObjectID {
-    uint32_t id;
-    uint32_t padding[3];
-};
-
 class Model;
-
-
 
 class Object3d
 {
 public:
+
+    struct ObjectID {
+        uint32_t id;
+        uint32_t padding[3];
+    };
 
     enum LightMode {
         kLightModeNone,
@@ -32,20 +30,34 @@ public:
 
     struct Material
     {
+        //色
         float4 color;
+        //ライト
         int32_t lightMode;
+        //輝度
         float32_t shininess;
+        //環境反射度
         float32_t environmentCoefficient;
-        //温度を追加してみる
-        float temperature;
+        //温度
+        float32_t temperature;
+        //UV
         float32_t4x4 uvTransform;
     };
 
 protected:
+
+    //コマンドリストの借り物
+    static ID3D12GraphicsCommandList* commandList_;
+
     // ==============位置情報==================
     WorldTransform worldTransform_;
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
     TransformationMatrixFor3D* transformationMatrixData_ = nullptr;
+
+    // ==============表示非表示切り替え==================
+    bool disabled_ = false;
+    // ==============オブジェクト名==================
+    std::string objectName_ = "object";
 
     // ==============マテリアル==================
     Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
@@ -72,13 +84,17 @@ protected:
 private:
 
 public:
-    ~Object3d();
-    void Finalize();
+
+    /// @brief コマンドリストの借り物を入れる
+    /// @param commandList コマンドリストクラス
+    static void SetCommandList(ID3D12GraphicsCommandList* commandList);
+
     // ==============位置情報==================
     WorldTransform& GetWorldTransform() { return worldTransform_; };
     EulerTransform& GetTransform() { return worldTransform_.eTransform_; }
     void SetTransform(const EulerTransform& transform) { worldTransform_.eTransform_ = transform; }
     const Matrix4x4& GetWorldMatrix() { return worldTransform_.matWorld_; };
+    void SetWorldMatrix(const Matrix4x4 mat) { worldTransform_.matWorld_ = mat; };
     const Vector3& GetScale()const { return worldTransform_.eTransform_.scale; };
     const Vector3& GetRotate()const { return worldTransform_.eTransform_.rotate; };
     const Vector3& GetTranslate() const { return worldTransform_.eTransform_.translate; };
@@ -86,9 +102,14 @@ public:
     void SetRotate(const Vector3& rotate) { worldTransform_.eTransform_.rotate = rotate; };
     void SetTranslate(const Vector3& translate) { worldTransform_.eTransform_.translate = translate; };
 
+
     // ==============ID情報==================
     void SetObjectID(uint32_t id) { if (idData_) { idData_->id = id; } }
     uint32_t GetObjectID() const { if (idData_) { return idData_->id; }; return 0; }
+
+    // ==============表示非表示切り替え==================
+    void SetDisabled(const bool flag) { disabled_ = flag; };
+    bool GetDisabled() { return disabled_; };
 
     // ==============膨張データ==================
 
@@ -101,6 +122,28 @@ public:
     void InitWaveData();
     void InitWaveDataIndex(const uint32_t& index);
 
+    // ==============マテリアルデータ==================
+    Material& GetMaterial() { return *material_; };
+    //色の取得
+    virtual Vector4& GetColor() { return material_->color; };
+    //色の設定
+    virtual void SetColor(const Vector4& color) { material_->color = color; }
+    //ライトの設定
+    int32_t& GetLightMode() { return material_->lightMode; };
+    void SetLightMode(const LightMode& lightMode) { material_->lightMode = lightMode; }
+    //輝度
+    void SetShininess(const float32_t& shininess) { material_->shininess = shininess; }
+    //輝度
+    float32_t& GetShininess() { return material_->shininess; }
+    //環境反射度
+    void SetEnvironmentCoefficient(const float& environmentCoefficient) { material_->environmentCoefficient = environmentCoefficient; }
+    //環境反射度
+    float32_t& GetEnvironmentCoefficient() { return material_->environmentCoefficient; }
+    //温度の設定
+    void SetTemperature(const float temp) { material_->temperature = temp; }
+    //温度の設定
+    float32_t GetTemperature() { return material_->temperature; }
+
     // ==============UVデータ==================
 
     Vector3& GetUVScale() { return uvTransform_.scale; };
@@ -110,23 +153,17 @@ public:
     void SetUV(const EulerTransform& transform) { uvTransform_ = transform; };
     void UpdateUV();
 
-    // ==============マテリアルデータ==================
-    Material& GetMaterial() { return *material_; };
-    int32_t& GetLightMode() { return material_->lightMode; };
-    void SetLightMode(const LightMode& lightMode) { material_->lightMode = lightMode; }
-    virtual Vector4& GetColor() { return material_->color; };
-    virtual void SetColor(const Vector4& color) { material_->color = color; }
-    void SetEnvironmentCoefficient(const float& environmentCoefficient) {
-        material_->environmentCoefficient = environmentCoefficient;
-    }
-    void SetShininess(const float32_t& shininess)
-    {
-        material_->shininess = shininess;
-    }
-
-    void SetTemperature(const float temp) { material_->temperature = temp; }
+    // ==============テクスチャデータ==================
+    
+    //SRVIndexの取得
     uint32_t GetSrvIndex(const TEXTURE_USAGE& textureUsage) { return textureHandles_[textureUsage]; }
-    virtual void SetTextureHandle(const TextureFactory::Handle& textureHandle, const TEXTURE_USAGE& textureUsage = TEXTURE_USAGE_DIFFUSE) {
+    /// @brief テクスチャハンドルの設定
+    /// @param textureHandle テクスチャハンドル
+    /// @param textureUsage 何用のテクスチャか　デフォルト値は拡散反射テクスチャ
+    virtual void SetTextureHandle(
+        const TextureFactory::Handle& textureHandle,
+        const TEXTURE_USAGE& textureUsage = TEXTURE_USAGE_DIFFUSE
+    ) {
         textureHandles_[textureUsage] = Texture::GetSRVHandle(textureHandle);
     };
 
@@ -134,14 +171,25 @@ public:
     Primitive* GetPrimitive() { return primitive_; }
 
     // ==============重要==================
-    
+
     /// @brief メッシュの情報を設定しその情報からマテリアルを設定する
     /// @param mesh メッシュ
     void SetMeshAndMaterial(Primitive* mesh);
+    /// @brief オブジェクトの生成
     void Create();
+    /// @brief 初期化
     virtual void Initialize();
+    /// @brief オブジェクトの登録
     void RegisterObject();
+    /// @brief 更新
     virtual void Update();
+    /// @brief 描画関数
+    /// @param camera カメラ
+    /// @param blendMode ブレンドモード
+    /// @param cullMode カリング
+    /// @param maskMode マスク
+    /// @param usePSOKey PSOが無かったら生成するかどうか
+    /// @param skyBoxTexture 環境テクスチャの設定
     virtual void Draw(Camera& camera,
         const BlendMode& blendMode = kBlendModeNormal,
         const CullMode& cullMode = kCullModeBack,
@@ -152,17 +200,17 @@ protected:
     /// @brief モデルの描画
     /// @param modelData モデルデータを入れる
     /// @param commandList コマンドリストの挿入
-    void DrawModel(ModelData* modelData, ID3D12GraphicsCommandList* commandList);
+    void DrawModel(ModelData* modelData);
+
     void CreateTransformationMatrix();
     /// @brief メッシュデータの描画処理
     /// @param commandList コマンドリストの設定
-    virtual void MeshDraw(ID3D12GraphicsCommandList* commandList);
+    virtual void MeshDraw();
 private:
     void CreateUV();
-    void CreateMaterial(const float temperature = 0.0f, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const uint32_t lightType = LightMode::kLightModeHalfL, const float shininess  =50.0f, const float  environmentCoefficient = 0.0f);
+    void CreateMaterial(const float temperature = 0.0f, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const uint32_t lightType = LightMode::kLightModeHalfL, const float shininess = 50.0f, const float  environmentCoefficient = 0.0f);
     void CreateWaveData();
     void CreateBalloonData();
     void CreateID();
-
 };
 

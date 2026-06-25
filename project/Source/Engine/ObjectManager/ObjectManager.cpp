@@ -1,10 +1,29 @@
 #include "ObjectManager.h"
 #include"DebugUI.h"
 #include"RenderTexture/RenderTexture.h"
+
 #ifdef USE_IMGUI
 #include"ImGuizmo.h"
 #endif 
+
 #include"Input.h"
+#include"JsonFile.h"
+
+#include"AnimationObject3d.h"
+#include"BeamObject3d.h"
+#include"SkyBoxObject3d.h"
+#include"LineObject3d.h"
+
+#include"Log.h"
+
+namespace {
+
+    void ConvertMatArray(const Matrix4x4& srcMatrix, float dstArray[16])
+    {
+        // 行列のメモリ構造をそのまま16個のfloat配列にコピー
+        std::memcpy(dstArray, &srcMatrix.m[0][0], sizeof(float) * 16);
+    }
+}
 
 ObjectManager* ObjectManager::GetInstance() {
     static ObjectManager instance;
@@ -41,19 +60,14 @@ void ObjectManager::UnregisterObject(Object3d* gameObject) {
 }
 
 Object3d* ObjectManager::FindObjectByID(uint32_t id) {
+    
     auto it = idMap_.find(id);
+    
     if (it != idMap_.end()) {
         return it->second;
     }
-    return nullptr; // 見つからない（背景など）
-}
-
-
-void ConvertMatArray(const Matrix4x4& srcMatrix, float dstArray[16])
-{
-    // 行列のメモリ構造をそのまま16個のfloat配列にコピー
-    std::memcpy(dstArray, &srcMatrix.m[0][0], sizeof(float) * 16);
-
+    // 見つからない（背景など）
+    return nullptr;
 }
 
 void ObjectManager::ClickObject(Camera& camera)
@@ -61,6 +75,20 @@ void ObjectManager::ClickObject(Camera& camera)
 #ifdef USE_IMGUI
 
     ImGui::Begin("Object3ds");
+
+    DebugUI::CreateJsonFile(kJsonFileName_.c_str());
+    //フィルターかけてObjecFileNameを探す
+    DebugUI::FindJsonFile(jsonFileName_,true,kJsonFileName_.c_str());
+    //同じラインに表示
+    ImGui::SameLine();
+    //セーブフラグ
+    bool isSave = false;
+    if (ImGui::Button("Save")) {
+        isSave = true;
+    }
+
+    // 保存完了メッセージを表示
+    DebugUI::ShowJsonFileSaveMessage(jsonFileName_);
 
     bool isClicked = false;
 
@@ -102,6 +130,10 @@ void ObjectManager::ClickObject(Camera& camera)
         clickedID_ = RenderTexture::GetInstance()->GetClickedObjectID();
     }
 
+    if (isSave) {
+        Save();
+    }
+
     ImGui::End();
 
 #endif
@@ -117,6 +149,56 @@ void ObjectManager::Clear() {
 void ObjectManager::Initialize()
 {
     objectCommandManager_.Initialize();
+}
+
+void ObjectManager::SeetCommandList(ID3D12GraphicsCommandList* commandList)
+{
+    Object3d::SetCommandList(commandList);
+    AnimationObject3d::SetCommandList(commandList);
+    BeamObject3d::SetCommandList(commandList);
+    SkyboxObject3d::SetCommandList(commandList);
+    LineObject3d::SetCommandList(commandList);
+    LogFile::Log("Objects Set CommandList\n");
+}
+
+void ObjectManager::Save()
+{
+
+    nlohmann::json& json = JsonFile::GetJsonFiles(jsonFileName_);
+
+    for (auto& object : objects_) {
+        std::string name = "Object" + std::to_string(object->GetObjectID());
+
+        std::string meshName = "empty";
+
+        if (object->GetPrimitive()) {
+            //プリミティブ情報があれば
+            meshName = object->GetPrimitive()->GetMeshName();
+        }
+
+        json[name] = {
+            {"mesh",meshName},
+            {"transform", JsonFile::EulerTransformToJson(object->GetTransform())},
+           
+        };
+    }
+
+    // ファイル保存
+    JsonFile::SaveJson(jsonFileName_);
+    JsonFile::MarkModified(jsonFileName_);
+
+}
+
+void ObjectManager::SetName()
+{
+    std::string folder = "Resource/JsonFiles/";
+    for (const auto& entry : std::filesystem::directory_iterator(folder)) {
+        std::string filename = entry.path().stem().string(); // 拡張子なしのファイル名
+        if (filename.find(kJsonFileName_) != std::string::npos) {
+            //ObjectEditorが含まれていたらファイルネームをセットする
+            jsonFileName_ = filename;
+        }
+    }
 }
 
 bool ObjectManager::UpdateImGuizmo(Camera& camera)
@@ -136,19 +218,19 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera)
 
     static int currentOp = 0; // 0: TRANSLATE, 1: ROTATE, 2: SCALE
 
-    if (ImGui::RadioButton("Translate (T)", &currentOp, 0) || ImGui::IsKeyPressed(ImGuiKey_T)) {
+    if (ImGui::RadioButton("Translate : T", &currentOp, 0) || ImGui::IsKeyPressed(ImGuiKey_T)) {
         currentOperation = ImGuizmo::TRANSLATE;
         currentOp = 0;
     }
     ImGui::SameLine(); // 横並びにする場合
 
-    if (ImGui::RadioButton("Rotate (R)", &currentOp, 1) || ImGui::IsKeyPressed(ImGuiKey_R)) {
+    if (ImGui::RadioButton("Rotate : R", &currentOp, 1) || ImGui::IsKeyPressed(ImGuiKey_R)) {
         currentOperation = ImGuizmo::ROTATE;
         currentOp = 1;
     }
     ImGui::SameLine();
 
-    if (ImGui::RadioButton("Scale (S)", &currentOp, 2) || ImGui::IsKeyPressed(ImGuiKey_S)) {
+    if (ImGui::RadioButton("Scale : S", &currentOp, 2) || ImGui::IsKeyPressed(ImGuiKey_S)) {
         currentOperation = ImGuizmo::SCALE;
         currentOp = 2;
     }

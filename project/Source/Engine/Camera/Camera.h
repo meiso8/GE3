@@ -1,63 +1,63 @@
 #pragma once
-#include"Matrix4x4.h"
 #include"Transform.h"
 #include"Vector2.h"
 #include"SphericalCoordinate.h"
-#include <string>
-
 #include<wrl.h>
 #include<d3d12.h>
+#include"Matrix/CameraMatrix.h"
 
-struct CameraForGPU {
-    Vector3 worldPosition;
+enum PROJECTION_TYPE {
+    PERSPECTIVE,
+    PARALLEL,
+};
+
+struct CameraData {
+
+    PROJECTION_TYPE projectionType = PERSPECTIVE;
+
+    float width = 1280.0f;
+    float height = 720.0f;
+
+    // 垂直方向視野角
+    float fovAngleY = Math::kQPi;
+    /// @brief 遠方
+    float farZ = 1000.0f;
+    /// @brief 
+    float  nearZ = 0.1f;
+    Vector2 offset = { 0.0f };
+
+    /// @brief オイラー角のトランスフォーム
+    EulerTransform eTransform;
+    //球面座標系
+    SphericalCoordinate sphericalCoordinate;
+
 };
 
 class Camera {
 public:
-    const float kFovAngle_ = 45.0f * 3.141592654f / 180.0f;
-    Vector3 scale_ = { 1.0f,1.0f,1.0f };
-    Vector3 rotate_ = { 0.0f,0.0f,0.0f };
-    Vector3 translate_ = { 0.0f,0.0f,0.0f };
-    // 垂直方向視野角
-    float fovAngleY_ = kFovAngle_;
-    float farZ_ = 1000.0f;
-   float  nearZ_ = 0.1f;
+    static const float kFovAngle;
 
-    Vector2 offset_ = { 0.0f };
-
-    enum PROJECTION_TYPE {
-        PERSPECTIVE,
-        PARALLEL,
+    struct CameraForGPU {
+        Vector3 worldPosition;
     };
 
-    PROJECTION_TYPE projectionType_ = PERSPECTIVE;
-    Matrix4x4 worldMat_;
-    //ビュー行列
-    Matrix4x4 viewMat_;
-    //射影行列
-    Matrix4x4 projectionMat_ = { 0.0f };
-    Matrix4x4 viewProjectionMat_ = { 0.0f };
-
-    //球面座標系
-    SphericalCoordinate sphericalCoordinate_;
-
 protected:
-
-    static float width_;
-    static float height_;
-    virtual void UpdateViewMatrix();
-    virtual void UpdateProjectionMatrix();
-
+    CameraData cameraData_;
+    //カメラ行列
+    CameraMatrix cameraMatrix_;
     //カメラのGPU用リソース
     Microsoft::WRL::ComPtr<ID3D12Resource> cameraResource_;
-    CameraForGPU* cameraData_ = nullptr;
-
+    CameraForGPU* cameraForGPU_ = nullptr;
+protected:
     void CreateResource();
     void UpdateData();
-
+    virtual void UpdateViewMatrix();
+    virtual void UpdateProjectionMatrix();
 public:
+    Camera();
+   
     void SetScreenSize(const float& width, const float& height);
-     Camera();
+    void InitializeTransform();
     /// @brief 初期化
     virtual void Initialize(const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE);
     /// @brief 更新
@@ -65,18 +65,25 @@ public:
     virtual void UpdateWorldMatrix();
 
     virtual void UpdateViewProjectionMatrix();
-    const Matrix4x4& GetViewMatrix() { return viewMat_; }
-    const Matrix4x4& GetProjectionMatrix() { return projectionMat_; };
-   Matrix4x4& GetViewProjectionMatrix();
-    void SetTransform(const EulerTransform& transform) {
-        scale_ = transform.scale;
-        rotate_ = transform.rotate;
-        translate_ = transform.translate;
-    };
 
-    Vector3 GetWorldPos();
-    void InitializeTransform();
+    const Matrix4x4& GetWorldMatrix() { return cameraMatrix_.worldMat; }
+    const Matrix4x4& GetViewMatrix() { return cameraMatrix_.viewMat; }
+    const Matrix4x4& GetProjectionMatrix() { return cameraMatrix_.projectionMat; };
     const Matrix4x4& GetProjectionMatrixForOutline();
+    const Matrix4x4& GetViewProjectionMatrix();
+    const PROJECTION_TYPE& GetProjectionType() { return cameraData_.projectionType; };
+    const EulerTransform& GetTransform() { return cameraData_.eTransform; }
+    const SphericalCoordinate& GetSphericalCoordinate() { return cameraData_.sphericalCoordinate; };
+
+    void SetTransform(const EulerTransform& transform) { cameraData_.eTransform = transform;};
+    void SetFovAngleY(const float fovAngle) { cameraData_.fovAngleY = fovAngle; };
+    void SetFarZ(const float farZ) { cameraData_.farZ = farZ; };
+    void SetNearZ(const float nearZ) { cameraData_.nearZ = nearZ; };
+    void SetOffset(const Vector2& offset) { cameraData_.offset = offset; };
+    void SetProjectionType(const PROJECTION_TYPE& type) { cameraData_.projectionType = type; };
+    void SetWorldMatrix(const Matrix4x4& mat) { cameraMatrix_.worldMat = mat; };
+    Vector3 GetWorldPos();
+
     ID3D12Resource* GetResource() {
         return cameraResource_.Get();
     }

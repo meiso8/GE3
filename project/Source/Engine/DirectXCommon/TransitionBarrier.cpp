@@ -1,5 +1,11 @@
 #include "TransitionBarrier.h"
-#include"CommandList.h"
+#include"Log.h"
+#include<cassert>
+void TransitionBarrier::SetCommandList(ID3D12GraphicsCommandList* commandList)
+{
+    commandList_ = commandList;
+    assert(commandList_);
+}
 
 //TransitionBarrierの設定
 void TransitionBarrier::SettingBarrier(
@@ -20,10 +26,10 @@ void TransitionBarrier::SettingBarrier(
 
     barrier_.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
     //TransitionBarrierを張る
-    CommandList::GetCommandList()->ResourceBarrier(1, &barrier_);
+    commandList_->ResourceBarrier(1, &barrier_);
 }
 
-void TransitionBarrier::SettingBarrierRTVforSRV(const Microsoft::WRL::ComPtr<ID3D12Resource>& swapChainResources)
+void TransitionBarrier::SettingBarrierRTVforSRV( const Microsoft::WRL::ComPtr<ID3D12Resource>& swapChainResources)
 {
     SettingBarrier(swapChainResources, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }

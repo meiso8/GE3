@@ -1,6 +1,7 @@
 #include"Bone.h"
 #include"MakeMatrix.h"
 #include"Log.h"
+#include"Object3d.h"
 
 Skeleton Bone::CreateSkeleton(const Node& rootNode)
 {
@@ -149,8 +150,9 @@ void DebugBone::Update(const Matrix4x4& parentMatrix)
         } else {
             bones_[i]->SetVertex(joint.transform.translate, skeleton_->joints[0].transform.translate);
         }
+        
+        bones_[i]->SetWorldMatrix(parentMatrix * joint.skeletonSpaceMatrix);
 
-        bones_[i]->worldTransform_.matWorld_ = parentMatrix * joint.skeletonSpaceMatrix;
     }
 
 #ifdef USE_IMGUI

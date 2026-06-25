@@ -2,15 +2,24 @@
 #include"DirectXCommon.h"
 #include"SRVmanager/SrvManager.h"
 #include<numbers>
-#include"DebugUI.h"
+#include"CommandList.h"
+#include"Log.h"
 
 SpotLight* SpotLightManager::spotLightData_ = nullptr;
 Microsoft::WRL::ComPtr <ID3D12Resource> SpotLightManager::spotLightResource_ = nullptr;
 uint32_t SpotLightManager::srvIndex_;
 
-void SpotLightManager::Create()
+void SpotLightManager::Finalize()
 {
-    //スポットライトのResourceを作成する
+    if (spotLightResource_) {
+        spotLightResource_.Reset();
+    }
+    LogFile::Log("Finalize  SpotLightManager");
+}
+
+SpotLightManager::SpotLightManager()
+
+{    //スポットライトのResourceを作成する
     spotLightResource_ =
         DirectXCommon::CreateBufferResource(sizeof(SpotLight) * kMaxData_);
     //書き込むためのアドレスを取得
@@ -21,25 +30,17 @@ void SpotLightManager::Create()
     SrvManager::CreateSRVforStructuredBuffer(srvIndex_, spotLightResource_.Get(), UINT(kMaxData_), sizeof(SpotLight));
 
     InitDatas();
+
+    LogFile::Log("Create  SpotLightManager");
 }
 
-void SpotLightManager::Finalize()
-{
-    if (spotLightResource_ != nullptr) {
-        spotLightResource_->Unmap(0, nullptr);
-        spotLightResource_.Reset();
-        spotLightResource_ = nullptr;
-    }
-
-}
-
-void SpotLightManager::SetGraphicsRootDescriptorTable(const UINT rootParameterIndex)
+void SpotLightManager::SetGraphicsRootDescriptorTable(const UINT rootParameterIndex, ID3D12GraphicsCommandList* commandList)
 {
     //SpotLightのDescriptorTableの設定をする
-    SrvManager::SetGraphicsRootDescriptorTable(rootParameterIndex, srvIndex_);
+    SrvManager::SetGraphicsRootDescriptorTable(rootParameterIndex, srvIndex_, commandList);
 }
 
-void SpotLightManager::InitData(const uint32_t& index)
+void SpotLightManager::InitData(const uint32_t index)
 {
     //デフォルト値はとりあえず以下のようにしておく   
     spotLightData_[index].color = {0.0f,0.0f,0.0f,1.0f };
@@ -48,8 +49,10 @@ void SpotLightManager::InitData(const uint32_t& index)
     spotLightData_[index].direction = { 0.0f,0.0f,1.0f };//スポットライトの方向
     spotLightData_[index].distance = { 1.0f };//ライトの届く範囲
     spotLightData_[index].decay = 0.1f;
-    spotLightData_[index].cosAngle = cosf(std::numbers::pi_v<float> / 8.0f);//スポットライトの余弦
+    spotLightData_[index].cosAngle = cosf(Math::kPi / 8.0f);//スポットライトの余弦
     spotLightData_[index].cosFalloffStart = 2.0f;
+
+    LogFile::Log("Init SpotLight Data");
 }
 
 void SpotLightManager::InitDatas()

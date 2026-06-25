@@ -1,17 +1,25 @@
 #include "ParticleEmitter.h"
-#include"Input.h"
-#include"Camera.h"
 #include"TimeManager.h"
+
+ParticleManager* ParticleEmitter::particleManager_ = nullptr;
 
 ParticleEmitter::ParticleEmitter()
 {
     //Initialize();
 
 }
+
+void ParticleEmitter::SetParticleManager(ParticleManager* particleManager)
+{
+    particleManager_ = particleManager;
+    assert(particleManager_);
+}
+
 void ParticleEmitter::Initialize()
 {
     emitter_.isLoop_ = false;
     emitter_.useRadialEmission_ = false;
+    emitter_.useBillboard_ = true;
     emitter_.count = 3;
     emitter_.frequency = 0.5f;
     emitter_.frequencyTime = 0.0f;
@@ -38,6 +46,9 @@ void ParticleEmitter::Initialize()
     emitter_.polarSpeedMinMax = { 0.0f,0.0f };
     emitter_.radiusSpeedMinMax = { 0.0f,0.0f };
 
+    emitter_.accelerationField_.acceleration = { 0.0f,0.0f,0.0f };
+    emitter_.accelerationField_.area.min = { -1.0f,-1.0f,-1.0f };
+    emitter_.accelerationField_.area.max = { 1.0f,1.0f,1.0f };
 }
 
 void ParticleEmitter::UpdateTimer()
@@ -63,12 +74,7 @@ void ParticleEmitter::Update()
 
 void ParticleEmitter::Emit()
 {
-    ParticleManager::GetInstance()->Emit(emitter_);
-}
-
-std::unique_ptr <ParticleGroup>& ParticleEmitter::GetGroup()
-{
-    return ParticleManager::GetInstance()->GetParticleGroup(emitter_.name);
+    particleManager_->Emit(emitter_);
 }
 
 void ParticleEmitter::SetParent(WorldTransform& parent)

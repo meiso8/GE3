@@ -9,6 +9,8 @@ class Model :public Primitive
 public:
     void CreateModel();
     void SetModelData(std::unique_ptr<ModelData> modelData) {
+        //メッシュの名前を記録
+        meshName_ = modelData->meshName;
         modelData_ = std::move(modelData);
     }
     ModelData* GetModelData() {

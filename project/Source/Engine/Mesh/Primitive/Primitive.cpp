@@ -8,6 +8,9 @@ MeshData PrimitiveGenerator::CreateCube(const AABB& aabb)
 
     MeshData data;
 
+    //メッシュの名前を記録
+    data.meshName = "Cube";
+
     //　================頂点データの作成=============================
 
     data.vertices.resize(20);
@@ -208,6 +211,9 @@ MeshData PrimitiveGenerator::CreateSkyBox(const AABB& aabb)
 {
 
     MeshData data;
+    //メッシュの名前を記録
+    data.meshName = "SkyBox";
+
     data.vertices.resize(20);
 
     Vector3 vertexData[8] = {};
@@ -380,7 +386,8 @@ MeshData PrimitiveGenerator::CreateLine(const Vector3& start, const Vector3& end
 {
 
     MeshData data;
-
+    //メッシュの名前を記録
+    data.meshName = "Line";
     data.vertices.resize(2);
 
     data.vertices[0].position = { start.x,start.y,start.z,1.0f };//左下
@@ -402,12 +409,15 @@ MeshData PrimitiveGenerator::CreateCircle(const Circle& circle, const uint32_t k
 {
 
     MeshData data;
+    
+    //メッシュの名前を記録
+    data.meshName = "Circle";
 
     //　=========================//頂点の作成//==================================
     data.vertices.resize(kSubdivision + 1);
 
     //緯度の方向に分割　-pi/2 ~ pi/2
-    const float pi = std::numbers::pi_v<float>;
+    const float pi = Math::kPi;
     const float kLonEvery = 2.0f * pi / float(kSubdivision);
 
     //経度の方向に分割 0 ~ 2*pi
@@ -471,6 +481,9 @@ MeshData PrimitiveGenerator::CreatePlane(const Vector2& size)
 {
     MeshData data;
 
+    //メッシュの名前を記録
+    data.meshName = "Plane";
+
     data.vertices.resize(4);
 
     Vector2 halfSize = size * 0.5f;
@@ -512,10 +525,12 @@ MeshData PrimitiveGenerator::CreateRing(const float innerRadius, const float out
 
     MeshData data;
 
+    data.meshName = "Ring";
+
     data.vertices.resize(kRingDivide * 4 + 1);
 
     //緯度の方向に分割　-pi/2 ~ pi/2
-    const float pi = std::numbers::pi_v<float>;
+    const float pi = Math::kPi;
     const float radianPreDivide = 2.0f * pi / float(kRingDivide);
 
     for (int index = 0; index < int(kRingDivide); ++index) {
@@ -580,6 +595,8 @@ MeshData PrimitiveGenerator::CreateRing(const float innerRadius, const float out
 MeshData PrimitiveGenerator::CreateSphere(const Sphere& sphere, const uint32_t kSubdivision)
 {
     MeshData data;
+
+    data.meshName = "Sphere";
 
     data.vertices.resize(6 * kSubdivision * kSubdivision);
 
@@ -654,6 +671,8 @@ MeshData PrimitiveGenerator::CreateCylinder(const bool isFlip, const float topRa
 {
     MeshData data;
 
+    data.meshName = "Cylinder";
+
     const float radianPreDivide = 2.0f * std::numbers::pi_v<float> / float(cylinderDivide);
 
     data.vertices.resize(cylinderDivide * 6);
@@ -707,6 +726,8 @@ MeshData PrimitiveGenerator::CreateCylinder(const bool isFlip, const float topRa
 MeshData PrimitiveGenerator::CreateBeam(const float firstSize)
 {
     MeshData data;
+    //メッシュの名前を記録する
+    data.meshName = "Beam";
 
     data.vertices.resize(12);
 
@@ -802,7 +823,7 @@ void Primitive::SetRootSignatureAndGraphicsPipeline(
    
         key.inputLayoutType = InputLayout::kInputLayoutTypeNormal;
 
-        if (meshType_ == MeshType::kLine) {
+        if (topologyType_ == TopologyType::kLine) {
             key.topologyType = PSO::kLine;
 
         } else {
@@ -814,7 +835,7 @@ void Primitive::SetRootSignatureAndGraphicsPipeline(
         commandList->SetPipelineState(pso.Get());
     } else {
 
-        if (meshType_ == MeshType::kLine) {
+        if (topologyType_ == TopologyType::kLine) {
             commandList->SetPipelineState(PSO::GetGraphicsPipelineStateLine().Get());
         } else {
             commandList->SetPipelineState(PSO::GetGraphicsPipelineState(blendMode, cullMode).Get());
@@ -826,12 +847,14 @@ void Primitive::SetRootSignatureAndGraphicsPipeline(
 
 void Primitive::Create(const MeshData& meshData)
 {
+    //メッシュの名前登録
+    meshName_ = meshData.meshName;
 
     // dataからトポロジーを保存し、それに基づいてmeshTypeを決定する
     if (meshData.topology == D3D_PRIMITIVE_TOPOLOGY_LINELIST) {
-        meshType_ = MeshType::kLine;
+        topologyType_ = TopologyType::kLine;
     } else {
-        meshType_ = MeshType::kNormal;
+        topologyType_ = TopologyType::kTriangle;
     }
     topology_ = meshData.topology;
     vertexCount_ = static_cast<UINT>(meshData.vertices.size());

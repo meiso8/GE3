@@ -4,7 +4,6 @@
 #include"SrvManager/SrvManager.h"
 #include"PrimitiveFactory/PrimitiveFactory.h"
 
-
 #include"Input.h"
 #include"Sprite.h"
 #include"Primitive.h"
@@ -28,14 +27,18 @@
 #include"JsonFile.h"
 #include"TimeManager.h"
 
+#include"SphericalCoordinate.h"
+
+
 #include<numbers>
 #include<algorithm>
 
-struct Param {
-    char name[128];
-    char value[128];
-};
-
+namespace {
+    struct Param {
+        char name[128];
+        char value[128];
+    };
+}
 
 void DebugUI::CheckInt(int& value, const char* label) {
 
@@ -59,35 +62,26 @@ void DebugUI::CheckFloat(float& value, const char* label) {
 #endif
 }
 
-void DebugUI::CheckCamera(Camera& camera, const char* label) {
+void DebugUI::CheckCamera(CameraMatrix& cameraMatrix, CameraData& cameraData, const char* label) {
 
 #ifdef USE_IMGUI
-
-    ImGui::Begin("Debug");
-
+    ImGui::Begin("Camera");
 
     if (ImGui::TreeNode(label)) {
 
-        CheckTransforms(camera.scale_, camera.rotate_, camera.translate_, "worldMatrix");
-        ShowMatrix4x4(camera.worldMat_);
-        if (ImGui::Button("InitTransform")) {
-            camera.InitializeTransform();
-        }
-        if (ImGui::TreeNode("ShericalCoordinate")) {
-            ImGui::SliderFloat("polar", &camera.sphericalCoordinate_.polar, -10.0f, 10.0f);
-            ImGui::SliderFloat("azimuthal", &camera.sphericalCoordinate_.azimuthal, -10.0f, 10.0f);
-            ImGui::SliderFloat("radius", &camera.sphericalCoordinate_.radius, -100.0f, 100.0f);
-            ImGui::TreePop();
-        }
+        CheckTransform(cameraData.eTransform, " worldMatrix");
+        ShowMatrix4x4(cameraMatrix.worldMat);
 
-        ImGui::SliderFloat2("ofsset", &camera.offset_.x, -1000.0f, 1000.0f);
-        ImGui::SliderFloat("nearZ", &camera.nearZ_, 0.0f, 1000.0f);
-        ImGui::SliderFloat("farZ", &camera.farZ_, 0.0f, 1000.0f);
-        ImGui::SliderFloat("fovAngleY", &camera.fovAngleY_, -6.28f, 6.28f);
-        ImGui::Text("Type : %s", (camera.projectionType_ == Camera::PERSPECTIVE) ? "PERSPECTIVE" : "PARALLEL");
+        CheckShericalCoordinate(cameraData.sphericalCoordinate);
+
+        ImGui::SliderFloat2("ofsset", &cameraData.offset.x, -1000.0f, 1000.0f);
+        ImGui::SliderFloat("nearZ", &cameraData.nearZ, 0.0f, 1000.0f);
+        ImGui::SliderFloat("farZ", &cameraData.farZ, 0.0f, 1000.0f);
+        ImGui::SliderFloat("fovAngleY", &cameraData.fovAngleY, -6.28f, 6.28f);
+        ImGui::Text("Type : %s", (cameraData.projectionType == PERSPECTIVE) ? "PERSPECTIVE" : "PARALLEL");
 
         if (ImGui::Button("ChangeType")) {
-            camera.projectionType_ = (camera.projectionType_ == Camera::PERSPECTIVE) ? Camera::PARALLEL : Camera::PERSPECTIVE;
+            cameraData.projectionType = (cameraData.projectionType == PERSPECTIVE) ? PARALLEL : PERSPECTIVE;
         }
 
         ImGui::TreePop();
@@ -98,45 +92,66 @@ void DebugUI::CheckCamera(Camera& camera, const char* label) {
 #endif
 }
 
+void DebugUI::CheckShericalCoordinate(SphericalCoordinate& sphericalCoordinate)
+{
+
+#ifdef USE_IMGUI
+
+    if (ImGui::TreeNode("ShericalCoordinate")) {
+        ImGui::SliderFloat("polar", &sphericalCoordinate.polar, -10.0f, 10.0f);
+        ImGui::SliderFloat("azimuthal", &sphericalCoordinate.azimuthal, -10.0f, 10.0f);
+        ImGui::SliderFloat("radius", &sphericalCoordinate.radius, -100.0f, 100.0f);
+        ImGui::TreePop();
+    }
+#endif
+}
+
 void DebugUI::CheckEmitter(Emitter& emitter, const char* label)
 {
 
 #ifdef USE_IMGUI
     ImGui::Begin("Particle");
 
-    ParticleManager& particle = *ParticleManager::GetInstance();
-
     if (ImGui::TreeNode(label)) {
-
-
-        if (ImGui::Button(emitter.name.c_str())) {
-            particle.Emit(emitter);
-        }
 
         int movement = static_cast<int>(emitter.movement);
         ImGui::SliderInt("movement", &movement, 0, 2);
         emitter.movement = static_cast<ParticleMovements>(movement);
         ImGui::Separator();
         int count = emitter.count;
-        ImGui::SliderInt("createNum", &count, 0, particle.kNumMaxInstance);
+        ImGui::SliderInt("createNum", &count, 0, ParticleManager::GetMaxInstance());
         emitter.count = count;
         ImGui::Checkbox("isLoop", &emitter.isLoop_);
         ImGui::Text("frequencyTime : %f", emitter.frequencyTime);
         ImGui::SliderFloat("frequency", &emitter.frequency, 0.001f, 10.0f);
         ImGui::SliderFloat("lifeTime", &emitter.lifeTime, -1.0f, 50.0f);
 
+        ImGui::Checkbox("useBillboard", &emitter.useBillboard_);
+
+        if (ImGui::TreeNode("Acceleration")) {
+            ImGui::SliderFloat3("acceleration", &emitter.accelerationField_.acceleration.x, -100.0f, 100.0f);
+            ImGui::SliderFloat3("area.min", &emitter.accelerationField_.area.min.x, -100.0f, 0.0f);
+            ImGui::SliderFloat3("area.max", &emitter.accelerationField_.area.max.x, 0.0f, 100.0f);
+            ImGui::TreePop();
+        }
+
         ImGui::Checkbox("useRadialEmission", &emitter.useRadialEmission_);
         ImGui::Separator();
         CheckWorldTransform(emitter.transform, "transform");
+
         ImGui::Separator();
-        ImGui::SliderFloat3("scaleAABBMin", &emitter.scaleAABB_.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("scaleAABBMax", &emitter.scaleAABB_.max.x, 0.0f, 20.0f);
-        ImGui::Separator();
-        ImGui::SliderFloat3("rotateAABBMin", &emitter.rotateAABB_.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("rotateAABBMax", &emitter.rotateAABB_.max.x, 0.0f, 20.0f);
-        ImGui::Separator();
-        ImGui::SliderFloat3("translateMin", &emitter.translateAABB_.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("translateMax", &emitter.translateAABB_.max.x, 0.0f, 20.0f);
+        if (ImGui::TreeNode("transformMinMax")) {
+            ImGui::SliderFloat3("scaleAABBMin", &emitter.scaleAABB_.min.x, -20.0f, 0.0f);
+            ImGui::SliderFloat3("scaleAABBMax", &emitter.scaleAABB_.max.x, 0.0f, 20.0f);
+            ImGui::Separator();
+            ImGui::SliderFloat3("rotateAABBMin", &emitter.rotateAABB_.min.x, -20.0f, 0.0f);
+            ImGui::SliderFloat3("rotateAABBMax", &emitter.rotateAABB_.max.x, 0.0f, 20.0f);
+            ImGui::Separator();
+            ImGui::SliderFloat3("translateMin", &emitter.translateAABB_.min.x, -20.0f, 0.0f);
+            ImGui::SliderFloat3("translateMax", &emitter.translateAABB_.max.x, 0.0f, 20.0f);
+            ImGui::TreePop();
+        }
+
         ImGui::Separator();
         ImGui::SliderFloat3("velcityAABBMax", &emitter.velocityAABB.min.x, -20.0f, 0.0f);
         ImGui::SliderFloat3("velcityAABBMin", &emitter.velocityAABB.max.x, 0.0f, 20.0f);
@@ -155,6 +170,7 @@ void DebugUI::CheckEmitter(Emitter& emitter, const char* label)
         CheckColor(emitter.color, "color");
         ImGui::SliderFloat("startAlpha", &emitter.startAlpha_, 0.0f, 1.0f);
         ImGui::SliderFloat("endAlpha", &emitter.endAlpha_, 0.0f, 1.0f);
+
         ImGui::TreePop();
     }
 
@@ -170,51 +186,20 @@ void DebugUI::CheckJsonFile()
 
     if (ImGui::TreeNode("Json")) {
 
-        if (ImGui::TreeNode("CreateNewFile")) {
-
-            static char tagBuffer[128] = "";
-            ImGui::InputText("FileTag", tagBuffer, IM_ARRAYSIZE(tagBuffer));
-
-            if (ImGui::Button("Create")) {
-                // 新しい構造化JSONを作成
-                nlohmann::json newJson;
-                // 管理マップに登録
-                JsonFile::SetJson(tagBuffer, newJson);
-                JsonFile::MarkModified(tagBuffer);
-            }
-
-            ImGui::TreePop();
-        }
+        //新しくJsonFileを作成する
+        CreateJsonFile();
 
         if (ImGui::TreeNode("FindTag")) {
 
-            // 安定した文字列保持用
-            static std::vector<std::string> tagStrings;
-            static std::vector<const char*> tagOptions;
+            static std::string tagName = "unKnown";
 
-            tagStrings.clear();
-            tagOptions.clear();
-
-            for (const auto& [tag, data] : JsonFile::GetJsonData()) {
-                tagStrings.push_back(tag); // std::string を保持
-            }
-
-            for (const auto& str : tagStrings) {
-                tagOptions.push_back(str.c_str()); // 安定したポインタを取得
-            }
-
-            // ImGui::Combo に渡す
-            static int tag_current = 0;
-            if (ImGui::Combo("Tags", &tag_current, tagOptions.data(), static_cast<int>(tagOptions.size()))) {
-                ImGui::Text("Tag: %s", tagOptions[tag_current]);
-            }
-
-            nlohmann::json& jsonFile = JsonFile::GetJsonFiles(tagOptions[tag_current]);
+            nlohmann::json& jsonfile = FindJsonFile(tagName);
 
             ImGui::Separator();
+
             if (ImGui::TreeNode("ShowJsonData")) {
-                ImGui::Text("Name: %s", tagOptions[tag_current]);
-                ImGui::TextWrapped("Data: %s", jsonFile.dump(2).c_str());
+                ImGui::Text("Name: %s", tagName);
+                ImGui::TextWrapped("Data: %s", jsonfile.dump(2).c_str());
                 ImGui::TreePop();
                 ImGui::Separator();
             }
@@ -225,18 +210,18 @@ void DebugUI::CheckJsonFile()
             if (ImGui::TreeNode("AddParam")) {
 
                 if (ImGui::InputText("StructName", structName, IM_ARRAYSIZE(structName))) {
-                    JsonFile::ClearModified(tagOptions[tag_current]);
+                    JsonFile::ClearModified(tagName);
                 }
 
                 for (size_t i = 0; i < params.size(); ++i) {
                     if (ImGui::TreeNode(("param" + std::to_string(i)).c_str())) {
 
                         if (ImGui::InputText(("Name##" + std::to_string(i)).c_str(), params[i].name, IM_ARRAYSIZE(params[i].name))) {
-                            JsonFile::ClearModified(tagOptions[tag_current]);
+                            JsonFile::ClearModified(tagName);
                         }
 
                         if (ImGui::InputText("Value##", params[i].value, IM_ARRAYSIZE(params[i].value))) {
-                            JsonFile::ClearModified(tagOptions[tag_current]);
+                            JsonFile::ClearModified(tagName);
                         }
 
                         // 削除ボタン
@@ -253,7 +238,7 @@ void DebugUI::CheckJsonFile()
                 // パラメータ追加ボタン
                 if (ImGui::Button("Add New Param")) {
                     params.push_back({ "newParam", "" });
-                    JsonFile::ClearModified(tagOptions[tag_current]);
+                    JsonFile::ClearModified(tagName);
                 }
 
 
@@ -263,26 +248,118 @@ void DebugUI::CheckJsonFile()
             if (ImGui::Button("Save")) {
 
                 for (const auto& param : params) {
-                    jsonFile[structName][param.name] = param.value;
+                    jsonfile[structName][param.name] = param.value;
                 }
                 // ファイル保存
-                JsonFile::SaveJson(tagOptions[tag_current]);
-                JsonFile::MarkModified(tagOptions[tag_current]);
+                JsonFile::SaveJson(tagName);
+                JsonFile::MarkModified(tagName);
 
             }
 
             // 保存完了メッセージを表示
-            if (JsonFile::IsModified(tagOptions[tag_current])) {
-                ImGui::TextColored(ImVec4(0, 1, 0, 1), "File saved");
-            } else {
-                ImGui::TextColored(ImVec4(1, 0, 0, 1), "File not saved.");
-            }
+            ShowJsonFileSaveMessage(tagName);
+
 
             ImGui::TreePop();
         }
 
         ImGui::TreePop();
     }
+#endif
+}
+
+void DebugUI::ShowJsonFileSaveMessage(const std::string& name) {
+
+#ifdef USE_IMGUI
+
+    // 保存完了メッセージを表示
+    if (JsonFile::IsModified(name)) {
+        ImGui::TextColored(ImVec4(0, 1, 0, 1), "File saved");
+    } else {
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "File not saved.");
+    }
+#endif
+}
+
+
+nlohmann::json& DebugUI::FindJsonFile(std::string& tagName, bool useFilter, const char* containFileName)
+{
+
+
+#ifdef USE_IMGUI
+
+    // 安定した文字列保持用
+    static std::vector<std::string> tagStrings;
+    static std::vector<const char*> tagOptions;
+
+    tagStrings.clear();
+    tagOptions.clear();
+
+    for (const auto& [tag, data] : JsonFile::GetJsonData()) {
+
+        if (!useFilter || tag.find(containFileName) != std::string::npos) {
+            tagStrings.push_back(tag); // 条件に合う std::string のみを保持
+        }
+    }
+
+    for (const auto& str : tagStrings) {
+        tagOptions.push_back(str.c_str()); // 安定したポインタを取得
+    }
+
+    // ImGui::Combo に渡す
+    static int tag_current = 0;
+
+    
+    // 選択肢が空になった場合の安全対策
+    if (tagOptions.empty()) {
+        ImGui::Text("No matching tags found.");
+        tagName = "";
+        // 例外処理
+        static nlohmann::json empty_json;
+        return empty_json;
+    }
+
+
+    if (ImGui::Combo("Tags", &tag_current, tagOptions.data(), static_cast<int>(tagOptions.size()))) {
+        ImGui::Text("Tag: %s", tagOptions[tag_current]);
+    }
+
+    tagName = tagOptions[tag_current];
+    return JsonFile::GetJsonFiles(tagName);
+
+#endif
+}
+
+void DebugUI::CreateJsonFile(const char* containFileName)
+{
+#ifdef USE_IMGUI
+
+    static char tagBuffer[128] = "";
+    static bool isInitialized = false;
+    bool isCreate = false;
+
+    // 初回呼び出し時のみ、引数で渡された文字列をバッファにコピー
+    if (!isInitialized && containFileName != nullptr) {
+        // 安全のためにバッファサイズを超えないようにコピー
+        strncpy(tagBuffer, containFileName, sizeof(tagBuffer) - 1);
+        tagBuffer[sizeof(tagBuffer) - 1] = '\0'; // 終端ヌル文字を保証
+        isInitialized = true;
+    }
+
+    if (ImGui::Button("Create")) { isCreate = true; }
+    //同じラインに表示
+    ImGui::SameLine();
+    //ファイルタグ名を入力
+    ImGui::InputText("FileTag", tagBuffer, IM_ARRAYSIZE(tagBuffer));
+
+    if (isCreate) {
+        // 新しい構造化JSONを作成
+        nlohmann::json newJson;
+        // 管理マップに登録
+        JsonFile::SetJson(tagBuffer, newJson);
+        JsonFile::MarkModified(tagBuffer);
+    }
+
 #endif
 }
 
@@ -691,7 +768,7 @@ void DebugUI::CheckPointLightData()
 void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
 {
 #ifdef USE_IMGUI
-    if (! &object3d) {
+    if (!&object3d) {
         return;
     }
 
@@ -712,7 +789,7 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
         auto& material = object3d.GetMaterial();
 
         CheckObject3dMaterial(
-            material.color, 
+            material.color,
             material.lightMode,
             material.shininess,
             material.temperature,
@@ -725,7 +802,7 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
         CheckBalloonData(object3d.GetBalloonData());
 
         auto* primitive = object3d.GetPrimitive();
-       
+
         if (primitive) {
 
             std::string currentModelName = "unknow";
@@ -764,20 +841,20 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
             int currentPrimitive = 0;
 
             if (ImGui::Combo("Set Primitive", &currentPrimitive, topologyType, IM_ARRAYSIZE(topologyType))) {
-                Primitive::TopologyType topo = static_cast<Primitive::TopologyType>(currentPrimitive % Primitive::kMaxTopology);
+                Primitive::MeshType topo = static_cast<Primitive::MeshType>(currentPrimitive % Primitive::kMaxTopology);
                 object3d.SetMeshAndMaterial(PrimitiveFactory::GetPrimitive(topo));
             };
         }
 
         if (auto* aniObj = dynamic_cast<AnimationObject3d*>(&object3d)) {
-            
+
             if (ImGui::TreeNode("Animation")) {
 
                 for (auto& [name, animations] : aniObj->GetAnimations()) {
                     ImGui::Text(name.c_str());
                     ImGui::SliderFloat("duration", &animations.duration, 0.0f, 1000000.0f);
                 }
-               
+
                 ImGui::TreePop();
             }
         }
@@ -785,11 +862,11 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
     }
 #endif
 }
-void DebugUI::CheckParticle()
+void DebugUI::CheckParticle(ParticleManager* particleManager)
 {
 #ifdef USE_IMGUI
 
-    ParticleManager& particle = *ParticleManager::GetInstance();
+    ParticleManager& particle = *particleManager;
     ImGui::Begin("Particle");
 
     if (ImGui::TreeNode("Particles")) {
@@ -799,14 +876,14 @@ void DebugUI::CheckParticle()
             if (ImGui::TreeNode(name.c_str())) {
 
                 ImGui::Checkbox("useModel", &group->useModel);
-                ImGui::Checkbox("useBillboard", &group->useBillboard);
+         /*       ImGui::Checkbox("useBillboard", &group->useBillboard);*/
                 ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
                 auto& material = group->material;
                 CheckObject3dMaterial(
-                    material->color, material->lightMode,material->shininess,material->temperature,material->uvTransform,material->environmentCoefficient,"Material");
-                ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
-                ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
-                ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);
+                    material->color, material->lightMode, material->shininess, material->temperature, material->uvTransform, material->environmentCoefficient, "Material");
+                //ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
+                //ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
+                //ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);
                 ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
                 for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
@@ -839,7 +916,7 @@ void DebugUI::CheckColor(Vector4& color, const char* label) {
 #endif
 }
 
-void DebugUI::CheckObject3dMaterial(Vector4& color, int32_t& lightMode, float& shininess,float& tempereture,Matrix4x4& uvMatrix,float& environmentCoefficient, const char* label) {
+void DebugUI::CheckObject3dMaterial(Vector4& color, int32_t& lightMode, float& shininess, float& tempereture, Matrix4x4& uvMatrix, float& environmentCoefficient, const char* label) {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
         CheckColor(color, "color");

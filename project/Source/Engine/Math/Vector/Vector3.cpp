@@ -1,6 +1,7 @@
 #include"Vector3.h"
 #include <cmath>
-#include"Matrix4x4.h"
+
+
 
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
 
@@ -17,13 +18,13 @@ Vector3 Multiply(const float scalar, const Vector3& v) {
 };
 
 Vector3 Multiply(const Vector3 v1, const Vector3& v2) {
-    return { v1.x * v2.x,v1.y * v2.y,v1.z * v2.z};
+    return { v1.x * v2.x,v1.y * v2.y,v1.z * v2.z };
 };
 
 
 //内積
 float Dot(const Vector3& v1, const Vector3& v2) {
-    return  v1.x * v2.x + v1.y * v2.y + v1.z * v2.z ;
+    return  v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 };
 
 
@@ -95,8 +96,8 @@ Vector3 Normalize(const Vector3& v) {
 
 }
 
-bool IsZero(const Vector3 &v) {
-	return (v.x == 0.0f) && (v.y == 0.0f) && (v.z == 0.0f);
+bool IsZero(const Vector3& v) {
+    return (v.x == 0.0f) && (v.y == 0.0f) && (v.z == 0.0f);
 }
 
 Vector3 Perpendicular(const Vector3& vector) {
@@ -119,7 +120,7 @@ Vector3 Project(const Vector3& v1, const Vector3& v2) {
 
 Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Add(v1, v2); }
 Vector3 operator-(const Vector3& v1, const Vector3& v2) { return Subtract(v1, v2); }
-Vector3 operator*(const Vector3& v1, const Vector3& v2){  return Multiply(v1,v2);}
+Vector3 operator*(const Vector3& v1, const Vector3& v2) { return Multiply(v1, v2); }
 Vector3 operator*(float s, const Vector3& v) { return Multiply(s, v); }
 Vector3 operator+(const Vector3& v, float s) { return { v.x + s,v.y + s,v.z + s }; };
 Vector3 operator+(float s, const Vector3& v) { return { s + v.x, s + v.y, s + v.z }; };
@@ -130,7 +131,3 @@ Vector3 operator/(const Vector3& v, float s) { return Multiply(1.0f / s, v); }
 Vector3 operator-(const Vector3& v) { return { -v.x,-v.y,-v.z }; }
 Vector3 operator+(const Vector3& v) { return v; }
 
-Vector3 Math::GetForward(const Matrix4x4& mat)
-{
-    return Normalize({ mat.m[2][0],mat.m[2][1], mat.m[2][2] });
-}

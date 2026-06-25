@@ -1,37 +1,44 @@
 #include "ButtobiEngine.h"
 
 #include"DirectXCommon.h"
+#include"TimeManager.h"
 #include"Input.h"
+#include"VibrateManager.h"
 #include"Log.h"
+#include"PSO.h"
+#include"CrashHandler.h"
 
-#include"SpriteCommon.h"
-#include"Texture.h"
 #include"SpriteCamera.h"
 #include"ModelManager.h"
+
 #include"DrawGrid.h"
-#include"Particle.h"
+
 #include"JsonFile.h"
 #include"Sound.h"
-#include"VibrateManager.h"
-#include"Lights/PointLightManager.h"
-#include"Lights/DirectionalLightManager.h"
-#include"Lights/SpotLightManager.h"
+
 #include"SceneManager.h"
 #include"SceneFactory.h"
+
 #include"Application/Loader/ModelFactory.h"
 #include"Application/Loader/SoundFactory.h"
 #include"Application/Loader/TextureFactory.h"
-#include"Engine/FreeTypeManager/FreeTypeManager.h"
-#include"ObjectManager/ObjectManager.h"
-#include"TimeManager.h"
 
-#include"PSO.h"
-#include"CrashHandler.h"
+#include"ObjectManager/ObjectManager.h"
+#include"Particle/ParticleEmitter.h"
+
+#include"PostProcessManager/PostProcessManager.h"
 
 #include"DebugUI.h"
 #include"DebugCamera.h"
 
-DirectXCommon* ButtobiEngine::directXCommon = nullptr;
+void ButtobiEngine::SetCommandList(ID3D12GraphicsCommandList* commandList)
+{    
+    Sprite::SetCommandList(commandList);
+    texture_->SetCommandList(commandList);
+    freeTypeManager_->SetCommandList(commandList);
+    ObjectManager::GetInstance()->SeetCommandList(commandList);
+    particleManager_->SetCommandList(commandList);
+}
 
 void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
 
@@ -41,81 +48,92 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     SetUnhandledExceptionFilter(ExportDump);
     //ログファイルの生成
     logFile = std::make_unique<LogFile>();
-    logFile->Create();
-    LogFile::Log("CreateLogFile");
-
     //WindowClassの生成
-    wc = std::make_unique<Window>();
-    wc->Create(title, clientWidth, clientHeight);
-    LogFile::Log("CreateWindowClass");
-
+    wc = std::make_unique<Window>(title, clientWidth, clientHeight);
     //InputClassの生成
     input = std::make_unique<Input>();
-    //入力
-    input->Initialize(*wc);
-    LogFile::Log("CreateInput");
-    //コントローラー
+    HRESULT result = input->Initialize(*wc);
+    assert(SUCCEEDED(result));
+    //コントローラーの振動管理
     VibrateManager::Initialize();
     //FPSや時間管理の生成
     time_ = std::make_unique<TimeManager>();
-    time_->Initialize();
-    LogFile::Log("Time Manager Initialize");
+
     //DirectXCommon
-    directXCommon = DirectXCommon::GetInstance();
-    directXCommon->PreInitialize(*wc);
+    directXCommon_ = std::make_unique<DirectXCommon>();
+    directXCommon_->PreInitialize(*wc);
     LogFile::Log("DirectXCommon PreInitialize");
+
     //rtvManagerの生成
     rtvManager = std::make_unique<RtvManager>();
-    rtvManager->Initialize();
-    LogFile::Log("CreateRtvManager");
 
-    directXCommon->InitializeRenderTargetView(*rtvManager);
+    directXCommon_->InitializeRenderTargetView(*rtvManager);
     LogFile::Log("DirectXCommon InitializeRenderTargetView");
-
-    directXCommon->PostInitialize();
+    directXCommon_->PostInitialize();
     LogFile::Log("DirectXCommon PostInitialize");
 
+    //SRV管理
     srvManager = std::make_unique<SrvManager>();
-    srvManager->Initialize();
-    LogFile::Log("CreateSrvManager");
 
 #ifdef USE_IMGUI
     //ImGuiの初期化。
-    imGuiClass.Initialize(*wc, directXCommon->GetDevice().Get(), directXCommon->GetSwapChain(), directXCommon->GetSwapChainRtv());
+    imGuiClass.Initialize(*wc, directXCommon_->GetDevice().Get(), directXCommon_->GetSwapChain(), directXCommon_->GetSwapChainRtv());
     LogFile::Log("InitImGui");
 #endif
 
-    directXCommon->InitializeRenderTexture(*rtvManager);
-    directXCommon->CreateDepthStencilResourceSRV();
+    auto* commandList = directXCommon_->GetCommandListClass()->Get();
+
+    directXCommon_->InitializeRenderTexture(*rtvManager);
+    directXCommon_->CreateDepthStencilResourceSRV();
 
     auto* pso = PSO::GetInstance();
     pso->CreateALLPSO();
-
     LogFile::Log("CreatePSO");
 
-    DirectionalLightManager::Create();
-    LogFile::Log("CreateDirectionalLightResource");
-    PointLightManager::CreateData();
-    SpotLightManager::Create();
+#pragma region//LightManager
+    //方向ライト管理の作成
+    directionalLightManager_ = std::make_unique<DirectionalLightManager>();
+    //ポイントライト管理の作成
+    pointLightManager_ = ::std::make_unique<PointLightManager>();
+    //スポットライト管理の作成
+    spotLightManager_ = ::std::make_unique<SpotLightManager>();
+#pragma endregion
+
     //共通のスプライト
-    SpriteCommon::Initialize();
-    LogFile::Log("InitializeSpriteCommon");
+    spriteCommon_ = std::make_unique<SpriteCommon>();
+    //PSOの設定と初期化
+    spriteCommon_->Initialize(pso->GetRootSignature());
+
+    Sprite::SetCommandList(commandList);
+
 
     //スプライト用カメラ
     SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
-    LogFile::Log("InitializeSpriteCamera");
+    LogFile::Log("Initialize　SpriteCamera");
     //サウンド管理
     Sound::Initialize();
-    LogFile::Log("InitializeSound");
+    LogFile::Log("Initialize Sound");
+
     //テクスチャ管理
-    Texture::Initialize();
-    LogFile::Log("InitializeTexture");
+    texture_ = std::make_unique<Texture>();
+    texture_->Initialize();
+    texture_->SetCommandList(commandList);
+    //テキストの初期化
+    freeTypeManager_ = std::make_unique<FreeTypeManager>();
+    freeTypeManager_->SetCommandList(commandList);
+
     //テスクチャ読み込み
     TextureFactory::Load();
     LogFile::Log("LoadAllTexture");
+
     //音声の読み込み
     SoundFactory::Load();
     LogFile::Log("LoadAllSound");
+
+    //JsonFileの読み込み
+    JsonFile::LoadAllJsonFile();
+    LogFile::Log("LoadAllJsonFile");
+    
     //モデル読み込み
     ModelFactory::Load();
     LogFile::Log("LoadAllModel");
@@ -125,13 +143,11 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     primitiveFactory_->CreateAllPrimitive();
     LogFile::Log("CreatePrimitive");
 
-    //JsonFileの読み込み
-    JsonFile::LoadAllJsonFile();
-    LogFile::Log("LoadAllJsonFile");
+    //オブジェクト管理の初期化
+    ObjectManager::GetInstance()->Initialize();
+    ObjectManager::GetInstance()->SeetCommandList(directXCommon_->GetCommandListClass()->Get());
+    LogFile::Log("ObjectManager Initialize");
 
-    //テキストの初期化
-    FreeTypeManager::Initialize();
-    LogFile::Log("InitializeFreeTypeManager");
 #ifdef _DEVELOP
     //グリット描画
     DrawGrid::Create();
@@ -139,9 +155,13 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
 #endif
 
     //パーティクル管理
-    auto* particleManager = ParticleManager::GetInstance();
-    particleManager->Create();
-    particleManager->CreateAll();
+    particleManager_ = std::make_unique<ParticleManager>();
+    //一旦後でRootSignatureについて考える
+    particleManager_->Create(pso->GetRootSignature());
+    particleManager_->SetCommandList(commandList);
+    particleManager_->CreateAll();
+    //パーティクルエミッターへのセット
+    ParticleEmitter::SetParticleManager(particleManager_.get());
 
     LogFile::Log("CreateparticleManager");
     //ファイルへのログ出力
@@ -152,10 +172,6 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     LogFile::Log("Create DebugCamera");
 #endif //_DEVELOP
 
-    //オブジェクト管理の初期化
-    ObjectManager::GetInstance()->Initialize();
-    LogFile::Log("ObjectManager Initialize");
-
     // =============================================
     // シーンの生成
     // =============================================
@@ -164,10 +180,10 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
 
     auto* camera = SceneManager::GetCurrentCamera();
     if (camera) {
-        DirectXCommon::GetInstance()->SetRenderTextureCamera(camera);
+        directXCommon_->SetRenderTextureCamera(camera);
         LogFile::Log("Set RenderTexture Camera");
     } else {
-        DirectXCommon::GetInstance()->SetRenderTextureCamera(DebugCamera::GetInstance());
+        directXCommon_->SetRenderTextureCamera(DebugCamera::GetInstance());
         LogFile::Log("Set Debug Camera");
     }
 
@@ -191,24 +207,24 @@ void ButtobiEngine::Update() {
     VibrateManager::Update();
     SceneManager::Update();
 
-#ifdef _DEVELOP
     auto* camera = SceneManager::GetCurrentCamera();
+#ifdef _DEVELOP
+  
     if (camera) {
-        directXCommon->SettingIdTextureBarrierPre();
-        LogFile::Log("SettingIdTextureBarrierPre");
+        directXCommon_->SettingIdTextureBarrierPre();
         //カメラがあるならクリックする
         ObjectManager::GetInstance()->ClickObject(*camera);
-        LogFile::Log("ObjectManager ClickObject");
-        directXCommon->SettingIdTextureBarrierPost();
-        LogFile::Log("SettingIdTextureBarrierPost");
-        // 共通更新
-        ParticleManager::GetInstance()->Update(*camera);
-        LogFile::Log("ParticleManager Update");
+        directXCommon_->SettingIdTextureBarrierPost();
     }
 
 #endif //_DEVELOP
+    if (camera) {
+        // パーティクル管理の更新
+        particleManager_->Update(*camera);
+    }
 
-    directXCommon->UpdateRenderTexture();
+    //ポストプロセス用の更新
+    directXCommon_->UpdateRenderTexture();
 
 }
 
@@ -219,18 +235,11 @@ void ButtobiEngine::Debug()
     ImGui::Begin("Debug");
 
     DebugUI::CheckFPS();
-
-    auto* camera = SceneManager::GetCurrentCamera();
-
-    if (camera) {
-        DebugUI::CheckCamera(*camera);
-    }
-
     SceneManager::Debug();
     DebugUI::CheckInput();
     DebugUI::CheckLights();
     DebugUI::CheckJsonFile();
-    DebugUI::CheckParticle();
+    DebugUI::CheckParticle(particleManager_.get());
 
     ImGui::End();
 
@@ -241,6 +250,10 @@ void ButtobiEngine::Debug()
 
 }
 
+ButtobiEngine::~ButtobiEngine()
+{
+}
+
 void ButtobiEngine::Run() {
 
     Initialize();
@@ -248,6 +261,7 @@ void ButtobiEngine::Run() {
     // =============================================
     // ウィンドウのxボタンが押されるまでループ メインループ
     // =============================================
+
     while (true) {
 
         //ループを抜ける
@@ -262,6 +276,7 @@ void ButtobiEngine::Run() {
         Draw();
 
     }
+
     Finalize();
 
 }
@@ -273,11 +288,12 @@ void ButtobiEngine::PreCommandSet() {
     imGuiClass.Render();
 #endif
     //ポストエフェクトの前設定
-    directXCommon->RenderTexturePreDraw();
+    directXCommon_->RenderTexturePreDraw();
 
 #ifdef _DEVELOP
     // デバッグカメラ
     auto* camera = SceneManager::GetCurrentCamera();
+
     if (camera) {
         DrawGrid::Draw(*camera);
     }
@@ -287,32 +303,33 @@ void ButtobiEngine::PreCommandSet() {
     // シーンの描画
     SceneManager::DrawModel();
     //パーティクルの描画
-    ParticleManager::GetInstance()->Draw();
+    particleManager_->Draw();
 
     //ポストエフェクトとのあと設定
-    directXCommon->RenderTexturePostDraw();
+    directXCommon_->RenderTexturePostDraw();
 
-    directXCommon->PreDraw();
+    directXCommon_->PreDraw();
 }
 
 void ButtobiEngine::PostCommandSet() {
 
     //ポストエフェクト
-    directXCommon->DrawRenderTexture();
+    directXCommon_->DrawRenderTexture();
     // シーンの描画
     SceneManager::DrawSprite();
 
 #ifdef USE_IMGUI
     //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む
-    imGuiClass.DrawImGui(CommandList::GetCommandList().Get());
+    imGuiClass.DrawImGui(directXCommon_->GetCommandList());
 
 #endif // _DEBUG
-    directXCommon->PostDraw();
+    directXCommon_->PostDraw();
     //時間の更新を入れる
     time_->Update();
     //次のコマンド準備をする
-    directXCommon->PrepareCommand();
-    FreeTypeManager::ResetFontUsage();
+    directXCommon_->PrepareCommand();
+    //フォントの使用をリセットする
+    freeTypeManager_->ResetFontUsage();
 };
 
 void ButtobiEngine::Finalize() {
@@ -320,7 +337,9 @@ void ButtobiEngine::Finalize() {
     //シーンマネージャーの終了処理
     SceneManager::Finalize();
     //パーティクルの終了処理
-    ParticleManager::GetInstance()->Finalize();
+    particleManager_->Finalize();
+    particleManager_.reset();
+
     //モデルの終了処理
     ModelManager::Finalize();
 
@@ -329,30 +348,45 @@ void ButtobiEngine::Finalize() {
     DrawGrid::Finalize();
 #endif
     //テキストの終了処理
-    FreeTypeManager::Finalize();
+    freeTypeManager_->Finalize();
+    freeTypeManager_.reset();
     //テクスチャの終了処理
-    Texture::Finalize();
+    texture_->Finalize();
+    texture_.reset();
+
     //音の終了処理
     Sound::Finalize();
     //スプライトの終了処理
-    SpriteCommon::Finalize();
+    spriteCommon_->Finalize();
+    spriteCommon_.reset();
+
+#pragma region//LightManagerの終了処理
+
     //スポットライトの終了処理
-    SpotLightManager::Finalize();
+    spotLightManager_->Finalize();
+    spotLightManager_.reset();
     //ポイントライトの終了処理
-    PointLightManager::Finalize();
+    pointLightManager_->Finalize();
+    pointLightManager_.reset();
     //方向ライトの終了処理
-    DirectionalLightManager::Finalize();
+    directionalLightManager_->Finalize();
+    directionalLightManager_.reset();
+
+#pragma endregion
 
 #ifdef USE_IMGUI
     //ImGuiの終了処理 ゲームループが終わったら行う
     imGuiClass.ShutDown();
 #endif
-    //DirectXCommonの終了処理
-    directXCommon->EndFrame();
+
     //RTVManagerのリセット
     rtvManager.reset();
     //SRVManagerのリセット
     srvManager.reset();
+    //DirecectXCommonのリセット
+    directXCommon_->Finalize();
+    directXCommon_.reset();
+
     //バイブレーションの終了処理
     VibrateManager::Finalize();
     //入力クラスの終了処理
