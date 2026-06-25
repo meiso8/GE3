@@ -3,5 +3,6 @@
 [![DevelopmentBuild](https://github.com/meiso8/ButtobiEngine/actions/workflows/DevelopmentBuild.yml/badge.svg)](https://github.com/meiso8/ButtobiEngine/actions/workflows/DevelopmentBuild.yml)
 
 # ぶっとびエンジン!
-ゲーム【ぶっとびミックス】から由来する。
+2年次のチーム制作1回目(TD2_1_2102)　ゲーム【ぶっとびミックス】に由来する。
+
 
