@@ -1,6 +1,9 @@
 #define NOMINMAX
 #include "Text.h"
 #include"DebugUI.h"
+#include "FreeTypeManager.h"
+#include"Engine/Mesh/Font/Font.h"
+
 
 void Text::Initialize(uint32_t fontHandle) {
     fontHandle_ = fontHandle;

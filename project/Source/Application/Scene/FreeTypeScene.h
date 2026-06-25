@@ -5,8 +5,8 @@
 #include"Object3d/Object3d.h"
 #include"SkyboxObject3d.h"
 #include"Particle/ParticleEmitter.h"
-#include"../GameObject/Player/Player.h"
 #include"../GameObject/Beam/Beam.h"
+
 
 class FreeTypeScene : public BaseScene
 {

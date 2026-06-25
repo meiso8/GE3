@@ -70,5 +70,12 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
 
 Matrix4x4 MakeRotateAxisSinCos(const Vector3& n, const float& cos, const float& sin);
-//ワールド行列からワールド座標を取得する関数
-Vector3 GetWorldTransformByMatrix(const Matrix4x4& mat);
+
+namespace Math{
+    //ワールド行列からワールド座標を取得する関数
+    Vector2 GetWorldTransformByMatrix(const Matrix3x3& mat);
+    //ワールド行列からワールド座標を取得する関数
+    Vector3 GetWorldTransformByMatrix(const Matrix4x4& mat);
+    Vector3 GetForward(const Matrix4x4& mat);
+    Matrix4x4 GetBillBordMatrix(const Matrix4x4& cameraWorldMatrix);
+}

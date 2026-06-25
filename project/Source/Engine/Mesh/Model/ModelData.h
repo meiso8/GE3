@@ -24,6 +24,7 @@ struct MeshData {
     std::vector<uint32_t> indices;
     // デフォルトは三角ポリゴン
     D3D_PRIMITIVE_TOPOLOGY topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    std::string meshName = "unKnown";
 };
 
 struct MeshSection {

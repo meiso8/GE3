@@ -55,10 +55,15 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
     //テクスチャ枚数上限チェック
     assert(models_.size() < kMaxModelCount);
 
+  
+
     //追加したテクスチャデータのポインタ
     std::unique_ptr<Model> model = std::make_unique<Model>();
 
     std::unique_ptr<ModelData> modelData = std::make_unique<ModelData>();
+
+    //モデルデータにタグを代入
+    modelData->meshName = tag;
 
     Assimp::Importer importer;
 
@@ -176,9 +181,13 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
         modelData->animations_ = AnimationManager::LoadAnimation(filePath);
     }
    
+
+
     model->SetModelData(std::move(modelData));
     //モデルを作成する
     model->CreateModel();
+
+
 
     //ハンドルとモデルをセットにする
     models_.insert(std::make_pair(tag, std::move(model)));

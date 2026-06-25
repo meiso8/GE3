@@ -6,30 +6,20 @@
 #include"SRVmanager/SrvManager.h"
 #include"SpriteCamera.h"  
 #include"ImGuiClass.h"
+#include"CommandList.h"
+#include"Log.h"
 
-ID3D12GraphicsCommandList* Sprite::commandList = nullptr;
+ID3D12GraphicsCommandList* Sprite::commandList_ = nullptr;
 
-Sprite::~Sprite()
+void Sprite::SetCommandList(ID3D12GraphicsCommandList* commandList)
 {
-    if (vertexResource_) {
-        vertexResource_->Unmap(0, nullptr);
-        vertexResource_.Reset();
-    }
-
-    if (transformationMatrixResource_) {
-        transformationMatrixResource_->Unmap(0, nullptr);
-        transformationMatrixResource_.Reset();
-    }
-
-    if (materialResource_) {
-        materialResource_->Unmap(0, nullptr);
-        materialResource_.Reset();
-    }
+    commandList_ = commandList;
+    assert(commandList_);
+    LogFile::Log("Sprite　SetCommandList");
 }
 
 void Sprite::Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color)
 {
-    commandList = DirectXCommon::GetCommandList();
     position_ = position;
     textureHandle_ = Texture::GetSRVHandle(textureHandle);
 
@@ -100,15 +90,11 @@ void Sprite::SetTexture(const TextureFactory::Handle& textureHandle)
 
 
 void Sprite::PreDraw(uint32_t blendMode) {
-    SpriteCommon::PreDraw(commandList);
-    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateSprite(blendMode).Get());//PSOを設定
-    //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    SpriteCommon::PreDraw(blendMode,commandList_);
 }
 
 void Sprite::Draw(
 ) {
-
 
     transform_.scale = { scale_.x * size_.x,scale_.y * size_.y,1.0f };
     transform_.rotate = { 0.0f,0.0f,rotate_ };
@@ -118,18 +104,19 @@ void Sprite::Draw(
 
     *transformationMatrixData_ = { Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix()),worldMatrix_ };
 
-
     //頂点バッファビューを設定
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-    SpriteCommon::SetIndexBuffer(commandList);
-    //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-    //TransformationMatrixCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-    //SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_);
+    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
+    
+    SpriteCommon::SetIndexBuffer(commandList_);
 
-    SpriteCommon::DrawCall(commandList);
+    //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+    //TransformationMatrixCBufferの場所を設定
+    commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+    //SRVのDescriptorTableの先頭を設定。rootParameter[2]
+    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_,commandList_);
+
+    SpriteCommon::DrawCall(commandList_);
 
 };
 

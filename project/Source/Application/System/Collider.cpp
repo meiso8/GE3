@@ -39,7 +39,7 @@ const Vector3& Collider::CalculateWorldPos()
     //親の行列と掛け算する
     child = Multiply(child, *worldMat_);
     //行列から位置を取得する
-    tempWorldTransform_ = GetWorldTransformByMatrix(child);
+    tempWorldTransform_ = Math::GetWorldTransformByMatrix(child);
 
 #ifdef _DEBUG
     object3d_.SetTranslate(tempWorldTransform_);

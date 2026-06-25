@@ -5,7 +5,7 @@ class TimeManager {
 
 public:
     static float DeltaTime();
-    void Initialize();
+    TimeManager();
     void Update();
 private:
     std::chrono::steady_clock::time_point reference_;

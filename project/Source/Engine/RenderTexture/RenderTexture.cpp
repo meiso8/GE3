@@ -43,6 +43,12 @@ void RenderTexture::Create(RtvManager& rtvManager)
     CreateMaterialThermography();
 }
 
+void RenderTexture::SetCommandList(ID3D12GraphicsCommandList* commandList)
+{
+    commandList_ = commandList;
+    assert(commandList_);
+}
+
 void RenderTexture::CreateResource(const uint32_t index, RtvManager& rtvManager,DXGI_FORMAT format, bool createSRV)
 {
     //rtvの作成
@@ -54,7 +60,7 @@ void RenderTexture::CreateResource(const uint32_t index, RtvManager& rtvManager,
             kRenderTargetClearValue_
         );
 
-    LogFile::Log("Rendertexture : CreateRTV");
+    LogFile::Log("Rendertexture : CreateRTV\n");
 
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
     rtvDesc.Format = format;
@@ -63,7 +69,7 @@ void RenderTexture::CreateResource(const uint32_t index, RtvManager& rtvManager,
     renderTextureDatas_[index].rtvHandleCPU = rtvManager.GetCPUDescriptorHandle(rtvIndex);
     DirectXCommon::GetDevice()->CreateRenderTargetView(renderTextureDatas_[index].resource.Get(), &rtvDesc, renderTextureDatas_[index].rtvHandleCPU);
 
-    LogFile::Log("Rendertexture : CreateRTVDesc");
+    LogFile::Log("Rendertexture : CreateRTVDesc\n");
 
     // ------------------------------------------
 
@@ -75,15 +81,15 @@ void RenderTexture::CreateResource(const uint32_t index, RtvManager& rtvManager,
         renderTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
         renderTextureSrvDesc.Texture2D.MipLevels = 1;
-        LogFile::Log("Rendertexture : Create SRV");
+        LogFile::Log("Rendertexture : Create SRV\n");
 
         renderTextureDatas_[index].srvIndex = SrvManager::Allocate();
         renderTextureDatas_[index].srvHandleCPU = SrvManager::GetCPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
         renderTextureDatas_[index].srvHandleGPU = SrvManager::GetGPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
-        LogFile::Log("Rendertexture : GetSRVIndexAndGPUAndCPUHandle");
+        LogFile::Log("Rendertexture : GetSRVIndexAndGPUAndCPUHandle\n");
 
         DirectXCommon::GetDevice()->CreateShaderResourceView(renderTextureDatas_[index].resource.Get(), &renderTextureSrvDesc, renderTextureDatas_[index].srvHandleCPU);
-        LogFile::Log("Rendertexture : CreateShaderResourceView");
+        LogFile::Log("Rendertexture : CreateShaderResourceView\n");
     }
 
 }
@@ -100,8 +106,6 @@ void RenderTexture::CopyClickPixelCommand(int mouseX, int mouseY)
     ID3D12Resource* readbackBuffer = idReadbackResource_.Get();
     if (!idTexture || !readbackBuffer) return;
 
-    auto* commandList = DirectXCommon::GetCommandList();
-
     D3D12_RESOURCE_BARRIER barrier{};
     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
     barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
@@ -109,7 +113,7 @@ void RenderTexture::CopyClickPixelCommand(int mouseX, int mouseY)
     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
     barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    commandList->ResourceBarrier(1, &barrier);
+    commandList_->ResourceBarrier(1, &barrier);
 
     // 2. コピー元のテクスチャ上の1ピクセルの位置（マウス位置）を指定
     D3D12_TEXTURE_COPY_LOCATION srcLocation{};
@@ -137,13 +141,12 @@ void RenderTexture::CopyClickPixelCommand(int mouseX, int mouseY)
     dstLocation.PlacedFootprint.Footprint.RowPitch = 256; // アライメントの最低規則(256バイト)に合わせる
 
     // 4. GPUコマンドリストにコピー命令を発行
-    commandList->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
-
+    commandList_->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
 
     // 3. 元の状態に戻す
     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
     barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET; // ★1で指定した元の状態に戻す
-    commandList->ResourceBarrier(1, &barrier);
+    commandList_->ResourceBarrier(1, &barrier);
 
 }
 
@@ -169,86 +172,80 @@ uint32_t RenderTexture::GetClickedObjectID()
 
 void RenderTexture::DrawDissolve(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const TextureFactory::Handle& textureHandle) {
 
-    auto* commandList = DirectXCommon::GetCommandList();
     // 1. 書き込み先（RTV）の設定とクリア
-    commandList->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
-    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::DISSOLVE));
-    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(PSO::kEffectDissolve).Get());//PSOを設定
+    commandList_->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
+    commandList_->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::DISSOLVE));
+    commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(PSO::kEffectDissolve).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectDissolve]->GetGPUVirtualAddress());
-    SrvManager::SetGraphicsRootDescriptorTable(1, Texture::GetSRVHandle(textureHandle));
-    SrvManager::SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex);
-    commandList->DrawInstanced(3, 1, 0, 0);
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectDissolve]->GetGPUVirtualAddress());
+    SrvManager::SetGraphicsRootDescriptorTable(1, Texture::GetSRVHandle(textureHandle), commandList_);
+    SrvManager::SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex, commandList_);
+    commandList_->DrawInstanced(3, 1, 0, 0);
 
 
 }
 void RenderTexture::DrawRandom(const BlendMode& blendMode, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
 {
-    auto* commandList = DirectXCommon::GetCommandList();
     // 1. 書き込み先（RTV）の設定とクリア
-    commandList->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
-    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::RANDOM));
-    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateRandom(blendMode).Get());//PSOを設定
-    commandList->SetGraphicsRootConstantBufferView(0, materialResourceRandom_->GetGPUVirtualAddress());
+    commandList_->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
+    commandList_->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::RANDOM));
+    commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateRandom(blendMode).Get());//PSOを設定
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResourceRandom_->GetGPUVirtualAddress());
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    commandList->DrawInstanced(3, 1, 0, 0);
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList_->DrawInstanced(3, 1, 0, 0);
 };
 
-void RenderTexture::Draw(const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
+void RenderTexture::Draw( const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index)
 {
-    auto* commandList = DirectXCommon::GetCommandList();
     // 1. 書き込み先（RTV）の設定とクリア
-    commandList->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
-    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::OFFSCREEN));
-    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(effectType).Get());//PSOを設定
+    commandList_->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
+    commandList_->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::OFFSCREEN));
+    commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(effectType).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
-    SrvManager::SetGraphicsRootDescriptorTable(0, renderTextureDatas_[index].srvIndex);
-    commandList->SetGraphicsRootConstantBufferView(1, materialResource_[effectType]->GetGPUVirtualAddress());
-    commandList->DrawInstanced(3, 1, 0, 0);
+    SrvManager::SetGraphicsRootDescriptorTable(0, renderTextureDatas_[index].srvIndex, commandList_);
+    commandList_->SetGraphicsRootConstantBufferView(1, materialResource_[effectType]->GetGPUVirtualAddress());
+    commandList_->DrawInstanced(3, 1, 0, 0);
 }
 
-void RenderTexture::DrawOutLine(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex)
+void RenderTexture::DrawOutLine( const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex)
 {
-    auto* commandList = DirectXCommon::GetCommandList();
     // 1. 書き込み先（RTV）の設定とクリア
-    commandList->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
+    commandList_->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
 
-    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::DEPTH_BASED_OUTLINE));
+    commandList_->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::DEPTH_BASED_OUTLINE));
 
-    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(PSO::kEffectDepthBasedOutline).Get());//PSOを設定
+    commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(PSO::kEffectDepthBasedOutline).Get());//PSOを設定
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectDepthBasedOutline]->GetGPUVirtualAddress());
-    SrvManager::SetGraphicsRootDescriptorTable(1, depthSrvIndex);
-    SrvManager::SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex);
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectDepthBasedOutline]->GetGPUVirtualAddress());
+    SrvManager::SetGraphicsRootDescriptorTable(1, depthSrvIndex, commandList_);
+    SrvManager::SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex, commandList_);
     //サーモグラフィー用のテクスチャを利用してマスク処理をかける
-    SrvManager::SetGraphicsRootDescriptorTable(3, renderTextureDatas_[kThermography].srvIndex);
-    commandList->DrawInstanced(3, 1, 0, 0);
+    SrvManager::SetGraphicsRootDescriptorTable(3, renderTextureDatas_[kThermography].srvIndex, commandList_);
+    commandList_->DrawInstanced(3, 1, 0, 0);
 }
 // RenderTexture.cpp にサーモグラフィー用の描画関数を追加する例
-void RenderTexture::DrawThermo(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle)
+void RenderTexture::DrawThermo( const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle)
 {
-    auto* commandList = DirectXCommon::GetCommandList();
-
     // 書き込み先はスワップチェーン（画面出力用）など
-    commandList->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
+    commandList_->OMSetRenderTargets(1, &dstRtvHandle, false, nullptr);
 
     // ★ サーモグラフィー用のPSOやRootSignatureを設定
-    commandList->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::THERMOGRAPHY));
-    commandList->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(PSO::kEffectThermography).Get());
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList_->SetGraphicsRootSignature(PSO::rootSignature->GetRootSignature(RootSignature::THERMOGRAPHY));
+    commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateOffScreen(PSO::kEffectThermography).Get());
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // 温度テクスチャ(t2)をシェーダーに渡す
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectThermography]->GetGPUVirtualAddress());
-    SrvManager::SetGraphicsRootDescriptorTable(1, renderTextureDatas_[kThermography].srvIndex); // 温度用
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectThermography]->GetGPUVirtualAddress());
+    SrvManager::SetGraphicsRootDescriptorTable(1, renderTextureDatas_[kThermography].srvIndex, commandList_); // 温度用
 
-    commandList->DrawInstanced(3, 1, 0, 0);
+    commandList_->DrawInstanced(3, 1, 0, 0);
 }
 void RenderTexture::Update()
 {
@@ -366,7 +363,7 @@ void RenderTexture::CreateMaterialBufferForGrayScale()
     HRESULT result = materialResource_[PSO::kEffectGrayScale]->Map(0, nullptr, reinterpret_cast<void**>(&materialForGrayScale_));
     materialForGrayScale_->color = sepiaColor_;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale\n");
 }
 
 void RenderTexture::CreateMaterialBufferForVignette()
@@ -379,7 +376,7 @@ void RenderTexture::CreateMaterialBufferForVignette()
     materialForVignette_->correctVal = 16.0f;
     materialForVignette_->viignetteVal = 0.8f;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : Vignette");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : Vignette\n");
 }
 
 void RenderTexture::CreateMaterialBufferForBoxFilter()
@@ -392,7 +389,7 @@ void RenderTexture::CreateMaterialBufferForBoxFilter()
     HRESULT result = materialResource_[PSO::kEffectBoxFilter]->Map(0, nullptr, reinterpret_cast<void**>(&materialForBoxFilter_));
     materialForBoxFilter_->kernel = 1.0f;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : BoxFilter");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : BoxFilter\n");
 }
 
 void RenderTexture::CreateMaterialBUfferForFullScreen()
@@ -405,7 +402,7 @@ void RenderTexture::CreateMaterialBUfferForFullScreen()
     HRESULT result = materialResource_[PSO::kEffectNone]->Map(0, nullptr, reinterpret_cast<void**>(&materialForFullScreen_));
     materialForFullScreen_->color = { 1.0f,1.0f,1.0f,1.0f };
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale\n");
 }
 
 void RenderTexture::CreateMaterialBufferForGaussianFilter()
@@ -420,7 +417,7 @@ void RenderTexture::CreateMaterialBufferForGaussianFilter()
     materialForGaussianFilter_->sigma = 1.0f;
     materialForGaussianFilter_->kernel = 1;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : GaussianFilter\n");
 }
 
 void RenderTexture::CreateMaterialLuminanceBasedOutline()
@@ -433,7 +430,7 @@ void RenderTexture::CreateMaterialLuminanceBasedOutline()
     HRESULT result = materialResource_[PSO::kEffectLuminanceBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForLuminanceBasedOutline_));
     materialForLuminanceBasedOutline_->weightVal = 0.0f;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : LuminanceBasedOutline");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : LuminanceBasedOutline\n");
 }
 
 void RenderTexture::CreateMaterialDepthBasedOutline()
@@ -449,7 +446,7 @@ void RenderTexture::CreateMaterialDepthBasedOutline()
     materialForDepthBasedOutline_->lineWidth = 10000.0f;
     materialForDepthBasedOutline_->color = { 0.0f,0.0f,0.0f };
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : DepthBasedOutline");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : DepthBasedOutline\n");
 }
 
 
@@ -466,7 +463,7 @@ void RenderTexture::CreateMaterialRadialBlur()
     materialForRadialBlur_->numSamples = 1;
     materialForRadialBlur_->blurWidth = 0.01f;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : RadialBlur");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : RadialBlur\n");
 }
 
 void RenderTexture::CreateMaterialDissolve() {
@@ -479,7 +476,7 @@ void RenderTexture::CreateMaterialDissolve() {
     HRESULT result = materialResource_[PSO::kEffectDissolve]->Map(0, nullptr, reinterpret_cast<void**>(&materialForDissolve_));
     materialForDissolve_->maskVal = 1.0f;
     materialForDissolve_->rgb = { 8.0f / 255.0f, 16.0f / 255.0f,0.0f };
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve\n");
 }
 void RenderTexture::CreateMaterialRandom()
 {
@@ -491,7 +488,7 @@ void RenderTexture::CreateMaterialRandom()
     HRESULT result = materialResourceRandom_->Map(0, nullptr, reinterpret_cast<void**>(&materialForRandom_));
     materialForRandom_->time = 1.0f;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve\n");
 }
 void RenderTexture::CreateMaterialThermography()
 {//マテリアル用のリソースを作る。
@@ -503,5 +500,5 @@ void RenderTexture::CreateMaterialThermography()
     materialForThermography_->alpha = { 1.0f };
     materialForThermography_->sigma = 10.0f;
     materialForThermography_->kernel = 14;
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : Thermography");
+    LogFile::Log("Rendertexture : Create : MaterialBuffer : Thermography\n");
 };

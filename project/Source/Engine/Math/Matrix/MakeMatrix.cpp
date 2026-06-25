@@ -1,7 +1,7 @@
 #include"MakeMatrix.h"
 #include <cmath>
 #include"cotangent.h"
-
+#include<numbers>
 Matrix3x3 MakeIdentity3x3() {
     Matrix3x3 result;
     for (size_t i = 0; i < 3; i++) {
@@ -707,7 +707,32 @@ Matrix4x4 MakeRotateAxisSinCos(const Vector3& n, const float& cos, const float& 
 
 }
 
-Vector3 GetWorldTransformByMatrix(const Matrix4x4& mat)
+
+
+Vector2 Math::GetWorldTransformByMatrix(const Matrix3x3& mat)
+{
+    return { mat.m[2][0], mat.m[2][1] };
+}
+Vector3 Math::GetWorldTransformByMatrix(const Matrix4x4& mat)
 {
     return { mat.m[3][0], mat.m[3][1], mat.m[3][2] };
 }
+
+Vector3 Math::GetForward(const Matrix4x4& mat)
+{
+    return Normalize({ mat.m[2][0],mat.m[2][1], mat.m[2][2] });
+}
+
+Matrix4x4 Math::GetBillBordMatrix(const Matrix4x4& cameraWorldMatrix)
+{
+
+    Matrix4x4 mat = Multiply(MakeRotateYMatrix(std::numbers::pi_v<float>), cameraWorldMatrix);
+    //移動要素の排除
+    mat.m[3][0] = 0.0f;
+    mat.m[3][1] = 0.0f;
+    mat.m[3][2] = 0.0f;
+
+    return mat;
+}
+
+

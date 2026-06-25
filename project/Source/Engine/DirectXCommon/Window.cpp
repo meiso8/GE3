@@ -15,6 +15,7 @@
 #pragma comment(lib,"winmm.lib")
 
 #include"Input.h"
+#include"Log.h"
 
 int32_t Window::clientWidth_ = 1280;
 int32_t Window::clientHeight_ = 720;
@@ -51,8 +52,27 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
     return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-void Window::Create(const std::wstring& title, const int32_t& clientWidth, const int32_t& clientHeight) {
 
+bool Window::ProcessMassage()
+{
+    MSG msg{};
+    //Windowにメッセージが来ていたら最優先で処理させる
+    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    //メッセージが来たら終了する
+    if (msg.message == WM_QUIT) {
+        LogFile::Log("Quit Window");
+        return true;
+    }
+
+    return false;
+}
+
+Window::Window(const std::wstring& title, const int32_t& clientWidth, const int32_t& clientHeight)
+{
     clientWidth_ = clientWidth;
     clientHeight_ = clientHeight;
 
@@ -68,7 +88,7 @@ void Window::Create(const std::wstring& title, const int32_t& clientWidth, const
     //ウィンドウプロシージャ
     wc_.lpfnWndProc = WindowProc;
     //ウィンドウクラス名
-    wc_.lpszClassName = L"CG2WindowClass";
+    wc_.lpszClassName = L"ButtobiEngineWindowClass";
     //インスタンスハンドル
     wc_.hInstance = GetModuleHandle(nullptr);
     //カーソル
@@ -114,29 +134,15 @@ void Window::Create(const std::wstring& title, const int32_t& clientWidth, const
 
 #pragma endregion 
 
-
-}
-
-bool Window::ProcessMassage()
-{
-    MSG msg{};
-    //Windowにメッセージが来ていたら最優先で処理させる
-    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-
-    //メッセージが来たら終了する
-    if (msg.message == WM_QUIT) {
-        return true;
-    }
-
-    return false;
+    LogFile::Log("Create WindowClass");
 }
 
 void Window::Finalize()
 {
     CloseWindow(hwnd_);
     CoUninitialize();
+
+
+    LogFile::Log("Finalize WindowClass");
 }
 

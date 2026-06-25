@@ -23,11 +23,6 @@ AnimationObject3d::AnimationObject3d() {
 #endif
 }
 
-AnimationObject3d::~AnimationObject3d()
-{
-    Object3d::Finalize();
-}
-
 void AnimationObject3d::Initialize()
 {
     animationTime_ = 0.0f;
@@ -171,30 +166,30 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
 
     if (skinningModel_) {
 
-        auto* commandlist = DirectXCommon::GetCommandList();
-        skinningModel_->SetRootSignatureAndGraphicsPipeline(commandlist, blendMode, cullMode,maskMode,usePSOKey);
+      
+        skinningModel_->SetRootSignatureAndGraphicsPipeline(commandList_, blendMode, cullMode,maskMode,usePSOKey);
        
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-        commandlist->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
-        commandlist->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
+        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE], commandList_);
         //cameraのCBufferの場所を設定
-        commandlist->SetGraphicsRootConstantBufferView(3, camera.GetResource()->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(3, camera.GetResource()->GetGPUVirtualAddress());
         //ID
-        commandlist->SetGraphicsRootConstantBufferView(4, idResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(4, idResource_->GetGPUVirtualAddress());
         //ライト
-        DirectionalLightManager::SetGraphicsRootConstantBufferView(5);
+        DirectionalLightManager::SetGraphicsRootConstantBufferView(5, commandList_);
         //expansionのCBufferの場所を設定
-        commandlist->SetGraphicsRootConstantBufferView(6, expansionResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(6, expansionResource_->GetGPUVirtualAddress());
         //WaveのSRVの場所を設定
-        commandlist->SetGraphicsRootShaderResourceView(7, waveResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootShaderResourceView(7, waveResource_->GetGPUVirtualAddress());
         //ライトのCBufferの場所を設定
-        PointLightManager::SetGraphicsRootDescriptorTable(8);
-        SpotLightManager::SetGraphicsRootDescriptorTable(9);
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture));
+        PointLightManager::SetGraphicsRootDescriptorTable(8, commandList_);
+        SpotLightManager::SetGraphicsRootDescriptorTable(9, commandList_);
+        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture), commandList_);
         //ここでテクスチャの設定をする
-        MeshDraw(commandlist);
+        MeshDraw();
     }
 
 #ifdef _DEBUG
@@ -203,21 +198,22 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
 
 }
 
-void AnimationObject3d::MeshDraw(ID3D12GraphicsCommandList* commandList)
+void AnimationObject3d::MeshDraw()
 {
-    commandList->IASetPrimitiveTopology(primitive_->GetTopology());
+
+    commandList_->IASetPrimitiveTopology(primitive_->GetTopology());
     //スキンクラスター
     auto* skinCluster = skinningModel_->GetSkinCluster();
 
     D3D12_VERTEX_BUFFER_VIEW vbvs[2] = { primitive_->GetVertexBufferView(), skinCluster->influenceBufferView };
-    commandList->IASetVertexBuffers(0, 2, vbvs);//VBVを設定
+    commandList_->IASetVertexBuffers(0, 2, vbvs);//VBVを設定
 
     //cameraのCBufferの場所を設定 paletteResource 
-    SrvManager::SetGraphicsRootDescriptorTable(11, skinCluster->paletteSrvIndex);
+    SrvManager::SetGraphicsRootDescriptorTable(11, skinCluster->paletteSrvIndex,commandList_);
  
     //モデルデータの取得
     auto* modelData = skinningModel_->GetModelData();
-    DrawModel(modelData, commandList);
+    DrawModel(modelData);
 
 }
 

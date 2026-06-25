@@ -1,5 +1,8 @@
 #include "JsonFile.h"
 #include <filesystem>
+#include"Vector3.h"
+#include"Transform.h"
+
 std::unordered_map<std::string, JsonData>JsonFile::jsonFiles_;
 
 void JsonFile::LoadAllJsonFile()
@@ -58,4 +61,22 @@ void JsonFile::SetJson(const std::string& tag, const nlohmann::json& j) {
     data.data = j;
     data.path = "Resource/JsonFiles/" + tag + ".json";
     SaveJson(tag);
+}
+
+nlohmann::json JsonFile::Vector3ToJson(const Vector3& vector)
+{
+    return {
+        {"x", vector.x},
+        {"y", vector.y},
+        {"z", vector.z},
+    };
+}
+
+nlohmann::json JsonFile::EulerTransformToJson(const EulerTransform& eTransform)
+{
+    return {
+        {"scale",     Vector3ToJson(eTransform.scale)    },
+        {"rotate",    Vector3ToJson(eTransform.rotate)   },
+        {"translate", Vector3ToJson(eTransform.translate)},
+    };
 }

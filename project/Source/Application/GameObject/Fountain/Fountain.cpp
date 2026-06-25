@@ -57,16 +57,16 @@ void Fountain::Update()
 
     waterObject_->Update();
 
-    auto& group = ParticleManager::GetInstance()->GetParticleGroup(particleEmitter_[0]->GetEmitter().name);
+    auto& emitter0 = particleEmitter_[0]->GetEmitter();
 
     splashTimer_ -= TimeManager::DeltaTime();
     waterObject_->GetWaveData(0).time += TimeManager::DeltaTime()*2.0f;
     //waterObject_->GetWaveData(1).time = splashTimer_;
 
     if (splashTimer_ <= splashTime_ * 0.5f) {
-        group->accelerationField.acceleration.y = -4.0f;
+        emitter0.accelerationField_.acceleration.y = -4.0f;
     } else {
-        group->accelerationField.acceleration.y = -3.0f;
+        emitter0.accelerationField_.acceleration.y = -3.0f;
     }
 
     if (splashTimer_ <= 0.0f) {
@@ -110,13 +110,12 @@ void Fountain::CreateParticle()
     for (auto& emitter : particleEmitter_) {
         emitter = std::make_unique<ParticleEmitter>();
         emitter->Initialize();
+        //Objectにペアレントする
         emitter->SetParent(object_->GetWorldTransform());
     }
    
     particleEmitter_[0]->SetName("fountain");
     particleEmitter_[1]->SetName("fountain2");
-
-    //Objectにペアレントする
 
     auto& emitter0 = particleEmitter_[0]->GetEmitter();
     emitter0.isLoop_ = true;
@@ -128,11 +127,9 @@ void Fountain::CreateParticle()
     emitter0.movement = ParticleMovements::kParticleNormal;
     emitter0.velocityAABB = { .min = {-0.2f,3.75f,-0.2f},.max = {0.2f,4.0f,0.2f} };
     emitter0.transform.eTransform_.scale = { 0.1f,0.1f,0.1f };
-    emitter0.transform.eTransform_.translate.y = 0.2f;
-    
-    auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
-    group->accelerationField.acceleration.y = -4.0f;
-    group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
+    emitter0.transform.eTransform_.translate.y = 0.2f;   
+    emitter0.accelerationField_.acceleration.y = -4.0f;
+    emitter0.accelerationField_.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
 
     auto& emitter1 = particleEmitter_[1]->GetEmitter();
     emitter1.isLoop_ = true;
@@ -146,6 +143,5 @@ void Fountain::CreateParticle()
     emitter1.count = 7;
     emitter1.lifeTime = 1.0f;
     emitter1.polarSpeed = 0.0f;
-    auto& group1 = ParticleManager::GetInstance()->GetParticleGroup(emitter1.name);
-    group1->accelerationField.acceleration.y = -2.0f;
+    emitter1.accelerationField_.acceleration.y = -2.0f;
 }

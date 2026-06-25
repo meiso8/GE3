@@ -12,8 +12,10 @@
 #include<string>
 #include<memory>
 #include<unordered_map>
-//自作Sprite
-#include"Engine/Mesh/Font/Font.h"
+#include"Vector2.h"
+
+class Font;
+class CommandList;
 
 struct GlyphKey {
     //フォントの種類のハンドル
@@ -43,38 +45,62 @@ struct GlyphRun {
     Vector2 position;
 };
 
-//FreeTypeのデータ
-struct FTData {
-    //face フォントの種類を格納する
-    FT_Face face;
-    //フォントデータ
-    std::vector<uint8_t> fontData;
-};
 
-struct FTResource {
-    //リソース
-    Microsoft::WRL::ComPtr<ID3D12Resource> resource;
-    Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource;
-};
-
-//FreeType用テクスチャデータ
-struct FTTextureData {
-    FTResource ftResource;
-    uint32_t srvIndex;
-    D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
-    D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
-    //文字のサイズ
-    Vector2 glyphSize;
-    float bearingY = 0.0f;
-};
 
 class FreeTypeManager {
 public:
+    
+
+    //FreeTypeのデータ
+    struct FTData {
+        //face フォントの種類を格納する
+        FT_Face face;
+        //フォントデータ
+        std::vector<uint8_t> fontData;
+    };
+
+    struct FTResource {
+        //リソース
+        Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+        Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource;
+    };
+
+    //FreeType用テクスチャデータ
+    struct FTTextureData {
+        FTResource ftResource;
+        uint32_t srvIndex;
+        D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
+        D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
+        //文字のサイズ
+        Vector2 glyphSize;
+        float bearingY = 0.0f;
+    };
+
+private:
+    //コマンドリストの借り物を格納する
+    static ID3D12GraphicsCommandList* commandList_;
+    //一つのライブラリで複数のFaceを保持できる
+    static FT_Library library_;
+    // フォント（←注意）ごとのFTData（faceとfontData）
+    static std::unordered_map<uint32_t, FTData> fontFaces_;
+    // 文字ごとのテクスチャを格納する
+    static std::unordered_map<GlyphKey, FTTextureData> glyphTextures_;
+    //文字ごとのFontを格納する
+    static std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Font>>> fontPool_;
+
+public:
     /// @brief ライブラリの初期化
-    static void Initialize();
-    /// @brief 終了処理
-    static void Finalize();
+    FreeTypeManager();
     ~FreeTypeManager();
+    // 2. コピーと代入を禁止する
+    FreeTypeManager(const FreeTypeManager&) = delete;
+    FreeTypeManager& operator=(const FreeTypeManager&) = delete;
+
+     void SetCommandList(ID3D12GraphicsCommandList* commandList);
+    /// @brief 終了処理
+     void Finalize();
+     /// @brief エンジンでCommandQueueを送った後にリセットする
+     void ResetFontUsage();
 
     /// @brief Faceの生成
     /// @param fontPath .ttfや.tccを読み込む
@@ -135,8 +161,6 @@ public:
     /// @return Font*
     static Font* GetOrCreateFont(const GlyphKey& key);
 
-    /// @brief エンジンでCommandQueueを送った後にリセットする
-    static void ResetFontUsage();
     /// @brief FTTextureDataの取得関数
     /// @param key keyを入れる
     /// @return FTTextureData
@@ -154,14 +178,5 @@ private:
     /// @brief リソールリリース
     /// @param resource 
     static void ReleaseResource(FTResource& resource);
-private:
-    //一つのライブラリで複数のFaceを保持できる
-    static FT_Library library_;
-    // フォント（←注意）ごとのFTData（faceとfontData）
-    static std::unordered_map<uint32_t, FTData> fontFaces_;
-    // 文字ごとのテクスチャを格納する
-    static std::unordered_map<GlyphKey, FTTextureData> glyphTextures_;
-    //文字ごとのFontを格納する
-    static std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Font>>> fontPool_;
 
 };

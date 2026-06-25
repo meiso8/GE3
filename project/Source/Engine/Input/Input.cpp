@@ -3,10 +3,11 @@
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
 #include"TimeManager.h"
-#include"Camera/Camera.h"
-#include<cmath>
 #include"Vector2.h"
 #include<algorithm>
+#include"Log.h"
+
+
 BYTE Input::key_[256];
 BYTE Input::preKey_[256];
 
@@ -85,6 +86,10 @@ HRESULT Input::Initialize(Window& window/*, int& fps*/) {
 
     result = mouse_->SetProperty(DIPROP_AXISMODE, &diprop.diph);
     assert(SUCCEEDED(result));
+
+
+    LogFile::Log("Create Input Class");
+
     return result;
 };
 

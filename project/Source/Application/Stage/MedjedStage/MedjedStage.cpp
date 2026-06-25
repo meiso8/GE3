@@ -210,9 +210,8 @@ void MedjedStage::CreateParticle()
     float pi = std::numbers::pi_v<float>;
     emitter0.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
     emitter0.isLoop_ = true;
-    auto& group = ParticleManager::GetInstance()->GetParticleGroup(emitter0.name);
-    group->accelerationField.acceleration.y = 5.0f;
-    group->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
+    emitter0.accelerationField_.acceleration.y = 5.0f;
+    emitter0.accelerationField_.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
 
     auto& emitter1 = particleEmitters_[kSky_Particle]->GetEmitter();
     emitter1.transform.eTransform_.translate.y = 30.0f;
@@ -225,14 +224,8 @@ void MedjedStage::CreateParticle()
     emitter1.velocityAABB = { { -10.0f,-10.0f,-10.0f }, { 10.0f,0.0f,10.0f } };
     emitter1.rotateAABB_ = { .min = {-pi ,-pi ,-pi } ,.max = { pi, pi, pi} };
     emitter1.isLoop_ = true;
-
-    auto& enemyGroup = ParticleManager::GetInstance()->GetParticleGroup(emitter1.name);
-    enemyGroup->accelerationField.acceleration.y = 10.0f;
-    enemyGroup->accelerationField.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,15.0f,25.0f} };
-
-
-
-
+    emitter1.accelerationField_.acceleration.y = 10.0f;
+    emitter1.accelerationField_.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,15.0f,25.0f} };
 }
 
 void MedjedStage::TransitionScene()

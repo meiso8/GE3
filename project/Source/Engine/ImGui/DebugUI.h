@@ -11,27 +11,34 @@
 #include <functional>
 #include<memory>
 #include<unordered_map>
+#include"Matrix/CameraMatrix.h"
 
 enum BlendMode;
+
 class Input;
 class Sprite;
 class Font;
-class SphereMesh;
-class Camera;
+
 class Model;
+class Primitive;
+
 class ParticleManager;
 struct Emitter;
 class Object3d;
-struct Material;
 class AnimationObject3d;
 
-struct PointLight;
+struct Material;
+
+struct CameraData;
+
+struct SphericalCoordinate;
 struct QuaternionTransform;
-class MeshCommon;
-//struct Damage;
+
+struct PointLight;
+
 struct CharacterState;
 
-
+#include "nlohmann/json.hpp"
 class DebugUI
 {
 public:
@@ -39,10 +46,12 @@ public:
     static void CheckFPS();
     static void CheckSound();
     static void CheckJsonFile();
+    static nlohmann::json& FindJsonFile(std::string& tagName ,bool useFilter = false, const char* containFileName = "unKnown");
+    static void ShowJsonFileSaveMessage(const std::string& name);
+    static void CreateJsonFile(const char* containFileName = "JsonFileName");
     static void CheckSRVIndex();
     static void CheckSRVTexture(const int srvIndex);
     static void CheckTextures();
-  /*  static void CheckDamageStruct(Damage& damage, const char* label);*/
     /// @brief 入力
     /// @param input 
     static void CheckInput();
@@ -90,9 +99,9 @@ public:
 
     /// @brief カメラ
     /// @param camera 
-    static void CheckCamera(Camera& camera, const char* label = "Camera");
-
-    static void CheckParticle ();
+    static void CheckCamera(CameraMatrix& cameraMatrix, CameraData& cameraOption, const char* label = "Camera");
+    static void CheckShericalCoordinate(SphericalCoordinate& sphericalCoordinate);
+    static void CheckParticle (ParticleManager* particleManager);
     static void CheckEmitter(Emitter& emitter, const char* label = "Emitter");
     /// @brief 色
     /// @param color 
@@ -117,8 +126,6 @@ public:
     static void SwitchFlag(bool& flag, const char* label);
     static void Button(const char* label, std::function<void()> onSwitch);
 
-
-
 private:
     /// @brief 光源
 /// @param directionalLights 
@@ -128,6 +135,7 @@ private:
 /// @param CheckSpotLight 
 /// @param lightType 
     static void CheckSpotLight();
+   
     static void CheckPointLightData();
 };
 

@@ -9,9 +9,8 @@ void DebugLog(const std::string& message) {
     OutputDebugStringA(message.c_str());
 }
 
-void LogFile::Create()
-{
-    // ログのディレクトリを用意
+LogFile::LogFile()
+{    // ログのディレクトリを用意
     std::filesystem::create_directory("logs");
     //現在時刻を取得（UTC時刻）
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
@@ -28,6 +27,8 @@ void LogFile::Create()
     std::ofstream logStream(logFilePath);
 
     stream_.open(logFilePath);
+
+    LogFile::Log("CreateLogFile");
 }
 
 //ログを出力する関数

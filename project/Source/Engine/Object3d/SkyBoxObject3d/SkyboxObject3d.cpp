@@ -3,11 +3,6 @@
 #include"AABB.h"
 #include"SrvManager/SrvManager.h"
 
-SkyboxObject3d::~SkyboxObject3d()
-{
-    Object3d::Finalize();
-}
-
 void SkyboxObject3d::Create()
 {
 
@@ -32,11 +27,6 @@ void SkyboxObject3d::Initialize()
     worldTransform_.eTransform_.scale = { 20.0f,20.0f,20.0f };
 }
 
-void SkyboxObject3d::Update()
-{
-    WorldTransformUpdate(worldTransform_);
-}
-
 void SkyboxObject3d::Draw(Camera& camera)
 {
     //データを書き込む
@@ -48,22 +38,19 @@ void SkyboxObject3d::Draw(Camera& camera)
     viewMat = Multiply(viewMat, camera.GetProjectionMatrix());
     transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, viewMat);
 
-    //ここはどこからでもアクセス可能なため　後で変更する
-    auto* commandList = DirectXCommon::GetCommandList();
-
     if (skyBox_) {
         //RootSignatureの設定
-        commandList->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::SKYBOX));
+        commandList_->SetGraphicsRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::SKYBOX));
         //PSOを設定
-        commandList->SetPipelineState(PSO::GetGraphicsPipelineStateSkyBox().Get());
+        commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateSkyBox().Get());
         //マテリアルCBufferの場所を設定
-        commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
-        commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
         //拡散反射テクスチャ 
-        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE]);
+        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE],commandList_);
         //メッシュの描画
-        MeshDraw(commandList);
+        MeshDraw();
     }
 }
 

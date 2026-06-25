@@ -326,6 +326,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\Stage\StageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Math\Matrix\CameraMatrix.h" />
     <ClInclude Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.h" />
     <ClInclude Include="Source\Engine\RtvManager\RtvManager.h" />
     <ClInclude Include="Source\Engine\Mesh\Primitive\Primitive.h" />
@@ -516,6 +517,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\memo.json" />
     <None Include="Resource\JsonFiles\notes.json" />
+    <None Include="Resource\JsonFiles\testtttttt.json" />
     <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
   </ItemGroup>

@@ -13,6 +13,8 @@
 
 #include"Texture.h"
 
+class CommandList;
+
 class Sprite
 {
 public:
@@ -23,7 +25,10 @@ public:
         float32_t4x4 uvTransform;
     };
 
-    ~Sprite();
+
+public:
+    static void SetCommandList(ID3D12GraphicsCommandList* commandList);
+public:
     void Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
     void Update();
@@ -77,6 +82,7 @@ private:
     void UpdateUV();
 
 private:
+    static ID3D12GraphicsCommandList* commandList_;
 
     uint32_t textureHandle_ = 0;
     Vector2 anchorPoint_ = { 0.0f,0.0f };
@@ -84,7 +90,7 @@ private:
     bool isFlipY_ = false;
     Vector2 textureLeftTop = { 0.0f,0.0f };
     Vector2 textureSize = { 100.0f,100.0f };
-    static ID3D12GraphicsCommandList* commandList;
+
 
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};

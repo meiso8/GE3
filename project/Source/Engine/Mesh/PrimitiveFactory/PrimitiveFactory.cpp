@@ -1,54 +1,40 @@
 #include "PrimitiveFactory.h"
  
 std::unordered_map<std::string, Primitive>PrimitiveFactory::primitives_;
-
-Primitive* PrimitiveFactory::GetPrimitive(const Primitive::TopologyType& topologyType)
-{
-    
-    switch (topologyType)
-    {
-    case Primitive::kPlane:
-       return GetPrimitiveForName("Plane");
-        break;
-    case Primitive::kCube:
-        return  GetPrimitiveForName("Cube");
-        break;
-    case Primitive::kSphere:
-        return  GetPrimitiveForName("Sphere");
-        break;
-    case Primitive::kRing:
-        return  GetPrimitiveForName("Ring");
-        break;
-    case Primitive::kCylinder:
-        return  GetPrimitiveForName("Cylinder");
-        break;
-    default:
-        return  GetPrimitiveForName("Plane");
-        break;
-    }
-
-}
-
-void PrimitiveFactory::CreateAllPrimitive()
-{
-    primitives_["Plane"].Create(PrimitiveGenerator::CreatePlane({ 1.0f,1.0f }));
-    primitives_["Cube"].Create(PrimitiveGenerator::CreateCube());
-    primitives_["Sphere"].Create(PrimitiveGenerator::CreateSphere());
-    primitives_["Ring"].Create(PrimitiveGenerator::CreateRing());
-    primitives_["Cylinder"].Create(PrimitiveGenerator::CreateCylinder());
-}
+std::unordered_map<Primitive::MeshType, std::string>PrimitiveFactory::meshType_;
 
 Primitive* PrimitiveFactory::GetPrimitiveForName(const std::string name)
 {
-    if (primitives_.contains(name)) { 
+    if (primitives_.contains(name)) {
         return &primitives_.at(name);
     };
-    
+
     //名前がなかった。
     return nullptr;
 }
 
-MeshData PrimitiveFactory::GetMeshData(const Primitive::TopologyType& topologyType)
+Primitive* PrimitiveFactory::GetPrimitive(const Primitive::MeshType& topologyType)
+{ 
+   return GetPrimitiveForName(meshType_[topologyType]);
+}
+
+void PrimitiveFactory::CreateAllPrimitive()
+{
+    CreateAndSetMeshType(Primitive::kPlane);
+    CreateAndSetMeshType(Primitive::kCube);
+    CreateAndSetMeshType(Primitive::kSphere);
+    CreateAndSetMeshType(Primitive::kRing);
+    CreateAndSetMeshType(Primitive::kCylinder);
+}
+
+void PrimitiveFactory::CreateAndSetMeshType(const Primitive::MeshType& topologyType)
+{
+    MeshData mesh = GetMeshData(topologyType);
+    primitives_[mesh.meshName].Create(mesh);
+    meshType_[topologyType] = mesh.meshName;
+}
+
+MeshData PrimitiveFactory::GetMeshData(const Primitive::MeshType& topologyType)
 {
     switch (topologyType)
     {

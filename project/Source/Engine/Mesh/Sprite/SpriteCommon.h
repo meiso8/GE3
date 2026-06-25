@@ -1,9 +1,9 @@
 #pragma once
 #include<d3d12.h>
 #include"DirectXCommon.h"
-#include"commandList.h"
-#include"PSO/RootSignature.h"
 
+#include"PSO/RootSignature.h"
+class CommandList;
 class PSO;
 
 class SpriteCommon
@@ -15,11 +15,11 @@ private:
     static uint32_t* indexData_;
 
 public:
-    static void Finalize();
-     static void Initialize();
+     void Finalize();
+     void Initialize(RootSignature*  rootSignature);
+
      static void SetIndexBuffer(ID3D12GraphicsCommandList* commandList);
-     static void PreDraw(ID3D12GraphicsCommandList* commandList);
-     static void PreFontDraw(ID3D12GraphicsCommandList* commandList);
+     static void PreDraw(uint32_t blendMode, ID3D12GraphicsCommandList* commandList);
      static void DrawCall(ID3D12GraphicsCommandList* commandList);
 private:
     static void CreateIndexResource();

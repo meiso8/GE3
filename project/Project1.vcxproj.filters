@@ -1076,6 +1076,9 @@
     <ClInclude Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Math\Matrix\CameraMatrix.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\JsonFiles\config.json" />
@@ -1084,6 +1087,7 @@
     <None Include="Resource\JsonFiles\memo.json" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
     <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
+    <None Include="Resource\JsonFiles\testtttttt.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">

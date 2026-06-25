@@ -27,7 +27,7 @@ public:
 class Primitive {
 
 public:
-    enum TopologyType {
+    enum MeshType {
         kPlane,
         kCube,
         kSphere,
@@ -35,8 +35,8 @@ public:
         kCylinder,
         kMaxTopology,
     };
-    enum class MeshType {
-        kNormal, // 三角形ポリゴン
+    enum class TopologyType {
+        kTriangle, // 三角形ポリゴン
         kLine    // ライン
     };
 
@@ -56,15 +56,20 @@ public:
     UINT GetIndexCount() { return indexCount_; };
     UINT GetVertexCount() { return vertexCount_; };
     D3D_PRIMITIVE_TOPOLOGY& GetTopology() {return topology_; }
-    
+    std::string& GetMeshName() { return meshName_; };
 protected:
     UINT vertexCount_ = 0;
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
+    std::string meshName_ = "unKnown";
 private:
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     D3D12_INDEX_BUFFER_VIEW  indexBufferView_{};
     D3D_PRIMITIVE_TOPOLOGY topology_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
     Microsoft::WRL::ComPtr <ID3D12Resource> indexResource_{};
-    MeshType meshType_ = MeshType::kNormal; // デフォルトはNormal
+
     UINT indexCount_ = 0;
+
+    //トポロジータイプ
+    TopologyType topologyType_ = TopologyType::kTriangle;
+ 
 };

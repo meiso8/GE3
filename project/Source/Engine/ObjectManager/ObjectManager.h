@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "Object3d.h"
 #include"ObjectCommandManager.h"
+#include "nlohmann/json.hpp"
 
 class ObjectManager
 {
@@ -25,7 +26,10 @@ public:
     // シーン切り替え時などの全クリア
     void Clear();
     void Initialize();
-private:
+    void SeetCommandList(ID3D12GraphicsCommandList* commandList);
+private:   
+    void Save();
+    void SetName();
     bool UpdateImGuizmo(Camera& camera);
     ObjectManager() = default;
     ~ObjectManager() = default;
@@ -34,6 +38,10 @@ private:
     std::unordered_map<uint32_t, Object3d* > idMap_;
     uint32_t nextID_ = 1; // 1から順にAllocateしていく
     uint32_t clickedID_ = 0;
+    /// @brief オブジェクトエディターのファイル名を設定しておく
+    const std::string kJsonFileName_ = "objectEditor";
+    /// @brief jsonファイル名
+    std::string jsonFileName_ = kJsonFileName_;
 
 };
 

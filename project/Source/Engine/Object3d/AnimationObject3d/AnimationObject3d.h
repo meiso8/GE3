@@ -8,12 +8,13 @@ class DebugBone;
 struct SkinCluster;
 class SkinningModel;
 struct ModelData;
+class CommandList;
 
 class AnimationObject3d :public Object3d
 {
 public:
+
     AnimationObject3d();
-    ~AnimationObject3d();
     void Initialize()override;
     void InitTime();
     void SetModelAndLoadAnimation(Model* model);
@@ -25,7 +26,7 @@ public:
     void Draw(Camera& camera, const BlendMode& blendMode = kBlendModeNormal, const CullMode& cullMode = kCullModeBack, const MaskMode maskMode = kAll,const bool usePSOKye =false, const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX)override;
     /// @brief メッシュデータのドロー
     /// @param commandList コマンドリストをセットする
-    void MeshDraw(ID3D12GraphicsCommandList* commandList)override;
+    void MeshDraw()override;
     void SetSkinning(const bool& flag) { isSkinning_ = flag; }
     void SetAnimation(const std::string animName) {
         currentAnimation_ = animName;
@@ -34,6 +35,8 @@ public:
     std::map<std::string, Animation>& GetAnimations();
     Matrix4x4 GetWorldJointMatrix(const std::string name);
 private:
+
+
     void UpdateAnimation();
     float animationTime_ = 0.0f;
     std::string currentAnimation_ = "Idle";

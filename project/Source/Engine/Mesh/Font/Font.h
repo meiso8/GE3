@@ -14,6 +14,8 @@
 #include"Texture.h"
 #include"hlslTypeToCpp.h"
 
+class CommandList;
+
 class Font
 {
 public:
@@ -23,14 +25,21 @@ public:
         float32_t4x4 uvTransform;
     };
 
-    Font();
-    ~Font();
-    void Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },  const Vector2& size = {64.0f,64.0f},const Vector2& anchorPoint = {0.0f,0.0f});
+public:
 
-    void Update();
-    void UpdateAnchorPoint();
+    static void SetCommandList(ID3D12GraphicsCommandList* commandList);
     static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
     void Draw();
+
+    void Create(
+        const TextureFactory::Handle& textureHandle,
+        const Vector2& position, 
+        const Vector4& color = { 1.0f,1.0f,1.0f,1.0f },
+        const Vector2& size = {64.0f,64.0f},
+        const Vector2& anchorPoint = {0.0f,0.0f}
+    );
+    void Update();
+    void UpdateAnchorPoint();
 
     void SetSize(const Vector2& size) { size_ = size; };
     void SetPosition(const Vector2& position) { position_ = position; }
@@ -58,8 +67,7 @@ public:
     Vector2& GetAnchorPoint() { return anchorPoint_; }
 
     /// @brief アンカーポイント
-    /// @param anchorPoint 0.0f~1.0f
-    
+    /// @param anchorPoint 0.0f~1.0f 
     void SetAnchorPoint(const Vector2& anchorPoint) { 
         anchorPoint_ = anchorPoint;
         UpdateAnchorPoint();
@@ -85,15 +93,17 @@ private:
     void UpdateUV();
 
 private:
-    bool inUse_ = false;
+    //コマンドリストの借り物
+    static ID3D12GraphicsCommandList* commandList_;
 
+    bool inUse_ = false;
     uint32_t textureHandle_ = 0;
     Vector2 anchorPoint_ = { 0.0f,0.0f };
     bool isFlipX_ = false;
     bool isFlipY_ = false;
     Vector2 textureLeftTop = { 0.0f,0.0f };
     Vector2 textureSize = { 100.0f,100.0f };
-    static ID3D12GraphicsCommandList* commandList;
+
 
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};

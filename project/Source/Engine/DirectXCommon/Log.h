@@ -10,6 +10,6 @@ class LogFile {
 private:
     static std::ofstream stream_;
 public:
-    static void Create();
+    LogFile();
     static void Log(const std::string& message);
 };

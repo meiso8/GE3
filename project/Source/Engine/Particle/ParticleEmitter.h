@@ -5,6 +5,7 @@
 #include"Vector4.h"
 #include"BlendMode.h"
 #include"Particle.h"
+#include"AccelerationField.h"
 
 class Camera;
 
@@ -13,6 +14,7 @@ struct Emitter
     std::string name = "unknown";
     bool isLoop_ = false;
     bool useRadialEmission_ = false;
+    bool useBillboard_ = true;
 
     WorldTransform transform;//エミッタのTransfrom
     AABB translateAABB_ = { 0.0f };
@@ -36,13 +38,16 @@ struct Emitter
     //経度の移動速度
     float polarSpeed = 0.0f;
     MinMax polarSpeedMinMax = { 0.0f,0.0f };
+    AccelerationField accelerationField_;
 };
+
+class ParticleManager;
 
 class ParticleEmitter
 {
 private:
    Emitter emitter_{};
-public:
+   static ParticleManager* particleManager_;
 public:
     ParticleEmitter();
     ~ParticleEmitter() = default;
@@ -53,7 +58,7 @@ public:
     void SetName(const std::string name) { emitter_.name = name; }
     void SetMovement(ParticleMovements& movement) { emitter_.movement; }
     void SetParent(WorldTransform& parent);
-    std::unique_ptr <ParticleGroup>& GetGroup();
+    static void SetParticleManager(ParticleManager* particleManager);
 private:
     void UpdateTimer();
 
