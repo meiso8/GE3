@@ -6,12 +6,12 @@
 #include<wrl.h>
 #include<array>
 
-class RtvManager;
+class RtvDescriptorHeap;
 class RenderTargetView
 {
 public:
     void Create(
-        std::array< Microsoft::WRL::ComPtr <ID3D12Resource>, 2>swapChainResources, RtvManager& rtvManager);
+        std::array< Microsoft::WRL::ComPtr <ID3D12Resource>, 2>swapChainResources, RtvDescriptorHeap* rtvDescriptorHeap);
     D3D12_RENDER_TARGET_VIEW_DESC& GetDesc() { return rtvDesc_; }
     const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandle(size_t index) const;
 

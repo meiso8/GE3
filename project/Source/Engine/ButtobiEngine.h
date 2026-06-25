@@ -6,8 +6,13 @@
 #include"ImGuiClass.h"
 
 #include"TimeManager.h"
-#include"SRVmanager/SrvManager.h"
-#include"Rtvmanager/Rtvmanager.h"
+
+#include"SrvDescriptorHeap.h"
+#include"RtvDescriptorHeap.h"
+#include"DsvDescriptorHeap.h"
+
+
+
 #include"Input.h"
 #include"Log.h"
 #include"PrimitiveFactory/PrimitiveFactory.h"
@@ -39,9 +44,11 @@ private:
     /// @brief DirectXCommon後で改変する
     std::unique_ptr<DirectXCommon> directXCommon_ = nullptr;
     /// @brief RTV管理
-    std::unique_ptr<RtvManager> rtvManager = nullptr;
+    std::unique_ptr<RtvDescriptorHeap> rtvDescriptorHeap_ = nullptr;
     /// @brief SRV管理
-    std::unique_ptr<SrvManager> srvManager = nullptr;
+    std::unique_ptr<SrvDescriptorHeap> srvDescriptorHeap_ = nullptr;
+    /// @brief SRV管理
+    std::unique_ptr<DsvDescriptorHeap> dsvDescriptorHeap_ = nullptr;
 
     /// @brief 方向ライト
     std::unique_ptr<DirectionalLightManager> directionalLightManager_ = nullptr;

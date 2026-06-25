@@ -2,7 +2,7 @@
 #include"ModelData.h"
 #include"Bone.h"
 #include"DirectXCommon.h"
-#include"SRVmanager/SrvManager.h"
+#include"SrvDescriptorHeap.h"
 #include<dxgi1_6.h>
 #include <algorithm>
 #include"MakeMatrix.h"
@@ -17,12 +17,12 @@ SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelDa
     skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
     skinCluster.mappedPalette = { mappedPalette,skeleton.joints.size() };//spanを使ってアクセスするようにする
     //インデックスを格納
-    skinCluster.paletteSrvIndex = SrvManager::Allocate();
-    skinCluster.paletteSrvHandle.first = SrvManager::GetCPUDescriptorHandle(skinCluster.paletteSrvIndex);
-    skinCluster.paletteSrvHandle.second = SrvManager::GetGPUDescriptorHandle(skinCluster.paletteSrvIndex);
+    skinCluster.paletteSrvIndex = SrvDescriptorHeap::Allocate();
+    skinCluster.paletteSrvHandle.first = SrvDescriptorHeap::GetCPUDescriptorHandle(skinCluster.paletteSrvIndex);
+    skinCluster.paletteSrvHandle.second = SrvDescriptorHeap::GetGPUDescriptorHandle(skinCluster.paletteSrvIndex);
 
     //palette用のsrvを作成
-    SrvManager::CreateSRVforStructuredBuffer(skinCluster.paletteSrvIndex, skinCluster.paletteResource.Get(), UINT(skeleton.joints.size()), sizeof(WellForGPU));
+    SrvDescriptorHeap::CreateSRVforStructuredBuffer(skinCluster.paletteSrvIndex, skinCluster.paletteResource.Get(), UINT(skeleton.joints.size()), sizeof(WellForGPU));
 
     //influence用のResourceを確保
     skinCluster.influenceResource = DirectXCommon::CreateBufferResource(sizeof(VertexInfluence) * modelData.vertices.size());

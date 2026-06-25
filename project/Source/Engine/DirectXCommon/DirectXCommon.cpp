@@ -4,8 +4,9 @@
 #include "ScissorRect.h"
 #include<cassert>
 
-#include"SRVmanager/SrvManager.h"
-#include"RtvManager/RtvManager.h"
+#include"SrvDescriptorHeap.h"
+#include"RtvDescriptorHeap.h"
+
 #include "PostProcessManager/PostProcessManager.h"
 
 #include"DebugUI.h"
@@ -15,7 +16,6 @@ using namespace Microsoft::WRL;
 ComPtr<ID3D12Device> DirectXCommon::device = nullptr;
 
 ComPtr<ID3D12DescriptorHeap> DirectXCommon::dsvDescriptorHeap = nullptr;
-uint32_t DirectXCommon::descriptorSizeDSV = 0;
 
 std::unique_ptr< DxcCompiler> DirectXCommon::dxcCompiler = nullptr;
 
@@ -55,6 +55,7 @@ void DirectXCommon::PreInitialize(Window& window)
     InitializeCommand();
     CreateSwapChain();
     CreateDepthBuffer();
+
     DescriptorHeapSettings();
     //コマンドリストのセット
     barrier.SetCommandList(commandList_->Get());
@@ -76,9 +77,9 @@ void DirectXCommon::CreateDepthStencilResourceSRV()
     depthTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     depthTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
     depthTextureSrvDesc.Texture2D.MipLevels = 1;
-    depthTextureData_.srvIndex = SrvManager::Allocate();
-    depthTextureData_.srvHandleCPU = SrvManager::GetCPUDescriptorHandle(depthTextureData_.srvIndex);
-    depthTextureData_.srvHandleGPU = SrvManager::GetGPUDescriptorHandle(depthTextureData_.srvIndex);
+    depthTextureData_.srvIndex = SrvDescriptorHeap::Allocate();
+    depthTextureData_.srvHandleCPU = SrvDescriptorHeap::GetCPUDescriptorHandle(depthTextureData_.srvIndex);
+    depthTextureData_.srvHandleGPU = SrvDescriptorHeap::GetGPUDescriptorHandle(depthTextureData_.srvIndex);
     DirectXCommon::GetDevice()->CreateShaderResourceView(depthTextureData_.depthStencilResource.Get(), &depthTextureSrvDesc, depthTextureData_.srvHandleCPU);
     LogFile::Log("Rendertexture : DepthTextureResource : CreateShaderResourceView\n");
 
@@ -133,7 +134,7 @@ void DirectXCommon::RenderTexturePreDraw()
     // IDバッファ(Index 2)のクリア処理
     commanList->ClearRenderTargetView(renderTextureDataID.rtvHandleCPU, clearColor, 0, nullptr);
     //SRV管理の描画前処理
-    SrvManager::PreDraw(commanList);
+    SrvDescriptorHeap::PreDraw(commanList);
 
     //ビューポート領域の設定
     commanList->RSSetViewports(1, &viewport);//Viewportを設定
@@ -161,7 +162,7 @@ void DirectXCommon::DrawRenderTexture()
     //描画先を画面(バックバッファ)のRTVにする
     // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
-    auto backBufferRTV = RtvManager::GetCPUDescriptorHandle(backBufferIndex);
+    auto backBufferRTV = RtvDescriptorHeap::GetCPUDescriptorHandle(backBufferIndex);
 
     ppm.Execute(renderTexture_, backBufferRTV, &barrier, depthTextureData_.srvIndex, kBlendModeMultiply);
 }
@@ -248,7 +249,7 @@ void DirectXCommon::PreDraw()
     commanList->ClearRenderTargetView(rtvClass.GetHandle(backBufferIndex), clearColor, 0, nullptr);
 
     //SRV管理の描画前処理
-    SrvManager::PreDraw(commanList);
+    SrvDescriptorHeap::PreDraw(commanList);
 
     //ビューポート領域の設定
     commanList->RSSetViewports(1, &viewport);//Viewportを設定
@@ -366,23 +367,10 @@ void DirectXCommon::CreateDepthBuffer()
 
 }
 
-void DirectXCommon::DescriptorHeapSettings()
-{
-
-    descriptorSizeDSV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
-    //DSV用ヒープでディスクリプタの数は1。DSVはShader内で触るものではないので、ShaderVisibleはfalse
-    if (dsvDescriptorHeap == nullptr) {
-        dsvDescriptorHeap = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
-        LogFile::Log("Create DSV DescriptorHeap\n");
-    }
-
-}
-
-void DirectXCommon::InitializeRenderTargetView(RtvManager& rtvManager)
+void DirectXCommon::InitializeRenderTargetView(RtvDescriptorHeap* rtvDescriptorHeap)
 {
     //RTVを作る
-    rtvClass.Create(swapChainResources, rtvManager);
+    rtvClass.Create(swapChainResources, rtvDescriptorHeap);
     LogFile::Log("CreateRTV\n");
 
 }
@@ -430,10 +418,10 @@ void DirectXCommon::CreateDXCCompiler()
 }
 
 
-void DirectXCommon::InitializeRenderTexture(RtvManager& rtvManager)
+void DirectXCommon::InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap)
 {
     renderTexture_ = RenderTexture::GetInstance();
-    renderTexture_->Create(rtvManager);
+    renderTexture_->Create(rtvDescriptorHeap);
     renderTexture_->SetCommandList(commandList_->Get());
 
 }
@@ -666,26 +654,3 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::UploadTextureData(
     return intermediateResource;
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetDSVCPUDescriptorHandle(uint32_t index)
-{
-    return GetCPUDescriptorHandle(dsvDescriptorHeap.Get(), descriptorSizeDSV, index);
-}
-
-D3D12_GPU_DESCRIPTOR_HANDLE DirectXCommon::GetDSVGPUDescriptorHandle(uint32_t index)
-{
-    return GetGPUDescriptorHandle(dsvDescriptorHeap.Get(), descriptorSizeDSV, index);
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index)
-{
-    D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-    handleCPU.ptr += (descriptorSize * index);
-    return handleCPU;
-}
-
-D3D12_GPU_DESCRIPTOR_HANDLE DirectXCommon::GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index)
-{
-    D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-    handleGPU.ptr += (descriptorSize * index);
-    return handleGPU;
-}

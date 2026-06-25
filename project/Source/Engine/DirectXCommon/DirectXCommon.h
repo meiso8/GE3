@@ -29,7 +29,7 @@ class RtvManager;
 class DirectXCommon
 {
 public:
-    static uint32_t descriptorSizeDSV;
+
 private:
 
     struct DepthTextureData {
@@ -98,8 +98,8 @@ public:
             ;
     }
     
-    void InitializeRenderTexture(RtvManager& rtvManager);
-    void InitializeRenderTargetView(RtvManager& rtvManager);
+    void InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap);
+    void InitializeRenderTargetView(RtvDescriptorHeap* rtvDescriptorHeap);
 
     void UpdateRenderTexture();
     /// @brief BufferResourceの作成関数

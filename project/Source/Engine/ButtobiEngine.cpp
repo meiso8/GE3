@@ -65,15 +65,15 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     LogFile::Log("DirectXCommon PreInitialize");
 
     //rtvManagerの生成
-    rtvManager = std::make_unique<RtvManager>();
+    rtvDescriptorHeap_ = std::make_unique<RtvDescriptorHeap>();
 
-    directXCommon_->InitializeRenderTargetView(*rtvManager);
+    directXCommon_->InitializeRenderTargetView(rtvDescriptorHeap_.get());
     LogFile::Log("DirectXCommon InitializeRenderTargetView");
     directXCommon_->PostInitialize();
     LogFile::Log("DirectXCommon PostInitialize");
 
     //SRV管理
-    srvManager = std::make_unique<SrvManager>();
+    srvDescriptorHeap_ = std::make_unique<SrvDescriptorHeap>();
 
 #ifdef USE_IMGUI
     //ImGuiの初期化。
@@ -83,7 +83,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
 
     auto* commandList = directXCommon_->GetCommandListClass()->Get();
 
-    directXCommon_->InitializeRenderTexture(*rtvManager);
+    directXCommon_->InitializeRenderTexture(*rtvDescriptorHeap_);
     directXCommon_->CreateDepthStencilResourceSRV();
 
     auto* pso = PSO::GetInstance();
@@ -380,9 +380,9 @@ void ButtobiEngine::Finalize() {
 #endif
 
     //RTVManagerのリセット
-    rtvManager.reset();
+    rtvDescriptorHeap_.reset();
     //SRVManagerのリセット
-    srvManager.reset();
+    srvDescriptorHeap_.reset();
     //DirecectXCommonのリセット
     directXCommon_->Finalize();
     directXCommon_.reset();

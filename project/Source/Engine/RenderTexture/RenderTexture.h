@@ -9,7 +9,7 @@
 #include"Texture.h"
 #include"TransitionBarrier.h"
 
-class RtvManager;
+class RtvDescriptorHeap;
 class CommandList;
 
 class RenderTexture
@@ -132,7 +132,7 @@ public:
     };
 
     Microsoft::WRL::ComPtr<ID3D12Resource>& GetMaterialResouce(const PSO::EffectType& effectType);
-    void Create(RtvManager& rtvManager);
+    void Create(RtvDescriptorHeap* rtvDescriptorHeap);
   
     void SetCommandList(ID3D12GraphicsCommandList* commandList);
 
@@ -166,7 +166,7 @@ protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
 private:
-    void CreateResource(const uint32_t index, RtvManager& rtvManager, DXGI_FORMAT format, bool createSRV);
+    void CreateResource(const uint32_t index, RtvDescriptorHeap* rtvDescriptorHeap, DXGI_FORMAT format, bool createSRV);
     void CreateMaterialBufferForGrayScale();
     void CreateMaterialBufferForVignette();
     void CreateMaterialBufferForBoxFilter();
