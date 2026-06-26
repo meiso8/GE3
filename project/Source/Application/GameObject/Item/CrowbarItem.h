@@ -9,6 +9,8 @@ public:
         name_ = "CrowbarItem";
         description_ = "固く閉ざされた扉をこじ開けることができる。";
         SetModel("crowbarItem");
+        object_->SetObjectName(name_);
+        object_->RegisterObject();
     }
 
     std::shared_ptr<Item> CombineWith(const std::shared_ptr<Item>& other) override;

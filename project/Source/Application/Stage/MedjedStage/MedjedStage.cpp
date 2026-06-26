@@ -36,7 +36,6 @@ void MedjedStage::Initialize()
     //パーティクルの初期化
     particleEmitters_[kMedjed_Particle]->GetEmitter().transform.Parent(GetMedjed()->GetWorldTransform());
 
-
     //パーティクルのリセット
     ParticleManager::ResetAll();
 
@@ -55,7 +54,6 @@ void MedjedStage::Initialize()
 
     itemManager_->GenerateItems({ "SunRod" });
     Sound::PlaySE(SoundFactory::VOICE_Asobimasyo, 0.5f);
-
 }
 
 void MedjedStage::Update()

@@ -27,6 +27,7 @@ public:
     bool isUsed_ = false;
     bool isGet_ = false;
     bool isGetAnimEnd_ = false;
+
     // UI表示用（ImGuiなど） 
     virtual void Init();
     virtual void DrawInfoUI();
@@ -41,13 +42,22 @@ public:
     void SetRotate(const Vector3& rotate) { object_->SetRotate(rotate); };
     void Scale(const Vector3 start, const Vector3 end);
     void SetScale(const Vector3& scale) { object_->SetScale(scale); }
+    void InitScale() const{ object_->SetScale(Math::UNIT_SCALE); };
     void SetScreenStartPos();
     void UpdateAniTimer(const float& endTime = 4.0f);
     float aniTimer_ = 0.0f;
    virtual void LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV);
    void SetStartEndPos(const Vector3& start, const Vector3& end);
+
+   const Vector3& GetUseRotate() { return useRotate_; }
+       const Vector3& GetEndPosOffset() { return endPosOffset_; }
+       const Vector3& GetStartPosOffset() { return startPosOffset_; }
+
 protected:
 
+    Vector3 useRotate_ = { 4.7f,1.57f,0.0f };
+    Vector3 endPosOffset_ = { -0.3f,0.3f,0.01f };
+    Vector3 startPosOffset_ = { -0.3f,0.5f,0.01f };
 
    Vector3 startPos_ = { 0.0f };
    Vector3 endPos_ = { 0.0f };

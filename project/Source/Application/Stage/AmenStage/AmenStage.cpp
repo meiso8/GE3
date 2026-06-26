@@ -19,7 +19,7 @@ AmenStage::AmenStage()
 
 void AmenStage::Initialize()
 {
-
+    itemManager_->GenerateItems({ "CrowbarItem" });
     memoManager_->GenerateMemos({ TextureFactory::MEMO1, TextureFactory::MEMO3,TextureFactory::MEMO4,TextureFactory::BOOK4 });
     // ミイラ前に移動
     player_->Init({ 0.0f, 0.0f, -5.0f });
@@ -27,7 +27,7 @@ void AmenStage::Initialize()
     Sound::StopAllSound();
     slidePuzzleSystem_->Initialize();
     backGround_->Initialize();
-    itemManager_->Init();
+
     amenRa_->Initialize();
     Sound::bgmVolume_ = 0.1f;
 }

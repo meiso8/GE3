@@ -14,9 +14,23 @@ ItemManager::ItemManager()
 
 void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
 {
-    items_.clear(); // 既存のアイテムをクリア
+    
+    // 1. 前のステージの「未取得」のアイテムだけを削除（所持品は残す）
+    for (auto it = items_.begin(); it != items_.end(); ) {
+        if (!it->second->isGet_) {
+            it = items_.erase(it); // 未取得なら削除してイテレータを進める
+        } else {
+            ++it;
+        }
+    }
 
     for (const auto& name : itemNames) {
+  
+        // すでに存在しているなら生成をスキップ
+        if (items_.find(name) != items_.end()) {
+            continue;
+        }     
+        
         std::shared_ptr<Item> item = nullptr;
 
         if (name == "CrowbarItem") {
@@ -34,12 +48,11 @@ void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
             items_[name] = item;
         }
     }
-
-    itemSlot_.Init();
 }
 
 void ItemManager::Init() {
     items_.clear(); // 既存のアイテムをクリア
+    itemSlot_.Init();
 }
 
 void ItemManager::Update() {
@@ -57,6 +70,10 @@ void ItemManager::DrawGetItem()
 void ItemManager::Draw(Camera& camera) {
   
     for (auto& [name, item] : items_) {
+        if (!item) continue;
+        //★ 取得済みのアイテムはステージ上には描画しない スロット側で描画する
+        if (item->isGet_) continue;
+
         item->Draw(camera);
     }
 
@@ -95,6 +112,9 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
     for (auto& [name, item] : items_) {
         if (!item) continue;
 
+        // ★ すでに取得済みのアイテムはレイキャスト（クリック判定）の対象外にする
+        if (item->isGet_) continue;
+
         const auto& obj = item->object_;
         if (!obj) continue;
 
@@ -115,21 +135,20 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
     return nullptr;
 }
 
-void ItemManager::UseItemFromSlot(const Vector3& pos)
+void ItemManager::UseItemFromSlot(const Vector3& pos,const char* name)
 {
 
-    auto item = GetItem("GoldHeart");
+    auto item = GetItem(name);
 
     if (InputBind::IsClick()) {
+
         if (item && !item->isUsed_ && item->isGet_) {
             SoundManager::PlayCorrectSE();
             item->Use();
-            Vector3 offset = { -0.3f,0.5f,0.01f };
-            Vector3 endOffset = { -0.3f,0.3f,0.01f };
-            item->SetStartEndPos(pos + offset, pos + endOffset);
-            item->SetRotate({ 4.7f,1.57f,0.0f });
-            item->SetScale({ 1.0f,1.0f,1.0f });
+            item->SetStartEndPos(pos + item->GetStartPosOffset(), pos + item->GetEndPosOffset());
+            item->SetRotate(item->GetUseRotate());
+            //スケールの初期化
+            item->InitScale();
         }
     }
-
 }

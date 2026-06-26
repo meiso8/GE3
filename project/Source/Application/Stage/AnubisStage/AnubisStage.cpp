@@ -19,7 +19,7 @@ void AnubisStage::Initialize()
     Sound::StopAllSound();
 
     backGround_->Initialize();
-    itemManager_->Init();
+
 
     Sound::bgmVolume_ = 0.1f;
 

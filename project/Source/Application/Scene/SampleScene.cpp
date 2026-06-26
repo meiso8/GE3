@@ -83,9 +83,7 @@ void SampleScene::Initialize() {
     memoManager_->Initialize();
     //アメンステージにする
     stageManager_->SetNestStage("AmenStage");
-#ifdef _DEVELOP
-    stageManager_->SetNestStage("AnubisStage");
-#endif
+
     sceneChange_->Initialize();
 
     //現在のステージの初期化
@@ -188,13 +186,14 @@ void SampleScene::SetSceneChange()
 void SampleScene::Debug()
 {
 
+#ifdef USE_IMGUI
+
     if (Input::IsTriggerKey(DIK_V)) {
         stageManager_->SetNestStage("MedjedStage");
     }
     if (Input::IsTriggerKey(DIK_B)) {
         stageManager_->SetNestStage("AnubisStage");
     }
-#ifdef USE_IMGUI
 
     ImGui::Begin("Debug");
 

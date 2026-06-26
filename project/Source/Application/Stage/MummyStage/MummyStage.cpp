@@ -144,12 +144,16 @@ bool MummyStage::IsRayCastHit(RaySprite& raySprite)
 void MummyStage::CheckCollision(CollisionManager& collisionManager)
 {
 
-
     if (IsRayCastHit(*player_->raySprite_)) {
+
         //オープンし終わったら
         if (mummy_->GetIsOpenEnd()) {
+
             //心臓を使う
-            itemManager_->UseItemFromSlot(GetMummy()->GetWorldTransform().GetWorldPosition());
+            itemManager_->UseItemFromSlot(
+                GetMummy()->GetWorldTransform().GetWorldPosition(),
+                "GoldHeart"
+            );
         }
 
     }
