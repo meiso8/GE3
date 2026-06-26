@@ -3,13 +3,19 @@
 #include"TransformationMatrix.h"
 #include"MakeMatrix.h"
 #include"PSO.h"
-#include"SRVmanager/SrvManager.h"
+#include"SrvDescriptorHeap.h"
 #include"SpriteCamera.h"  
 #include"Log.h"
 
 ID3D12GraphicsCommandList* Font::commandList_  = nullptr;
-
-void Font::Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color, const Vector2& size, const Vector2& anchorPoint)
+/// @brief　SRV管理の借り物
+SrvDescriptorHeap* Font::srvDescriptorHeap_ = nullptr;
+void Font::Create(
+    const TextureFactory::Handle& textureHandle, 
+    const Vector2& position, 
+    const Vector4& color,
+    const Vector2& size, 
+    const Vector2& anchorPoint)
 {
 
     position_ = position;
@@ -75,11 +81,15 @@ void Font::SetTexture(const TextureFactory::Handle& textureHandle)
     textureHandle_ = Texture::GetSRVHandle(textureHandle);
 }
 
-void Font::SetCommandList(ID3D12GraphicsCommandList* commandList)
+void Font::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
-    assert(commandList);
-    LogFile::Log("Font SetCommandList");
+    assert(commandList_);
+    LogFile::Log("Font SetCommandList\n");
+
+    srvDescriptorHeap_ = srvDescriptorHeap;
+    assert(srvDescriptorHeap_);
+    LogFile::Log("Font Set　SrvDescriptorHeap\n");
 }
 
 void Font::PreDraw(uint32_t blendMode) {
@@ -112,7 +122,7 @@ void Font::Draw(
     //TransformationMatrixCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。rootParameter[2]。
-    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_,commandList_);
+    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandle_,commandList_);
     SpriteCommon::DrawCall(commandList_);
 
 };

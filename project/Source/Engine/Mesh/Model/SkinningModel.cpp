@@ -1,5 +1,4 @@
 #include "SkinningModel.h"
-#include"SRVmanager/SrvManager.h"
 #include"Model.h"
 
 SkinningModel::SkinningModel()
@@ -14,7 +13,7 @@ void SkinningModel::SetModel(Model* model)
     modelData_ = model->GetModelData();
     //スケルトンやクラスターを作成する
     *skeleton_ = Bone::CreateSkeleton(modelData_->rootNode);
-    *skinCluster_ = CreateSkinCluster(*skeleton_, *modelData_);
+    *skinCluster_ = Skin::CreateSkinCluster(*skeleton_, *modelData_);
 }
 
 void SkinningModel::SetRootSignatureAndGraphicsPipeline(

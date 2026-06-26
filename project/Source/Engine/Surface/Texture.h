@@ -15,6 +15,8 @@
 #include"Application/Loader/TextureFactory.h"
 #include<filesystem>
 
+class SrvDescriptorHeap;
+
 class Texture
 {
 
@@ -45,7 +47,10 @@ public:
     void Finalize();
     //初期化
     void Initialize();
-    void SetCommandList(ID3D12GraphicsCommandList* commandList);
+    /// @brief コマンドリストとSrvDescriptorHeapの設定関数
+    /// @param commandList コマンドリスト
+    /// @param srvDescriptorHeap SrvDescriptorHeap
+    void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
     //インデックスを返すロード関数
     static uint32_t LoadAndGetIndex(const std::filesystem::path& filePath);
     //SRVインデックスの開始番号
@@ -56,6 +61,7 @@ public:
     static const DirectX::TexMetadata& GetMetaData(const uint32_t& handle);
 private:
     static ID3D12GraphicsCommandList* commandList_;
+    static SrvDescriptorHeap* srvDescriptorHeap_;
     static std::unordered_map<std::filesystem::path, TextureData> textureDatas;
     static std::vector<uint32_t> srvIndexes_;
     static std::unordered_map<uint32_t, std::filesystem::path> handleToPath_;

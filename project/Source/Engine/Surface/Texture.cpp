@@ -1,28 +1,27 @@
 #include "Texture.h"
 #include"DirectXCommon.h"
-#include"StringUtility.h"
 #include<cassert>
-#include"SRVmanager/SrvManager.h"
+#include"SrvDescriptorHeap.h"
 #include"Log.h"
-
-using namespace StringUtility;
 
 std::vector<uint32_t> Texture::srvIndexes_;
 std::unordered_map<uint32_t, std::filesystem::path> Texture::handleToPath_;
 std::unordered_map<std::filesystem::path, Texture::TextureData> Texture::textureDatas;
 ID3D12GraphicsCommandList* Texture::commandList_ = nullptr;
-
+SrvDescriptorHeap* Texture::srvDescriptorHeap_ = nullptr;
 void Texture::Initialize()
 {
-    textureDatas.reserve(SrvManager::kMaxSRVCount);
+    textureDatas.reserve(SrvDescriptorHeap::kMaxSRVCount_);
     // handles 配列を初期化（未ロード状態を示すために 0 で埋める）
     srvIndexes_.resize(TextureFactory::TEXTURES, 0);
 }
 
-void Texture::SetCommandList(ID3D12GraphicsCommandList* commandList)
+void Texture::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
     assert(commandList_);
+    srvDescriptorHeap_ = srvDescriptorHeap;
+    assert(srvDescriptorHeap_);
 }
 
 
@@ -108,7 +107,7 @@ uint32_t Texture::GetSrvIndexByFilePath(const std::filesystem::path& filePath)
 D3D12_GPU_DESCRIPTOR_HANDLE Texture::GetSrvHandleGPU(const std::filesystem::path& filePath)
 {
     //テクスチャ番号が正常範囲内にある
-    assert(SrvManager::CanCreateSRV());
+    assert(srvDescriptorHeap_->CanUseIndex());
     //テクスチャデータの参照を取得
     return textureDatas[filePath].srvHandleGPU;
 }
@@ -116,7 +115,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE Texture::GetSrvHandleGPU(const std::filesystem::path
 const DirectX::TexMetadata& Texture::GetMetaData(const uint32_t& handle)
 {
     //テクスチャ番号が正常範囲内にある
-    assert(SrvManager::CanCreateSRV());
+    assert(srvDescriptorHeap_->CanUseIndex());
 
     return textureDatas[handleToPath_[handle]].metadata;
 }
@@ -129,7 +128,7 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
     }
 
     //テクスチャ枚数上限チェック
-    assert(SrvManager::CanCreateSRV());
+    assert(srvDescriptorHeap_->CanUseIndex());
 
     //テクスチャファイルを読んでプログラムで扱えるようにする
     DirectX::ScratchImage image{};
@@ -174,11 +173,11 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
     textureData.intermediateResource = DirectXCommon::UploadTextureData(commandList_,textureData.resource, mipImages);
 
     //テクスチャデータの要素数番号をSRVのインデックスとする
-    textureData.srvIndex = SrvManager::Allocate();
+    textureData.srvIndex = srvDescriptorHeap_->Allocate();
 
-    textureData.srvHandleCPU = SrvManager::GetCPUDescriptorHandle(textureData.srvIndex);
-    textureData.srvHandleGPU = SrvManager::GetGPUDescriptorHandle(textureData.srvIndex);
+    textureData.srvHandleCPU =  srvDescriptorHeap_->GetCPUDescriptorHandle(textureData.srvIndex);
+    textureData.srvHandleGPU =  srvDescriptorHeap_->GetGPUDescriptorHandle(textureData.srvIndex);
 
-    SrvManager::CreateSRVforTexture(textureData.srvIndex, textureData.resource.Get(), textureData.metadata);
+    srvDescriptorHeap_->CreateSRVforTexture(textureData.srvIndex, textureData.resource.Get(), textureData.metadata);
 
 }

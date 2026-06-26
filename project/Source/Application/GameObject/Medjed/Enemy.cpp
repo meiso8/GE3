@@ -58,9 +58,13 @@ Enemy::Enemy()
     SetWorldMatrix(bodyPos_.GetWorldTransform());
     SetCenter({ 0.0f,0.0f, 0.0f });
 
-    SetCollisionAttribute(kCollisionEnemy);
+    SetCollisionAttribute(CollisionTag::GetTag("Enemy"));
     // 敵は「プレイヤー」と「プレイヤーの弾」と衝突したい
-    SetCollisionMask(kCollisionPlayer | kCollisionPlayerBulletCold | kCollisionPlayerBulletHot);
+    SetCollisionMask(
+          CollisionTag::GetTag("Player") 
+        | CollisionTag::GetTag("PlayerBulletCold")
+        | CollisionTag::GetTag("PlayerBulletHot")
+    );
 
     colliders_["EnemyFoot_L"].collider_ = std::make_unique<Collider>();
     colliders_["EnemyFoot_R"].collider_ = std::make_unique<Collider>();
@@ -73,15 +77,15 @@ Enemy::Enemy()
         group.matrix_ = MakeIdentity4x4();
         group.collider_->SetRadius(kColliderRad_);
 
-        group.collider_->SetCollisionAttribute(kCollisionEnemy);
+        group.collider_->SetCollisionAttribute(CollisionTag::GetTag("Enemy"));
         // 足とfloorを判定する
 
         if (name == "EnemyHead") {
             //目だったら
-            group.collider_->SetCollisionMask(kCollisionPlayerBulletCold | kCollisionPlayerBulletHot);
+            group.collider_->SetCollisionMask(CollisionTag::GetTag("PlayerBulletCold") | CollisionTag::GetTag("PlayerBulletCold"));
             /*     group.collider_->SetCenter({ 0.0f,0.0f,0.125f });*/
         } else {
-            group.collider_->SetCollisionMask(kCollisionFloor);
+            group.collider_->SetCollisionMask(CollisionTag::GetTag("Floor"));
             group.collider_->SetCenter({ 0.0f,0.125f,0.0f });
         }
 
@@ -109,7 +113,8 @@ void Enemy::Init()
 
     bodyPos_.Initialize();
     bodyPos_.SetScale({ 0.0f,0.0f,0.0f });
-
+    bodyPos_.SetObjectName("GiantEnemy");
+    bodyPos_.RegisterObject();
     bodyPos_.SetAnimation("Nod");
 
     phaseTimer_ = 0.0f;
@@ -133,12 +138,7 @@ void Enemy::Draw(Camera& camera, const Object3d::LightMode& lightMode)
 void Enemy::Update()
 {
 
-
-
 #ifdef USE_IMGUI  
-
-    DebugUI::CheckObject3d(bodyPos_, "Enemy");
-
 
     ImGui::Begin("Enemy");
 
@@ -258,7 +258,7 @@ void Enemy::OnCollision(Collider* collider)
     //デバック用
     OnCollisionCollider();
 
-    if (collider->GetCollisionAttribute() == kCollisionPlayerBulletCold || collider->GetCollisionAttribute() == kCollisionPlayerBulletHot) {
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("PlayerBulletCold") || collider->GetCollisionAttribute() == CollisionTag::GetTag("PlayerBulletHot")) {
         //プレイヤーの弾の温度によって後でカエル
         if (!characterState_.isHit) {
             characterState_.isHit = true;
@@ -272,7 +272,7 @@ void Enemy::OnCollision(Collider* collider)
             poyoAnimTimer_ = 0.0f;
         }
 
-        if (collider->GetCollisionAttribute() == kCollisionPlayer) {
+        if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Player")) {
 
             Sound::PlaySE(SoundFactory::VOICE_Asobimasyo, 1.0f);
 

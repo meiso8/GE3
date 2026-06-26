@@ -7,6 +7,7 @@
 #include"Input.h"
 #include"TimeManager.h"
 #include"DebugUI.h"
+#include"ImGuizmo.h"
 
 void DebugCamera::Initialize(const PROJECTION_TYPE& type)
 {
@@ -54,7 +55,16 @@ void DebugCamera::UpdateMatrix() {
     DebugUI::CheckCamera(cameraMatrix_, cameraData_, "Debug Camera");
 #endif
 
-    MouseInputMove();
+    bool isUseImGui = false;
+
+#ifdef USE_IMGUI
+    if (ImGui::IsWindowFocused() && ImGuizmo::IsUsing()) {
+        isUseImGui = true;
+    }
+#endif
+    if (!isUseImGui) {
+        MouseInputMove();
+    }
 
     Matrix4x4 matRotDelta = MakeIdentity4x4();
     matRotDelta = Multiply(matRotDelta, MakeRotateXMatrix(deltaRotate_.x));

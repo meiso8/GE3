@@ -10,6 +10,7 @@
 #include"TransitionBarrier.h"
 
 class RtvDescriptorHeap;
+class SrvDescriptorHeap;
 class CommandList;
 
 class RenderTexture
@@ -125,6 +126,7 @@ private:
     Microsoft::WRL::ComPtr <ID3D12Resource>materialResourceRandom_;
     MaterialForRandom* materialForRandom_ = nullptr;
     ID3D12GraphicsCommandList* commandList_ = nullptr;
+    SrvDescriptorHeap* srvDescriptorHeap_ = nullptr;
 public:
     static RenderTexture* GetInstance() {
         static RenderTexture instance;
@@ -134,7 +136,7 @@ public:
     Microsoft::WRL::ComPtr<ID3D12Resource>& GetMaterialResouce(const PSO::EffectType& effectType);
     void Create(RtvDescriptorHeap* rtvDescriptorHeap);
   
-    void SetCommandList(ID3D12GraphicsCommandList* commandList);
+    void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
 
     // 1. 描画コマンドの最後にコピー命令を積む関数 (PostDrawの直前に呼ぶ)
     void CopyClickPixelCommand(int mouseX, int mouseY);
@@ -166,7 +168,12 @@ protected:
     /// @brief テクスチャハンドル
     uint32_t textureHandle_ = 0;
 private:
-    void CreateResource(const uint32_t index, RtvDescriptorHeap* rtvDescriptorHeap, DXGI_FORMAT format, bool createSRV);
+    void CreateResource(
+        const uint32_t index, 
+        RtvDescriptorHeap* rtvDescriptorHeap,
+        DXGI_FORMAT format,
+        bool createSRV
+    );
     void CreateMaterialBufferForGrayScale();
     void CreateMaterialBufferForVignette();
     void CreateMaterialBufferForBoxFilter();

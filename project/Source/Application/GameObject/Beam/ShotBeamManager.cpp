@@ -86,10 +86,14 @@ bool IntersectsAABB(const Ray& ray, const AABB& aabb, const Vector3& pos, const 
 }
 void ShotBeamManager::RayCastHit()
 {
-    AABB playerAABB = GetAABBWorldPos(player_->GetEyeCollider());
     float min = 0.0f;
 
+    //中心点を考慮した座標を取得してくる
+    Vector3 pos = player_->GetEyeCollider()->GetWorldTransform().GetWorldPosition();
 
+    AABB aabbWorld = { .min = {-0.25f,-0.25f,-0.25f},.max = {0.25f,0.25f,0.25f} };
+    aabbWorld.min += pos;
+    aabbWorld.max += pos;
 
     for (auto& beam : beamManager_->GetBeams()) {
 
@@ -100,7 +104,12 @@ void ShotBeamManager::RayCastHit()
 
         //アイテムがあれば　跳ね返し攻撃が出来るように作成していく予定
 
-        if (IntersectsAABB(ray, playerAABB, player_->GetEyeCollider()->GetWorldTransform().GetWorldPosition(), length)) {
+        if (IntersectsAABB(
+            ray,
+            aabbWorld,
+            player_->GetEyeCollider()->GetWorldTransform().GetWorldPosition(),
+            length
+        )) {
 
             raySprite_->OnCollisionColor();
 

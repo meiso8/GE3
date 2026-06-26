@@ -18,8 +18,8 @@ Item::Item()
     object_ = std::make_shared<Object3d>();
     object_->Create();
     SetAABB({ .min = { -0.5f,-0.5f,-0.5f},.max = { 0.5f,0.5f,0.5f } });
-    SetCollisionAttribute(kCollisionItem);
-    SetCollisionMask(!kCollisionItem);
+    SetCollisionAttribute(CollisionTag::GetTag("Item"));
+    SetCollisionMask(!CollisionTag::GetTag("Item"));
     SetWorldMatrix(*object_);
   
 }

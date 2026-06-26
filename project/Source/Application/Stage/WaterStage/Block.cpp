@@ -10,8 +10,13 @@
 #include"../Engine/ImGui/DebugUI.h"
 Block::Block()
 {
-    SetCollisionAttribute(kCollisionFloor);
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);
+    SetCollisionAttribute(CollisionTag::GetTag("Floor"));
+    SetCollisionMask(
+          CollisionTag::GetTag("Player")
+        | CollisionTag::GetTag("Enemy") 
+        | CollisionTag::GetTag("Medjed")
+        | CollisionTag::GetTag("DummyMedjed")
+    );
     SetAABB({ {-1.0f,-1.0f,-1.0f} ,{1.0f,1.0f,1.0f} });
 }
 

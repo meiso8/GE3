@@ -25,7 +25,11 @@
 #include"../externals/DirectXTex/d3dx12.h"
 
 #include"Vector4.h"
-class RtvManager;
+
+class SrvDescriptorHeap;
+class RtvDescriptorHeap;
+class DsvDescriptorHeap;
+
 class DirectXCommon
 {
 public:
@@ -43,8 +47,6 @@ private:
     DXGIFactory dxgiFactory = {};
 
     static Microsoft::WRL::ComPtr<ID3D12Device> device;
-
-    static Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap;
     static std::unique_ptr< DxcCompiler> dxcCompiler;
     std::unique_ptr<CommandList> commandList_ = nullptr;
 
@@ -72,11 +74,13 @@ public:
     /// @param window windowクラスを渡す
     void PreInitialize(Window& window);
     void PostInitialize();
-    void CreateDepthStencilResourceSRV();
+   
+    void CreateDepthStencilResourceSRV(SrvDescriptorHeap* srvDescriptorHeap);
     /// @brief 描画前処理
 /// @param color 画面の色を指定する
-    void RenderTexturePreDraw();
-    void DrawRenderTexture();
+    void RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap);
+    void VeiwPortAndScissorRect();
+    void DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap);
     void RenderTexturePostDraw();
     void SetRenderTextureCamera(Camera* camera);
     void SettingIdTextureBarrierPre();
@@ -94,14 +98,14 @@ public:
     /// @brief スワップチェインのRTVの取得関数
     /// @return スワップチェインのRTV
     RenderTargetView& GetSwapChainRtv() {
-        return rtvClass
-            ;
+        return rtvClass ;
     }
     
-    void InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap);
+    void InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap, SrvDescriptorHeap* srvDescriptorHeap);
     void InitializeRenderTargetView(RtvDescriptorHeap* rtvDescriptorHeap);
+    void InitializeDepthStencilView(DsvDescriptorHeap* dsvDescriptorHeap);
 
-    void UpdateRenderTexture();
+    void UpdateRenderTexture(SrvDescriptorHeap* srvDescriptorHeap);
     /// @brief BufferResourceの作成関数
     /// @param sizeInBytes 
     /// @return BufferResource
@@ -168,35 +172,13 @@ public:
     /// @brief コマンドリストクラスの取得関数
 /// @return コマンドリスト
     CommandList* GetCommandListClass() { return commandList_.get(); };
-    /// @brief DSVのCPUディスクリプタハンドルの取得関数
-    /// @param index 
-    /// @return DSVのCPUディスクリプタハンドル
-    static D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);
-    /// @brief DSVのGPUディスクリプタハンドルの取得関数
-    /// @param index 
-    /// @return DSVのGPUディスクリプタハンドル
-    static D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
-    /// @brief 指定したディスクリプタヒープ内の指定インデックスに対応するCPUディスクリプタハンドルを取得。
-    /// @param descriptorHeap 有効なID3D12DescriptorHeapへのポインタ。
-    /// @param descriptorSize ディスクリプタ間のバイト単位のオフセット（ディスクリプタサイズ）。
-    /// @param index ヒープ内の取得対象ディスクリプタのインデックス。
-    /// @return 指定したインデックスに対応するD3D12_CPU_DESCRIPTOR_HANDLE。
-    static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-    /// @brief 指定したディスクリプタヒープ内の指定インデックスに対応するGPUディスクリプタハンドルを取得。
-    /// @param descriptorHeap 有効なID3D12DescriptorHeapへのポインタ。
-    /// @param descriptorSize  ディスクリプタ間のバイト単位のオフセット（ディスクリプタサイズ）。
-    /// @param index ヒープ内の取得対象ディスクリプタのインデックス。
-    /// @return 指定したインデックスに対応するD3D12_GPU_DESCRIPTOR_HANDLE。
-    static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
 private:
     void InitializeDevice();
     void InitializeCommand();
     void CreateSwapChain();
     void CreateDepthBuffer();
-    void DescriptorHeapSettings();
 
-    void InitializeDepthStencilView();
+
     void InitializeFence();
     void InitializeViewPort();
     void ScissorRectSetting();

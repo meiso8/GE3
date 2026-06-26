@@ -16,6 +16,7 @@
 
 class Font;
 class CommandList;
+class SrvDescriptorHeap;
 
 struct GlyphKey {
     //フォントの種類のハンドル
@@ -87,7 +88,7 @@ private:
     static std::unordered_map<GlyphKey, FTTextureData> glyphTextures_;
     //文字ごとのFontを格納する
     static std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Font>>> fontPool_;
-
+    static SrvDescriptorHeap* srvDescriptorHeap_;
 public:
     /// @brief ライブラリの初期化
     FreeTypeManager();
@@ -96,7 +97,7 @@ public:
     FreeTypeManager(const FreeTypeManager&) = delete;
     FreeTypeManager& operator=(const FreeTypeManager&) = delete;
 
-     void SetCommandList(ID3D12GraphicsCommandList* commandList);
+     void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
     /// @brief 終了処理
      void Finalize();
      /// @brief エンジンでCommandQueueを送った後にリセットする

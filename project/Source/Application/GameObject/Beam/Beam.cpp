@@ -69,8 +69,6 @@ void Beam::Update()
 
 #ifdef USE_IMGUI
 
-    DebugUI::CheckObject3d(*object3d_, "Beam");
-
     ImGui::Begin("BeamPointData");
 
     if (ImGui::TreeNode("Beams")) {

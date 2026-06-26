@@ -5,8 +5,14 @@
 
 Platform::Platform() {
 
-    SetCollisionAttribute(kCollisionWall);
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMedjed | kCollisionDummyMedjed);
+    SetCollisionAttribute(CollisionTag::GetTag("Wall"));
+
+    SetCollisionMask(
+        CollisionTag::GetTag("Player")
+        | CollisionTag::GetTag("Enemy")
+        | CollisionTag::GetTag("Medjed")
+        | CollisionTag::GetTag("DummyMedjed")
+    );
 
     SetAABB({ { -1.5f, 0.0f, -0.5f }, { 1.5f, 0.75f, 1.0f } });
 

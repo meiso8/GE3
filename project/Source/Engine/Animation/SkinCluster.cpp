@@ -7,7 +7,10 @@
 #include <algorithm>
 #include"MakeMatrix.h"
 
-SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData)
+
+SrvDescriptorHeap* Skin::srvDescriptorHeap_ = nullptr;
+
+SkinCluster Skin::CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData)
 {
     SkinCluster skinCluster;
 
@@ -17,12 +20,12 @@ SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelDa
     skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
     skinCluster.mappedPalette = { mappedPalette,skeleton.joints.size() };//spanを使ってアクセスするようにする
     //インデックスを格納
-    skinCluster.paletteSrvIndex = SrvDescriptorHeap::Allocate();
-    skinCluster.paletteSrvHandle.first = SrvDescriptorHeap::GetCPUDescriptorHandle(skinCluster.paletteSrvIndex);
-    skinCluster.paletteSrvHandle.second = SrvDescriptorHeap::GetGPUDescriptorHandle(skinCluster.paletteSrvIndex);
+    skinCluster.paletteSrvIndex = srvDescriptorHeap_->Allocate();
+    skinCluster.paletteSrvHandle.first = srvDescriptorHeap_->GetCPUDescriptorHandle(skinCluster.paletteSrvIndex);
+    skinCluster.paletteSrvHandle.second = srvDescriptorHeap_->GetGPUDescriptorHandle(skinCluster.paletteSrvIndex);
 
     //palette用のsrvを作成
-    SrvDescriptorHeap::CreateSRVforStructuredBuffer(skinCluster.paletteSrvIndex, skinCluster.paletteResource.Get(), UINT(skeleton.joints.size()), sizeof(WellForGPU));
+    srvDescriptorHeap_->CreateSRVforStructuredBuffer(skinCluster.paletteSrvIndex, skinCluster.paletteResource.Get(), UINT(skeleton.joints.size()), sizeof(WellForGPU));
 
     //influence用のResourceを確保
     skinCluster.influenceResource = DirectXCommon::CreateBufferResource(sizeof(VertexInfluence) * modelData.vertices.size());
@@ -70,7 +73,7 @@ SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelDa
     return skinCluster;
 }
 
-void UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton)
+void Skin::UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton)
 {
 
     for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); ++jointIndex) {
@@ -82,3 +85,8 @@ void UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton)
     }
 }
 
+void Skin::SetSrvDescriptorHeap(SrvDescriptorHeap* srvDescriptorHeap)
+{
+    srvDescriptorHeap_ = srvDescriptorHeap;
+    assert(srvDescriptorHeap);
+}

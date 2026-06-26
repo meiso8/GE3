@@ -75,8 +75,8 @@ nlohmann::json JsonFile::Vector3ToJson(const Vector3& vector)
 nlohmann::json JsonFile::EulerTransformToJson(const EulerTransform& eTransform)
 {
     return {
-        {"scale",     Vector3ToJson(eTransform.scale)    },
-        {"rotate",    Vector3ToJson(eTransform.rotate)   },
         {"translate", Vector3ToJson(eTransform.translate)},
+        {"rotate",    Vector3ToJson(eTransform.rotate)   },
+        {"scale",     Vector3ToJson(eTransform.scale)    },
     };
 }

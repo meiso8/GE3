@@ -12,6 +12,7 @@
 #include<memory>
 
 class Model;
+class SrvDescriptorHeap;
 
 class Object3d
 {
@@ -48,7 +49,7 @@ protected:
 
     //コマンドリストの借り物
     static ID3D12GraphicsCommandList* commandList_;
-
+    static SrvDescriptorHeap* srvDescriptorHeap_;
     // ==============位置情報==================
     WorldTransform worldTransform_;
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
@@ -57,7 +58,7 @@ protected:
     // ==============表示非表示切り替え==================
     bool disabled_ = false;
     // ==============オブジェクト名==================
-    std::string objectName_ = "object";
+    std::string objectName_ = "Object";
 
     // ==============マテリアル==================
     Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
@@ -85,9 +86,13 @@ private:
 
 public:
 
-    /// @brief コマンドリストの借り物を入れる
+    /// @brief コマンドリストのとsrvDescriptorHeapの借り物を入れる
     /// @param commandList コマンドリストクラス
-    static void SetCommandList(ID3D12GraphicsCommandList* commandList);
+    ///  @param srvDescriptorHeap srvDescriptorHeap
+    static void SetCommandListAndSrvDescriptorHeap(
+        ID3D12GraphicsCommandList* commandList,
+        SrvDescriptorHeap* srvDescriptorHeap
+    );
 
     // ==============位置情報==================
     WorldTransform& GetWorldTransform() { return worldTransform_; };
@@ -102,6 +107,9 @@ public:
     void SetRotate(const Vector3& rotate) { worldTransform_.eTransform_.rotate = rotate; };
     void SetTranslate(const Vector3& translate) { worldTransform_.eTransform_.translate = translate; };
 
+    // ==============オブジェクト名==================
+    const std::string& GetObjectName() { return objectName_; };
+    void SetObjectName(const std::string& name) { objectName_ = name; }
 
     // ==============ID情報==================
     void SetObjectID(uint32_t id) { if (idData_) { idData_->id = id; } }
@@ -154,7 +162,7 @@ public:
     void UpdateUV();
 
     // ==============テクスチャデータ==================
-    
+
     //SRVIndexの取得
     uint32_t GetSrvIndex(const TEXTURE_USAGE& textureUsage) { return textureHandles_[textureUsage]; }
     /// @brief テクスチャハンドルの設定

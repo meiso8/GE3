@@ -22,30 +22,28 @@
 void Player::OnCollision(Collider* collider)
 {
 
-    if (collider->GetCollisionAttribute() == kCollisionEnemy
-        || collider->GetCollisionAttribute() == kCollisionEnemyBullet
-        || collider->GetCollisionAttribute() == kCollisionMedjed
-        || collider->GetCollisionAttribute() == kCollisionMummy
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Enemy")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("EnemyBulletCold")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("EnemyBulletHot")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("Medjed")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("Mummy")
 
         ) {
-
-
-
         OnCollisionEnemy();
-
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionFloor) {
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Floor")) {
         isFloorHit_ = true;
         isJump_ = false;
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionDummyMedjed
-        || collider->GetCollisionAttribute() == kCollisionWall
-        || collider->GetCollisionAttribute() == kCollisionMedjed
-        || collider->GetCollisionAttribute() == kCollisionEnemy
-        || collider->GetCollisionAttribute() == kCollisionMummy
-        || collider->GetCollisionAttribute() == kCollisionFloor
+    if (
+        collider->GetCollisionAttribute() == CollisionTag::GetTag("DummyMedjed")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("Wall")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("Medjed")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("Enemy")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("Mummy")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("Floor")
 
         ) {
 
@@ -69,8 +67,18 @@ Player::Player() {
     localAabb_.max = { radius , 1.5f ,radius };
 
     SetAABB(localAabb_);
-    SetCollisionAttribute(kCollisionPlayer);
-    SetCollisionMask(kCollisionEnemy | kCollisionEnemyBullet | kCollisionMedjed | kCollisionDummyMedjed | kCollisionWall | kCollisionMummy | kCollisionWater | kCollisionFloor);
+    SetCollisionAttribute(CollisionTag::GetTag("Player"));
+    SetCollisionMask(
+          CollisionTag::GetTag("Enemy")
+        | CollisionTag::GetTag("EnemyBulletCold")
+        | CollisionTag::GetTag("EnemyBulletHot")
+        | CollisionTag::GetTag("Medjed")
+        | CollisionTag::GetTag("DummyMedjed") 
+        | CollisionTag::GetTag("Wall")
+        | CollisionTag::GetTag("Mummy") 
+        | CollisionTag::GetTag("Water") 
+        | CollisionTag::GetTag("Floor")
+    );
 
     //それぞれのObject3d（WorldTransform）を作る
     bodyPos_.Create();
@@ -100,7 +108,8 @@ void Player::Init(const Vector3& pos)
     //体の位置初期化
     bodyPos_.Initialize();
     bodyPos_.SetTranslate(pos);
-
+    bodyPos_.SetObjectName("Player");
+    bodyPos_.RegisterObject();
     bodyPos_.Update();
 
     //目の位置初期化
@@ -185,13 +194,12 @@ void Player::Update()
 void Player::Debug()
 {
 #ifdef USE_IMGUI
-    DebugUI::CheckObject3d(bodyPos_, "player");
+
     ImGui::Begin("Player");
     DebugUI::CheckCaracterState(characterState_, "CharacterStage");
     ImGui::Checkbox("isInvincible", &isInvincible_);
     ImGui::SliderFloat3("velocity_", &velocity_.x, -1000.0f, 1000.0f);
     ImGui::End();
-
 
 #endif //USE_IMGUI
 }

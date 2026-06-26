@@ -9,7 +9,7 @@
 #include"SkinningModel.h"
 #include"Bone.h"
 #include<algorithm>
-#include"SRVmanager/SrvManager.h"
+#include"SrvDescriptorHeap.h"
 #include"DirectXCommon.h"
 #include"Log.h"
 
@@ -92,7 +92,7 @@ void AnimationObject3d::UpdateAnimation()
         //現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
        Bone::UpdateSkeleton(*skeleton);
         //SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
-        UpdateSkinCluster(*skinCluster, *skeleton);
+       Skin::UpdateSkinCluster(*skinCluster, *skeleton);
     }
 
     if (isSkinning_) {
@@ -173,7 +173,7 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
         commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE], commandList_);
+        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE], commandList_);
         //cameraのCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(3, camera.GetResource()->GetGPUVirtualAddress());
         //ID
@@ -185,9 +185,12 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
         //WaveのSRVの場所を設定
         commandList_->SetGraphicsRootShaderResourceView(7, waveResource_->GetGPUVirtualAddress());
         //ライトのCBufferの場所を設定
-        PointLightManager::SetGraphicsRootDescriptorTable(8, commandList_);
-        SpotLightManager::SetGraphicsRootDescriptorTable(9, commandList_);
-        SrvManager::SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture), commandList_);
+          //PointLightのDescriptorTableの設定をする
+        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(8, PointLightManager::GetSrvIndex(), commandList_);
+        //SpotLightのDescriptorTableの設定をする
+        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(9, SpotLightManager::GetSrvIndex(), commandList_);
+
+        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture), commandList_);
         //ここでテクスチャの設定をする
         MeshDraw();
     }
@@ -209,7 +212,7 @@ void AnimationObject3d::MeshDraw()
     commandList_->IASetVertexBuffers(0, 2, vbvs);//VBVを設定
 
     //cameraのCBufferの場所を設定 paletteResource 
-    SrvManager::SetGraphicsRootDescriptorTable(11, skinCluster->paletteSrvIndex,commandList_);
+    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(11, skinCluster->paletteSrvIndex,commandList_);
  
     //モデルデータの取得
     auto* modelData = skinningModel_->GetModelData();

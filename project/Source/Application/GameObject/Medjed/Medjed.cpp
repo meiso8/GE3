@@ -13,7 +13,7 @@
 void Medjed::OnCollision(Collider* collider)
 {
 
-    if (collider->GetCollisionAttribute() == kCollisionPlayer) {
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Player")) {
 
         if (!isHit_) {
             isHit_ = true;
@@ -25,7 +25,7 @@ void Medjed::OnCollision(Collider* collider)
     }
 
 
-    if (collider->GetCollisionAttribute() == kCollisionWall || collider->GetCollisionAttribute() == kCollisionDummyMedjed) {
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Wall") || collider->GetCollisionAttribute() == CollisionTag::GetTag("DummyMedjed")) {
         velocity_ *= -0.8f;
         ResolveCollision(aniObj_->GetTransform().translate, velocity_, GetCollisionInfo());
     }
@@ -63,8 +63,12 @@ Medjed::Medjed() {
     aniObj_->SetModelAndLoadAnimation(model_);
 
     SetAABB(localAABB_);
-    SetCollisionAttribute(kCollisionMedjed);
-    SetCollisionMask(kCollisionPlayer | kCollisionWall | kCollisionDummyMedjed);
+    SetCollisionAttribute(CollisionTag::GetTag("Medjed"));
+    SetCollisionMask(
+        CollisionTag::GetTag("Player")
+        | CollisionTag::GetTag("Wall") |
+        CollisionTag::GetTag("DummyMedjed")
+    );
     SetWorldMatrix(aniObj_->GetWorldTransform());
 }
 
@@ -98,8 +102,6 @@ void Medjed::Update()
 
 #ifdef USE_IMGUI
 
-    DebugUI::CheckObject3d(*aniObj_,"Medjed");
-
     ImGui::Begin("Debug");
     ImGui::Checkbox("isFinedMedjed", &isFind_);
     ImGui::End();
@@ -117,6 +119,8 @@ void Medjed::Init()
     aniObj_->Initialize();
     aniObj_->SetAnimation("Idle");
     aniObj_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
+    aniObj_->SetObjectName("Medjed");
+    aniObj_->RegisterObject();
 }
 
 void Medjed::Draw(Camera& camera)

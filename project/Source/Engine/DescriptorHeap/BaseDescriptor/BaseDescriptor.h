@@ -6,34 +6,35 @@
 
 class BaseDescriptor
 {
-public:
-    static const uint32_t kMaxCount_;
 protected:
-    static  Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descriptorHeap_;
-private:
-    static uint32_t descriptorSize_;
-    static uint32_t useIndex_;
+   Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descriptorHeap_ = nullptr;
+    uint32_t descriptorSize_ = 0;
+    uint32_t useIndex_ = 0;
+    uint32_t maxCount_ = 1;
 public:
-    BaseDescriptor() = default;
+    BaseDescriptor();
     ~BaseDescriptor();
     /// @brief アロケータ
     /// @return 空いているインデックス
-    static uint32_t Allocate();
+    uint32_t Allocate();
     /// @brief 最大数かどうかを取得する関数
     /// @return 最大数かどうか
-    static bool CanUseIndex();
+    bool CanUseIndex();
     /// @brief RTVのCPUディスクリプタハンドルの取得関数
     /// @param index 
     /// @return RTVのCPUディスクリプタハンドル
-    static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index);
+   D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index);
     /// @brief RTVのGPUディスクリプタハンドルの取得関数
     /// @param index 
     /// @return RTVのGPUディスクリプタハンドル
-    static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t index);
+   D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t index);
+   ID3D12DescriptorHeap* GetDescriptorHeap() { return descriptorHeap_.Get(); };
 protected:
-    virtual void CreateDescriptorHeapAndSize(
-        const D3D12_DESCRIPTOR_HEAP_TYPE& type = 
+        void CreateDescriptorHeapAndSize(
+        const D3D12_DESCRIPTOR_HEAP_TYPE& type =
         D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-        bool shaderVisible  = true) = 0;
+        bool shaderVisible = true,
+        const uint32_t kMaxCount = 1
+    );
 };
 

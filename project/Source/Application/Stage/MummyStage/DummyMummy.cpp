@@ -31,8 +31,11 @@ void DummyMummy::Initialize()
     Look(*targetPos_);
     object_->SetSkinning(false);
 
-    SetCollisionAttribute(kCollisionWall);
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMummy);
+    SetCollisionAttribute(CollisionTag::GetTag("Wall"));
+    SetCollisionMask(
+        CollisionTag::GetTag("Player")
+        | CollisionTag::GetTag("Enemy")
+        | CollisionTag::GetTag("Mummy"));
 }
 
 void DummyMummy::Update()
@@ -88,11 +91,11 @@ void DummyMummy::OnCollision(Collider* collider)
     // 自分自身との衝突は無視 
     if (collider == this) { return; }
 
-    if (collider->GetCollisionAttribute() == kCollisionWall) {
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Wall")) {
         ResolveCollision(object_->GetTransform().translate, velocity_, GetCollisionInfo());
     }
 
-    if (collider->GetCollisionAttribute() == kCollisionMummy) {
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Mummy")) {
         isHitCollision_ = true;
     }
 
@@ -101,8 +104,13 @@ void DummyMummy::OnCollision(Collider* collider)
 void DummyMummy::SetCollisionType()
 {
 
-    SetCollisionAttribute(kCollisionMummy); // ミイラの衝突属性
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy | kCollisionMummy | kCollisionWall); // プレイヤーや壁と衝突
+    SetCollisionAttribute(CollisionTag::GetTag("Mummy")); // ミイラの衝突属性
+    SetCollisionMask(
+          CollisionTag::GetTag("Player")
+        | CollisionTag::GetTag("Enemy")
+        | CollisionTag::GetTag("Mummy")
+        | CollisionTag::GetTag("Wall")
+    ); // プレイヤーや壁と衝突
 }
 
 Vector3 DummyMummy::GetWorldPos()

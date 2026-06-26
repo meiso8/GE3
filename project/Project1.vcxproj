@@ -166,8 +166,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\System\CollisionConfig.cpp" />
     <ClCompile Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.cpp" />
-    <ClCompile Include="DsvDescriptorHeap.cpp" />
     <ClCompile Include="Source\Engine\DescriptorHeap\RtvDescriptorHeap\RtvDescriptorHeap.cpp" />
     <ClCompile Include="Source\Engine\DescriptorHeap\BaseDescriptor\BaseDescriptor.cpp" />
     <ClCompile Include="Source\Engine\DescriptorHeap\DsvDescriptorHeap\DsvDescriptorHeap.cpp" />
@@ -523,7 +523,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resource\JsonFiles\config.json" />
     <None Include="Resource\JsonFiles\memo.json" />
     <None Include="Resource\JsonFiles\notes.json" />
-    <None Include="Resource\JsonFiles\testtttttt.json" />
     <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
   </ItemGroup>

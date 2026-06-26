@@ -3,8 +3,8 @@
 
 Memo::Memo() {
 
-    SetCollisionAttribute(kCollisionWall);
-    SetCollisionMask(kCollisionPlayer);
+    SetCollisionAttribute(CollisionTag::GetTag("Wall"));
+    SetCollisionMask(CollisionTag::GetTag("Player"));
 
     SetAABB({ .min = {-0.5f,-0.5f,-0.5f}, .max = {0.5f,0.5f,0.5f} });
     cubeMesh_ = std::make_unique<Primitive>();

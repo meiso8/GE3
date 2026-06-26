@@ -2,13 +2,9 @@
 #include"DirectXCommon.h"
 #include"Log.h"
 
-uint32_t SrvDescriptorHeap::useIndex_ = 0;
-const uint32_t SrvDescriptorHeap::kMaxCount_ = 512;
-uint32_t SrvDescriptorHeap::descriptorSize_ = 0;
-
 SrvDescriptorHeap::SrvDescriptorHeap()
 {
-    CreateDescriptorHeapAndSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true);
+    CreateDescriptorHeapAndSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, kMaxSRVCount_);
 }
 
 void SrvDescriptorHeap::PreDraw(ID3D12GraphicsCommandList* commandList)

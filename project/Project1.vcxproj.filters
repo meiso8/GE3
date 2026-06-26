@@ -543,10 +543,10 @@
     <ClCompile Include="Source\Engine\DescriptorHeap\RtvDescriptorHeap\RtvDescriptorHeap.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DsvDescriptorHeap.cpp">
+    <ClCompile Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.cpp">
+    <ClCompile Include="Source\Application\System\CollisionConfig.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1111,7 +1111,6 @@
     <None Include="Resource\JsonFiles\memo.json" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
     <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
-    <None Include="Resource\JsonFiles\testtttttt.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">

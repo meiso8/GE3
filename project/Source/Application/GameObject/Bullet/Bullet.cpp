@@ -86,12 +86,29 @@ void Bullet::Draw(Camera& camera) {
 void Bullet::SetBulletType(const BulletType& type)
 {
     if (type == kPlayerCold || type == kPlayerHot) {
-        SetCollisionAttribute(type == kPlayerCold ? kCollisionPlayerBulletCold : kCollisionPlayerBulletHot);
-        SetCollisionMask(kCollisionEnemy | kCollisionMedjed | kCollisionWall | kCollisionFloor);
+
+        SetCollisionAttribute(
+            type == kPlayerCold ? 
+            CollisionTag::GetTag("PlayerBulletCold")  : CollisionTag::GetTag("PlayerBulletHot")
+        );
+
+        SetCollisionMask(
+            CollisionTag::GetTag("Enemy")
+            | CollisionTag::GetTag("Medjed")
+            | CollisionTag::GetTag("Wall")
+            | CollisionTag::GetTag("Floor")
+        );
+
     } else if (type) {
-        SetCollisionAttribute(kCollisionEnemyBullet);
+
+        SetCollisionAttribute(CollisionTag::GetTag("EnemyBulletCold"));
+
         // 弾は「Player」とだけ衝突したい
-        SetCollisionMask(kCollisionPlayer | kCollisionWall | kCollisionFloor);
+        SetCollisionMask(
+            CollisionTag::GetTag("Player")
+            | CollisionTag::GetTag("Wall")
+            | CollisionTag::GetTag("Floor")
+        );
     }
 
     if (type == kEnemyCold || type == kPlayerCold) {

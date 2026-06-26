@@ -1,17 +1,15 @@
 #include "BaseDescriptor.h"
 #include"Log.h"
 #include<cassert>
+#include"DescriptorHandle/DescriptorHandle.h"
 #include"DirectXCommon.h"
 
-const uint32_t BaseDescriptor::kMaxCount_ = 64;
-uint32_t BaseDescriptor::useIndex_ = 0;
-uint32_t BaseDescriptor::descriptorSize_ = 0;
-Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>BaseDescriptor::descriptorHeap_ = nullptr;
+BaseDescriptor::BaseDescriptor()
+{
+}
 
 BaseDescriptor::~BaseDescriptor()
 {
-    descriptorHeap_.Reset();
-    LogFile::Log("Reset descriptorHeap\n");
 }
 
 uint32_t BaseDescriptor::Allocate()
@@ -24,7 +22,7 @@ uint32_t BaseDescriptor::Allocate()
 
 bool BaseDescriptor::CanUseIndex()
 {
-    if (useIndex_ < kMaxCount_) {
+    if (useIndex_ < maxCount_) {
         return true;
     }
 
@@ -35,20 +33,23 @@ bool BaseDescriptor::CanUseIndex()
 D3D12_CPU_DESCRIPTOR_HANDLE BaseDescriptor::GetCPUDescriptorHandle(uint32_t index)
 {
     assert(CanUseIndex());
-    return DirectXCommon::GetCPUDescriptorHandle(descriptorHeap_.Get(), descriptorSize_, index);
+    return DescriptorHandle::GetCPUDescriptorHandle(descriptorHeap_.Get(), descriptorSize_, index);
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE BaseDescriptor::GetGPUDescriptorHandle(uint32_t index)
 {
     assert(CanUseIndex());
-    return  DirectXCommon::GetGPUDescriptorHandle(descriptorHeap_.Get(), descriptorSize_, index);
+    return  DescriptorHandle::GetGPUDescriptorHandle(descriptorHeap_.Get(), descriptorSize_, index);
 }
 
-void BaseDescriptor::CreateDescriptorHeapAndSize(const D3D12_DESCRIPTOR_HEAP_TYPE& type, bool shaderVisible)
+void BaseDescriptor::CreateDescriptorHeapAndSize(const D3D12_DESCRIPTOR_HEAP_TYPE& type, bool shaderVisible,const uint32_t kMaxCount)
 {
+
+    maxCount_ = kMaxCount;
+
     //DescriptorHeapを生成する
     if (descriptorHeap_ == nullptr) {
-        descriptorHeap_ = DirectXCommon::CreateDescriptorHeap(type, kMaxCount_, shaderVisible);
+        descriptorHeap_ = DirectXCommon::CreateDescriptorHeap(type, maxCount_, shaderVisible);
     }
 
     descriptorSize_ = DirectXCommon::GetDevice()->GetDescriptorHandleIncrementSize(type);

@@ -9,23 +9,16 @@ EyeCollider::EyeCollider()
 {
     object_ = std::make_unique<Object3d>();
     object_->Create();
-    SetCollisionAttribute(kCollisionPlayerEye);
-    SetCollisionMask(kCollisionWall);
-    SetAABB({ { -0.5f,-0.5f,-0.5f }, { 0.5f,0.5f,0.5f } });
-    SetWorldMatrix(object_->GetWorldTransform());
 }
 
 void EyeCollider::Update()
 {
     object_->Update();
-    ColliderUpdate();
 }
 
 void EyeCollider::Draw(Camera& camera)
 {
-
     object_->Draw(camera);
-    ColliderDraw(camera);
 }
 
 void EyeCollider::Initialize()
@@ -35,18 +28,6 @@ void EyeCollider::Initialize()
     auto& transform = object_->GetTransform();
     transform.translate.y = kEyeDefaultPosY_;
     transform.translate.z = kEyeDefaultPosZ_;
-
-
-}
-
-void EyeCollider::OnCollision(Collider* collider)
-{
-
-    if (collider->GetCollisionAttribute() == kCollisionWall) {
-        object_->Update();
-    }
-
-    OnCollisionCollider();
 }
 
 Vector3& EyeCollider::GetForward()

@@ -1,8 +1,6 @@
 #include "SpotLightManager.h"
 #include"DirectXCommon.h"
-#include"SRVmanager/SrvManager.h"
-#include<numbers>
-#include"CommandList.h"
+#include"SrvDescriptorHeap.h"
 #include"Log.h"
 
 SpotLight* SpotLightManager::spotLightData_ = nullptr;
@@ -17,7 +15,7 @@ void SpotLightManager::Finalize()
     LogFile::Log("Finalize  SpotLightManager");
 }
 
-SpotLightManager::SpotLightManager()
+SpotLightManager::SpotLightManager(SrvDescriptorHeap *srvDescriptorHeap)
 
 {    //スポットライトのResourceを作成する
     spotLightResource_ =
@@ -26,18 +24,12 @@ SpotLightManager::SpotLightManager()
     spotLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&spotLightData_));
 
     //srvIndexを取得する
-    srvIndex_ = SrvManager::Allocate();
-    SrvManager::CreateSRVforStructuredBuffer(srvIndex_, spotLightResource_.Get(), UINT(kMaxData_), sizeof(SpotLight));
+    srvIndex_ = srvDescriptorHeap->Allocate();
+    srvDescriptorHeap->CreateSRVforStructuredBuffer(srvIndex_, spotLightResource_.Get(), UINT(kMaxData_), sizeof(SpotLight));
 
     InitDatas();
 
     LogFile::Log("Create  SpotLightManager");
-}
-
-void SpotLightManager::SetGraphicsRootDescriptorTable(const UINT rootParameterIndex, ID3D12GraphicsCommandList* commandList)
-{
-    //SpotLightのDescriptorTableの設定をする
-    SrvManager::SetGraphicsRootDescriptorTable(rootParameterIndex, srvIndex_, commandList);
 }
 
 void SpotLightManager::InitData(const uint32_t index)
