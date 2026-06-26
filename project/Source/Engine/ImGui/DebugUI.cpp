@@ -1,7 +1,7 @@
 #define NOMINMAX
 #include "DebugUI.h"
 #include"CharacterState.h"
-#include"SrvManager/SrvManager.h"
+#include"SrvDescriptorHeap.h"
 #include"PrimitiveFactory/PrimitiveFactory.h"
 
 #include"Input.h"
@@ -191,14 +191,14 @@ void DebugUI::CheckJsonFile()
 
         if (ImGui::TreeNode("FindTag")) {
 
-            static std::string tagName = "unKnown";
+            std::string tagName = "";
 
             nlohmann::json& jsonfile = FindJsonFile(tagName);
 
             ImGui::Separator();
 
             if (ImGui::TreeNode("ShowJsonData")) {
-                ImGui::Text("Name: %s", tagName);
+                ImGui::Text("Name: %s", tagName.c_str());
                 ImGui::TextWrapped("Data: %s", jsonfile.dump(2).c_str());
                 ImGui::TreePop();
                 ImGui::Separator();
@@ -285,48 +285,61 @@ void DebugUI::ShowJsonFileSaveMessage(const std::string& name) {
 nlohmann::json& DebugUI::FindJsonFile(std::string& tagName, bool useFilter, const char* containFileName)
 {
 
-
 #ifdef USE_IMGUI
 
-    // 安定した文字列保持用
-    static std::vector<std::string> tagStrings;
-    static std::vector<const char*> tagOptions;
+    if (ImGui::TreeNode("FindJsonFiles")) {
 
-    tagStrings.clear();
-    tagOptions.clear();
+        // 安定した文字列保持用
+        static std::vector<std::string> tagStrings;
+        static std::vector<const char*> tagOptions;
 
-    for (const auto& [tag, data] : JsonFile::GetJsonData()) {
+        tagStrings.clear();
+        tagOptions.clear();
 
-        if (!useFilter || tag.find(containFileName) != std::string::npos) {
-            tagStrings.push_back(tag); // 条件に合う std::string のみを保持
+        for (const auto& [tag, data] : JsonFile::GetJsonData()) {
+
+            if (!useFilter || tag.find(containFileName) != std::string::npos) {
+                tagStrings.push_back(tag); // 条件に合う std::string のみを保持
+            }
         }
+
+        for (const auto& str : tagStrings) {
+            tagOptions.push_back(str.c_str()); // 安定したポインタを取得
+        }
+
+        // ImGui::Combo に渡す
+        static int tag_current = 0;
+
+        // 選択肢が空になった場合の安全対策
+        if (tagOptions.empty()) {
+            ImGui::Text("No matching tags found.");
+            tagName = "";
+            // 例外処理
+            static nlohmann::json empty_json;
+            return empty_json;
+        }
+
+        if (ImGui::Combo(containFileName, &tag_current, tagOptions.data(), static_cast<int>(tagOptions.size()))) {
+            ImGui::Text("Tag: %s", tagOptions[tag_current]);
+        }
+
+        ImGui::TreePop();
+
+        if (tag_current >= tagOptions.size()) {
+     
+            static nlohmann::json empty_json;
+            tagName = "";
+            return empty_json;
+        }
+
+        tagName = tagOptions[tag_current];
+        return JsonFile::GetJsonFiles(tagName);
+
     }
 
-    for (const auto& str : tagStrings) {
-        tagOptions.push_back(str.c_str()); // 安定したポインタを取得
-    }
-
-    // ImGui::Combo に渡す
-    static int tag_current = 0;
-
-    
-    // 選択肢が空になった場合の安全対策
-    if (tagOptions.empty()) {
-        ImGui::Text("No matching tags found.");
-        tagName = "";
-        // 例外処理
-        static nlohmann::json empty_json;
-        return empty_json;
-    }
-
-
-    if (ImGui::Combo("Tags", &tag_current, tagOptions.data(), static_cast<int>(tagOptions.size()))) {
-        ImGui::Text("Tag: %s", tagOptions[tag_current]);
-    }
-
-    tagName = tagOptions[tag_current];
-    return JsonFile::GetJsonFiles(tagName);
-
+    static nlohmann::json empty_json;
+    tagName = "";
+    return empty_json;
 #endif
 }
 
@@ -363,17 +376,17 @@ void DebugUI::CreateJsonFile(const char* containFileName)
 #endif
 }
 
-void DebugUI::CheckSRVIndex() {
+void DebugUI::CheckSRVIndex(SrvDescriptorHeap* srvDescriptorHeap) {
 #ifdef USE_IMGUI
     static int index = 0;
 
     ImGui::Begin("SRVTexture");
     // 例：表示したいSRVのインデックス番号
     // （テクスチャを読み込んだ時のインデックスや、RenderTextureのsrvIndexなど）
-    ImGui::SliderInt("srvIndex", &index, 0, SrvManager::kMaxSRVCount - 1);
+    ImGui::SliderInt("srvIndex", &index, 0, SrvDescriptorHeap::kMaxSRVCount_ - 1);
 
     // SrvManager から GPUハンドルを取得
-    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = SrvManager::GetGPUDescriptorHandle(index);
+    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = srvDescriptorHeap->GetGPUDescriptorHandle(index);
 
     // ImGui::Imageに渡すために ImTextureID (void* 型) にキャストする
     ImTextureID texID = (ImTextureID)gpuHandle.ptr;
@@ -386,16 +399,16 @@ void DebugUI::CheckSRVIndex() {
 #endif
 }
 
-void DebugUI::CheckSRVTexture(const int srvIndex)
+void DebugUI::CheckSRVTexture(const int srvIndex, SrvDescriptorHeap* srvDescriptorHeap)
 {
 #ifdef USE_IMGUI
 
-    if (srvIndex >= (int)SrvManager::kMaxSRVCount) {
+    if (srvIndex >= (int)SrvDescriptorHeap::kMaxSRVCount_) {
         return;
     };
 
     // SrvManager から GPUハンドルを取得
-    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = SrvManager::GetGPUDescriptorHandle(srvIndex);
+    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = srvDescriptorHeap->GetGPUDescriptorHandle(srvIndex);
 
     // ImGui::Imageに渡すために ImTextureID (void* 型) にキャストする
     ImTextureID texID = (ImTextureID)gpuHandle.ptr;
@@ -406,7 +419,7 @@ void DebugUI::CheckSRVTexture(const int srvIndex)
 #endif
 }
 
-void DebugUI::CheckTextures()
+void DebugUI::CheckTextures(SrvDescriptorHeap* srvDescriptorHeap)
 {
 
 #ifdef USE_IMGUI
@@ -440,10 +453,10 @@ void DebugUI::CheckTextures()
             uint32_t currentSrvIndex = srvIndexes[i];
 
             // ★ 0 などの未割り当て、あるいは無効な定数(0xFFFFFFFF等)の場合は描画しないガードを入れる
-            if (currentSrvIndex != 0 && currentSrvIndex < SrvManager::kMaxSRVCount && !Texture::GetMetaData(currentSrvIndex).IsCubemap()) {
+            if (currentSrvIndex != 0 && currentSrvIndex < SrvDescriptorHeap::kMaxSRVCount_ && !Texture::GetMetaData(currentSrvIndex).IsCubemap()) {
 
                 // 安全であることを確認してからハンドルを取得
-                D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = SrvManager::GetGPUDescriptorHandle(currentSrvIndex);
+                D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = srvDescriptorHeap->GetGPUDescriptorHandle(currentSrvIndex);
 
                 if (gpuHandle.ptr != 0) {
                     ImGui::Text("[%d] SRV:%d", i, currentSrvIndex);
@@ -765,19 +778,37 @@ void DebugUI::CheckPointLightData()
 
 #endif
 }
-void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
+void DebugUI::CheckObject3d(Object3d& object3d)
 {
 #ifdef USE_IMGUI
     if (!&object3d) {
         return;
     }
 
-    if (ImGui::TreeNode(label)) {
+    auto* objectName = object3d.GetObjectName().c_str();
+
+    if (ImGui::TreeNode(objectName)) {
+
+        static char tagBuffer[128] = "";
+        static bool isInitialized = false;
+
+        // 初回呼び出し時のみ、引数で渡された文字列をバッファにコピー
+        if (!isInitialized && objectName != nullptr) {
+            // 安全のためにバッファサイズを超えないようにコピー
+            strncpy(tagBuffer, objectName, sizeof(tagBuffer) - 1);
+            tagBuffer[sizeof(tagBuffer) - 1] = '\0'; // 終端ヌル文字を保証
+            isInitialized = true;
+        }
+
+        //ファイルタグ名を入力
+        if (ImGui::InputText("ObjectName", tagBuffer, IM_ARRAYSIZE(tagBuffer))) {
+            object3d.SetObjectName(tagBuffer);
+        };
 
         // 直前に描画した要素が右クリックされたら、ポップアップを開く
         if (ImGui::BeginPopupContextItem("ObjectContextMenu")) // "ObjectContextMenu"はポップアップの一意のID
         {
-            if (ImGui::Selectable("Delete"))
+            if (ImGui::Selectable("UnregisterObject"))
             {
                 ObjectManager::GetInstance()->UnregisterObject(&object3d);
             }
@@ -837,7 +868,7 @@ void DebugUI::CheckObject3d(Object3d& object3d, const char* label)
             "Ring",
             "Cylinder"
             };
-
+           
             int currentPrimitive = 0;
 
             if (ImGui::Combo("Set Primitive", &currentPrimitive, topologyType, IM_ARRAYSIZE(topologyType))) {
@@ -876,7 +907,7 @@ void DebugUI::CheckParticle(ParticleManager* particleManager)
             if (ImGui::TreeNode(name.c_str())) {
 
                 ImGui::Checkbox("useModel", &group->useModel);
-         /*       ImGui::Checkbox("useBillboard", &group->useBillboard);*/
+                /*       ImGui::Checkbox("useBillboard", &group->useBillboard);*/
                 ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
                 auto& material = group->material;
                 CheckObject3dMaterial(

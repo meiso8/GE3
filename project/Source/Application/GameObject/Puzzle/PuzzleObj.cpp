@@ -11,8 +11,8 @@ PuzzleObj::PuzzleObj() {
 
     AABB aabb = { .min = {-0.25f,-0.25f,-0.25f},.max = {0.25f,0.25f,0.25f} };
 
-    SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突
+    SetCollisionAttribute(CollisionTag::GetTag("Wall")); // ミイラの衝突属性
+    SetCollisionMask(CollisionTag::GetTag("Player") | CollisionTag::GetTag("Enemy")); // プレイヤーや壁と衝突
  
     // memoのサイズに合わせる
     SetAABB(aabb);
@@ -37,14 +37,14 @@ void PuzzleObj::Initialize() {
 
     object_->Initialize();
     object_->SetTranslate({ -24.0f,0.25f,-24.0f });
-
+    object_->SetObjectName("PuzzleObj");
+    object_->RegisterObject();
 }
 
 void PuzzleObj::Update() {
 
     object_->Update();
     object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-    DebugUI::CheckObject3d(*object_, "PuzzleObj");
 }
 
 void PuzzleObj::Draw(Camera& camera) {
@@ -53,7 +53,8 @@ void PuzzleObj::Draw(Camera& camera) {
 }
 
 void PuzzleObj::OnCollision(Collider* collider) {
-    if (collider->GetCollisionAttribute() == kCollisionPlayer) {
+
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Player")) {
         // プレイヤーとぶつかったときの処理（必要なら）
     }
 

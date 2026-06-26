@@ -16,8 +16,13 @@ Papyrus::Papyrus() {
 
     AABB aabb = { {-2.5f,-1.0f,-0.063f}, {2.5f,1.0f,0.063f} };
 
-    SetCollisionAttribute(kCollisionWall); //かべ
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy|kCollisionMummy); // プレイヤーや壁と衝突
+    SetCollisionAttribute(CollisionTag::GetTag("Wall")); //かべ
+
+    SetCollisionMask(
+        CollisionTag::GetTag("Player") 
+        | CollisionTag::GetTag("Enemy")
+        | CollisionTag::GetTag("Mummy")
+    ); // プレイヤーや壁と衝突
 
     // memoのサイズに合わせる
     SetAABB(aabb);
@@ -27,12 +32,13 @@ Papyrus::Papyrus() {
 
 void Papyrus::Initialize() {
     object_->Initialize();
+    object_->SetObjectName("Papyrus");
+    object_->RegisterObject();
     object_->SetTranslate({ 0.0f,2.0f,5.0f });
 }
 
 void Papyrus::Update() {
     object_->Update();
-    DebugUI::CheckObject3d(*object_, "Papyrus");
     ColliderUpdate();
 }
 
@@ -43,7 +49,7 @@ void Papyrus::Draw(Camera& camera) {
 }
 
 void Papyrus::OnCollision(Collider* collider) {
-    if (collider->GetCollisionAttribute() == kCollisionPlayer) {
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Player")) {
         // プレイヤーとぶつかったときの処理（必要なら）
     }
     OnCollisionCollider();

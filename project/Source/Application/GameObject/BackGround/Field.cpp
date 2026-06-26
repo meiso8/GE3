@@ -4,7 +4,6 @@
 #include"TimeManager.h"
 Field::Field()
 {
-
     circle_ = { {0.0f,0.0f,0.0f},25.0f };
     circleMesh_ = std::make_unique<Primitive>();
     circleMesh_->Create(PrimitiveGenerator::CreateCircle(circle_));
@@ -29,8 +28,6 @@ void Field::Update()
     object3d_->GetUVTransform().translate.y = uvTranslate_;
     object3d_->UpdateUV();
     object3d_->Update();
-
-    DebugUI::CheckObject3d(*object3d_, "fieldObject");
 }
 
 void Field::Draw(Camera& camera)

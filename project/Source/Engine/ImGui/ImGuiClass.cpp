@@ -3,7 +3,7 @@
 #include"ImGuizmo.h"
 #endif
 #include"CommandList.h"
-#include"SRVmanager/SrvManager.h"
+#include"SrvDescriptorHeap.h"
 
 #include"Camera.h"
 #include"Object3d.h"
@@ -25,11 +25,12 @@ namespace ImGuiLoadFile {
 
 #ifdef USE_IMGUI
 void ImGuiClass::Initialize(Window& window,
+    SrvDescriptorHeap* srvDescriptorHeap,
     const Microsoft::WRL::ComPtr<ID3D12Device>& device,
     SwapChain& swapChain,
     RenderTargetView& rtv) {
 
-    uint32_t srvIndex = SrvManager::Allocate();
+    uint32_t srvIndex = srvDescriptorHeap->Allocate();
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -99,9 +100,9 @@ void ImGuiClass::Initialize(Window& window,
     ImGui_ImplDX12_Init(device.Get(),
         swapChain.GetDesc().BufferCount,
         rtv.GetDesc().Format,
-        SrvManager::GetDescriptorHeap(),
-        SrvManager::GetCPUDescriptorHandle(srvIndex),
-        SrvManager::GetGPUDescriptorHandle(srvIndex));
+        srvDescriptorHeap->GetDescriptorHeap(),
+        srvDescriptorHeap->GetCPUDescriptorHandle(srvIndex),
+        srvDescriptorHeap->GetGPUDescriptorHandle(srvIndex));
 
 
     // ==========================================
@@ -204,7 +205,7 @@ void HandleDroppedFile(const std::filesystem::path& fullPath) {
 
 }
 
-void ImGuiClass::DrawModelLoaderWindow()
+void ImGuiClass::DrawModelLoaderWindow(SrvDescriptorHeap* srvDescriptorHeap)
 {
  
     ImGui::Begin("Assets");
@@ -221,7 +222,7 @@ void ImGuiClass::DrawModelLoaderWindow()
 
     ImGui::Text("%s", ImGuiLoadFile::droppedFilePath.string().c_str());
 
-    DebugUI::CheckTextures();
+    DebugUI::CheckTextures(srvDescriptorHeap);
     DebugUI::CheckModels();
     DebugUI::CheckSound();
 

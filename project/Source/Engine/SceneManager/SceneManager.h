@@ -30,14 +30,14 @@ public:
     virtual void DrawSprite() = 0;
     virtual void SceneChangeUpdate();
     bool GetIsEndScene() {
-        if (sceneChange_ == nullptr) { 
+        if (sceneChange_ == nullptr) {
             return false;
         }
         // nullptr でない場合は IsEndScene() を呼び出す
-        return sceneChange_->IsEndScene(); 
+        return sceneChange_->IsEndScene();
     };
 
-    void SetStateEnd() { sceneChange_->SetState(SceneChange::kSceneEnd , 0.0f); }
+    void SetStateEnd() { sceneChange_->SetState(SceneChange::kSceneEnd, 0.0f); }
 
     void SwitchCamera();
 };
@@ -55,9 +55,11 @@ public:
     static void SetNextScene(const std::string& name);
     static void InitScene();
     static Camera* GetCurrentCamera() { return currentScene_->GetCurrentCamera(); };
+    static std::string GetCurrentSceneName() { if (currentScene_) return sceneNames_.at(currentScene_); return "noScene"; }
 private:
     static BaseScene* currentScene_;
     static BaseScene* nextScene_;
     static std::map < std::string, std::unique_ptr<BaseScene>> scenes_;
+    static std::map <  BaseScene*, std::string> sceneNames_;
 };
 

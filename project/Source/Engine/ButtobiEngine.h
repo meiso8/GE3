@@ -6,8 +6,11 @@
 #include"ImGuiClass.h"
 
 #include"TimeManager.h"
-#include"SRVmanager/SrvManager.h"
-#include"Rtvmanager/Rtvmanager.h"
+
+#include"SrvDescriptorHeap.h"
+#include"RtvDescriptorHeap.h"
+#include"DsvDescriptorHeap.h"
+
 #include"Input.h"
 #include"Log.h"
 #include"PrimitiveFactory/PrimitiveFactory.h"
@@ -17,8 +20,9 @@
 #include"Lights/DirectionalLightManager.h"
 #include"Lights/SpotLightManager.h"
 #include"Texture.h"
-
 #include"SpriteCommon.h"
+#include"CollisionConfig.h"
+
 
 class DirectXCommon;
 
@@ -39,9 +43,11 @@ private:
     /// @brief DirectXCommon後で改変する
     std::unique_ptr<DirectXCommon> directXCommon_ = nullptr;
     /// @brief RTV管理
-    std::unique_ptr<RtvManager> rtvManager = nullptr;
+    std::unique_ptr<RtvDescriptorHeap> rtvDescriptorHeap_ = nullptr;
     /// @brief SRV管理
-    std::unique_ptr<SrvManager> srvManager = nullptr;
+    std::unique_ptr<SrvDescriptorHeap> srvDescriptorHeap_ = nullptr;
+    /// @brief DSV管理
+    std::unique_ptr<DsvDescriptorHeap> dsvDescriptorHeap_ = nullptr;
 
     /// @brief 方向ライト
     std::unique_ptr<DirectionalLightManager> directionalLightManager_ = nullptr;
@@ -49,7 +55,8 @@ private:
     std::unique_ptr<PointLightManager> pointLightManager_ = nullptr;
     /// @brief スポットライト
     std::unique_ptr<SpotLightManager> spotLightManager_ = nullptr;
-
+    /// @brief タグ作成クラス
+    std::unique_ptr<TagFactory> tagFactory_ = nullptr;
 #ifdef USE_IMGUI
     ImGuiClass imGuiClass = {};
 #endif // USE_IMGUI
@@ -66,7 +73,7 @@ private:
     /// @brief テキスト管理
     std::unique_ptr<FreeTypeManager> freeTypeManager_ = nullptr;
 private:
-    void SetCommandList(ID3D12GraphicsCommandList* commandList);
+    void SetCommandListAndSrvDescriptorHeap();
 
 protected:
     

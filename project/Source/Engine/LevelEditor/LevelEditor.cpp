@@ -1,7 +1,10 @@
 #include "LevelEditor.h"
 #include"Model.h"
+#include<ctype.h>
+#include"../Mesh/PrimitiveFactory/PrimitiveFactory.h"
 
-void LevelEditor::Load(const std::string& fileName)
+
+void LevelEditor::Load(const std::string& fileName, bool useButtobiEditor)
 {
     // =============================JSONファイルを読み込んでみる=============================
 
@@ -29,13 +32,28 @@ void LevelEditor::Load(const std::string& fileName)
     std::string name =
         deserialized["name"].get<std::string>();
     //正しいレベルデータファイルかチェック
-    assert(name.compare("scene") == 0);
+    std::string toLowerName;
+    for (auto& w : name) {
+        toLowerName += std::tolower(w);
+    }
+
+    //sceneが含まれていたら
+    assert(toLowerName.find("scene") != std::string::npos);
 
     // =============================オブジェクト走査========================================
 
     levelData_ = std::make_unique<LevelData>();
 
     levelData_->objects.reserve(kMaxObjectCount_);
+
+    if (useButtobiEditor) {
+        vector3Name_ = { "x","z","y" };
+        transformsName_ = { "translate","rotate","scale" };
+
+    } else {
+        vector3Name_ = { "x","y","z" };
+        transformsName_ = { "translation","rotation","scaling" };
+    }
 
     //"objects"の全オブジェクトを走査
     for (nlohmann::json& object : deserialized["objects"]) {
@@ -58,12 +76,22 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
     for (auto& objectData : levelData_->objects) {
 
         std::unique_ptr<ObjectSet> newObjctData = std::make_unique<ObjectSet>();
+     
         Model* model = ModelManager::GetModel(objectData.fileName);
 
         newObjctData->obj_ = std::make_unique<Object3d>();
-
         newObjctData->obj_->Create();
-        newObjctData->obj_->SetMeshAndMaterial(model);
+
+        if (model) {
+            newObjctData->obj_->SetMeshAndMaterial(model);
+        } else {
+          auto* primitive =  PrimitiveFactory::GetPrimitiveForName(objectData.fileName);
+            newObjctData->obj_->SetMeshAndMaterial(primitive);
+        }
+      
+        newObjctData->obj_->SetObjectName(objectData.objectName);
+        newObjctData->obj_->RegisterObject();
+
         auto& transform = newObjctData->obj_->GetWorldTransform();
 
         transform.eTransform_ = objectData.transform;
@@ -87,13 +115,15 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
     std::string type = object["type"].get<std::string>();
     //種類ごとの処理
 
-
-
     //MESHがある場合
     if (type.compare("MESH") == 0) {
         //要素追加
         levelData->objects.emplace_back(LevelData::ObjectData{});
         LevelData::ObjectData& objectData = levelData->objects.back();
+
+        if (object.contains("name")) {
+            objectData.objectName = object["name"];
+        }
 
         if (object.contains("file_name")) {
             objectData.fileName = object["file_name"];
@@ -162,21 +192,41 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
 
 }
 
+
+
 void LevelEditor::LoadTransform(nlohmann::json& object, EulerTransform& transform)
 {
 
-    nlohmann::json& loadTransform = object["transform"];
-    //それぞれ座標系を合わせるため、yzの入れ替えを行っている
-    //平行移動
-    transform.translate.x = (float)loadTransform["translation"][0];
-    transform.translate.y = (float)loadTransform["translation"][2];
-    transform.translate.z = (float)loadTransform["translation"][1];
-    //回転角 軸回転方向を変換しておく
-    transform.rotate.x = -(float)loadTransform["rotation"][0];
-    transform.rotate.y = (float)loadTransform["rotation"][2];//ここは反転しないでおく
-    transform.rotate.z = -(float)loadTransform["rotation"][1];
-    //スケーリング
-    transform.scale.x = (float)loadTransform["scaling"][0];
-    transform.scale.y = (float)loadTransform["scaling"][2];
-    transform.scale.z = (float)loadTransform["scaling"][1];
-}
+    if (object.contains("transform")) {
+        nlohmann::json& loadTransform = object["transform"];
+        //それぞれ座標系を合わせるため、yzの入れ替えを行っている
+        //平行移動
+        uint32_t transformIndex = 0;
+
+        transform.translate.x = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[0]];
+        transform.translate.y = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[1]];
+        transform.translate.z = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[2]];
+        transformIndex++;
+        //回転角 軸回転方向を変換しておく
+
+        transform.rotate.x = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[0]];
+        transform.rotate.y = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[1]];
+        transform.rotate.z = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[2]];
+        transformIndex++;
+
+        if (vector3Name_[2]=="y") {
+            transform.rotate.x *= -1.0f;
+            transform.rotate.z *= -1.0f;
+        } 
+
+        //スケーリング
+        transform.scale.x = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[0]];
+        transform.scale.y = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[1]];
+        transform.scale.z = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[2]];
+
+    }
+    }
+
+
+
+

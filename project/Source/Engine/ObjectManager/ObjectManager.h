@@ -6,6 +6,7 @@
 #include "Object3d.h"
 #include"ObjectCommandManager.h"
 #include "nlohmann/json.hpp"
+class SrvDescriptorHeap;
 
 class ObjectManager
 {
@@ -26,7 +27,7 @@ public:
     // シーン切り替え時などの全クリア
     void Clear();
     void Initialize();
-    void SeetCommandList(ID3D12GraphicsCommandList* commandList);
+    void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
 private:   
     void Save();
     void SetName();

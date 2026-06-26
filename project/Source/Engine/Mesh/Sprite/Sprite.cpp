@@ -3,19 +3,24 @@
 #include"TransformationMatrix.h"
 #include"MakeMatrix.h"
 #include"PSO.h"
-#include"SRVmanager/SrvManager.h"
+#include"SrvDescriptorHeap.h"
 #include"SpriteCamera.h"  
 #include"ImGuiClass.h"
 #include"CommandList.h"
 #include"Log.h"
 
 ID3D12GraphicsCommandList* Sprite::commandList_ = nullptr;
-
-void Sprite::SetCommandList(ID3D12GraphicsCommandList* commandList)
+/// @brief　SRV管理の借り物
+SrvDescriptorHeap* Sprite::srvDescriptorHeap_ = nullptr;
+void Sprite::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
     assert(commandList_);
     LogFile::Log("Sprite　SetCommandList");
+
+    srvDescriptorHeap_ = srvDescriptorHeap;
+    assert(srvDescriptorHeap_);
+    LogFile::Log("Sprite Set　SrvDescriptorHeap\n");
 }
 
 void Sprite::Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color)
@@ -114,7 +119,7 @@ void Sprite::Draw(
     //TransformationMatrixCBufferの場所を設定
     commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。rootParameter[2]
-    SrvManager::SetGraphicsRootDescriptorTable(2, textureHandle_,commandList_);
+    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandle_,commandList_);
 
     SpriteCommon::DrawCall(commandList_);
 

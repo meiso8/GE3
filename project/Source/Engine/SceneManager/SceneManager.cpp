@@ -3,6 +3,8 @@
 #include"ObjectManager/ObjectManager.h"
 #include"DebugCamera.h"
 
+
+
 BaseScene::BaseScene()
 {
     sceneChange_ = std::make_unique<SceneChange>();
@@ -38,12 +40,14 @@ void BaseScene::SwitchCamera()
 // =========================================================================================
 
 std::map < std::string, std::unique_ptr<BaseScene>> SceneManager::scenes_;
+std::map <BaseScene*, std::string> SceneManager::sceneNames_;
 BaseScene* SceneManager::currentScene_ = nullptr;
 BaseScene* SceneManager::nextScene_ = nullptr;
 
 void SceneManager::Finalize()
 {
     scenes_.clear();
+    sceneNames_.clear();
     currentScene_ = nullptr;
     nextScene_ = nullptr;
 }
@@ -80,18 +84,7 @@ void SceneManager::Debug()
 
     ImGui::Begin("Debug");
 
-
-    std::string currentSceneName = "None";
-
-    for (const auto& [name, scene] : scenes_) {
-        if (currentScene_ == scene.get()) {
-            currentSceneName = name;
-            break;
-        }
-
-    }
-
-    if (ImGui::BeginCombo("Change Scene", currentSceneName.c_str())) {
+    if (ImGui::BeginCombo("Change Scene", GetCurrentSceneName().c_str())) {
 
         // マップ内のすべてのシーンをループして選択肢を作る
         for (const auto& [name, scene] : scenes_) {
@@ -119,6 +112,7 @@ void SceneManager::Debug()
 void SceneManager::SetMap(const std::string& name, std::unique_ptr<BaseScene> scene)
 {
     scenes_[name] = std::move(scene);
+    sceneNames_[scenes_[name].get()] = name;
 }
 
 void SceneManager::SetNextScene(const std::string& name)
@@ -139,7 +133,7 @@ void SceneManager::InitScene()
     ObjectManager::GetInstance()->Initialize();
     //オブジェクトをクリアする
     ObjectManager::GetInstance()->Clear();
-   
+
     currentScene_->Initialize();
 
 }

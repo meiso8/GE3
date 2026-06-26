@@ -111,6 +111,8 @@ private:
 
     RootSignature* rootSignature_ = nullptr;
     ID3D12GraphicsCommandList* commandList_ = nullptr;
+    SrvDescriptorHeap* srvDescriptorHeap_ = nullptr;
+
     Camera* camera_ = nullptr;
 
     static const uint32_t kNumMaxInstance = 1000;//インスタンス数
@@ -142,7 +144,7 @@ public:
 
     void CreateAll();
     void Create( RootSignature* rootSignature);
-    void SetCommandList(ID3D12GraphicsCommandList* commandList);
+    void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
     void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle,const Primitive::MeshType& topoligyType, const bool& useModel = false, const float temperature = 1.0f, const std::string& modelFileName = "Box.obj");
 
     void Update(Camera& camera);

@@ -1,82 +1,121 @@
 {
-    "Object1": {
-        "mesh": "Cylinder",
-        "transform": {
-            "rotate": {
-                "x": null,
-                "y": null,
-                "z": null
+    "name": "FreeTypeScene",
+    "objects": [
+        {
+            "disabled": false,
+            "file_name": "Cylinder",
+            "name": "Object1",
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
             },
-            "scale": {
-                "x": null,
-                "y": null,
-                "z": null
+            "type": "MESH"
+        },
+        {
+            "disabled": false,
+            "file_name": "medjed",
+            "name": "Object1",
+            "transform": {
+                "rotate": {
+                    "x": -3.1415908336639404,
+                    "y": -1.5099580252808664e-07,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.4884533882141113,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.062393784523010254,
+                    "y": -2.420893907546997,
+                    "z": 0.8452904224395752
+                }
             },
-            "translate": {
-                "x": null,
-                "y": null,
-                "z": null
-            }
+            "type": "MESH"
+        },
+        {
+            "disabled": false,
+            "file_name": "medjed",
+            "name": "Object2",
+            "transform": {
+                "rotate": {
+                    "x": -0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -1.4174995422363281,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "disabled": false,
+            "file_name": "medjed",
+            "name": "Object3",
+            "transform": {
+                "rotate": {
+                    "x": -0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 0.6802246570587158,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 1.5191700458526611,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "MESH"
+        },
+      
+        {
+            "disabled": false,
+            "file_name": "Building",
+            "name": "Object6",
+            "transform": {
+                "rotate": {
+                    "x": -0.0,
+                    "y": 0.0,
+                    "z": 3.1414999961853027
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "MESH"
         }
-    },
-    "Object2": {
-        "mesh": "medjed",
-        "transform": {
-            "rotate": {
-                "x": -3.141591787338257,
-                "y": -1.5099580252808664e-07,
-                "z": -3.141591787338257
-            },
-            "scale": {
-                "x": 1.0,
-                "y": 1.4884532690048218,
-                "z": 1.0
-            },
-            "translate": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.8452904224395752
-            }
-        }
-    },
-    "Object3": {
-        "mesh": "medjed",
-        "transform": {
-            "rotate": {
-                "x": 0.0,
-                "y": -0.0,
-                "z": 0.0
-            },
-            "scale": {
-                "x": 0.9999999403953552,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "translate": {
-                "x": -1.4174995422363281,
-                "y": 0.0,
-                "z": 0.0
-            }
-        }
-    },
-    "Object4": {
-        "mesh": "medjed",
-        "transform": {
-            "rotate": {
-                "x": 0.0,
-                "y": -0.0,
-                "z": 0.0
-            },
-            "scale": {
-                "x": 7.171508312225342,
-                "y": 7.929449081420898,
-                "z": 1.0
-            },
-            "translate": {
-                "x": 1.5191700458526611,
-                "y": 0.0,
-                "z": 0.0
-            }
-        }
-    }
+    ]
 }

@@ -20,7 +20,7 @@ Building::Building() {
     fieldPoses_[Wall2] = std::make_unique<FieldCollider>();
     fieldPoses_[Wall3] = std::make_unique<FieldCollider>();
     fieldPoses_[Floor] = std::make_unique<FieldCollider>();
-    fieldPoses_[Floor]->SetCollisionAttribute(kCollisionFloor);
+    fieldPoses_[Floor]->SetCollisionAttribute(CollisionTag::GetTag("Floor"));
 
     for (const auto& [type, object] : fieldPoses_) {
         if (type == Floor) {
@@ -112,8 +112,13 @@ FieldCollider::FieldCollider()
     object_->Create();
     object_->SetMeshAndMaterial(cube_.get());
 
-    SetCollisionAttribute(kCollisionWall);
-    SetCollisionMask(kCollisionPlayer | kCollisionPlayerEye | kCollisionEnemy | kCollisionMedjed | kCollisionMummy);
+    SetCollisionAttribute(CollisionTag::GetTag("Wall"));
+    SetCollisionMask(
+        CollisionTag::GetTag("Player")
+        | CollisionTag::GetTag("Enemy")
+        | CollisionTag::GetTag("Medjed")
+        | CollisionTag::GetTag("Mummy")
+    );
     SetWorldMatrix(object_->GetWorldTransform());
 }
 

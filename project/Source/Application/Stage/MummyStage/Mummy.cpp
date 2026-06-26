@@ -27,8 +27,13 @@ Mummy::Mummy() {
 
     aniObj_->SetModelAndLoadAnimation(coffinModel_);
 
-    SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy|kCollisionMummy); // プレイヤーや壁と衝突
+    SetCollisionAttribute(CollisionTag::GetTag("Wall")); // ミイラの衝突属性
+
+    // プレイヤーや壁と衝突
+    SetCollisionMask(
+        CollisionTag::GetTag("Player")
+        | CollisionTag::GetTag("Enemy")
+        | CollisionTag::GetTag("Mummy"));
 
     SetAABB({ {-1.0f, 0.0f, -0.25f}, {1.0f, 0.5f, 0.25f} });
     SetWorldMatrix(aniObj_->GetWorldTransform().matWorld_);

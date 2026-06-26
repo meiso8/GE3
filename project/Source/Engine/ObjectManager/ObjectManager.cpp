@@ -1,6 +1,7 @@
 #include "ObjectManager.h"
 #include"DebugUI.h"
 #include"RenderTexture/RenderTexture.h"
+#include"SceneManager.h"
 
 #ifdef USE_IMGUI
 #include"ImGuizmo.h"
@@ -122,7 +123,7 @@ void ObjectManager::ClickObject(Camera& camera)
 
     auto* selectedObj = ObjectManager::GetInstance()->FindObjectByID(clickedID_);
     if (selectedObj) {
-        DebugUI::CheckObject3d(*selectedObj, "selectObject");
+        DebugUI::CheckObject3d(*selectedObj);
     }
 
     if (!isClicked && !ImGui::GetIO().WantCaptureMouse) {
@@ -151,36 +152,43 @@ void ObjectManager::Initialize()
     objectCommandManager_.Initialize();
 }
 
-void ObjectManager::SeetCommandList(ID3D12GraphicsCommandList* commandList)
+void ObjectManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
 {
-    Object3d::SetCommandList(commandList);
-    AnimationObject3d::SetCommandList(commandList);
-    BeamObject3d::SetCommandList(commandList);
-    SkyboxObject3d::SetCommandList(commandList);
-    LineObject3d::SetCommandList(commandList);
-    LogFile::Log("Objects Set CommandList\n");
+    Object3d::SetCommandListAndSrvDescriptorHeap(commandList, srvDescriptorHeap);
+    LogFile::Log("Objects Set CommandList And Srv DescriptorHeap\n");
 }
 
 void ObjectManager::Save()
 {
 
     nlohmann::json& json = JsonFile::GetJsonFiles(jsonFileName_);
-
+    std::string sceneName = SceneManager::GetCurrentSceneName()+"Scene";
+    //シーン名
+    json["name"] = sceneName;
     for (auto& object : objects_) {
+
+        // オブジェクト名の取得 (必要に応じて object->GetName() などに変更してください)
         std::string name = "Object" + std::to_string(object->GetObjectID());
 
         std::string meshName = "empty";
+        std::string mesyType = "EMPTY";
 
         if (object->GetPrimitive()) {
-            //プリミティブ情報があれば
             meshName = object->GetPrimitive()->GetMeshName();
+            mesyType = "MESH";
         }
 
-        json[name] = {
-            {"mesh",meshName},
+        nlohmann::json objectJson = {
+    
+            {"file_name", meshName},
             {"transform", JsonFile::EulerTransformToJson(object->GetTransform())},
-           
+            {"disabled", object->GetDisabled()},
+            {"name", name},
+            { "type", mesyType },
         };
+
+        // 4. 配列に要素を追加
+        json["objects"].push_back(objectJson);
     }
 
     // ファイル保存
@@ -218,7 +226,7 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera)
 
     static int currentOp = 0; // 0: TRANSLATE, 1: ROTATE, 2: SCALE
 
-    if (ImGui::RadioButton("Translate : T", &currentOp, 0) || ImGui::IsKeyPressed(ImGuiKey_T)) {
+    if (ImGui::RadioButton("Grab : G", &currentOp, 0) || ImGui::IsKeyPressed(ImGuiKey_G)) {
         currentOperation = ImGuizmo::TRANSLATE;
         currentOp = 0;
     }

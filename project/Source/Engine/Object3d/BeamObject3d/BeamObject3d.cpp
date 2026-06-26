@@ -1,7 +1,6 @@
 #include "BeamObject3d.h"
-#include"DirectXCommon.h"
 #include"MakeMatrix.h"
-#include"SRVmanager/SrvManager.h"
+#include"SrvDescriptorHeap.h"
 #include"Log.h"
 
 void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, const TextureFactory::Handle skyBoxTexture)
@@ -22,7 +21,7 @@ void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMo
         commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-        SrvManager::SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE],commandList_);
+        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE],commandList_);
         //cameraのCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(3, camera.GetResource()->GetGPUVirtualAddress());
         //ID

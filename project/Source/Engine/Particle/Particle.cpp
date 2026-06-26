@@ -7,7 +7,7 @@
 #include"Log.h"
 
 #include"Collision.h"
-#include"SRVmanager/SrvManager.h"
+#include"SrvDescriptorHeap.h"
 #include"Model.h"
 #include"SpriteCamera.h"
 #include"ParticleEmitter.h"
@@ -52,10 +52,13 @@ void ParticleManager::Create(RootSignature* rootSignature)
     };
 }
 
-void ParticleManager::SetCommandList(ID3D12GraphicsCommandList* commandList)
+void ParticleManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
     assert(commandList_);
+
+    srvDescriptorHeap_ = srvDescriptorHeap;
+    assert(srvDescriptorHeap_);
 }
 
 Particle MakeNewParticle(
@@ -196,9 +199,9 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
     }
 
     newParticleGroup->instancingResource->Unmap(0, nullptr);
-    newParticleGroup->instanceSrvIndex = SrvManager::Allocate();
+    newParticleGroup->instanceSrvIndex = srvDescriptorHeap_->Allocate();
 
-    SrvManager::CreateSRVforStructuredBuffer(newParticleGroup->instanceSrvIndex, newParticleGroup->instancingResource.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
+    srvDescriptorHeap_->CreateSRVforStructuredBuffer(newParticleGroup->instanceSrvIndex, newParticleGroup->instancingResource.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
     //名前とパーティクルをセットにする
     particleGroups.insert(std::make_pair(name, std::move(newParticleGroup)));
 
@@ -436,9 +439,9 @@ void ParticleManager::Draw()
             //マテリアルの設定
             commandList_->SetGraphicsRootConstantBufferView(0, group->materialResource->GetGPUVirtualAddress());
             //粒ごとのトランスフォーム
-            SrvManager::SetGraphicsRootDescriptorTable(1, group->instanceSrvIndex, commandList_);
+            srvDescriptorHeap_->SetGraphicsRootDescriptorTable(1, group->instanceSrvIndex, commandList_);
             //テスクチャ
-            SrvManager::SetGraphicsRootDescriptorTable(2, group->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex,commandList_);
+            srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, group->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex,commandList_);
             //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
 
             if (group->model != nullptr && group->useModel) {

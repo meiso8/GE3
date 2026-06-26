@@ -1,18 +1,12 @@
 #include "PointLightManager.h"
 #include"DirectXCommon.h"
-#include"SRVmanager/SrvManager.h"
+#include"SrvDescriptorHeap.h"
 #include"CommandList.h"
 #include"Log.h"
 
 Microsoft::WRL::ComPtr <ID3D12Resource> PointLightManager::pointLightResource_;
 PointLight* PointLightManager::pointLightData_;
 uint32_t PointLightManager::srvIndex_;
-
-void PointLightManager::SetGraphicsRootDescriptorTable(const UINT rootParameterIndex, ID3D12GraphicsCommandList* commandList)
-{
-    //PointLightのDescriptorTableの設定をする
-    SrvManager::SetGraphicsRootDescriptorTable(rootParameterIndex, srvIndex_, commandList);
-}
 
 void PointLightManager::InitData(const uint32_t& index)
 {
@@ -42,15 +36,15 @@ void PointLightManager::Finalize()
     LogFile::Log("Finalize PointLightManager");
 }
 
-PointLightManager::PointLightManager()
+PointLightManager::PointLightManager(SrvDescriptorHeap* srvDescriptorHeap)
 {
     pointLightResource_ =
         DirectXCommon::CreateBufferResource(sizeof(PointLight) * kMaxData_);
     //書き込むためのアドレスを取得
     pointLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&pointLightData_));
 
-    srvIndex_ = SrvManager::Allocate();
-    SrvManager::CreateSRVforStructuredBuffer(srvIndex_, pointLightResource_.Get(), UINT(kMaxData_), sizeof(PointLight));
+    srvIndex_ = srvDescriptorHeap->Allocate();
+    srvDescriptorHeap->CreateSRVforStructuredBuffer(srvIndex_, pointLightResource_.Get(), UINT(kMaxData_), sizeof(PointLight));
 
     //データを初期化する
     InitDatas();

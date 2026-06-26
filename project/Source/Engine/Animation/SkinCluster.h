@@ -11,7 +11,7 @@ const uint32_t kNumMaxInfluence = 4;
 
 struct Skeleton;
 struct ModelData;
-
+class SrvDescriptorHeap;
 struct VertexInfluence {
     std::array<float, kNumMaxInfluence> weights;
     std::array<int32_t, kNumMaxInfluence> jointIndices;
@@ -35,6 +35,12 @@ struct SkinCluster {
     uint32_t paletteSrvIndex;
 };
 
-SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData);
+class Skin {
+private:
+    static SrvDescriptorHeap* srvDescriptorHeap_;
+public:
+    static void SetSrvDescriptorHeap(SrvDescriptorHeap* srvDescriptorHeap);
+    static SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData);
+    static void UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton);
+};
 
-void UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton);

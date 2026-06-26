@@ -37,6 +37,7 @@ struct QuaternionTransform;
 struct PointLight;
 
 struct CharacterState;
+class SrvDescriptorHeap;
 
 #include "nlohmann/json.hpp"
 class DebugUI
@@ -49,9 +50,9 @@ public:
     static nlohmann::json& FindJsonFile(std::string& tagName ,bool useFilter = false, const char* containFileName = "unKnown");
     static void ShowJsonFileSaveMessage(const std::string& name);
     static void CreateJsonFile(const char* containFileName = "JsonFileName");
-    static void CheckSRVIndex();
-    static void CheckSRVTexture(const int srvIndex);
-    static void CheckTextures();
+    static void CheckSRVIndex(SrvDescriptorHeap* srvDescriptorHeap);
+    static void CheckSRVTexture(const int srvIndex, SrvDescriptorHeap* srvDescriptorHeap);
+    static void CheckTextures(SrvDescriptorHeap* srvDescriptorHeap);
     /// @brief 入力
     /// @param input 
     static void CheckInput();
@@ -75,7 +76,7 @@ public:
     /// @brief Object3d
     /// @param object3d Object3d
     /// @param label 
-    static void CheckObject3d(Object3d& object3d, const char* label);
+    static void CheckObject3d(Object3d& object3d);
     /// @brief ワールドトランスフォーム
     /// @param worldTransform 
     static void CheckWorldTransform(WorldTransform& worldTransform, const char* label);

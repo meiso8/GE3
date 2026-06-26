@@ -249,9 +249,6 @@
     <ClCompile Include="Source\Engine\Object3d\Object3d\Object3d.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\SRVmanager\SrvManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Particle\ParticleEmitter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -531,10 +528,25 @@
     <ClCompile Include="Source\Engine\Mesh\Primitive\Primitive.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\RtvManager\RtvManager.cpp">
+    <ClCompile Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.cpp">
+    <ClCompile Include="Source\Engine\DescriptorHeap\DsvDescriptorHeap\DsvDescriptorHeap.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\DescriptorHeap\BaseDescriptor\BaseDescriptor.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\DescriptorHeap\SrvDescriptorHeap\SrvDescriptorHeap.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\DescriptorHeap\RtvDescriptorHeap\RtvDescriptorHeap.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\System\CollisionConfig.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -762,9 +774,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Object3d\Object3d\Object3d.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\SRVmanager\SrvManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Particle\ParticleEmitter.h">
@@ -1070,13 +1079,28 @@
     <ClInclude Include="Source\Engine\Mesh\Primitive\Primitive.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\RtvManager\RtvManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Matrix\CameraMatrix.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DescriptorHeap\DsvDescriptorHeap\DsvDescriptorHeap.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DescriptorHeap\BaseDescriptor\BaseDescriptor.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DescriptorHeap\SrvDescriptorHeap\SrvDescriptorHeap.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DescriptorHeap\RtvDescriptorHeap\RtvDescriptorHeap.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorHeap.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1087,7 +1111,6 @@
     <None Include="Resource\JsonFiles\memo.json" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
     <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
-    <None Include="Resource\JsonFiles\testtttttt.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png">

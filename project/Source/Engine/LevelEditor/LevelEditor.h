@@ -7,7 +7,7 @@
 #include<fstream>
 #include"Object3d/Object3d.h"
 #include"../System/Collider.h"
-
+#include<array>
 struct LevelData {
 
     struct ColliderData {
@@ -16,9 +16,12 @@ struct LevelData {
     };
 
     struct ObjectData {
+        std::string objectName;
         std::string fileName;
+        std::string meshTypeName;
         EulerTransform transform;
         ColliderData colliderData;
+
     };
 
     struct PlayerSpawnData {
@@ -39,24 +42,31 @@ struct LevelData {
 class LevelEditor
 {
 public:
-
+    
     struct ObjectSet {
         std::unique_ptr<Object3d> obj_ = nullptr;
         std::unique_ptr<Collider>collider_ = nullptr;
     };
 
-    LevelData* GetLevelData() { return levelData_.get(); };
-    void Load(const std::string& fileName);
-    /// @brief オブジェクトの作成関数
-    /// @param objects 
-    void CreateObject(std::vector<std::unique_ptr<ObjectSet>>&objects);
 private:
     const std::string kDefaultBaseFirectory = "Resource/JsonFiles/";
     const std::string  kExtension = ".json";
     const uint32_t kMaxObjectCount_ = 1000;
     std::unique_ptr<LevelData>levelData_ = nullptr;
+    std::array<std::string, 3> vector3Name_ = { "x","z","y" };
+    std::array<std::string, 3> transformsName_ = { "translation","rotation","scaling" };
+public:
+
+    LevelData* GetLevelData() { return levelData_.get(); };
+    void Load(const std::string& fileName, bool useButtobiEditor = false);
+    /// @brief オブジェクトの作成関数
+    /// @param objects 
+    void CreateObject(std::vector<std::unique_ptr<ObjectSet>>&objects);
+
 private:
+
     void LoadObject(nlohmann::json& object, LevelData* levelData);
     void LoadTransform(nlohmann::json& object, EulerTransform& transform);
+
 };
 

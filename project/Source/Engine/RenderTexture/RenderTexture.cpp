@@ -1,7 +1,9 @@
 #include "RenderTexture.h"
 #include"DirectXCommon.h"
-#include"Engine/SRVManager/SRVManager.h"
-#include"Engine/RtvManager/RtvManager.h"
+
+#include"SrvDescriptorHeap.h"
+#include"RtvDescriptorHeap.h"
+
 #include"PSO.h"
 #ifdef _DEVELOP
 #include "DebugUI.h"
@@ -17,16 +19,16 @@ Microsoft::WRL::ComPtr<ID3D12Resource>& RenderTexture::GetMaterialResouce(const 
 }
 
 
-void RenderTexture::Create(RtvManager& rtvManager)
+void RenderTexture::Create(RtvDescriptorHeap* rtvDescriptorHeap)
 {
     kRenderTargetClearValue_ = { 1.0f,0.0f,0.0f,1.0f };
 
-    CreateResource(kNormal0,rtvManager, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
-    CreateResource(kNormal1,rtvManager, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
+    CreateResource(kNormal0, rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
+    CreateResource(kNormal1, rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
     //サーモグラフィー用テクスチャ
-    CreateResource(kThermography, rtvManager,DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
+    CreateResource(kThermography, rtvDescriptorHeap,DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
     //ObjectID用テクスチャ　
-    CreateResource(kObjectID, rtvManager,DXGI_FORMAT_R32_UINT, false);
+    CreateResource(kObjectID, rtvDescriptorHeap,DXGI_FORMAT_R32_UINT, false);
     //ObjectID用リソース
     idReadbackResource_ = DirectXCommon::CreateReadbackBufferResource(sizeof(uint32_t));
 
@@ -43,13 +45,19 @@ void RenderTexture::Create(RtvManager& rtvManager)
     CreateMaterialThermography();
 }
 
-void RenderTexture::SetCommandList(ID3D12GraphicsCommandList* commandList)
+void RenderTexture::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
     assert(commandList_);
+    srvDescriptorHeap_ = srvDescriptorHeap;
+    assert(srvDescriptorHeap_);
 }
 
-void RenderTexture::CreateResource(const uint32_t index, RtvManager& rtvManager,DXGI_FORMAT format, bool createSRV)
+
+void RenderTexture::CreateResource(
+    const uint32_t index,
+    RtvDescriptorHeap* rtvDescriptorHeap,
+    DXGI_FORMAT format, bool createSRV)
 {
     //rtvの作成
     renderTextureDatas_[index].resource =
@@ -65,8 +73,8 @@ void RenderTexture::CreateResource(const uint32_t index, RtvManager& rtvManager,
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
     rtvDesc.Format = format;
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-    uint32_t rtvIndex = rtvManager.Allocate();
-    renderTextureDatas_[index].rtvHandleCPU = rtvManager.GetCPUDescriptorHandle(rtvIndex);
+    uint32_t rtvIndex = rtvDescriptorHeap->Allocate();
+    renderTextureDatas_[index].rtvHandleCPU = rtvDescriptorHeap->GetCPUDescriptorHandle(rtvIndex);
     DirectXCommon::GetDevice()->CreateRenderTargetView(renderTextureDatas_[index].resource.Get(), &rtvDesc, renderTextureDatas_[index].rtvHandleCPU);
 
     LogFile::Log("Rendertexture : CreateRTVDesc\n");
@@ -83,9 +91,9 @@ void RenderTexture::CreateResource(const uint32_t index, RtvManager& rtvManager,
         renderTextureSrvDesc.Texture2D.MipLevels = 1;
         LogFile::Log("Rendertexture : Create SRV\n");
 
-        renderTextureDatas_[index].srvIndex = SrvManager::Allocate();
-        renderTextureDatas_[index].srvHandleCPU = SrvManager::GetCPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
-        renderTextureDatas_[index].srvHandleGPU = SrvManager::GetGPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
+        renderTextureDatas_[index].srvIndex = srvDescriptorHeap_->Allocate();
+        renderTextureDatas_[index].srvHandleCPU = srvDescriptorHeap_->GetCPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
+        renderTextureDatas_[index].srvHandleGPU = srvDescriptorHeap_->GetGPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
         LogFile::Log("Rendertexture : GetSRVIndexAndGPUAndCPUHandle\n");
 
         DirectXCommon::GetDevice()->CreateShaderResourceView(renderTextureDatas_[index].resource.Get(), &renderTextureSrvDesc, renderTextureDatas_[index].srvHandleCPU);
@@ -180,8 +188,8 @@ void RenderTexture::DrawDissolve(const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle,
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
     commandList_->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectDissolve]->GetGPUVirtualAddress());
-    SrvManager::SetGraphicsRootDescriptorTable(1, Texture::GetSRVHandle(textureHandle), commandList_);
-    SrvManager::SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex, commandList_);
+   srvDescriptorHeap_->SetGraphicsRootDescriptorTable(1, Texture::GetSRVHandle(textureHandle), commandList_);
+   srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex, commandList_);
     commandList_->DrawInstanced(3, 1, 0, 0);
 
 
@@ -207,7 +215,7 @@ void RenderTexture::Draw( const PSO::EffectType& effectType, const D3D12_CPU_DES
     //形状を設定。PSOに設定している物とはまた別。同じものを設定すると考えておけばよい。
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
-    SrvManager::SetGraphicsRootDescriptorTable(0, renderTextureDatas_[index].srvIndex, commandList_);
+    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(0, renderTextureDatas_[index].srvIndex, commandList_);
     commandList_->SetGraphicsRootConstantBufferView(1, materialResource_[effectType]->GetGPUVirtualAddress());
     commandList_->DrawInstanced(3, 1, 0, 0);
 }
@@ -224,10 +232,10 @@ void RenderTexture::DrawOutLine( const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle,
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //SRVのDescriptorTableの先頭を設定。0はrootParameter[0]である。
     commandList_->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectDepthBasedOutline]->GetGPUVirtualAddress());
-    SrvManager::SetGraphicsRootDescriptorTable(1, depthSrvIndex, commandList_);
-    SrvManager::SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex, commandList_);
+    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(1, depthSrvIndex, commandList_);
+    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, renderTextureDatas_[index].srvIndex, commandList_);
     //サーモグラフィー用のテクスチャを利用してマスク処理をかける
-    SrvManager::SetGraphicsRootDescriptorTable(3, renderTextureDatas_[kThermography].srvIndex, commandList_);
+    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(3, renderTextureDatas_[kThermography].srvIndex, commandList_);
     commandList_->DrawInstanced(3, 1, 0, 0);
 }
 // RenderTexture.cpp にサーモグラフィー用の描画関数を追加する例
@@ -243,7 +251,7 @@ void RenderTexture::DrawThermo( const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle)
 
     // 温度テクスチャ(t2)をシェーダーに渡す
     commandList_->SetGraphicsRootConstantBufferView(0, materialResource_[PSO::kEffectThermography]->GetGPUVirtualAddress());
-    SrvManager::SetGraphicsRootDescriptorTable(1, renderTextureDatas_[kThermography].srvIndex, commandList_); // 温度用
+    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(1, renderTextureDatas_[kThermography].srvIndex, commandList_); // 温度用
 
     commandList_->DrawInstanced(3, 1, 0, 0);
 }

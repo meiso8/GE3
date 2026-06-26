@@ -33,8 +33,11 @@ private:
 	float radius_ = 1.0f;	// 衝突半径
 	AABB aabb_;
 	Ray ray_;
+
+	std::string colliderName_ = "Collider";
 	uint32_t collisionAttribute_ = 0xffffffff;	// 衝突属性
 	uint32_t collisionMask_ = 0xffffffff;		// 衝突マスク
+
 	ColliderType type_ = ColliderType::kSphere;
 	CollisionInfo collisionInfo_;
 	//新しく中心と座標を追加
@@ -50,8 +53,10 @@ private:
 	Object3d object3d_;
 #endif // DEBUG
 public:
-	void InitCalcuatedTisFrameFlag();
 	Collider();
+	void InitCalcuatedTisFrameFlag();
+	const std::string GetColliderName() { return colliderName_; };
+	void SetColliderName(const std::string& colliderName) { colliderName_ = colliderName; }
 	/// @brief 衝突時コールバック関数
 	virtual void OnCollision(Collider* collider) {
 		(void)collider;

@@ -25,8 +25,8 @@ Water::Water() {
     object_->SetTemperature(0.1f);
 
     AABB aabb = { .min = {-12.5f,-0.5f,-12.5f},.max = {12.5f,0.5f,12.5f} };
-    SetCollisionAttribute(kCollisionWater);
-    SetCollisionMask(kCollisionPlayer); // プレイヤー
+    SetCollisionAttribute(CollisionTag::GetTag("Water"));
+    SetCollisionMask(CollisionTag::GetTag("Player")); // プレイヤー
     SetWorldMatrix(object_->GetWorldTransform().matWorld_);
     // memoのサイズに合わせる
     SetAABB(aabb);
@@ -42,6 +42,8 @@ void Water::Initialize() {
     object_->SetTranslate({ 0.0f,0.75f,0.0f });
     object_->GetWaveData(0).amplitude = 0.2f;
     object_->GetWaveData(1).amplitude = 0.1f;
+    object_->SetObjectName("Water");
+    object_->RegisterObject();
 }
 
 void Water::Update() {
@@ -63,12 +65,9 @@ void Water::Update() {
         object_->GetWaveData(1).amplitude = Lerp(object_->GetWaveData(1).amplitude, 0.0f, 0.1f);
     }
 
-
-
     object_->GetWaveData(0).time += TimeManager::DeltaTime();
     object_->GetWaveData(1).time = object_->GetWaveData(0).time + 1.5f;
     object_->Update();
-    DebugUI::CheckObject3d(*object_, "Water");
 }
 
 void Water::Draw(Camera& camera) {

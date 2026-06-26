@@ -4,16 +4,17 @@
 #include"Lights/Light.h"
 #include<stdint.h>
 class CommandList;
+class SrvDescriptorHeap;
 class SpotLightManager
 {
 public:
      void Finalize();
-     SpotLightManager();
-    static void SetGraphicsRootDescriptorTable(const UINT rootParameterIndex, ID3D12GraphicsCommandList* commandList);
+     SpotLightManager() = default;
+    SpotLightManager(SrvDescriptorHeap* srvDescriptorHeap);
     static void InitData(const uint32_t index);
     static void InitDatas();
     static SpotLight& GetData(const uint32_t& index) { return spotLightData_[index]; }
-   
+    static uint32_t GetSrvIndex() { return srvIndex_; }
 public:
     static const uint32_t kMaxData_ = 20;
 private:

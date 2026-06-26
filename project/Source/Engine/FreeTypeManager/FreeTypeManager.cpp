@@ -4,7 +4,7 @@
 #include<fstream>
 #include<cassert>
 #include"DirectXCommon.h"
-#include"SRVmanager/SrvManager.h"
+#include"SrvDescriptorHeap.h"
 #include"Mesh/Font/Font.h"
 #include"Log.h"
 
@@ -18,6 +18,7 @@ unordered_map<GlyphKey, FreeTypeManager::FTTextureData> FreeTypeManager::glyphTe
 std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Font>>> FreeTypeManager::fontPool_;
 
 ID3D12GraphicsCommandList* FreeTypeManager::commandList_ = nullptr;
+SrvDescriptorHeap* FreeTypeManager::srvDescriptorHeap_ = nullptr;
 
 FreeTypeManager::FreeTypeManager()
 {    
@@ -105,15 +106,22 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
 
 }
 
-void FreeTypeManager::SetCommandList(ID3D12GraphicsCommandList* commandList)
+void FreeTypeManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
 
 {    //コマンドリストをセットする
     commandList_ = commandList;
     assert(commandList_);
     
-    LogFile::Log("SetCommandList to FreeType");
+    LogFile::Log("SetCommandList to FreeType\n");
 
-    Font::SetCommandList(commandList_);
+    srvDescriptorHeap_ = srvDescriptorHeap;
+    assert(srvDescriptorHeap_);
+
+    Font::SetCommandListAndSrvDescriptorHeap(commandList_, srvDescriptorHeap_);
+
+    LogFile::Log("Set SrvDescriptorHeap to FreeType\n");
+
+
 }
 
 void FreeTypeManager::Finalize()
@@ -412,11 +420,11 @@ void FreeTypeManager::CreateGlyphTexture(uint32_t faceHandle, FT_UInt glyphIndex
     metadata.format = DXGI_FORMAT_R8_UNORM;
     metadata.mipLevels = 1;
 
-    texData.srvIndex = SrvManager::Allocate();
+    texData.srvIndex = srvDescriptorHeap_->Allocate();
     Texture::AddTextureHandleByIndex(texData.srvIndex);
-    texData.srvHandleCPU = SrvManager::GetCPUDescriptorHandle(texData.srvIndex);
-    texData.srvHandleGPU = SrvManager::GetGPUDescriptorHandle(texData.srvIndex);
-    SrvManager::CreateSRVforTexture(texData.srvIndex, texData.ftResource.resource.Get(), metadata);
+    texData.srvHandleCPU = srvDescriptorHeap_->GetCPUDescriptorHandle(texData.srvIndex);
+    texData.srvHandleGPU = srvDescriptorHeap_->GetGPUDescriptorHandle(texData.srvIndex);
+    srvDescriptorHeap_->CreateSRVforTexture(texData.srvIndex, texData.ftResource.resource.Get(), metadata);
     texData.glyphSize = { (float)bitmap.width, (float)bitmap.rows };
     texData.bearingY = face->glyph->metrics.horiBearingY / 64.0f;
 

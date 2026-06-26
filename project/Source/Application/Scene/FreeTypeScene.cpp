@@ -47,10 +47,9 @@ FreeTypeScene::FreeTypeScene()
     beam_ = std::make_unique<Beam>();
 
     levelEditor_ = std::make_unique<LevelEditor>();
-    levelEditor_->Load("test");
+    levelEditor_->Load("objectEditor",true);
     //オブジェクトをセットする
     levelEditor_->CreateObject(objects_);
-
 
     auto* levelData = levelEditor_->GetLevelData();
 

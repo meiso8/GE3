@@ -45,8 +45,8 @@ DummyMedjed::DummyMedjed()
     object3d_->SetTemperature(0.1f);
 
     SetAABB(localAABB_);
-    SetCollisionAttribute(kCollisionDummyMedjed);
-    SetCollisionMask(kCollisionPlayer | kCollisionMedjed);
+    SetCollisionAttribute(CollisionTag::GetTag("DummyMedjed"));
+    SetCollisionMask(CollisionTag::GetTag("Player") | CollisionTag::GetTag("Medjed"));
     SetWorldMatrix(object3d_->GetWorldTransform());
 
 }

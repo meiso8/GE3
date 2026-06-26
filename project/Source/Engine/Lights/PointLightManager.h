@@ -5,13 +5,14 @@
 #include"Lights/Light.h"
 #include<cstdint>
 #include<cassert>
-
+class SrvDescriptorHeap;
 class PointLightManager
 {
 public:
     void Finalize();
-    PointLightManager();
-    static void SetGraphicsRootDescriptorTable(const UINT rootParameterIndex, ID3D12GraphicsCommandList* commandList);
+    PointLightManager()= default;
+    PointLightManager(SrvDescriptorHeap* srvDescriptorHeap);
+    static uint32_t GetSrvIndex() { return srvIndex_; };
     static void InitData(const uint32_t& index);
     static void InitDatas();
     static PointLight& GetData(const uint32_t& index) { assert(index < kMaxData_); return pointLightData_[index]; };

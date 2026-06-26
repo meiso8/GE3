@@ -21,8 +21,8 @@ Fountain::Fountain()
     waterObject_->SetTemperature(0.1f);
 
     AABB aabb = { .min = {-1.0f,0.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
-    SetCollisionAttribute(kCollisionWall); // ミイラの衝突属性
-    SetCollisionMask(kCollisionPlayer | kCollisionEnemy); // プレイヤーや壁と衝突
+    SetCollisionAttribute(CollisionTag::GetTag("Wall")); // ミイラの衝突属性
+    SetCollisionMask(CollisionTag::GetTag("Player") | CollisionTag::GetTag("Enemy")); // プレイヤーや壁と衝突
 
     //サイズに合わせる
     SetAABB(aabb);
@@ -41,6 +41,9 @@ void Fountain::Initialize()
     waterObject_->SetTranslate({0.0f,0.3f,0.0f });
     waterObject_->InitWaveData();
     waterObject_->SetColor({ 0.0f,1.0f,1.0f,0.2f });
+
+    object_->SetObjectName("Fountain");
+    object_->RegisterObject();
 }
 
 void Fountain::Update()
@@ -77,12 +80,7 @@ void Fountain::Update()
         emitter->Update();
     } 
  
-
-    DebugUI::CheckObject3d(*object_, "Fountain");
-
-    DebugUI::CheckObject3d(*waterObject_, "Water");
-
-    DebugUI::CheckEmitter(particleEmitter_[1]->GetEmitter(),"water222222222");
+    DebugUI::CheckEmitter(particleEmitter_[1]->GetEmitter(),"water");
 
     ColliderUpdate();
     //StageManager::GetInstance()->SetNestStage("MedjedStage");
@@ -97,7 +95,7 @@ void Fountain::Draw(Camera& camera)
 
 void Fountain::OnCollision(Collider* collider)
 {
-    if (collider->GetCollisionAttribute() == kCollisionPlayer) {
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Player")) {
         // プレイヤーとぶつかったときの処理
         
     }

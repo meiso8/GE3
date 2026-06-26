@@ -166,7 +166,6 @@ void SampleScene::CheckAllCollision()
 
     //プレイヤーのコライダーを追加する
     collisionManager_->AddCollider(player_.get());
-    collisionManager_->AddCollider(player_->GetEyeCollider());
 
     stageManager_->CheckCollision(*collisionManager_);
 
