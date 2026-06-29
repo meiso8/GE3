@@ -41,7 +41,7 @@ void StageChangeTrigger::Create(
             //プリミティブだったら
             object_->SetMeshAndMaterial(PrimitiveFactory::GetPrimitiveForName(meshName));
         } else {
-            object_->SetMeshAndMaterial(ModelManager::GetModel(meshName));
+            object_->SetMeshAndMaterial(ModelManager::LoadModelAndGet(meshName));
         }
     }
 
