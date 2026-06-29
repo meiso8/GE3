@@ -17,9 +17,9 @@ void StageManager::Initialize()
 
     //メモマネージャー
     memoManager_->Initialize();
-    LogFile::Log("InitializeMemoManager");
+    LogFile::Log("Initialize　MemoManager");
     currentStage_->Initialize();
-    LogFile::Log("InitializeNextScene");
+    LogFile::Log("Initialize　NextScene");
 
 }
 
@@ -54,15 +54,15 @@ void StageManager::TransitionStage()
     //次のステージがセットされていたら次のステージにする
     if (nextStage_) {
         sceneChange_->Initialize();
-        sceneChange_->SetState(SceneChange::kFadeOut,1.0f);
+        sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
         LogFile::Log("Start FadeOut");
         //メモマネージャー
         memoManager_->Initialize();
-        LogFile::Log("InitializeMemoManager");
+        LogFile::Log("Initialize MemoManager");
         currentStage_ = nextStage_;
         currentStage_->Initialize();
         nextStage_ = nullptr;
-        LogFile::Log("InitializeNextScene");
+        LogFile::Log("Initialize NextScene");
     }
 
 }
@@ -78,6 +78,7 @@ void StageManager::TransitionScene(const std::string& sceneName)
 void StageManager::SetMap(const std::string& name, std::unique_ptr<Stage> stage)
 {
     stages_[name] = std::move(stage);
+    stageNames_[stages_[name].get()] = name;
 }
 
 void StageManager::SetNestStage(const std::string& name)

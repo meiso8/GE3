@@ -15,6 +15,7 @@ AmenStage::AmenStage()
     slidePuzzleSystem_ = std::make_unique<SlidePuzzleSystem>();
     amenRa_ = std::make_unique<AmenRa>();
     backGround_ = std::make_unique<BackGround>();
+   stageChangeTrigger_ = std::make_unique<StageChangeTrigger>();
 }
 
 void AmenStage::Initialize()
@@ -30,6 +31,18 @@ void AmenStage::Initialize()
 
     amenRa_->Initialize();
     Sound::bgmVolume_ = 0.1f;
+
+    stageChangeTrigger_->Create(
+        "medjed",
+        "AnubisStage",
+        { 
+        .scale = Math::UNIT_SCALE,
+        .rotate = Math::ZERO,
+        .translate = {-10.0f,0.0f,10.0f}
+        },
+        Math::ZERO,
+        Math::UNIT_SCALE
+    );
 }
 
 void AmenStage::Update()
@@ -43,6 +56,7 @@ void AmenStage::Update()
         //ステージを水にする
         StageManager::GetInstance()->SetNestStage("WaterStage");
     }
+    stageChangeTrigger_->Update();
 }
 
 void AmenStage::Draw(Camera& camera)
@@ -50,6 +64,7 @@ void AmenStage::Draw(Camera& camera)
     backGround_->Draw(camera);
     amenRa_->Draw(camera);
     slidePuzzleSystem_->Draw(camera);
+    stageChangeTrigger_->Draw(camera);
 }
 
 void AmenStage::DrawSprite()
@@ -64,7 +79,7 @@ void AmenStage::CheckCollision(CollisionManager& collisionManager)
 
     collisionManager.AddCollider(slidePuzzleSystem_->GetPuzzleObj());
     collisionManager.AddCollider(amenRa_.get());
-    
+    collisionManager.AddCollider(stageChangeTrigger_.get());
         // 壁との当たり判定
     for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());

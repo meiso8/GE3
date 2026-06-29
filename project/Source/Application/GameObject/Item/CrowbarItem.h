@@ -18,6 +18,4 @@ public:
     void Use() override {
         //TryOpenNearbyDoor();
     }
-
-    void LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV)override;
 };

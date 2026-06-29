@@ -7,7 +7,6 @@
 #include"Particle/ParticleEmitter.h"
 #include"../GameObject/Beam/Beam.h"
 
-
 class FreeTypeScene : public BaseScene
 {
 public:
@@ -26,14 +25,12 @@ private:
     std::unique_ptr<Sprite>sprite_ = nullptr;
 
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
-    std::unique_ptr<Object3d> object3d_ = nullptr;
-    std::unique_ptr<Primitive>cylinder_ = nullptr;
     std::unique_ptr<Beam>beam_ = nullptr;
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
 
-    /* std::unique_ptr<Player>player_ = nullptr;*/
-    std::vector<std::unique_ptr<Object3d>> enemies_;
+
+
     int srvIndex = 0;
 
 

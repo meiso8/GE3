@@ -33,34 +33,7 @@ FreeTypeScene::FreeTypeScene()
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
 
-    cylinder_ = std::make_unique<Primitive>();
-    cylinder_->Create(PrimitiveGenerator::CreateCylinder());
-
-    object3d_ = std::make_unique<Object3d>();
-
-    object3d_->Create();
-    object3d_->SetMeshAndMaterial(cylinder_.get());
-
-    object3d_->SetTextureHandle(TextureFactory::GRADATION_LINE);
-    object3d_->GetMaterial().environmentCoefficient = 0.5f;
-
     beam_ = std::make_unique<Beam>();
-
-    levelEditor_ = std::make_unique<LevelEditor>();
-    levelEditor_->Load("objectEditor",true);
-    //オブジェクトをセットする
-    levelEditor_->CreateObject(objects_);
-
-    auto* levelData = levelEditor_->GetLevelData();
-
-    for (auto& enemyData : levelData->enemies) {
-        std::unique_ptr<Object3d> enemy = std::make_unique<Object3d>();
-        enemy->Create();
-        enemy->SetMeshAndMaterial(ModelManager::GetModel(enemyData.fileName));
-        enemy->Initialize();
-        enemy->SetTransform(enemyData.transform);
-        enemies_.push_back(std::move(enemy));
-    }
 
 
 }
@@ -74,22 +47,8 @@ void FreeTypeScene::Initialize()
 
     currentCamera_ = camera_.get();
 
-    //player_->Init();
-
-    //if (!levelData->players.empty()) {
-    //    auto& playerData = levelData->players[0];
-    //    player_->SetBodyPos(playerData.transform.translate);
-    //    player_->SetBodyRotate(playerData.transform.rotate);
-    //    player_->SetBodyScale(playerData.transform.scale);
-    //}
-    //player_->Update();
-
     beam_->Initialize();
 
-    object3d_->RegisterObject();
-    for (auto& obj : objects_) {
-        obj->obj_->RegisterObject();
-    }
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
     CreateParticle();
@@ -124,21 +83,9 @@ void FreeTypeScene::Update()
 
     beam_->Update();
 
-    for (auto& obj : objects_) {
-        obj->obj_->SetTemperature(1.0f);
-        obj->obj_->Update();
-    }
-
-    for (auto& obj : enemies_) {
-        obj->Update();
-    }
-
-    object3d_->Update();
-
     for (int i = 0; i < particleEmitters_.size(); ++i) {
         particleEmitters_[i]->Update();
     }
-
 
 }
 
@@ -156,16 +103,7 @@ void FreeTypeScene::DrawModel()
 
     skyBoxObj_->Draw(*currentCamera_);
 
-    object3d_->Draw(*currentCamera_, BlendMode::kBlendModeAdd, CullMode::kCullModeNone, MaskMode::kZero);
     beam_->Draw(currentCamera_);
-
-    for (auto& obj : objects_) {
-        obj->obj_->Draw(*currentCamera_);
-    }
-
-    for (auto& obj : enemies_) {
-        obj->Draw(*currentCamera_);
-    }
 
 
 }
@@ -200,7 +138,6 @@ void FreeTypeScene::CreateParticle()
 
     emitter0.accelerationField_.acceleration.y = 0.0f;
     emitter0.accelerationField_.area = { .min = {-1.0f,-1.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
-
 
     particleEmitters_[1]->SetName("ring");
 

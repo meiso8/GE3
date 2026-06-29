@@ -1,0 +1,149 @@
+{
+    "name": "SampleScene",
+    "objects": [
+        {
+            "disabled": false,
+            "file_name": "medjed",
+            "name": "Object1",
+            "nextStageName": "AnubisStage",
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -7.828859806060791,
+                    "y": -7.103988650669635e-07,
+                    "z": 25.495498657226563
+                }
+            },
+            "type": "StageChangeTrigger"
+        },
+        {
+            "disabled": false,
+            "file_name": "crowbarItem",
+            "name": "CrowbarItem2",
+            "nextStageName": "",
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "disabled": false,
+            "file_name": "player",
+            "name": "Player3",
+            "nextStageName": "",
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -4.0095367431640625,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -7.327852725982666,
+                    "y": -0.5,
+                    "z": 21.60779571533203
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "disabled": false,
+            "file_name": "Cube",
+            "name": "PuzzleObj4",
+            "nextStageName": "",
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -24.0,
+                    "y": 0.25,
+                    "z": -24.0
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "disabled": false,
+            "file_name": "AmenRa",
+            "name": "AmenRa5",
+            "nextStageName": "",
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 3.1415927410125732,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "disabled": false,
+            "file_name": "medjed",
+            "name": "Object6",
+            "nextStageName": "AnubisStage",
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -10.0,
+                    "y": 0.0,
+                    "z": 10.0
+                }
+            },
+            "type": "StageChangeTrigger"
+        }
+    ]
+}

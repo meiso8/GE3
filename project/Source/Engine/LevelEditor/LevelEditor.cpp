@@ -3,6 +3,7 @@
 #include<ctype.h>
 #include"../Mesh/PrimitiveFactory/PrimitiveFactory.h"
 
+const std::array<std::string, LevelEditor::kObjectTypeNames>  LevelEditor::objectTypeName_ = { "MESH","PlayerSpawn","EnemySpawn","StageChangeTrigger" };
 
 void LevelEditor::Load(const std::string& fileName, bool useButtobiEditor)
 {
@@ -47,11 +48,11 @@ void LevelEditor::Load(const std::string& fileName, bool useButtobiEditor)
     levelData_->objects.reserve(kMaxObjectCount_);
 
     if (useButtobiEditor) {
-        vector3Name_ = { "x","z","y" };
+        vector3Name_ = { "x","y","z" };
         transformsName_ = { "translate","rotate","scale" };
 
     } else {
-        vector3Name_ = { "x","y","z" };
+        vector3Name_ = { "x","z","y" };
         transformsName_ = { "translation","rotation","scaling" };
     }
 
@@ -73,10 +74,13 @@ void LevelEditor::Load(const std::string& fileName, bool useButtobiEditor)
 
 void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
 {
+
+    objects.clear();
+
     for (auto& objectData : levelData_->objects) {
 
         std::unique_ptr<ObjectSet> newObjctData = std::make_unique<ObjectSet>();
-     
+
         Model* model = ModelManager::GetModel(objectData.fileName);
 
         newObjctData->obj_ = std::make_unique<Object3d>();
@@ -85,10 +89,10 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
         if (model) {
             newObjctData->obj_->SetMeshAndMaterial(model);
         } else {
-          auto* primitive =  PrimitiveFactory::GetPrimitiveForName(objectData.fileName);
+            auto* primitive = PrimitiveFactory::GetPrimitiveForName(objectData.fileName);
             newObjctData->obj_->SetMeshAndMaterial(primitive);
         }
-      
+
         newObjctData->obj_->SetObjectName(objectData.objectName);
         newObjctData->obj_->RegisterObject();
 
@@ -107,6 +111,31 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
     }
 }
 
+void LevelEditor::CreateStageChangeTriggers(std::vector<std::unique_ptr<StageChangeTrigger>>& triggers)
+{
+
+    // 配列をクリア
+    triggers.clear();
+
+    for (auto& triggerData : levelData_->stageChangeTriggers_) {
+
+        // インスタンスを作成
+        std::unique_ptr<StageChangeTrigger> newTrigger = std::make_unique<StageChangeTrigger>();
+
+        newTrigger->Create(
+            triggerData.fileName,
+            triggerData.nextStageName,
+            triggerData.transform,
+            triggerData.colliderData.center,
+            triggerData.colliderData.size
+        );
+
+        // 管理用配列に追加
+        triggers.push_back(std::move(newTrigger));
+    }
+
+}
+
 
 void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
 
@@ -116,51 +145,23 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
     //種類ごとの処理
 
     //MESHがある場合
-    if (type.compare("MESH") == 0) {
+    if (type.compare(objectTypeName_[kMesh]) == 0) {
         //要素追加
         levelData->objects.emplace_back(LevelData::ObjectData{});
         LevelData::ObjectData& objectData = levelData->objects.back();
 
-        if (object.contains("name")) {
-            objectData.objectName = object["name"];
-        }
-
-        if (object.contains("file_name")) {
-            objectData.fileName = object["file_name"];
-        }
-
+        //オブジェクト名の読み込み
+        LoadName(objectData.objectName, object,"name");
+        //ファイル名の読み込み
+        LoadName(objectData.fileName, object);
         //トランスフォームのパラメータ読み込み
         LoadTransform(object, objectData.transform);
-
+        //子要素の走査
+        LoadChildren(object, levelData);
         //コライダーの読み込み
-        if (object.contains("collider")) {
+        LoadCollider(objectData.colliderData, object);
 
-            nlohmann::json& collider = object["collider"];
-
-            objectData.colliderData.center = {
-                    (float)collider["center"][0],
-                    (float)collider["center"][2],
-                    (float)collider["center"][1],
-            };
-            objectData.colliderData.size = {
-                .x = (float)collider["size"][0] ,
-                .y = (float)collider["size"][2] ,
-                .z = (float)collider["size"][1]
-            };
-
-        }
-
-
-
-        //オブジェクト走査を再起関数にまとめ、再帰呼び出して枝を走査する
-        if (object.contains("children")) {
-
-            for (nlohmann::json& child : object["children"]) {
-                LoadObject(child, levelData);
-            }
-        }
-    } else if (type.compare("PlayerSpawn") == 0) {
-
+    } else if (type.compare(objectTypeName_[kPlayerSpawn]) == 0) {
         //要素追加
         levelData->players.emplace_back(LevelData::PlayerSpawnData{});
         LevelData::PlayerSpawnData& playerData = levelData->players.back();
@@ -168,31 +169,37 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LoadTransform(object, playerData.transform);
 
 
-    } else if (type.compare("EnemySpawn") == 0) {
+    } else if (type.compare(objectTypeName_[kEnemySpawn]) == 0) {
         //要素追加
         levelData->enemies.emplace_back(LevelData::EnemySpawnData{});
         LevelData::EnemySpawnData& enemyData = levelData->enemies.back();
-
-        if (object.contains("file_name")) {
-            enemyData.fileName = object["file_name"];
-        }
         //トランスフォームのパラメータ読み込み
         LoadTransform(object, enemyData.transform);
+        //子要素の走査
+        LoadChildren(object, levelData);
 
-
-        //オブジェクト走査を再起関数にまとめ、再帰呼び出して枝を走査する
-        if (object.contains("children")) {
-
-            for (nlohmann::json& child : object["children"]) {
-                LoadObject(child, levelData);
-            }
-        }
-
+    } else if (type.compare(objectTypeName_[kStageChangeTrigger]) == 0) {
+        //要素追加
+        levelData->stageChangeTriggers_.emplace_back(LevelData::StageChangeTriggerData{});
+        LevelData::StageChangeTriggerData& stageChangeTriggerData = levelData->stageChangeTriggers_.back();
+        //次のステージ名を記録
+        LoadName(stageChangeTriggerData.nextStageName, object, "nextStageName");
+        //ファイル名の読み込み
+        LoadName(stageChangeTriggerData.fileName, object);
+        //トランスフォームのパラメータ読み込み
+        LoadTransform(object, stageChangeTriggerData.transform);
+        //コライダーの読み込み
+        LoadCollider(stageChangeTriggerData.colliderData, object);
     }
 
 }
 
-
+void LevelEditor::LoadName(std::string& fileName, nlohmann::json& object, const std::string& loadName)
+{
+    if (object.contains(loadName)) {
+        fileName = object[loadName];
+    }
+}
 
 void LevelEditor::LoadTransform(nlohmann::json& object, EulerTransform& transform)
 {
@@ -214,10 +221,10 @@ void LevelEditor::LoadTransform(nlohmann::json& object, EulerTransform& transfor
         transform.rotate.z = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[2]];
         transformIndex++;
 
-        if (vector3Name_[2]=="y") {
+        if (vector3Name_[2] == "y") {
             transform.rotate.x *= -1.0f;
             transform.rotate.z *= -1.0f;
-        } 
+        }
 
         //スケーリング
         transform.scale.x = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[0]];
@@ -225,8 +232,38 @@ void LevelEditor::LoadTransform(nlohmann::json& object, EulerTransform& transfor
         transform.scale.z = (float)loadTransform[transformsName_[transformIndex]][vector3Name_[2]];
 
     }
+}
+
+void LevelEditor::LoadChildren(nlohmann::json& object, LevelData* levelData)
+{
+    //オブジェクト走査を再起関数にまとめ、再帰呼び出して枝を走査する
+    if (object.contains("children")) {
+
+        for (nlohmann::json& child : object["children"]) {
+            LoadObject(child, levelData);
+        }
     }
+}
 
+void LevelEditor::LoadCollider(LevelData::ColliderData& colliderData, nlohmann::json& object)
+{
+    //コライダーの読み込み
+    if (object.contains("collider")) {
 
+        nlohmann::json& collider = object["collider"];
+
+        colliderData.center = {
+                (float)collider["center"][vector3Name_[0]],
+                (float)collider["center"][vector3Name_[1]],
+                (float)collider["center"][vector3Name_[2]],
+        };
+        colliderData.size = {
+            .x = (float)collider["size"][vector3Name_[0]] ,
+            .y = (float)collider["size"][vector3Name_[1]] ,
+            .z = (float)collider["size"][vector3Name_[2]]
+        };
+
+    }
+}
 
 

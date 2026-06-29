@@ -78,6 +78,7 @@ Player::Player() {
         | CollisionTag::GetTag("Mummy") 
         | CollisionTag::GetTag("Water") 
         | CollisionTag::GetTag("Floor")
+        | CollisionTag::GetTag("StageTrigger")
     );
 
     //それぞれのObject3d（WorldTransform）を作る
