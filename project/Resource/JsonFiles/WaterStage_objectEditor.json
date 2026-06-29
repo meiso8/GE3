@@ -3,9 +3,9 @@
     "objects": [
         {
             "disabled": false,
-            "file_name": "medjed",
-            "name": "Object1",
-            "nextStageName": "AnubisStage",
+            "file_name": "dummyMummy",
+            "name": "MummyRoomDoor1",
+            "nextStageName": "MummyStage",
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -18,18 +18,18 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 13.768769264221191,
+                    "x": 10.282463073730469,
                     "y": -7.103988650669635e-07,
-                    "z": 25.495498657226563
+                    "z": 11.138555526733398
                 }
             },
             "type": "StageChangeTrigger"
         },
         {
             "disabled": false,
-            "file_name": "medjed",
+            "file_name": "AmenRa",
             "name": "Object2",
-            "nextStageName": "AnubisStage",
+            "nextStageName": "AmenStage",
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -43,16 +43,16 @@
                 },
                 "translate": {
                     "x": -10.0,
-                    "y": 0.0,
-                    "z": 24.835859298706055
+                    "y": -5.960464477539063e-08,
+                    "z": 10.62145709991455
                 }
             },
             "type": "StageChangeTrigger"
         },
         {
             "disabled": false,
-            "file_name": "crowbarItem",
-            "name": "CrowbarItem3",
+            "file_name": "Water",
+            "name": "Water3",
             "nextStageName": "",
             "transform": {
                 "rotate": {
@@ -67,7 +67,7 @@
                 },
                 "translate": {
                     "x": 0.0,
-                    "y": 0.0,
+                    "y": 0.75,
                     "z": 0.0
                 }
             },
@@ -81,7 +81,7 @@
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": -5.736576080322266,
+                    "y": -9.632196426391602,
                     "z": 0.0
                 },
                 "scale": {
@@ -90,57 +90,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -9.951048851013184,
-                    "y": -0.5,
-                    "z": 6.4375739097595215
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "disabled": false,
-            "file_name": "Cube",
-            "name": "PuzzleObj5",
-            "nextStageName": "",
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
+                    "x": 10.591726303100586,
                     "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": -24.0,
-                    "y": 0.25,
-                    "z": -24.0
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "disabled": false,
-            "file_name": "AmenRa",
-            "name": "AmenRa6",
-            "nextStageName": "",
-            "transform": {
-                "rotate": {
-                    "x": 3.1415927410125732,
-                    "y": -8.74227694680485e-08,
-                    "z": 3.1415927410125732
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
+                    "z": 8.18345832824707
                 }
             },
             "type": "EMPTY"

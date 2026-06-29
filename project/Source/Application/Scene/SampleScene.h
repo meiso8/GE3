@@ -17,6 +17,8 @@
 #include"CollisionManager.h"
 
 #include"../Stage/StageManager.h"
+#include"LevelEditor/LevelEditor.h"
+
 
 class Sprite;
 class PlaneMesh;
@@ -52,13 +54,6 @@ private:
 
 #pragma region//ステージ
     StageManager* stageManager_ = nullptr;
-
-    //レベルエディタ
-    std::unique_ptr<LevelEditor> levelEditor_ = nullptr;
-    std::vector<std::unique_ptr<LevelEditor::ObjectSet>>objects_;
-    // 1. トリガーを管理するリストを用意
-    std::vector<std::unique_ptr<StageChangeTrigger>> stageTriggers_;
-
 #pragma endregion
     //衝突判定
     std::unique_ptr<CollisionManager>collisionManager_ = nullptr;

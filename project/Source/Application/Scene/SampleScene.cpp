@@ -41,8 +41,7 @@ SampleScene::SampleScene()
     uIManager_ = std::make_unique<UIManager>();
     //メモ管理
     memoManager_ = std::make_unique<MemoManager>();
-    //レベルエディタの生成
-    levelEditor_ = std::make_unique<LevelEditor>();
+
     //ステージマネージャーのインスタンスを取得する
     stageManager_ = StageManager::GetInstance();
     //プレイヤーをセットする
@@ -84,13 +83,7 @@ void SampleScene::Initialize() {
     memoManager_->Initialize();
     //アメンステージにする
     stageManager_->SetNestStage("AmenStage");
-
-    levelEditor_->Load("AmenStage_objectEditor", true);
-    //オブジェクトの生成
-    levelEditor_->CreateObject(objects_);
-    auto* levelData = levelEditor_->GetLevelData();
-    // ★ステージ遷移トリガーの生成と配置
-    levelEditor_->CreateStageChangeTriggers(stageTriggers_);
+   
     //ステージ遷移の初期化
     sceneChange_->Initialize();
     //現在のステージの初期化
@@ -130,14 +123,7 @@ void SampleScene::Update() {
         }
     }
 
-    for (auto& obj : objects_) {
-        obj->obj_->SetTemperature(1.0f);
-        obj->obj_->Update();
-    }
 
-    for (auto& trigger : stageTriggers_) {
-        trigger->Update();
-    }
 
     //ステージの更新処理
     stageManager_->Update();
@@ -179,10 +165,6 @@ void SampleScene::CheckAllCollision()
         collisionManager_->AddCollider(memo.get());
     }
 
-    //ステージ移動トリガーとの衝突
-    for (auto& trigger : stageTriggers_) {
-        collisionManager_->AddCollider(trigger.get());
-    }
 
     //プレイヤーのコライダーを追加する
     collisionManager_->AddCollider(player_.get());
@@ -255,16 +237,6 @@ void SampleScene::DrawModel() {
 
     //ステージごとの描画
     stageManager_->DrawModel(currentCamera_);
-
-    //オブジェクトの描画
-    for (auto& obj : objects_) {
-        obj->obj_->Draw(*currentCamera_);
-    }
-
-    //ステージトリガーの描画
-    for (auto& trigger : stageTriggers_) {
-        trigger->Draw(*currentCamera_);
-    }
 
     //プレイヤーの描画
     player_->Draw(*currentCamera_);

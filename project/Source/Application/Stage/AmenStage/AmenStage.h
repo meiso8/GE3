@@ -9,8 +9,6 @@
 #include"AmenRa.h"
 #include"BackGround/BackGround.h"
 
-#include"../../GameObject/StageChangeTrigger/StageChangeTrigger.h"
-
 class AmenStage :public Stage
 {
 
@@ -18,7 +16,6 @@ private:
     std::unique_ptr<SlidePuzzleSystem>slidePuzzleSystem_ = nullptr;
     std::unique_ptr<BackGround>backGround_ = nullptr;
     std::unique_ptr<AmenRa>amenRa_ = nullptr;
-    std::unique_ptr<StageChangeTrigger>stageChangeTrigger_ = nullptr;
 
 public:
     const bool IsClear();

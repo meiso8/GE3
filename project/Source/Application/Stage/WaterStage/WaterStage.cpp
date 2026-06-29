@@ -18,6 +18,10 @@ WaterStage::WaterStage()
 
 void WaterStage::Initialize()
 {
+
+    //ステージのロード
+    LoadAndCreateObject("WaterStage_objectEditor");
+
     memoManager_->GenerateMemos({ TextureFactory::MEMO2, TextureFactory::BOOK2 });
     water_->Initialize();
     papyrusWall_->Init();
@@ -48,6 +52,9 @@ void WaterStage::Update()
     water_->Update();
     papyrusWall_->Update();
 
+    //オブジェクトの更新
+    UpdateObject();
+
     if (IsClear()) {
         //クリアしていたらミイラステージになる
         StageManager::GetInstance()->SetNestStage("MummyStage");
@@ -60,7 +67,8 @@ void WaterStage::Draw(Camera& camera)
     papyrusWall_->Draw(camera);
     blockMap_->Draw(camera);
     water_->Draw(camera);
-
+    //オブジェクトの描画
+    DrawObject(camera);
 }
 
 void WaterStage::CheckCollision(CollisionManager& collisionManager)
@@ -80,5 +88,8 @@ void WaterStage::CheckCollision(CollisionManager& collisionManager)
     }
 
     collisionManager.AddCollider(water_.get());
+
+    //コライダーを追加する
+    AddObjectCollision(collisionManager);
 }
 

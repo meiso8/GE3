@@ -31,6 +31,9 @@ MedjedStage::MedjedStage()
 
 void MedjedStage::Initialize()
 {
+    //ステージのロード
+    LoadAndCreateObject("MedjedStage_objectEditor");
+
     //ライトの初期化？
     lightingManager_->Initialize();
     //パーティクルの初期化
@@ -48,8 +51,6 @@ void MedjedStage::Initialize()
     medjedManager_->Initialize();
     rhythmBullet_->Initialize();
 
-    //medjedManager_->Update();
-
     player_->Init({ 0.0f, 0.0f, 0.0f });
 
     itemManager_->GenerateItems({ "SunRod" });
@@ -61,6 +62,9 @@ void MedjedStage::Update()
 
     medjedManager_->Update();
     backGround_->Update();
+
+    //オブジェクトの更新
+    UpdateObject();
 
     if (FindMedjed()) {
 
@@ -126,6 +130,8 @@ void MedjedStage::Draw(Camera& camera)
         rhythmBullet_->Draw(camera);
     }
 
+    //オブジェクトの描画
+    DrawObject(camera);
 }
 
 void MedjedStage::DrawSprite()
@@ -180,6 +186,9 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager)
     for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());
     }
+
+    //コライダーを追加する
+    AddObjectCollision(collisionManager);
 }
 
 void MedjedStage::UpdateEmitter(const Particels& particles)

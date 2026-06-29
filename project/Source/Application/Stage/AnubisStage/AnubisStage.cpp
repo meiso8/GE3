@@ -12,6 +12,10 @@ AnubisStage::AnubisStage()
 
 void AnubisStage::Initialize()
 {
+
+    //ステージのロード
+    LoadAndCreateObject("AnubisStage_objectEditor");
+
     memoManager_->GenerateMemos({ TextureFactory::MEMO1, TextureFactory::MEMO3,TextureFactory::MEMO4,TextureFactory::BOOK4 });
     // ミイラ前に移動
     player_->Init({ 0.0f, 0.0f, -5.0f });
@@ -35,12 +39,17 @@ void AnubisStage::Update()
     //ステージをMedjedStageにする
     //StageManager::GetInstance()->SetNestStage("MedjedStage");
     fountain_->Update();
+
+    //オブジェクトの更新
+    UpdateObject();
 }
 
 void AnubisStage::Draw(Camera& camera)
 {
     fountain_->Draw(camera);
     backGround_->Draw(camera);
+    //オブジェクトの描画
+    DrawObject(camera);
 }
 
 
@@ -57,5 +66,8 @@ void AnubisStage::CheckCollision(CollisionManager& collisionManager)
     }
 
     collisionManager.AddCollider(fountain_.get());
+
+    //コライダーを追加する
+    AddObjectCollision(collisionManager);
 }
 

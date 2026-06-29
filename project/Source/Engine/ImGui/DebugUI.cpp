@@ -328,7 +328,7 @@ nlohmann::json& DebugUI::FindJsonFile(std::string& tagName, bool useFilter, cons
         ImGui::TreePop();
 
         if (tag_current >= tagOptions.size()) {
-     
+
             static nlohmann::json empty_json;
             tagName = "";
             return empty_json;
@@ -801,7 +801,9 @@ void DebugUI::CheckObject3d(Object3d& object3d)
         isInitialized = true;
     }
 
-    if (ImGui::TreeNode(objectName)) {
+    std::string selectObjectName = "SelectObject :" + std::to_string(object3d.GetObjectID());
+
+    if (ImGui::TreeNode(selectObjectName.c_str())) {
 
         //ファイルタグ名を入力
         if (ImGui::InputText("ObjectName", tagBuffer, IM_ARRAYSIZE(tagBuffer))) {
@@ -822,17 +824,6 @@ void DebugUI::CheckObject3d(Object3d& object3d)
             }
 
             ImGui::EndCombo();
-        }
-
-
-        // 直前に描画した要素が右クリックされたら、ポップアップを開く
-        if (ImGui::BeginPopupContextItem("ObjectContextMenu")) // "ObjectContextMenu"はポップアップの一意のID
-        {
-            if (ImGui::Selectable("UnregisterObject"))
-            {
-                ObjectManager::GetInstance()->UnregisterObject(&object3d);
-            }
-            ImGui::EndPopup();
         }
 
         CheckWorldTransform(object3d.GetWorldTransform(), "WorldTransform");
@@ -888,7 +879,7 @@ void DebugUI::CheckObject3d(Object3d& object3d)
             "Ring",
             "Cylinder"
             };
-           
+
             int currentPrimitive = 0;
 
             if (ImGui::Combo("Set Primitive", &currentPrimitive, topologyType, IM_ARRAYSIZE(topologyType))) {
@@ -930,6 +921,16 @@ void DebugUI::CheckObject3d(Object3d& object3d)
 
         ImGui::TreePop();
     }
+
+    // 直前に描画した要素が右クリックされたら、ポップアップを開く
+    if (ImGui::BeginPopupContextItem("ObjectContextMenu")) // "ObjectContextMenu"はポップアップの一意のID
+    {
+        if (ImGui::Selectable("UnregisterObject"))
+        {
+            ObjectManager::GetInstance()->UnregisterObject(&object3d);
+        }
+        ImGui::EndPopup();
+    }
 #endif
 }
 void DebugUI::CheckParticle(ParticleManager* particleManager)
@@ -946,14 +947,10 @@ void DebugUI::CheckParticle(ParticleManager* particleManager)
             if (ImGui::TreeNode(name.c_str())) {
 
                 ImGui::Checkbox("useModel", &group->useModel);
-                /*       ImGui::Checkbox("useBillboard", &group->useBillboard);*/
                 ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
                 auto& material = group->material;
                 CheckObject3dMaterial(
                     material->color, material->lightMode, material->shininess, material->temperature, material->uvTransform, material->environmentCoefficient, "Material");
-                //ImGui::SliderFloat3("acceleration", &group->accelerationField.acceleration.x, -100.0f, 100.0f);
-                //ImGui::SliderFloat3("area.min", &group->accelerationField.area.min.x, -100.0f, 0.0f);
-                //ImGui::SliderFloat3("area.max", &group->accelerationField.area.max.x, 0.0f, 100.0f);
                 ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
                 for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {

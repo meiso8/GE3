@@ -10,11 +10,6 @@
 #include"Input.h"
 #include"JsonFile.h"
 
-//#include"AnimationObject3d.h"
-//#include"BeamObject3d.h"
-//#include"SkyBoxObject3d.h"
-//#include"LineObject3d.h"
-
 #include"Log.h"
 
 namespace {

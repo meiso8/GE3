@@ -77,7 +77,21 @@ private:
     std::array<std::string, 3> vector3Name_ = { "x","z","y" };
     std::array<std::string, 3> transformsName_ = { "translation","rotation","scaling" };
     static const std::array<std::string, kObjectTypeNames>  objectTypeName_;
+
+private:
+    LevelEditor() = default;
+    ~LevelEditor() = default;
+
 public:
+
+    static LevelEditor* GetInstance() {
+        static LevelEditor instance;
+        return &instance;
+    }
+
+    LevelEditor(const LevelEditor&) = delete;
+    LevelEditor& operator=(const LevelEditor&) = delete;
+   
     static const std::array<std::string, kObjectTypeNames>GetObjectTypeName() { return  objectTypeName_; };
     LevelData* GetLevelData() { return levelData_.get(); };
     void Load(const std::string& fileName, bool useButtobiEditor = false);

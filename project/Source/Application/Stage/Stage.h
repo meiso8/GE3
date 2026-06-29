@@ -5,6 +5,7 @@
 #include"../GameObject/Memo/MemoManager.h"
 #include"UI/UIManager.h"
 #include"LightingManager.h"
+#include"LevelEditor/LevelEditor.h"
 
 class Camera;
 class Stage
@@ -15,6 +16,17 @@ protected:
     static MemoManager* memoManager_;
     static UIManager* uiManager_;
     static LightingManager* lightingManager_;
+
+    //レベルエディタ
+    std::vector<std::unique_ptr<LevelEditor::ObjectSet>>objects_;
+    // 1. トリガーを管理するリストを用意
+    std::vector<std::unique_ptr<StageChangeTrigger>> stageTriggers_;
+
+protected:
+    void LoadAndCreateObject(const std::string& fileName );
+    void UpdateObject();
+    void DrawObject(Camera& camera);
+    void AddObjectCollision(CollisionManager& collisionManager);
 public:
     Stage();
     static void SetMemoManager(MemoManager* memoManager) { memoManager_ = memoManager; };
