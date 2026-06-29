@@ -81,8 +81,8 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
 
         std::unique_ptr<ObjectSet> newObjctData = std::make_unique<ObjectSet>();
 
-        Model* model = ModelManager::GetModel(objectData.fileName);
-
+        Model* model = ModelManager::LoadModelAndGet(objectData.fileName);
+       
         newObjctData->obj_ = std::make_unique<Object3d>();
         newObjctData->obj_->Create();
 

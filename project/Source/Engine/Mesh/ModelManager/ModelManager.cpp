@@ -25,7 +25,6 @@ Model* ModelManager::GetModel(const std::filesystem::path& tag)
     if (models_.contains(tag)) {
         return models_.at(tag).get();
     }
-
     std::cerr << "モデルの取得に失敗しました！" << std::endl;
 
     return nullptr;
@@ -163,7 +162,7 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
     }
 
     //モデルのテクスチャを読む
-    for (auto& [name,material] : modelData->materials) {
+    for (auto& [name, material] : modelData->materials) {
         for (auto& textureData : material.textureData_) {
             if (!textureData.textureFilePath.empty()) {
                 textureData.textureSrvIndex = Texture::AddTextureHandle(textureData.textureFilePath);
@@ -178,7 +177,7 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
     if (scene->HasAnimations()) {
         modelData->animations_ = AnimationManager::LoadAnimation(filePath);
     }
-   
+
 
 
     model->SetModelData(std::move(modelData));
@@ -190,6 +189,14 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
     //ハンドルとモデルをセットにする
     models_.insert(std::make_pair(tag, std::move(model)));
 
+}
+
+Model* ModelManager::LoadModelAndGet(const std::filesystem::path& filePath)
+{
+    LoadModel(filePath);
+    // .stem() で拡張子抜きのファイル名を取得し、.string() で std::string に変換
+    std::string tag = std::filesystem::path(filePath.filename().string()).stem().string();
+    return  GetModel(tag);
 }
 
 Node ModelManager::ReadNode(aiNode* node)

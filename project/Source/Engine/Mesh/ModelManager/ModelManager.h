@@ -17,6 +17,7 @@ public:
     static std::map <const std::filesystem::path, std::unique_ptr< Model>>& GetModels() { return models_; };
     static void Finalize();
     static void LoadModel(const std::filesystem::path& filePath);
+    static Model* LoadModelAndGet(const std::filesystem::path& filePath);
 private:
     static Node ReadNode(aiNode* node);
 private:
