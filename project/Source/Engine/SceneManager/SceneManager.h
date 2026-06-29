@@ -4,7 +4,6 @@
 #include<memory>
 #include<vector>
 #include"SceneChange.h"
-#include"LevelEditor/LevelEditor.h"
 
 class BaseScene
 {

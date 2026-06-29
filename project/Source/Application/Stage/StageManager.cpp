@@ -1,7 +1,7 @@
 #include "StageManager.h"
 #include"Log.h"
 #include"SceneManager.h"
-
+#include"ObjectManager/ObjectManager.h"
 
 StageManager::~StageManager()
 {
@@ -53,6 +53,12 @@ void StageManager::TransitionStage()
 
     //次のステージがセットされていたら次のステージにする
     if (nextStage_) {
+
+        //コマンドを初期化する
+        ObjectManager::GetInstance()->Initialize();
+        //オブジェクトをクリアする
+        ObjectManager::GetInstance()->Clear();
+
         sceneChange_->Initialize();
         sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
         LogFile::Log("Start FadeOut");

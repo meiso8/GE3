@@ -15,11 +15,13 @@ AmenStage::AmenStage()
     slidePuzzleSystem_ = std::make_unique<SlidePuzzleSystem>();
     amenRa_ = std::make_unique<AmenRa>();
     backGround_ = std::make_unique<BackGround>();
-   stageChangeTrigger_ = std::make_unique<StageChangeTrigger>();
 }
 
 void AmenStage::Initialize()
 {
+    //ステージのロード
+    LoadAndCreateObject("AmenStage_objectEditor");
+
     itemManager_->GenerateItems({ "CrowbarItem" });
     memoManager_->GenerateMemos({ TextureFactory::MEMO1, TextureFactory::MEMO3,TextureFactory::MEMO4,TextureFactory::BOOK4 });
     // ミイラ前に移動
@@ -32,17 +34,6 @@ void AmenStage::Initialize()
     amenRa_->Initialize();
     Sound::bgmVolume_ = 0.1f;
 
-    stageChangeTrigger_->Create(
-        "medjed",
-        "AnubisStage",
-        { 
-        .scale = Math::UNIT_SCALE,
-        .rotate = Math::ZERO,
-        .translate = {-10.0f,0.0f,10.0f}
-        },
-        Math::ZERO,
-        Math::UNIT_SCALE
-    );
 }
 
 void AmenStage::Update()
@@ -56,7 +47,10 @@ void AmenStage::Update()
         //ステージを水にする
         StageManager::GetInstance()->SetNestStage("WaterStage");
     }
-    stageChangeTrigger_->Update();
+
+    //オブジェクトの更新
+    UpdateObject();
+
 }
 
 void AmenStage::Draw(Camera& camera)
@@ -64,7 +58,8 @@ void AmenStage::Draw(Camera& camera)
     backGround_->Draw(camera);
     amenRa_->Draw(camera);
     slidePuzzleSystem_->Draw(camera);
-    stageChangeTrigger_->Draw(camera);
+    //オブジェクトの描画
+    DrawObject(camera);
 }
 
 void AmenStage::DrawSprite()
@@ -79,11 +74,15 @@ void AmenStage::CheckCollision(CollisionManager& collisionManager)
 
     collisionManager.AddCollider(slidePuzzleSystem_->GetPuzzleObj());
     collisionManager.AddCollider(amenRa_.get());
-    collisionManager.AddCollider(stageChangeTrigger_.get());
-        // 壁との当たり判定
+
+    // 壁との当たり判定
     for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());
     }
+
+    //コライダーを追加する
+    AddObjectCollision(collisionManager);
+
 }
 
 

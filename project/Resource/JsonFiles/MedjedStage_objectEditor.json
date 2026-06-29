@@ -27,9 +27,9 @@
         },
         {
             "disabled": false,
-            "file_name": "medjed",
+            "file_name": "AmenRa",
             "name": "Object2",
-            "nextStageName": "AnubisStage",
+            "nextStageName": "AmenStage",
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -43,7 +43,7 @@
                 },
                 "translate": {
                     "x": -10.0,
-                    "y": 0.0,
+                    "y": -5.960464477539063e-08,
                     "z": 24.835859298706055
                 }
             },
@@ -51,8 +51,32 @@
         },
         {
             "disabled": false,
-            "file_name": "crowbarItem",
-            "name": "CrowbarItem3",
+            "file_name": "medjed",
+            "name": "Medjed3",
+            "nextStageName": "",
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.8153780698776245,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 7.775873184204102,
+                    "y": 0.0,
+                    "z": -7.32307243347168
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "disabled": false,
+            "file_name": "medjed",
+            "name": "GiantEnemy1",
             "nextStageName": "",
             "transform": {
                 "rotate": {
@@ -61,9 +85,9 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
                 },
                 "translate": {
                     "x": 0.0,
@@ -81,7 +105,7 @@
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": -5.736576080322266,
+                    "y": -19.63446807861328,
                     "z": 0.0
                 },
                 "scale": {
@@ -90,57 +114,33 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -9.951048851013184,
+                    "x": 0.0,
                     "y": -0.5,
-                    "z": 6.4375739097595215
+                    "z": 0.0
                 }
             },
             "type": "EMPTY"
         },
         {
             "disabled": false,
-            "file_name": "Cube",
-            "name": "PuzzleObj5",
+            "file_name": "sunMedal",
+            "name": "SunRod4",
             "nextStageName": "",
             "transform": {
                 "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
+                    "x": 1.0,
+                    "y": 6.547292232513428,
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "x": 0.03125,
+                    "y": 0.03125,
+                    "z": 0.03125
                 },
                 "translate": {
-                    "x": -24.0,
-                    "y": 0.25,
-                    "z": -24.0
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "disabled": false,
-            "file_name": "AmenRa",
-            "name": "AmenRa6",
-            "nextStageName": "",
-            "transform": {
-                "rotate": {
-                    "x": 3.1415927410125732,
-                    "y": -8.74227694680485e-08,
-                    "z": 3.1415927410125732
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
+                    "x": -0.03865993395447731,
+                    "y": -0.034057557582855225,
+                    "z": 0.10000000149011612
                 }
             },
             "type": "EMPTY"
