@@ -5,7 +5,7 @@
 
 class CollisionTag {
 public:
-    static void SetTag(const std::string& tagName);
+    static void AddTag(const std::string& tagName);
     static uint32_t GetTag(const std::string& tagName);
 private:
     static uint32_t useIndex_;

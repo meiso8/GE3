@@ -13,7 +13,9 @@
 #include"Object3d.h"
 #include"AnimationObject3d.h"
 #include"ObjectManager/ObjectManager.h"
-
+#include"LevelEditor/LevelEditor.h"
+#include"../../Application/GameObject/StageChangeTrigger/StageChangeTrigger.h"
+#include"../../Application/Stage/StageManager.h"
 #include"Sound.h"
 
 #include"Lights/Light.h"
@@ -778,6 +780,8 @@ void DebugUI::CheckPointLightData()
 
 #endif
 }
+
+
 void DebugUI::CheckObject3d(Object3d& object3d)
 {
 #ifdef USE_IMGUI
@@ -786,24 +790,40 @@ void DebugUI::CheckObject3d(Object3d& object3d)
     }
 
     auto* objectName = object3d.GetObjectName().c_str();
+    static char tagBuffer[128] = "";
+    static bool isInitialized = false;
+
+    // 初回呼び出し時のみ、引数で渡された文字列をバッファにコピー
+    if (!isInitialized && objectName != nullptr) {
+        // 安全のためにバッファサイズを超えないようにコピー
+        strncpy(tagBuffer, objectName, sizeof(tagBuffer) - 1);
+        tagBuffer[sizeof(tagBuffer) - 1] = '\0'; // 終端ヌル文字を保証
+        isInitialized = true;
+    }
 
     if (ImGui::TreeNode(objectName)) {
-
-        static char tagBuffer[128] = "";
-        static bool isInitialized = false;
-
-        // 初回呼び出し時のみ、引数で渡された文字列をバッファにコピー
-        if (!isInitialized && objectName != nullptr) {
-            // 安全のためにバッファサイズを超えないようにコピー
-            strncpy(tagBuffer, objectName, sizeof(tagBuffer) - 1);
-            tagBuffer[sizeof(tagBuffer) - 1] = '\0'; // 終端ヌル文字を保証
-            isInitialized = true;
-        }
 
         //ファイルタグ名を入力
         if (ImGui::InputText("ObjectName", tagBuffer, IM_ARRAYSIZE(tagBuffer))) {
             object3d.SetObjectName(tagBuffer);
         };
+
+        std::string currentObjectTypeName = object3d.GetObjectType();
+
+        if (ImGui::BeginCombo("Set ObjectTypeName", currentObjectTypeName.c_str())) {
+            // オブジェクト名を選択肢に入れる
+            for (auto objectTypeName : LevelEditor::GetObjectTypeName()) {
+                // 選択肢を表示（クリックされたら true を返す）
+                if (ImGui::Selectable(objectTypeName.c_str(), true)) {
+                    // クリックされたらオブジェクトタイプをセットする
+                    object3d.SetObjectType(objectTypeName);
+                    break;
+                }
+            }
+
+            ImGui::EndCombo();
+        }
+
 
         // 直前に描画した要素が右クリックされたら、ポップアップを開く
         if (ImGui::BeginPopupContextItem("ObjectContextMenu")) // "ObjectContextMenu"はポップアップの一意のID
@@ -889,6 +909,25 @@ void DebugUI::CheckObject3d(Object3d& object3d)
                 ImGui::TreePop();
             }
         }
+
+
+        // 現在トリガーに設定されている遷移先ステージ名を取得
+        std::string currentStageName = object3d.GetNextStageName();
+
+        if (ImGui::BeginCombo("Set StageName", currentStageName.c_str())) {
+            // オブジェクト名を選択肢に入れる
+            for (auto [stage, nextStageName] : StageManager::GetInstance()->GetStageNames()) {
+                // 選択肢を表示（クリックされたら true を返す）
+                if (ImGui::Selectable(nextStageName.c_str(), true)) {
+                    // クリックされたらStageNameをセットする
+                    object3d.SetNextStageName(nextStageName);
+                    break;
+                }
+            }
+
+            ImGui::EndCombo();
+        }
+
         ImGui::TreePop();
     }
 #endif

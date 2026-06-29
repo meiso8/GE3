@@ -18,6 +18,9 @@ public:
         static StageManager instance;
         return &instance;
     }
+    const std::string& GetCurrentStageName() { return stageNames_[currentStage_]; }
+    const std::map <Stage*, std::string>& GetStageNames() { return stageNames_; };
+
     void Initialize();
     void Update();
     void DrawModel(Camera* camera);
@@ -40,5 +43,6 @@ private:
     Stage* currentStage_ = nullptr;
     Stage* nextStage_ = nullptr;
     std::map < std::string, std::unique_ptr<Stage>> stages_;
+    std::map <Stage*, std::string> stageNames_;
 };
 

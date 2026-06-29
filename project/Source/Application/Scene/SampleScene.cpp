@@ -41,7 +41,8 @@ SampleScene::SampleScene()
     uIManager_ = std::make_unique<UIManager>();
     //メモ管理
     memoManager_ = std::make_unique<MemoManager>();
-
+    //レベルエディタの生成
+    levelEditor_ = std::make_unique<LevelEditor>();
     //ステージマネージャーのインスタンスを取得する
     stageManager_ = StageManager::GetInstance();
     //プレイヤーをセットする
@@ -84,8 +85,14 @@ void SampleScene::Initialize() {
     //アメンステージにする
     stageManager_->SetNestStage("AmenStage");
 
+    levelEditor_->Load("AmenStage_objectEditor", true);
+    //オブジェクトの生成
+    levelEditor_->CreateObject(objects_);
+    auto* levelData = levelEditor_->GetLevelData();
+    // ★ステージ遷移トリガーの生成と配置
+    levelEditor_->CreateStageChangeTriggers(stageTriggers_);
+    //ステージ遷移の初期化
     sceneChange_->Initialize();
-
     //現在のステージの初期化
     stageManager_->TransitionStage();
 }
@@ -123,6 +130,15 @@ void SampleScene::Update() {
         }
     }
 
+    for (auto& obj : objects_) {
+        obj->obj_->SetTemperature(1.0f);
+        obj->obj_->Update();
+    }
+
+    for (auto& trigger : stageTriggers_) {
+        trigger->Update();
+    }
+
     //ステージの更新処理
     stageManager_->Update();
 
@@ -155,12 +171,18 @@ void SampleScene::CheckAllCollision()
     //メモがヒットしているかどうか
     memoManager_->RayCastHit(*player_->raySprite_);
     // ========================//Ray================================
+
+    collisionManager_->ClearColliders();
+
     //めもとの当たり判定
     for (auto& [texture, memo] : memoManager_->GetMemos()) {
         collisionManager_->AddCollider(memo.get());
     }
 
-    collisionManager_->ClearColliders();
+    //ステージ移動トリガーとの衝突
+    for (auto& trigger : stageTriggers_) {
+        collisionManager_->AddCollider(trigger.get());
+    }
 
     //プレイヤーのコライダーを追加する
     collisionManager_->AddCollider(player_.get());
@@ -188,13 +210,6 @@ void SampleScene::Debug()
 
 #ifdef USE_IMGUI
 
-    if (Input::IsTriggerKey(DIK_V)) {
-        stageManager_->SetNestStage("MedjedStage");
-    }
-    if (Input::IsTriggerKey(DIK_B)) {
-        stageManager_->SetNestStage("AnubisStage");
-    }
-
     ImGui::Begin("Debug");
 
     if (ImGui::Button("SwitchCamera")) {
@@ -203,12 +218,23 @@ void SampleScene::Debug()
 
     DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
 
-    const char* stages[] = { "AmenStage", "WaterStage", "MedjedStage","MummyStage","AnubisStage"};
-    int stageCurrent = 0;
+    // 現在トリガーに設定されている遷移先ステージ名を取得
+    std::string currentStageName = StageManager::GetInstance()->GetCurrentStageName();
 
-    if (ImGui::Combo("CurrentStage", &stageCurrent, stages, IM_ARRAYSIZE(stages))) {
-        stageManager_->SetNestStage(stages[stageCurrent % 5]);
-    };
+    if (ImGui::BeginCombo("StageName", currentStageName.c_str())) {
+        // オブジェクト名を選択肢に入れる
+        for (auto [stage, nextStageName] : StageManager::GetInstance()->GetStageNames()) {
+            // 選択肢を表示（クリックされたら true を返す）
+            if (ImGui::Selectable(nextStageName.c_str(), true)) {
+                // クリックされたらStageNameをセットする
+                stageManager_->SetNestStage(nextStageName);
+                break;
+            }
+        }
+
+        ImGui::EndCombo();
+    }
+
 
     ImGui::End();
     //プレイヤーのデバッグ
@@ -226,8 +252,20 @@ void SampleScene::DrawModel() {
     skyboxObject3d_->Draw(*currentCamera_);
     memoManager_->Draw(*currentCamera_);
     itemManager_->Draw(*currentCamera_);
+
     //ステージごとの描画
     stageManager_->DrawModel(currentCamera_);
+
+    //オブジェクトの描画
+    for (auto& obj : objects_) {
+        obj->obj_->Draw(*currentCamera_);
+    }
+
+    //ステージトリガーの描画
+    for (auto& trigger : stageTriggers_) {
+        trigger->Draw(*currentCamera_);
+    }
+
     //プレイヤーの描画
     player_->Draw(*currentCamera_);
     //アイテムを手前に描画する

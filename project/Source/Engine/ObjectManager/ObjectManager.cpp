@@ -10,10 +10,10 @@
 #include"Input.h"
 #include"JsonFile.h"
 
-#include"AnimationObject3d.h"
-#include"BeamObject3d.h"
-#include"SkyBoxObject3d.h"
-#include"LineObject3d.h"
+//#include"AnimationObject3d.h"
+//#include"BeamObject3d.h"
+//#include"SkyBoxObject3d.h"
+//#include"LineObject3d.h"
 
 #include"Log.h"
 
@@ -165,26 +165,28 @@ void ObjectManager::Save()
     std::string sceneName = SceneManager::GetCurrentSceneName()+"Scene";
     //シーン名
     json["name"] = sceneName;
+
+    // 一度配列をクリアする
+    json["objects"] = nlohmann::json::array();
+
     for (auto& object : objects_) {
 
-        // オブジェクト名の取得 (必要に応じて object->GetName() などに変更してください)
-        std::string name = "Object" + std::to_string(object->GetObjectID());
+        // オブジェクト名の取得
+        std::string name = object->GetObjectName() + std::to_string(object->GetObjectID());
 
         std::string meshName = "empty";
-        std::string mesyType = "EMPTY";
 
         if (object->GetPrimitive()) {
             meshName = object->GetPrimitive()->GetMeshName();
-            mesyType = "MESH";
         }
 
         nlohmann::json objectJson = {
-    
             {"file_name", meshName},
             {"transform", JsonFile::EulerTransformToJson(object->GetTransform())},
             {"disabled", object->GetDisabled()},
             {"name", name},
-            { "type", mesyType },
+            {"type", object->GetObjectType() },
+            {"nextStageName",object->GetNextStageName()}
         };
 
         // 4. 配列に要素を追加

@@ -59,6 +59,9 @@ protected:
     bool disabled_ = false;
     // ==============オブジェクト名==================
     std::string objectName_ = "Object";
+    std::string objectType_ = "EMPTY";
+    //移動先シーン名
+    std::string nextStageName_ = "";
 
     // ==============マテリアル==================
     Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
@@ -82,6 +85,7 @@ protected:
 
     // ==============メッシュ情報==================
     Primitive* primitive_ = nullptr;
+
 private:
 
 public:
@@ -110,6 +114,13 @@ public:
     // ==============オブジェクト名==================
     const std::string& GetObjectName() { return objectName_; };
     void SetObjectName(const std::string& name) { objectName_ = name; }
+
+    // ==============オブジェクトタイプ==================
+    const std::string& GetObjectType() { return objectType_; };
+    void SetObjectType(const std::string& name) { objectType_ = name; }
+    // ==============次のステージをセットする==================
+    const std::string& GetNextStageName() { return nextStageName_; };
+    void SetNextStageName(const std::string& stageName) { nextStageName_ = stageName; }
 
     // ==============ID情報==================
     void SetObjectID(uint32_t id) { if (idData_) { idData_->id = id; } }

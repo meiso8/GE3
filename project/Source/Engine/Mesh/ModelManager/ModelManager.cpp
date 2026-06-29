@@ -55,8 +55,6 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
     //テクスチャ枚数上限チェック
     assert(models_.size() < kMaxModelCount);
 
-  
-
     //追加したテクスチャデータのポインタ
     std::unique_ptr<Model> model = std::make_unique<Model>();
 

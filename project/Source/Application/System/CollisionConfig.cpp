@@ -5,7 +5,7 @@ uint32_t CollisionTag::useIndex_ = 0;
 const uint32_t CollisionTag::maxCount_ = 1000;
 std::unordered_map<std::string, uint32_t>CollisionTag::tags_;
 
-void CollisionTag::SetTag(const std::string& tagName)
+void CollisionTag::AddTag(const std::string& tagName)
 {
     if (tags_.contains(tagName)|| useIndex_ >= maxCount_) {
         return;
@@ -32,21 +32,23 @@ void TagFactory::SetTag()
 {
 
 
-   CollisionTag::SetTag("Player");
-   CollisionTag::SetTag("PlayerBulletCold");
-   CollisionTag::SetTag("PlayerBulletHot");
+   CollisionTag::AddTag("Player");
+   CollisionTag::AddTag("PlayerBulletCold");
+   CollisionTag::AddTag("PlayerBulletHot");
 
-   CollisionTag::SetTag("Enemy");
-   CollisionTag::SetTag("EnemyBulletCold");
-   CollisionTag::SetTag("EnemyBulletHot");
+   CollisionTag::AddTag("Enemy");
+   CollisionTag::AddTag("EnemyBulletCold");
+   CollisionTag::AddTag("EnemyBulletHot");
 
-   CollisionTag::SetTag("Medjed");
-   CollisionTag::SetTag("DummyMedjed");
-   CollisionTag::SetTag("Mummy");
+   CollisionTag::AddTag("Medjed");
+   CollisionTag::AddTag("DummyMedjed");
+   CollisionTag::AddTag("Mummy");
 
-   CollisionTag::SetTag("Wall");
-   CollisionTag::SetTag("Floor");
-   CollisionTag::SetTag("Water");
+   CollisionTag::AddTag("Wall");
+   CollisionTag::AddTag("Floor");
+   CollisionTag::AddTag("Water");
    
-   CollisionTag::SetTag("Item");
+   CollisionTag::AddTag("Item");
+
+   CollisionTag::AddTag("StageTrigger");
 }

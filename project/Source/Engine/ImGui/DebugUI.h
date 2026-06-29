@@ -47,7 +47,7 @@ public:
     static void CheckFPS();
     static void CheckSound();
     static void CheckJsonFile();
-    static nlohmann::json& FindJsonFile(std::string& tagName ,bool useFilter = false, const char* containFileName = "unKnown");
+    static nlohmann::json& FindJsonFile(std::string& tagName, bool useFilter = false, const char* containFileName = "unKnown");
     static void ShowJsonFileSaveMessage(const std::string& name);
     static void CreateJsonFile(const char* containFileName = "JsonFileName");
     static void CheckSRVIndex(SrvDescriptorHeap* srvDescriptorHeap);
@@ -68,7 +68,7 @@ public:
     /// @param sprite 
     static void CheckSprite(Sprite& sprite, const char* label);
     /// @brief Font
-/// @param Font 
+    /// @param Font 
     static void CheckFont(Font& sprite, const char* label);
     static void CheckBalloonData(Balloon& balloon);
     static void CheckWaveData(Wave& wave, const char* label);
@@ -102,7 +102,7 @@ public:
     /// @param camera 
     static void CheckCamera(CameraMatrix& cameraMatrix, CameraData& cameraOption, const char* label = "Camera");
     static void CheckShericalCoordinate(SphericalCoordinate& sphericalCoordinate);
-    static void CheckParticle (ParticleManager* particleManager);
+    static void CheckParticle(ParticleManager* particleManager);
     static void CheckEmitter(Emitter& emitter, const char* label = "Emitter");
     /// @brief 色
     /// @param color 
@@ -126,7 +126,6 @@ public:
     static void CheckFlag(bool& flag, const char* label);
     static void SwitchFlag(bool& flag, const char* label);
     static void Button(const char* label, std::function<void()> onSwitch);
-
 private:
     /// @brief 光源
 /// @param directionalLights 
@@ -136,7 +135,7 @@ private:
 /// @param CheckSpotLight 
 /// @param lightType 
     static void CheckSpotLight();
-   
+
     static void CheckPointLightData();
 };
 

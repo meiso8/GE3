@@ -16,9 +16,8 @@ protected:
 
     Camera* currentCamera_ = nullptr;
     std::unique_ptr <SceneChange> sceneChange_ = nullptr;
-    //レベルエディタ
-    std::unique_ptr<LevelEditor> levelEditor_ = nullptr;
-    std::vector<std::unique_ptr<LevelEditor::ObjectSet>>objects_;
+
+
 
 public:
     Camera* GetCurrentCamera() { return currentCamera_; };
