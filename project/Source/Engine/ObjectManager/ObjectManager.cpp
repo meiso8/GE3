@@ -2,6 +2,7 @@
 #include"DebugUI.h"
 #include"RenderTexture/RenderTexture.h"
 #include"SceneManager.h"
+#include"Model.h"
 
 #ifdef USE_IMGUI
 #include"ImGuizmo.h"
@@ -171,8 +172,13 @@ void ObjectManager::Save()
 
         std::string meshName = "empty";
 
-        if (object->GetPrimitive()) {
-            meshName = object->GetPrimitive()->GetMeshName();
+        auto* primitive = object->GetPrimitive();
+        if (primitive) {
+            meshName = primitive->GetMeshName();
+        }
+
+        if (auto model = dynamic_cast<Model*>(primitive)) {
+            model->GetModelData()->directoryPath_;
         }
 
         nlohmann::json objectJson = {

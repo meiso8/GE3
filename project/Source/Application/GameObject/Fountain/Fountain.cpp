@@ -12,12 +12,12 @@ Fountain::Fountain()
 {
     object_ = std::make_unique<Object3d>();
     object_->Create();
-    object_->SetMeshAndMaterial(ModelManager::GetModel("Fountain"));
+    object_->SetMeshAndMaterial(ModelManager::GetModel("Fountain.obj"));
     object_->SetTemperature(0.2f);
 
     waterObject_ = std::make_unique<Object3d>();
     waterObject_->Create();
-    waterObject_->SetMeshAndMaterial(ModelManager::GetModel("Water2"));
+    waterObject_->SetMeshAndMaterial(ModelManager::GetModel("Water2.obj"));
     waterObject_->SetTemperature(0.1f);
 
     AABB aabb = { .min = {-1.0f,0.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };

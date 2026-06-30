@@ -43,12 +43,11 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
     std::string filename = filePath.filename().string();
     //std::string ext = filePath.extension().string();
 
-
     // .stem() で拡張子抜きのファイル名を取得し、.string() で std::string に変換
-    std::string tag = std::filesystem::path(filename).stem().string();
+    //std::string tag = std::filesystem::path(filename).stem().string();
 
     //読み込み済みテクスチャを検索
-    if (models_.contains(tag)) {
+    if (models_.contains(filename)) {
         return;
     }
     //テクスチャ枚数上限チェック
@@ -60,7 +59,9 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
     std::unique_ptr<ModelData> modelData = std::make_unique<ModelData>();
 
     //モデルデータにタグを代入
-    modelData->meshName = tag;
+    modelData->meshName = filename;
+    //ディレクトリパス
+    modelData->directoryPath_ = directoryPath;
 
     Assimp::Importer importer;
 
@@ -187,16 +188,14 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
 
 
     //ハンドルとモデルをセットにする
-    models_.insert(std::make_pair(tag, std::move(model)));
+    models_.insert(std::make_pair(filename, std::move(model)));
 
 }
 
 Model* ModelManager::LoadModelAndGet(const std::filesystem::path& filePath)
 {
     LoadModel(filePath);
-    // .stem() で拡張子抜きのファイル名を取得し、.string() で std::string に変換
-    std::string tag = std::filesystem::path(filePath.filename().string()).stem().string();
-    return  GetModel(tag);
+    return  GetModel(filePath.filename().string());
 }
 
 Node ModelManager::ReadNode(aiNode* node)

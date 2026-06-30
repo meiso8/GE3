@@ -40,5 +40,6 @@ struct ModelData :public MeshData {
     std::map<std::string, MaterialData>materials;
     Node rootNode;
     std::map <std::string, Animation> animations_;
+    std::string directoryPath_;
 };
 

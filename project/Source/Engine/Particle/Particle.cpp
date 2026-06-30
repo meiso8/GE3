@@ -28,9 +28,9 @@ std::unordered_map<std::string, std::unique_ptr <ParticleGroup> >ParticleManager
 void ParticleManager::CreateAll()
 {
     CreateParticleGroup("particle1", TextureFactory::CIRCLE, Primitive::kPlane, false);
-    CreateParticleGroup("people", TextureFactory::UV_CHECKER, Primitive::kPlane, true,1.0f, "people");
+    CreateParticleGroup("people", TextureFactory::UV_CHECKER, Primitive::kPlane, true,1.0f, "people.obj");
     CreateParticleGroup("ring", TextureFactory::GRADATION_LINE, Primitive::kRing);
-    CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, Primitive::kPlane, true,1.0f, "people");
+    CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, Primitive::kPlane, true,1.0f, "people.obj");
     CreateParticleGroup("powerCharge", TextureFactory::CIRCLE, Primitive::kPlane, false);
     CreateParticleGroup("fountain", TextureFactory::WATER_TEXTURE, Primitive::kPlane,false,0.01f);
     CreateParticleGroup("fountain2", TextureFactory::WATER_TEXTURE, Primitive::kPlane, false,0.01f);

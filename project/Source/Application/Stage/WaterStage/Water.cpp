@@ -14,7 +14,7 @@ Water::Water() {
     object_ = std::make_unique<Object3d>();
 
     object_->Create();
-    object_->SetMeshAndMaterial(ModelManager::GetModel("Water"));
+    object_->SetMeshAndMaterial(ModelManager::GetModel("Water.obj"));
 
     object_->GetWaveData(0).amplitude = 0.2f;
     object_->GetWaveData(0).direction = Normalize(Vector3{ 0.134f,0.12f,0.98f });

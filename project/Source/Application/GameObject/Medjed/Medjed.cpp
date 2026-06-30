@@ -54,7 +54,7 @@ void Medjed::MoveStart()
 
 Medjed::Medjed() {
 
-    model_ = ModelManager::GetModel("medjed");
+    model_ = ModelManager::GetModel("medjed.gltf");
    
     aniObj_ = std::make_unique<AnimationObject3d>();
     aniObj_->Create();
