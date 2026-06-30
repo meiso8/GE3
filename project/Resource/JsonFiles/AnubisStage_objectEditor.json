@@ -4,7 +4,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/Medjed",
-            "file_name": "medjed",
+            "file_name": "medjed.gltf",
             "name": "Object3",
             "nextStageName": "AmenStage",
             "transform": {
@@ -29,7 +29,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/Medjed",
-            "file_name": "medjed",
+            "file_name": "medjed.gltf",
             "name": "Object4",
             "nextStageName": "WaterStage",
             "transform": {
@@ -54,7 +54,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/player",
-            "file_name": "player",
+            "file_name": "player.obj",
             "name": "Player4",
             "nextStageName": "",
             "transform": {
@@ -79,7 +79,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/Fountain",
-            "file_name": "Fountain",
+            "file_name": "Fountain.obj",
             "name": "Fountain5",
             "nextStageName": "",
             "transform": {

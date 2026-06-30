@@ -4,7 +4,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/mummy",
-            "file_name": "dummyMummy",
+            "file_name": "dummyMummy.gltf",
             "name": "Object2",
             "nextStageName": "WaterStage",
             "transform": {
@@ -29,7 +29,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/Medjed",
-            "file_name": "medjed",
+            "file_name": "medjed.gltf",
             "name": "Object4",
             "nextStageName": "MedjedStage",
             "transform": {
@@ -54,7 +54,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/Papyrus",
-            "file_name": "Papyrus",
+            "file_name": "Papyrus.obj",
             "name": "Papyrus5",
             "nextStageName": "",
             "transform": {
@@ -79,7 +79,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/Medjed",
-            "file_name": "medjed",
+            "file_name": "medjed.gltf",
             "name": "MedjedRoomDoor4",
             "nextStageName": "MedjedStage",
             "transform": {

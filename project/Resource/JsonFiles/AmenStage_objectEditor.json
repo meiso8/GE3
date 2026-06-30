@@ -28,7 +28,8 @@
         },
         {
             "disabled": false,
-            "file_name": "medjed",
+            "directoryPath": "Resource/Models/Medjed",
+            "file_name": "medjed.gltf",
             "name": "Object2",
             "nextStageName": "AnubisStage",
             "transform": {
