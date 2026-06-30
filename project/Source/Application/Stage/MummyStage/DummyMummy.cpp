@@ -9,7 +9,7 @@ Model* DummyMummy::model_ = nullptr;
 #include"Sound.h"
 DummyMummy::DummyMummy()
 {
-    model_ = ModelManager::GetModel("dummyMummy");
+    model_ = ModelManager::GetModel("dummyMummy.gltf");
 
     object_ = std::make_unique<AnimationObject3d>();
 

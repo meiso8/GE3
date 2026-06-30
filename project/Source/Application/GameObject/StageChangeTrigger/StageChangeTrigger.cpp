@@ -24,6 +24,7 @@ StageChangeTrigger::StageChangeTrigger()
 
 void StageChangeTrigger::Create(
     const std::string& meshName,
+    const std::string& directoryPath,
     const std::string& nextStageName, 
     const EulerTransform& transform, 
     const Vector3& center,
@@ -41,7 +42,7 @@ void StageChangeTrigger::Create(
             //プリミティブだったら
             object_->SetMeshAndMaterial(PrimitiveFactory::GetPrimitiveForName(meshName));
         } else {
-            object_->SetMeshAndMaterial(ModelManager::LoadModelAndGet(meshName));
+            object_->SetMeshAndMaterial(ModelManager::LoadModelAndGet(directoryPath  + "/" +meshName ));
         }
     }
 

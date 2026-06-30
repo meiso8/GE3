@@ -8,6 +8,7 @@ public:
     ~StageChangeTrigger() = default;
     void Create(
         const std::string& meshName,
+        const std::string& directoryPath,
         const std::string& nextSceneName, 
         const EulerTransform& transform, 
         const Vector3& center,

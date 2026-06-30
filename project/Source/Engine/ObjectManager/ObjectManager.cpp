@@ -2,6 +2,7 @@
 #include"DebugUI.h"
 #include"RenderTexture/RenderTexture.h"
 #include"SceneManager.h"
+#include"Model.h"
 
 #ifdef USE_IMGUI
 #include"ImGuizmo.h"
@@ -171,8 +172,9 @@ void ObjectManager::Save()
 
         std::string meshName = "empty";
 
-        if (object->GetPrimitive()) {
-            meshName = object->GetPrimitive()->GetMeshName();
+        auto* primitive = object->GetPrimitive();
+        if (primitive) {
+            meshName = primitive->GetMeshName();
         }
 
         nlohmann::json objectJson = {
@@ -183,6 +185,11 @@ void ObjectManager::Save()
             {"type", object->GetObjectType() },
             {"nextStageName",object->GetNextStageName()}
         };
+
+        //モデルだった場合ディレクトリパスの要素を追加
+        if (auto model = dynamic_cast<Model*>(primitive)) {
+            objectJson["directoryPath"] = model->GetModelData()->directoryPath_;
+        }
 
         // 4. 配列に要素を追加
         json["objects"].push_back(objectJson);

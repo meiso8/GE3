@@ -5,7 +5,7 @@
 #include"CollisionConfig.h"
 #include"Model.h"
 Bullet::Bullet() {
-    model_ = ModelManager::GetModel("people");
+    model_ = ModelManager::GetModel("people.obj");
 
     body_.Create();
     body_.SetMeshAndMaterial(model_);

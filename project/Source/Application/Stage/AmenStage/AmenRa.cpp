@@ -11,7 +11,7 @@ AmenRa::AmenRa() {
 
     object_ = std::make_unique<Object3d>();
     object_->Create();
-    object_->SetMeshAndMaterial(ModelManager::GetModel("AmenRa"));
+    object_->SetMeshAndMaterial(ModelManager::GetModel("AmenRa.obj"));
     object_->SetLightMode(Object3d::kLightModeLReflectance);
     object_->SetTemperature(0.1f);
     AABB aabb = { .min = {-1.0f,0.0f,-1.0f},.max = {1.0f,6.01f,1.0f} };

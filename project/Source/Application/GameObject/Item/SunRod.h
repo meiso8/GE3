@@ -6,7 +6,7 @@ public:
     SunRod() {
         name_ = "SunRod";
         description_ = "太陽の力を宿した神聖な杖。";
-        SetModel("sunMedal");
+        SetModel("sunMedal.obj");
         object_->SetObjectName(name_);
         object_->RegisterObject();
     }

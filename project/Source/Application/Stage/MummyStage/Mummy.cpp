@@ -9,10 +9,10 @@ Mummy::Mummy() {
     object_ = std::make_unique<Object3d>();
 
     object_->Create();
-    object_->SetMeshAndMaterial(ModelManager::GetModel("mummy"));
+    object_->SetMeshAndMaterial(ModelManager::GetModel("mummy.obj"));
 
     object_->SetTemperature(0.2f);
-    coffinModel_ = ModelManager::GetModel("coffin");
+    coffinModel_ = ModelManager::GetModel("coffin.gltf");
     aniObj_ = std::make_unique<AnimationObject3d>();
 
     aniObj_->Create();

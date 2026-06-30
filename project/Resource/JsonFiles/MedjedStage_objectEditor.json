@@ -3,6 +3,7 @@
     "objects": [
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/Medjed",
             "file_name": "medjed",
             "name": "Object1",
             "nextStageName": "AnubisStage",
@@ -27,6 +28,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/AmenRa",
             "file_name": "AmenRa",
             "name": "Object2",
             "nextStageName": "AmenStage",
@@ -51,6 +53,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/Medjed",
             "file_name": "medjed",
             "name": "Medjed3",
             "nextStageName": "",
@@ -75,6 +78,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/Medjed",
             "file_name": "medjed",
             "name": "GiantEnemy1",
             "nextStageName": "",
@@ -99,6 +103,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/player",
             "file_name": "player",
             "name": "Player4",
             "nextStageName": "",
@@ -123,6 +128,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/sunMedal",
             "file_name": "sunMedal",
             "name": "SunRod4",
             "nextStageName": "",

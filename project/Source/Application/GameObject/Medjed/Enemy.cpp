@@ -45,7 +45,7 @@ Enemy::Enemy()
          {PHASE::EXIT, std::bind(&Enemy::Exit, this)},
     };
 
-    model_ = ModelManager::GetModel("medjed");
+    model_ = ModelManager::GetModel("medjed.gltf");
 
     bodyPos_.SetModelAndLoadAnimation(model_);
     bodyPos_.Create();
