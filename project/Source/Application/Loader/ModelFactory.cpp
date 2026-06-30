@@ -18,9 +18,11 @@ void ModelFactory::Load() {
     ModelManager::LoadModel("Resource/Models/sunMedal/crowbarItem.obj");
 
     ModelManager::LoadModel("Resource/Models/Papyrus/Papyrus.obj");
+    
     ModelManager::LoadModel("Resource/Models/Water/Water.obj");
+    ModelManager::LoadModel("Resource/Models/Water2/Water2.obj");
 
     ModelManager::LoadModel("Resource/Models/Fountain/Fountain.obj");
     ModelManager::LoadModel("Resource/Models/Building/Building.obj");
-    ModelManager::LoadModel("Resource/Models/Water2/Water2.obj");
+
 };

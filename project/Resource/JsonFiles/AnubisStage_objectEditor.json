@@ -3,6 +3,7 @@
     "objects": [
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/Medjed",
             "file_name": "medjed",
             "name": "Object3",
             "nextStageName": "AmenStage",
@@ -27,6 +28,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/Medjed",
             "file_name": "medjed",
             "name": "Object4",
             "nextStageName": "WaterStage",
@@ -51,6 +53,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/player",
             "file_name": "player",
             "name": "Player4",
             "nextStageName": "",
@@ -75,6 +78,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/Fountain",
             "file_name": "Fountain",
             "name": "Fountain5",
             "nextStageName": "",

@@ -80,8 +80,9 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
     for (auto& objectData : levelData_->objects) {
 
         std::unique_ptr<ObjectSet> newObjctData = std::make_unique<ObjectSet>();
+        auto filePath = objectData.filePath;
 
-        Model* model = ModelManager::LoadModelAndGet(objectData.fileName);
+        Model* model = ModelManager::LoadModelAndGet(filePath.directoryPath + "/" + filePath.fileName);
        
         newObjctData->obj_ = std::make_unique<Object3d>();
         newObjctData->obj_->Create();
@@ -89,7 +90,7 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
         if (model) {
             newObjctData->obj_->SetMeshAndMaterial(model);
         } else {
-            auto* primitive = PrimitiveFactory::GetPrimitiveForName(objectData.fileName);
+            auto* primitive = PrimitiveFactory::GetPrimitiveForName(objectData.filePath.fileName);
             newObjctData->obj_->SetMeshAndMaterial(primitive);
         }
 
@@ -123,7 +124,8 @@ void LevelEditor::CreateStageChangeTriggers(std::vector<std::unique_ptr<StageCha
         std::unique_ptr<StageChangeTrigger> newTrigger = std::make_unique<StageChangeTrigger>();
 
         newTrigger->Create(
-            triggerData.fileName,
+            triggerData.filePath.fileName,
+            triggerData.filePath.directoryPath,
             triggerData.nextStageName,
             triggerData.transform,
             triggerData.colliderData.center,
@@ -152,8 +154,8 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
 
         //オブジェクト名の読み込み
         LoadName(objectData.objectName, object,"name");
-        //ファイル名の読み込み
-        LoadName(objectData.fileName, object);
+        //メッシュファイルパスデータをロードする
+        LoadMeshData(objectData.filePath, object);
         //トランスフォームのパラメータ読み込み
         LoadTransform(object, objectData.transform);
         //子要素の走査
@@ -168,7 +170,6 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         //トランスフォームのパラメータ読み込み
         LoadTransform(object, playerData.transform);
 
-
     } else if (type.compare(objectTypeName_[kEnemySpawn]) == 0) {
         //要素追加
         levelData->enemies.emplace_back(LevelData::EnemySpawnData{});
@@ -177,6 +178,8 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LoadTransform(object, enemyData.transform);
         //子要素の走査
         LoadChildren(object, levelData);
+        //メッシュファイルパスデータをロードする
+        LoadMeshData(enemyData.filePath, object);
 
     } else if (type.compare(objectTypeName_[kStageChangeTrigger]) == 0) {
         //要素追加
@@ -184,8 +187,8 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LevelData::StageChangeTriggerData& stageChangeTriggerData = levelData->stageChangeTriggers_.back();
         //次のステージ名を記録
         LoadName(stageChangeTriggerData.nextStageName, object, "nextStageName");
-        //ファイル名の読み込み
-        LoadName(stageChangeTriggerData.fileName, object);
+        //メッシュファイルパスデータをロードする
+        LoadMeshData(stageChangeTriggerData.filePath,object);
         //トランスフォームのパラメータ読み込み
         LoadTransform(object, stageChangeTriggerData.transform);
         //コライダーの読み込み
@@ -199,6 +202,13 @@ void LevelEditor::LoadName(std::string& fileName, nlohmann::json& object, const 
     if (object.contains(loadName)) {
         fileName = object[loadName];
     }
+}
+
+void LevelEditor::LoadMeshData(LevelData::MeshFileData& meshData, nlohmann::json& object)
+{        //ファイル名の読み込み
+    LoadName(meshData.fileName, object);
+    //ファイルディレクトリの読み込み
+    LoadName(meshData.directoryPath, object, "directoryPath");
 }
 
 void LevelEditor::LoadTransform(nlohmann::json& object, EulerTransform& transform)

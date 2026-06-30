@@ -2,8 +2,9 @@
     "name": "SampleScene",
     "objects": [
         {
+            "directoryPath": "Resource/Models/Medjed",
             "disabled": false,
-            "file_name": "medjed",
+            "file_name": "medjed.gltf",
             "name": "Object1",
             "nextStageName": "AnubisStage",
             "transform": {
@@ -32,26 +33,27 @@
             "nextStageName": "AnubisStage",
             "transform": {
                 "rotate": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
+                    "x": -3.1415908336639404,
+                    "y": -0.03849853202700615,
+                    "z": 3.1415908336639404
                 },
                 "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "x": 0.9899989366531372,
+                    "y": 0.9899999499320984,
+                    "z": 0.9899989366531372
                 },
                 "translate": {
                     "x": -10.0,
                     "y": 0.0,
-                    "z": 24.835859298706055
+                    "z": 23.619163513183594
                 }
             },
             "type": "StageChangeTrigger"
         },
         {
+            "directoryPath": "Resource/Models/sunMedal",
             "disabled": false,
-            "file_name": "crowbarItem",
+            "file_name": "crowbarItem.obj",
             "name": "CrowbarItem3",
             "nextStageName": "",
             "transform": {
@@ -74,14 +76,15 @@
             "type": "EMPTY"
         },
         {
+            "directoryPath": "Resource/Models/player",
             "disabled": false,
-            "file_name": "player",
+            "file_name": "player.obj",
             "name": "Player4",
             "nextStageName": "",
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": -17.579574584960938,
+                    "y": 1250.853515625,
                     "z": 0.0
                 },
                 "scale": {
@@ -90,9 +93,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 11.858760833740234,
-                    "y": -0.5,
-                    "z": 0.35875749588012695
+                    "x": -2.769474506378174,
+                    "y": -575.4913330078125,
+                    "z": 5.778907775878906
                 }
             },
             "type": "EMPTY"
@@ -122,8 +125,9 @@
             "type": "EMPTY"
         },
         {
+            "directoryPath": "Resource/Models/AmenRa",
             "disabled": false,
-            "file_name": "AmenRa",
+            "file_name": "AmenRa.obj",
             "name": "AmenRa6",
             "nextStageName": "",
             "transform": {

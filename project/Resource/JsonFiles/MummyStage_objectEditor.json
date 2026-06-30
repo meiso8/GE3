@@ -3,6 +3,7 @@
     "objects": [
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/mummy",
             "file_name": "dummyMummy",
             "name": "Object2",
             "nextStageName": "WaterStage",
@@ -27,6 +28,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/Medjed",
             "file_name": "medjed",
             "name": "Object4",
             "nextStageName": "MedjedStage",
@@ -51,6 +53,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/Papyrus",
             "file_name": "Papyrus",
             "name": "Papyrus5",
             "nextStageName": "",
@@ -75,6 +78,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/Medjed",
             "file_name": "medjed",
             "name": "MedjedRoomDoor4",
             "nextStageName": "MedjedStage",

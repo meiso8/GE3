@@ -8,7 +8,7 @@ public:
     CrowbarItem() {
         name_ = "CrowbarItem";
         description_ = "固く閉ざされた扉をこじ開けることができる。";
-        SetModel("crowbarItem");
+        SetModel("crowbarItem.obj");
         object_->SetObjectName(name_);
         object_->RegisterObject();
     }

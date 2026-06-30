@@ -23,9 +23,9 @@ Item::Item()
     SetWorldMatrix(*object_);
   
 }
-void Item::SetModel(const std::string& fileName)
+void Item::SetModel(const std::string& tagName)
 {
-    object_->SetMeshAndMaterial(ModelManager::GetModel(fileName));
+    object_->SetMeshAndMaterial(ModelManager::GetModel(tagName));
 }
 void Item::Init()
 {

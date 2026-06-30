@@ -17,9 +17,14 @@ struct LevelData {
         Vector3 size = { 1.0f,1.0f,1.0f };
     };
 
+    struct MeshFileData {
+        std::string fileName;
+        std::string directoryPath;
+    };
+
     struct ObjectData {
         std::string objectName;
-        std::string fileName;
+        MeshFileData filePath;
         std::string meshTypeName;
         EulerTransform transform;
         ColliderData colliderData;
@@ -31,13 +36,13 @@ struct LevelData {
     };
 
     struct EnemySpawnData {
-        std::string fileName;
+        MeshFileData filePath;
         EulerTransform transform;
     };
 
     struct StageChangeTriggerData {
         std::string nextStageName;
-        std::string fileName;
+        MeshFileData filePath;
         EulerTransform transform;
         ColliderData colliderData;
     };
@@ -107,6 +112,8 @@ private:
     /// @param object オブジェクト
     /// @param loadName どの名前を読み込むか
     void LoadName(std::string& fileName, nlohmann::json& object, const std::string& loadName = "file_name");
+    void LoadMeshData(LevelData::MeshFileData& meshData, nlohmann::json& object);
+    
     /// @brief 位置情報の読み込み
     /// @param object オブジェクト
     /// @param transform 位置情報

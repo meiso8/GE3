@@ -11,7 +11,7 @@ class Item :public Collider{
 public:
     Item();
     virtual ~Item() = default;
-    virtual void SetModel(const std::string& fileName);
+    virtual void SetModel(const std::string& tagName);
     // 3Dオブジェクトの参照（描画や当たり判定用）
     std::shared_ptr<Object3d> object_;
     // アイテムの名前や説明 

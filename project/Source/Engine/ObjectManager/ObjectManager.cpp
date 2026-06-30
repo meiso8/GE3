@@ -177,10 +177,6 @@ void ObjectManager::Save()
             meshName = primitive->GetMeshName();
         }
 
-        if (auto model = dynamic_cast<Model*>(primitive)) {
-            model->GetModelData()->directoryPath_;
-        }
-
         nlohmann::json objectJson = {
             {"file_name", meshName},
             {"transform", JsonFile::EulerTransformToJson(object->GetTransform())},
@@ -189,6 +185,11 @@ void ObjectManager::Save()
             {"type", object->GetObjectType() },
             {"nextStageName",object->GetNextStageName()}
         };
+
+        //モデルだった場合ディレクトリパスの要素を追加
+        if (auto model = dynamic_cast<Model*>(primitive)) {
+            objectJson["directoryPath"] = model->GetModelData()->directoryPath_;
+        }
 
         // 4. 配列に要素を追加
         json["objects"].push_back(objectJson);

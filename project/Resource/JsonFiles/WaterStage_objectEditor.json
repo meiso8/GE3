@@ -3,6 +3,7 @@
     "objects": [
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/mummy",
             "file_name": "dummyMummy",
             "name": "MummyRoomDoor1",
             "nextStageName": "MummyStage",
@@ -27,6 +28,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/AmenRa",
             "file_name": "AmenRa",
             "name": "Object2",
             "nextStageName": "AmenStage",
@@ -51,6 +53,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/Water",
             "file_name": "Water",
             "name": "Water3",
             "nextStageName": "",
@@ -75,6 +78,7 @@
         },
         {
             "disabled": false,
+            "directoryPath": "Resource/Models/player",
             "file_name": "player",
             "name": "Player4",
             "nextStageName": "",
