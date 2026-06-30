@@ -4,7 +4,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/mummy",
-            "file_name": "dummyMummy",
+            "file_name": "dummyMummy.gltf",
             "name": "MummyRoomDoor1",
             "nextStageName": "MummyStage",
             "transform": {
@@ -29,7 +29,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/AmenRa",
-            "file_name": "AmenRa",
+            "file_name": "AmenRa.obj",
             "name": "Object2",
             "nextStageName": "AmenStage",
             "transform": {
@@ -54,7 +54,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/Water",
-            "file_name": "Water",
+            "file_name": "Water.obj",
             "name": "Water3",
             "nextStageName": "",
             "transform": {
@@ -79,7 +79,7 @@
         {
             "disabled": false,
             "directoryPath": "Resource/Models/player",
-            "file_name": "player",
+            "file_name": "player.obj",
             "name": "Player4",
             "nextStageName": "",
             "transform": {
