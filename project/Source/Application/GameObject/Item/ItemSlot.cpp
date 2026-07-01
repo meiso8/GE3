@@ -1,132 +1,10 @@
 #include "ItemSlot.h"
-#include"Sound.h"
 #include"SoundManager/SoundManager.h"
-
-#include"Model.h"
 #include"Input.h"
 using namespace std;
 #define rep(i,n)for(int i =0;i < n;++i)
-#include"CollisionConfig.h"
-#include"TimeManager.h"
-#include"TransformAni/TransformAni.h"
-#include"CoordinateTransform.h"
 #include"MakeMatrix.h"
 #include<algorithm>
-
-Item::Item()
-{
-    object_ = std::make_shared<Object3d>();
-    object_->Create();
-    SetAABB({ .min = { -0.5f,-0.5f,-0.5f},.max = { 0.5f,0.5f,0.5f } });
-    SetCollisionAttribute(CollisionTag::GetTag("Item"));
-    SetCollisionMask(!CollisionTag::GetTag("Item"));
-    SetWorldMatrix(*object_);
-  
-}
-void Item::SetModel(const std::string& tagName)
-{
-    object_->SetMeshAndMaterial(ModelManager::GetModel(tagName));
-}
-void Item::Init()
-{
-    isGetAnimEnd_ = false;
-    isGet_ = false;
-    isUsed_ = false;
-    aniTimer_ = 0.0f;
-    object_->Initialize();
-    startPos_ = { 0.0f };
-    endPos_ = { 0.0f };
-}
-
-void Item::DrawInfoUI()
-{
-//#ifdef USE_IMGUI
-//
-//    ImGui::Begin("Item");
-//    //ImGui::Text(description_.c_str());
-//    DebugUI::CheckObject3d(*object_, name_.c_str());
-//
-//    ImGui::End();
-//
-//#endif
-}
-
-void Item::Draw(Camera& camera)
-{
-    object_->Draw(camera);
-    //ColliderDraw(camera);
-}
-
-void Item::DrawForSlotItem(Camera& camera)
-{
-    object_->Draw(camera,kBlendModeNormal,kCullModeBack, kZero,true);
-}
-
-void Item::OnCollision(Collider* collider)
-{
-    object_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-    OnCollisionCollider();
-}
-
-void Item::Rotate()
-{
-
-    TransformAni::RotateY(object_->GetWorldTransform(), 1.0f);
-}
-
-void Item::Scale(const Vector3 start,const Vector3 end)
-{
-    float localTime = (aniTimer_ - 2.0f) / 2.0f;
-    object_->SetScale(Lerp(start, end, localTime));
-}
-
-void Item::SetScreenStartPos()
-{
-    object_->Initialize();
-
-    auto& trnasform = object_->GetTransform();
-    trnasform.translate.z = 1.0f;
-
-    startPos_ = trnasform.translate;
-    object_->Update();
-}
-
-void Item::UpdateAniTimer(const float& endTime)
-{
-    if (aniTimer_ == endTime) {
-        isGetAnimEnd_ = true;
-        return;
-    }
-
-    aniTimer_ += TimeManager::DeltaTime();
-    aniTimer_ = std::clamp(aniTimer_, 0.0f, endTime);
-}
-
-void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV)
-{
-
-    float localTime = (aniTimer_ - 2.0f) / 2.0f;
-    // スクリーン座標 → ワールド座標に変換（Z=0.5f くらいがちょうど中間）
-    Vector3 screenPoint = { screenPos.x, screenPos.y, 0.0f};
-    Vector3 worldPos = CoordinateTransform(screenPoint, matInverseVPV);
-
-    // アイテムの位置を更新！ Trigger時に格納したstartPos
-    object_->SetTranslate(Lerp(startPos_, worldPos, localTime));
-
-}
-
-void Item::SetStartEndPos(const Vector3& start, const Vector3& end)
-{
-    startPos_ = start;
-    endPos_ = end;
-}
-
-void Item::Update()
-{
-    object_->Update();
-    object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-    ColliderUpdate();
-}
 
 ItemSlot::ItemSlot()
 {
@@ -214,7 +92,7 @@ void ItemSlot::ToScreen()
 bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
 {
     //すでに使われていたら入れない
-    if (item->isUsed_ || item->isGet_) {
+    if (item->IsUsed() || item->IsGet()) {
         return false;
     }
 
@@ -223,7 +101,7 @@ bool ItemSlot::AddItem(const std::shared_ptr<Item>& item)
             slot = item;
             slot->Init();
             slot->SetScreenStartPos();
-            slot->isGet_ = true;
+            slot->SetIsGet(true);
             return true;
         }
     }
@@ -266,7 +144,7 @@ void ItemSlot::DrawUI()
 void ItemSlot::Draw()
 {
     for (auto& item : slots_) {
-        if (item && !item->isUsed_) {
+        if (item && !item->IsUsed()) {
             item->DrawForSlotItem(*itemCamera_);
         }
     }
@@ -275,16 +153,16 @@ void ItemSlot::Draw()
 void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& screenPos)
 {
     //すでに使われていたら入れない
-    if (item->isGet_ && item->aniTimer_ >= 5.0f || item->isUsed_) {
+    if (item->IsGet() && item->GetAnimTimer() >= 5.0f || item->IsUsed()) {
         return;
     }
 
     item->UpdateAniTimer();
 
-    if (item->aniTimer_ <= 2.1f) {
+    if (item->GetAnimTimer() <= 2.1f) {
         item->Rotate();
     }
-    if (item->aniTimer_ > 2.0f) {
+    if (item->GetAnimTimer() > 2.0f) {
         item->LerpScreenPos(screenPos, matInverseVPV);
         const float size = 0.03125f;
         item->Scale({ 1.0f,1.0f,1.0f }, { size,size,size });

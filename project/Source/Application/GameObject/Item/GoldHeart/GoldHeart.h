@@ -1,5 +1,5 @@
 #pragma once
-#include "ItemSlot.h"
+#include"../Item.h"
 
 class GoldHeart : public Item {
 public:

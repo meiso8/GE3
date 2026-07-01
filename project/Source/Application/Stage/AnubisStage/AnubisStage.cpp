@@ -1,6 +1,5 @@
 #include "AnubisStage.h"
 #include"Sound.h"
-#include"../StageManager.h"
 
 #include"DebugUI.h"
 
@@ -35,9 +34,6 @@ void AnubisStage::Update()
     Sound::PlayBGM(SoundFactory::BGM_Sun);
 
     backGround_->Update();
-
-    //ステージをMedjedStageにする
-    //StageManager::GetInstance()->SetNestStage("MedjedStage");
     fountain_->Update();
 
     //オブジェクトの更新

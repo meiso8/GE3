@@ -1,19 +1,12 @@
 #include "WaterStage.h"
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
-#include"../StageManager.h"
 
-const bool WaterStage::IsClear()
-{
-    //金の心臓を手に入れたとき
-    return (blockMap_->IsClear() && itemManager_->HasItem("GoldHeart") && itemManager_->GetItem("GoldHeart")->isGetAnimEnd_);
-}
 WaterStage::WaterStage()
 {
     water_ = std::make_unique<Water>();
     papyrusWall_ = std::make_unique<PapyrusWall>();
     blockMap_ = std::make_unique<BlockMap>();
-
 }
 
 void WaterStage::Initialize()
@@ -54,12 +47,6 @@ void WaterStage::Update()
 
     //オブジェクトの更新
     UpdateObject();
-
-    if (IsClear()) {
-        //クリアしていたらミイラステージになる
-        StageManager::GetInstance()->SetNestStage("MummyStage");
-    }
-
 }
 
 void WaterStage::Draw(Camera& camera)
@@ -74,7 +61,7 @@ void WaterStage::Draw(Camera& camera)
 void WaterStage::CheckCollision(CollisionManager& collisionManager)
 {
 
-    blockMap_->RayCastHit(*player_->raySprite_);
+    blockMap_->RayCastHit(*player_->GerRaySprite());
     //Waterのかべ
     for (auto& [type, object] : papyrusWall_.get()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());

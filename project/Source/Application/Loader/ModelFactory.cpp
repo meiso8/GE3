@@ -16,6 +16,7 @@ void ModelFactory::Load() {
     ModelManager::LoadModel("Resource/Models/hart/hart.obj");
     ModelManager::LoadModel("Resource/Models/sunMedal/sunMedal.obj");
     ModelManager::LoadModel("Resource/Models/sunMedal/crowbarItem.obj");
+    ModelManager::LoadModel("Resource/Models/SolarDisc/SolarDisc.obj");
 
     ModelManager::LoadModel("Resource/Models/Papyrus/Papyrus.obj");
     

@@ -5,7 +5,6 @@
 #include<algorithm>
 #include"TimeManager.h"
 #include"Sound.h"
-#include"../StageManager.h"
 
 MummyStage::MummyStage()
 {
@@ -16,14 +15,6 @@ MummyStage::MummyStage()
     for (auto& dummyMummy : dummyMummies_) {
         dummyMummy = std::make_unique<DummyMummy>();
     }
-}
-
-
-
-const bool MummyStage::IsClear() const
-{
-    //ハートタイムが0以下になったら。
-    return heartSetEndTime_ <= 0.0f;;
 }
 
 void MummyStage::TimerUpdate()
@@ -40,7 +31,7 @@ void MummyStage::Initialize() {
 
     memoManager_->GenerateMemos({ TextureFactory::BOOK,TextureFactory::MEMO5 });
 
-    DummyMummy::SetTargetPosPtr(&player_->raySprite_->ray_.origin);
+    DummyMummy::SetTargetPosPtr(&player_->GerRaySprite()->ray_.origin);
 
     Sound::Stop(SoundFactory::BGM_Sea);
     Sound::PlaySE(SoundFactory::HORROR1);
@@ -88,15 +79,9 @@ void MummyStage::Update() {
 
     auto item = itemManager_->GetItem("GoldHeart");
 
-    if (itemManager_ && item && item->isUsed_) {
+    if (itemManager_ && item && item->IsUsed()) {
         //メジェドあらわる
         TimerUpdate();
-
-        if (IsClear()) {
-            //クリアしたらメジェドステージに行く
-            StageManager::GetInstance()->SetNestStage("MedjedStage");
-        }
-
     };
 
 
@@ -147,7 +132,7 @@ bool MummyStage::IsRayCastHit(RaySprite& raySprite)
 void MummyStage::CheckCollision(CollisionManager& collisionManager)
 {
 
-    if (IsRayCastHit(*player_->raySprite_)) {
+    if (IsRayCastHit(*player_->GerRaySprite())) {
 
         //オープンし終わったら
         if (mummy_->GetIsOpenEnd()) {

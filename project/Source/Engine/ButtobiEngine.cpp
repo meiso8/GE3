@@ -338,15 +338,13 @@ void ButtobiEngine::PreCommandSet() {
     SceneManager::DrawModel();
     //パーティクルの描画
     particleManager_->Draw();
-
     //ポストエフェクトのあと設定
     directXCommon_->RenderTexturePostDraw();
-
+    //描画前処理
     directXCommon_->PreDraw();
-
     //SRV管理の描画前処理
     srvDescriptorHeap_->PreDraw(commandList);
-
+    //ビューポートとシザー
     directXCommon_->VeiwPortAndScissorRect();
 }
 

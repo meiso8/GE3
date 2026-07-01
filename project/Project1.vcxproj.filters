@@ -351,16 +351,16 @@
     <ClCompile Include="Source\Application\GameObject\Item\ItemSlot.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Item\CrowbarItem.cpp">
+    <ClCompile Include="Source\Application\GameObject\Item\Crowbar\Crowbar.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Item\GoldHeart.cpp">
+    <ClCompile Include="Source\Application\GameObject\Item\GoldHeart\GoldHeart.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Item\SunMedal.cpp">
+    <ClCompile Include="Source\Application\GameObject\Item\SunMedal\SunMedal.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Item\SunRod.cpp">
+    <ClCompile Include="Source\Application\GameObject\Item\SunRod\SunRod.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\SoundManager\SoundManager.cpp">
@@ -550,6 +550,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\StageChangeTrigger\StageChangeTrigger.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Item\SolarDisc\SolarDisc.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\GameObject\Item\Item.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -899,16 +905,16 @@
     <ClInclude Include="Source\Application\GameObject\Item\ItemSlot.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Item\CrowbarItem.h">
+    <ClInclude Include="Source\Application\GameObject\Item\Crowbar\Crowbar.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Item\GoldHeart.h">
+    <ClInclude Include="Source\Application\GameObject\Item\GoldHeart\GoldHeart.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Item\SunMedal.h">
+    <ClInclude Include="Source\Application\GameObject\Item\SunMedal\SunMedal.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Item\SunRod.h">
+    <ClInclude Include="Source\Application\GameObject\Item\SunRod\SunRod.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\SoundManager\SoundManager.h">
@@ -1107,6 +1113,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\StageChangeTrigger\StageChangeTrigger.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Item\SolarDisc\SolarDisc.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\GameObject\Item\Item.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

@@ -25,7 +25,6 @@ void GoldHeart::Update()
     }
 
     object_->Update();
-    object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
     ColliderUpdate();
 }
 
