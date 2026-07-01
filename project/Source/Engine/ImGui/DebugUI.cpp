@@ -40,6 +40,8 @@ namespace {
         char name[128];
         char value[128];
     };
+
+    bool useMaxGameWindow_ = false;
 }
 
 void DebugUI::CheckInt(int& value, const char* label) {
@@ -186,87 +188,86 @@ void DebugUI::CheckJsonFile()
 {
 #ifdef USE_IMGUI
 
-    if (ImGui::TreeNode("Json")) {
+    ImGui::Begin("Json");
 
         //新しくJsonFileを作成する
         CreateJsonFile();
 
-        if (ImGui::TreeNode("FindTag")) {
+    if (ImGui::TreeNode("FindTag")) {
 
-            std::string tagName = "";
+        std::string tagName = "";
 
-            nlohmann::json& jsonfile = FindJsonFile(tagName);
+        nlohmann::json& jsonfile = FindJsonFile(tagName);
 
+        ImGui::Separator();
+
+        if (ImGui::TreeNode("ShowJsonData")) {
+            ImGui::Text("Name: %s", tagName.c_str());
+            ImGui::TextWrapped("Data: %s", jsonfile.dump(2).c_str());
+            ImGui::TreePop();
             ImGui::Separator();
+        }
 
-            if (ImGui::TreeNode("ShowJsonData")) {
-                ImGui::Text("Name: %s", tagName.c_str());
-                ImGui::TextWrapped("Data: %s", jsonfile.dump(2).c_str());
-                ImGui::TreePop();
-                ImGui::Separator();
+        static char structName[128] = "structName";
+        static std::vector<Param> params = {};
+
+        if (ImGui::TreeNode("AddParam")) {
+
+            if (ImGui::InputText("StructName", structName, IM_ARRAYSIZE(structName))) {
+                JsonFile::ClearModified(tagName);
             }
 
-            static char structName[128] = "structName";
-            static std::vector<Param> params = {};
+            for (size_t i = 0; i < params.size(); ++i) {
+                if (ImGui::TreeNode(("param" + std::to_string(i)).c_str())) {
 
-            if (ImGui::TreeNode("AddParam")) {
-
-                if (ImGui::InputText("StructName", structName, IM_ARRAYSIZE(structName))) {
-                    JsonFile::ClearModified(tagName);
-                }
-
-                for (size_t i = 0; i < params.size(); ++i) {
-                    if (ImGui::TreeNode(("param" + std::to_string(i)).c_str())) {
-
-                        if (ImGui::InputText(("Name##" + std::to_string(i)).c_str(), params[i].name, IM_ARRAYSIZE(params[i].name))) {
-                            JsonFile::ClearModified(tagName);
-                        }
-
-                        if (ImGui::InputText("Value##", params[i].value, IM_ARRAYSIZE(params[i].value))) {
-                            JsonFile::ClearModified(tagName);
-                        }
-
-                        // 削除ボタン
-                        if (ImGui::Button(("Delete##" + std::to_string(i)).c_str())) {
-                            params.erase(params.begin() + i);
-                            ImGui::TreePop(); // 消したあとに TreeNode を閉じておく
-                            break; // erase したらループを抜ける（インデックスがズレるのを防ぐため）
-                        }
-
-                        ImGui::TreePop();
+                    if (ImGui::InputText(("Name##" + std::to_string(i)).c_str(), params[i].name, IM_ARRAYSIZE(params[i].name))) {
+                        JsonFile::ClearModified(tagName);
                     }
+
+                    if (ImGui::InputText("Value##", params[i].value, IM_ARRAYSIZE(params[i].value))) {
+                        JsonFile::ClearModified(tagName);
+                    }
+
+                    // 削除ボタン
+                    if (ImGui::Button(("Delete##" + std::to_string(i)).c_str())) {
+                        params.erase(params.begin() + i);
+                        ImGui::TreePop(); // 消したあとに TreeNode を閉じておく
+                        break; // erase したらループを抜ける（インデックスがズレるのを防ぐため）
+                    }
+
+                    ImGui::TreePop();
                 }
-
-                // パラメータ追加ボタン
-                if (ImGui::Button("Add New Param")) {
-                    params.push_back({ "newParam", "" });
-                    JsonFile::ClearModified(tagName);
-                }
-
-
-                ImGui::TreePop();
             }
 
-            if (ImGui::Button("Save")) {
-
-                for (const auto& param : params) {
-                    jsonfile[structName][param.name] = param.value;
-                }
-                // ファイル保存
-                JsonFile::SaveJson(tagName);
-                JsonFile::MarkModified(tagName);
-
+            // パラメータ追加ボタン
+            if (ImGui::Button("Add New Param")) {
+                params.push_back({ "newParam", "" });
+                JsonFile::ClearModified(tagName);
             }
-
-            // 保存完了メッセージを表示
-            ShowJsonFileSaveMessage(tagName);
 
 
             ImGui::TreePop();
         }
 
+        if (ImGui::Button("Save")) {
+
+            for (const auto& param : params) {
+                jsonfile[structName][param.name] = param.value;
+            }
+            // ファイル保存
+            JsonFile::SaveJson(tagName);
+            JsonFile::MarkModified(tagName);
+
+        }
+
+        // 保存完了メッセージを表示
+        ShowJsonFileSaveMessage(tagName);
+
+
         ImGui::TreePop();
     }
+
+    ImGui::End();
 #endif
 }
 
@@ -1063,6 +1064,86 @@ void DebugUI::CheckBlendMode(BlendMode& blendMode) {
     }
 #endif
 };
+
+void DebugUI::ShowMainViewPort(SrvDescriptorHeap* srvDescriptorHeap, const uint32_t srvIndex)
+{
+#ifdef USE_IMGUI
+    // 1. 画面の中心座標を計算
+    const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+    ImVec2 screen_center = ImVec2(
+        main_viewport->WorkPos.x + main_viewport->WorkSize.x * 0.5f,
+        main_viewport->WorkPos.y + main_viewport->WorkSize.y * 0.5f
+    );
+
+    bool isTabTriggered = false;
+
+    // 'tab' キーが押されたらサイズ変更のトリガーを引く
+    if (Input::IsTriggerKey(DIK_TAB)) {
+        useMaxGameWindow_ = !useMaxGameWindow_;
+        isTabTriggered = true; // このフレームで切り替わったことを記録
+    }
+
+    if (useMaxGameWindow_) {
+        // 【最大化のとき】
+        // 画面の左上に配置し、画面全体のサイズ（WorkSize）を「常に(Always)」強制適用
+        ImGui::SetNextWindowPos(main_viewport->WorkPos, ImGuiCond_Always);
+        ImGui::SetNextWindowSize(main_viewport->WorkSize, ImGuiCond_Always);
+
+        // 全画面表示っぽくするために、タイトルバー、移動、リサイズ、折りたたみを無効化
+    } else {
+        if (isTabTriggered) {
+            // 戻った瞬間だけ 800x600にして画面中央へ
+            ImGui::SetNextWindowPos(screen_center, ImGuiCond_Always, ImVec2(1.0f, 1.0f));
+            ImGui::SetNextWindowSize(ImVec2(640.0f, 360.0f), ImGuiCond_Always);
+        }
+    }
+
+    // 3. ウィンドウの開始（リサイズ禁止フラグは付けない）
+    if (ImGui::Begin("Game Window")) {
+
+        float client_w = (float)Window::GetClientWidth();
+        float client_h = (float)Window::GetClientHeight();
+
+        // ゼロ除算を防ぐ安全対策
+        if (client_h > 0.0f) {
+            float target_aspect = client_w / client_h;
+
+            // 2. 現在のImGuiウィンドウ内の「利用可能な最大サイズ」を取得
+            ImVec2 avail_size = ImGui::GetContentRegionAvail();
+
+            // 3. まず「横幅」を限界まで広げた場合のサイズを計算
+            float game_w = avail_size.x;
+            float game_h = game_w / target_aspect;
+
+            // 4. もし縦幅がウィンドウからはみ出てしまう場合は、「縦幅」を限界まで広げる計算に切り替える
+            if (game_h > avail_size.y) {
+                game_h = avail_size.y;
+                game_w = game_h * target_aspect;
+            }
+
+            // 5. 【重要】余ったスペースを計算して、ゲーム画面を中央に寄せる（レターボックス化）
+            float offset_x = (avail_size.x - game_w) * 0.5f;
+            float offset_y = (avail_size.y - game_h) * 0.5f;
+
+            // ImGuiの描画カーソル位置を、計算した余白の分だけズラす
+            ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX() + offset_x, ImGui::GetCursorPosY() + offset_y));
+
+
+            // SrvManager から GPUハンドルを取得
+            D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = srvDescriptorHeap->GetGPUDescriptorHandle(srvIndex);
+
+            // 画像の表示 (引数: テクスチャID, 表示サイズ(横, 縦))
+            ImGui::Image((ImTextureID)gpuHandle.ptr, { game_w,game_h });
+
+            // テスト用のダミー枠（実際は上の ImGui::Image などに置き換えてください）
+            ImGui::Text("GameScreenSize %.0fx%.0f", game_w, game_h);
+
+        }
+    }
+
+    ImGui::End();
+#endif
+}
 
 void DebugUI::CheckCaracterState(CharacterState& characterState, const char* label)
 {

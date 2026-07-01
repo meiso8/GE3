@@ -126,6 +126,9 @@ void ImGuiClass::Initialize(Window& window,
 void ImGuiClass::FrameStart() {
 
 
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
