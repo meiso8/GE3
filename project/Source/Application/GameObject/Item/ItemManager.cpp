@@ -7,6 +7,15 @@
 #include"DebugUI.h"
 #include"Player/RaySprite.h"
 #include"SoundManager/SoundManager.h"
+#include "Crowbar/Crowbar.h"
+#include "SunMedal/SunMedal.h"
+#include "GoldHeart/GoldHeart.h"
+#include"SunRod/SunRod.h"
+#include"SolarDisc/SolarDisc.h"
+#include"Line.h"
+
+bool ItemManager::isGetSolarDisc_ = false;
+
 ItemManager::ItemManager()
 {
 
@@ -14,10 +23,9 @@ ItemManager::ItemManager()
 
 void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
 {
-    
     // 1. 前のステージの「未取得」のアイテムだけを削除（所持品は残す）
     for (auto it = items_.begin(); it != items_.end(); ) {
-        if (!it->second->isGet_) {
+        if (!it->second->IsGet()) {
             it = items_.erase(it); // 未取得なら削除してイテレータを進める
         } else {
             ++it;
@@ -33,14 +41,16 @@ void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
         
         std::shared_ptr<Item> item = nullptr;
 
-        if (name == "CrowbarItem") {
-            item = std::make_shared<CrowbarItem>();
+        if (name == "Crowbar") {
+            item = std::make_shared<Crowbar>();
         } else if (name == "SunMedal") {
             item = std::make_shared<SunMedal>();
         } else if (name == "GoldHeart") {
             item = std::make_shared<GoldHeart>();
         } else if (name == "SunRod") {
             item = std::make_shared<SunRod>();
+        } else if(name == "SolarDisc") {
+            item = std::make_shared<SolarDisc>();
         }
 
         if (item) {
@@ -53,12 +63,24 @@ void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
 void ItemManager::Init() {
     items_.clear(); // 既存のアイテムをクリア
     itemSlot_.Init();
+    //太陽円盤取得フラグの初期化
+    isGetSolarDisc_ = false;
 }
 
 void ItemManager::Update() {
     for (auto& [name, item] : items_) {
         item->Update();
     }
+
+    if (!isGetSolarDisc_) {
+        //未取得時のみ探す
+        auto item = GetItem("SolarDisc");
+        //取得アニメーションの終了を検知したとき
+        if (item && item->IsGet()&&item->IsGetAnimEnd()) {
+            isGetSolarDisc_ = true;
+        };
+    }
+
     itemSlot_.Update();
 }
 
@@ -72,7 +94,7 @@ void ItemManager::Draw(Camera& camera) {
     for (auto& [name, item] : items_) {
         if (!item) continue;
         //★ 取得済みのアイテムはステージ上には描画しない スロット側で描画する
-        if (item->isGet_) continue;
+        if (item->IsGet()) continue;
 
         item->Draw(camera);
     }
@@ -86,7 +108,7 @@ void ItemManager::DrawUI() {
 
 bool ItemManager::HasItem(const std::string& name) {
     auto item = GetItem(name);
-    return item && item->isGet_;
+    return item && item->IsGet();
 }
 
 std::shared_ptr<Item> ItemManager::GetItem(const std::string& name) {
@@ -113,9 +135,9 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
         if (!item) continue;
 
         // ★ すでに取得済みのアイテムはレイキャスト（クリック判定）の対象外にする
-        if (item->isGet_) continue;
+        if (item->IsGet()) continue;
 
-        const auto& obj = item->object_;
+        const auto& obj = item->GetObject3d();
         if (!obj) continue;
 
         AABB box = GetAABBWorldPos(item.get()); // AABBなど
@@ -142,7 +164,7 @@ void ItemManager::UseItemFromSlot(const Vector3& pos,const char* name)
 
     if (InputBind::IsClick()) {
 
-        if (item && !item->isUsed_ && item->isGet_) {
+        if (item && !item->IsUsed() && item->IsGet()) {
             SoundManager::PlayCorrectSE();
             item->Use();
             item->SetStartEndPos(pos + item->GetStartPosOffset(), pos + item->GetEndPosOffset());

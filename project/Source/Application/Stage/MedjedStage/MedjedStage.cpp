@@ -18,10 +18,10 @@ MedjedStage::MedjedStage()
 
     auto* enemy = medjedManager_->GetEnemy();
 
-    rhythmBullet_ = std::make_unique<RhythmBullet>(enemy, player_, player_->raySprite_.get());
+    rhythmBullet_ = std::make_unique<RhythmBullet>(enemy, player_, player_->GerRaySprite());
 
 
-    medjedManager_->SetRaySprite(player_->raySprite_.get());
+    medjedManager_->SetRaySprite(player_->GerRaySprite());
 
     //パーティクルの作成
     CreateParticle();

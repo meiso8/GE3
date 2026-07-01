@@ -4,12 +4,6 @@
 #include"Sound.h"
 #include"../StageManager.h"
 
-
-const bool AmenStage::IsClear()
-{
-    return slidePuzzleSystem_->GetIsGameEnd();
-}
-
 AmenStage::AmenStage()
 {
     slidePuzzleSystem_ = std::make_unique<SlidePuzzleSystem>();
@@ -22,7 +16,7 @@ void AmenStage::Initialize()
     //ステージのロード
     LoadAndCreateObject("AmenStage_objectEditor");
 
-    itemManager_->GenerateItems({ "CrowbarItem" });
+    itemManager_->GenerateItems({ "Crowbar","SolarDisc"});
     memoManager_->GenerateMemos({ TextureFactory::MEMO1, TextureFactory::MEMO3,TextureFactory::MEMO4,TextureFactory::BOOK4 });
     // ミイラ前に移動
     player_->Init({ 0.0f, 0.0f, -5.0f });
@@ -42,11 +36,6 @@ void AmenStage::Update()
     slidePuzzleSystem_->Update(*uiManager_->GetCurPosPtr());
     amenRa_->Update();
     backGround_->Update();
-
-    if (IsClear()) {
-        //ステージを水にする
-        StageManager::GetInstance()->SetNestStage("WaterStage");
-    }
 
     //オブジェクトの更新
     UpdateObject();
@@ -70,7 +59,7 @@ void AmenStage::DrawSprite()
 
 void AmenStage::CheckCollision(CollisionManager& collisionManager)
 {
-    slidePuzzleSystem_->RayCastHit(*player_->raySprite_);
+    slidePuzzleSystem_->RayCastHit(*player_->GerRaySprite());
 
     collisionManager.AddCollider(slidePuzzleSystem_->GetPuzzleObj());
     collisionManager.AddCollider(amenRa_.get());

@@ -18,6 +18,8 @@
 #include"RenderTexture/RenderTexture.h"
 #include"Sound.h"
 #include"DebugUI.h"
+#include"Item/ItemManager.h"
+
 
 void Player::OnCollision(Collider* collider)
 {
@@ -389,6 +391,11 @@ void Player::LookBack()
 
 void Player::Thermography()
 {
+
+    if (!ItemManager::IsGetSolarDisc()) {
+        //ソーラーディスク未取得は早期リターン
+        return;
+    }
 
     RenderTexture::GetInstance()->GetMaterialDissolve()->maskVal = 1.0f - thermography_;
 

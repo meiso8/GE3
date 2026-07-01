@@ -20,21 +20,16 @@ class Sprite;
 class Player :public Collider
 {
 public:
-    void OnCollision(Collider* collider)override;
-
-    void OnCollisionEnemy(const int hitPoint = 10);
 
 
     Player();
     void Init(const Vector3& pos);
-
     void Draw(Camera& camera);
     void DrawRaySprite();
     void Update();
     void Debug();
 
     Vector3& GetForward();
-
 
     const Matrix4x4& GetEyeMatrix() {
         return eyeCollider_->GetWorldMatrix();
@@ -50,17 +45,17 @@ public:
     void SetBodyScale(const Vector3& scale) { bodyPos_.SetScale(scale); }
     HPs* GetHpsPtr() { return &characterState_.hps; }
 
+    void OnCollision(Collider* collider)override;
+    void OnCollisionEnemy(const int hitPoint = 10);
+
     EyeCollider* GetEyeCollider() {
         return eyeCollider_.get();
     }
-    float cameraSpeed_ = 1.0f;
 
-    float zoomTimer_ = 1.0f;
-    bool isZoom_ = false;
-    float zoomStartTimer_ = 0.0f;
-    std::unique_ptr<RaySprite> raySprite_ = nullptr;
     const bool& IsDead() { return characterState_.isDead; }
-
+    const float& GetZoomTimer() { return zoomTimer_; }
+    //レイスプライトクラスを包含する
+    RaySprite* GerRaySprite() { return raySprite_.get(); };
 private:
 
     void UpdateRay();
@@ -71,9 +66,19 @@ private:
     void Thermography();
     void MouseLook();
 private:
-
+    //カメラ速度
+    float cameraSpeed_ = 1.0f;
+    //ズームタイマー
+    float zoomTimer_ = 1.0f;
+    //ズームフラグ
+    bool isZoom_ = false;
+    //ズーム開始タイマー
+    float zoomStartTimer_ = 0.0f;
+    //レイスプライトクラスを包含する
+    std::unique_ptr<RaySprite> raySprite_ = nullptr;
+    //無敵
     bool isInvincible_ = false;
-
+    //床との衝突
     bool isFloorHit_ = false;
     const float kJumpSpeed_ = 0.3125;
     float hitTimer_ = 0.0f;
@@ -86,7 +91,6 @@ private:
 
     bool isThermographyEnd_ = false;
     float thermography_ = 0.0f;
-
 
     bool isLookBack_ = false;
     bool isJump_ = false;
@@ -104,7 +108,6 @@ private:
     float cameraRotateX_ = 0.0f;
 
     CharacterState characterState_;
-
 
 };
 

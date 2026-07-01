@@ -1,12 +1,12 @@
 #pragma once
 
-#include"ItemSlot.h"
+#include"../Item.h"
 
-class CrowbarItem : public Item {
+class Crowbar : public Item {
 public:
 
-    CrowbarItem() {
-        name_ = "CrowbarItem";
+    Crowbar() {
+        name_ = "Crowbar";
         description_ = "固く閉ざされた扉をこじ開けることができる。";
         SetModel("crowbarItem.obj");
         object_->SetObjectName(name_);

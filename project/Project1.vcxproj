@@ -166,6 +166,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Item\Item.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\SolarDisc\SolarDisc.cpp" />
     <ClCompile Include="Source\Application\GameObject\StageChangeTrigger\StageChangeTrigger.cpp" />
     <ClCompile Include="Source\Application\System\CollisionConfig.cpp" />
     <ClCompile Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.cpp" />
@@ -217,8 +219,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Player\RaySprite.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\ItemManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\SoundManager\SoundManager.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Item\GoldHeart.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Item\CrowbarItem.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\GoldHeart\GoldHeart.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\Crowbar\Crowbar.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\ItemSlot.cpp" />
     <ClCompile Include="Source\Application\GameObject\Medjed\MedjedManager.cpp" />
     <ClCompile Include="Source\Engine\FreeTypeManager\FreeTypeManager.cpp" />
@@ -317,8 +319,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\BackGround\World.cpp" />
     <ClCompile Include="Source\Application\Scene\TitleScene.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\UIManager.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Item\SunMedal.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Item\SunRod.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\SunMedal\SunMedal.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\SunRod\SunRod.cpp" />
     <ClCompile Include="Source\Application\GameObject\TransformAni\TransformAni.cpp" />
     <ClCompile Include="Source\Application\Stage\WaterStage\Water.cpp" />
     <ClCompile Include="Source\Application\Stage\WaterStage\WaterStage.cpp" />
@@ -330,6 +332,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DescriptorHeap.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\Item.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\SolarDisc\SolarDisc.h" />
     <ClInclude Include="Source\Application\GameObject\StageChangeTrigger\StageChangeTrigger.h" />
     <ClInclude Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.h" />
     <ClInclude Include="Source\Engine\DescriptorHeap\RtvDescriptorHeap\RtvDescriptorHeap.h" />
@@ -381,8 +385,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\Player\RaySprite.h" />
     <ClInclude Include="Source\Application\GameObject\Item\ItemManager.h" />
     <ClInclude Include="Source\Application\GameObject\SoundManager\SoundManager.h" />
-    <ClInclude Include="Source\Application\GameObject\Item\GoldHeart.h" />
-    <ClInclude Include="Source\Application\GameObject\Item\CrowbarItem.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\GoldHeart\GoldHeart.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\Crowbar\Crowbar.h" />
     <ClInclude Include="Source\Application\GameObject\Item\ItemSlot.h" />
     <ClInclude Include="Source\Application\GameObject\Medjed\MedjedManager.h" />
     <ClInclude Include="Source\Application\Loader\ModelFactory.h" />
@@ -504,8 +508,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\BackGround\World.h" />
     <ClInclude Include="Source\Application\Scene\TitleScene.h" />
     <ClInclude Include="Source\Application\GameObject\UI\UIManager.h" />
-    <ClInclude Include="Source\Application\GameObject\Item\SunMedal.h" />
-    <ClInclude Include="Source\Application\GameObject\Item\SunRod.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\SunMedal\SunMedal.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\SunRod\SunRod.h" />
     <ClInclude Include="Source\Application\GameObject\TransformAni\TransformAni.h" />
     <ClInclude Include="Source\Application\Stage\WaterStage\Water.h" />
     <ClInclude Include="Source\Application\Stage\WaterStage\WaterStage.h" />

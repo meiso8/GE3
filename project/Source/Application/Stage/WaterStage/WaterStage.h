@@ -17,7 +17,6 @@ private:
 
     bool itemApper_ = false;
 public:
-    const bool IsClear();
     WaterStage();
     void Initialize()override;
     void Update()override;

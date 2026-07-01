@@ -102,7 +102,7 @@ void SampleScene::Update() {
     } else {
         //プレイヤーの目の位置をカメラの位置とする
         camera_->SetWorldMatrix(player_->GetEyeMatrix());
-        camera_->SetFovAngleY(Easing::EaseOutBack(Camera::kFovAngle, Camera::kFovAngle * 0.5f, player_->zoomTimer_));
+        camera_->SetFovAngleY(Easing::EaseOutBack(Camera::kFovAngle, Camera::kFovAngle * 0.5f, player_->GetZoomTimer()));
         camera_->UpdateViewProjectionMatrix();
     }
 
@@ -122,8 +122,6 @@ void SampleScene::Update() {
             stageManager_->Initialize();
         }
     }
-
-
 
     //ステージの更新処理
     stageManager_->Update();
@@ -151,11 +149,11 @@ void SampleScene::CheckAllCollision()
     // ========================//Ray================================
 
     //アイテムがヒットしているか
-    auto hitItem = itemManager_->RaycastHitItem(*player_->raySprite_);
+    auto hitItem = itemManager_->RaycastHitItem(*player_->GerRaySprite());
     if (hitItem) { itemManager_->GetItemSlot().OnTriggerItemPickup(hitItem); }
 
     //メモがヒットしているかどうか
-    memoManager_->RayCastHit(*player_->raySprite_);
+    memoManager_->RayCastHit(*player_->GerRaySprite());
     // ========================//Ray================================
 
     collisionManager_->ClearColliders();

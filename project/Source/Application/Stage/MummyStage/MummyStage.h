@@ -4,8 +4,6 @@
 #include<memory>
 #include"Player/RaySprite.h"
 #include"Papyrus.h"
-#include"Item/ItemManager.h"
-#include"Memo/MemoManager.h"
 #include "MummyRoom.h" 
 #include"DummyMummy.h"
 #include<array>
@@ -22,8 +20,6 @@ public:
     const float maxTime_ = 2.0f;
     float heartSetEndTime_ = maxTime_;
     void TimerUpdate();
-
-    const bool IsClear() const;
 
     MummyStage();
     void Initialize()override;
