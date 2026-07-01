@@ -243,6 +243,8 @@ void ButtobiEngine::Update() {
         directXCommon_->SettingIdTextureBarrierPost();
     }
 
+    directXCommon_->UpdateGameScreen(srvDescriptorHeap_.get());
+
 #endif //_DEVELOP
     if (camera) {
         // パーティクル管理の更新
@@ -316,11 +318,9 @@ void ButtobiEngine::PreCommandSet() {
     //ポストエフェクトの前設定
     directXCommon_->RenderTexturePreDraw(dsvDescriptorHeap_.get());
 
-
     auto* commandList = directXCommon_->GetCommandListClass()->Get();
     //SRV管理の描画前処理
     srvDescriptorHeap_->PreDraw(commandList);
-
 
     directXCommon_->VeiwPortAndScissorRect();
 #ifdef _DEVELOP
@@ -339,10 +339,8 @@ void ButtobiEngine::PreCommandSet() {
     //パーティクルの描画
     particleManager_->Draw();
 
-    //ポストエフェクトとのあと設定
+    //ポストエフェクトのあと設定
     directXCommon_->RenderTexturePostDraw();
-
-
 
     directXCommon_->PreDraw();
 

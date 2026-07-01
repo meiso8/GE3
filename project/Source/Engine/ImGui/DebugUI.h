@@ -43,6 +43,7 @@ class SrvDescriptorHeap;
 class DebugUI
 {
 public:
+    static void ShowMainViewPort(SrvDescriptorHeap* srvDescriptorHeap, const uint32_t srvIndex);
     static void CheckCaracterState(CharacterState& characterState, const char* label);
     static void CheckFPS();
     static void CheckSound();

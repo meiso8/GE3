@@ -262,7 +262,7 @@ void RenderTexture::Update()
 
 #ifdef _DEVELOP
 
-    ImGui::Begin("PosEffect");
+    ImGui::Begin("PostEffect");
 
     if (ImGui::TreeNode("GrayScale")) {
         DebugUI::CheckColor(materialForGrayScale_->color, "RenderTextureColor");

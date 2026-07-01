@@ -6,7 +6,7 @@
 #include<cmath>
 #include"Input.h"
 #include"TimeManager.h"
-#ifdef _USE_IMGUI
+#ifdef USE_IMGUI
 #include"DebugUI.h"
 #include"ImGuizmo.h"
 #endif

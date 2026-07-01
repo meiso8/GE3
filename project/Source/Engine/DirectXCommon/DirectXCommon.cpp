@@ -371,7 +371,13 @@ void DirectXCommon::InitializeDepthStencilView(DsvDescriptorHeap* dsvDescriptorH
     // DSVHeapの先頭にDSVを作る
     device->CreateDepthStencilView(depthTextureData_.depthStencilResource.Get(), &dsvDesc, dsvDescriptorHeap->GetDescriptorHeap()->GetCPUDescriptorHandleForHeapStart());
 
-    LogFile::Log("InitializeDepthStencilView\n");
+    LogFile::Log("Initialize DepthStencilView\n");
+}
+
+void DirectXCommon::UpdateGameScreen(SrvDescriptorHeap* srvDescriptorHeap)
+{    //一旦ここでゲーム画面の描画
+    DebugUI::ShowMainViewPort(srvDescriptorHeap, renderTexture_->GetRenderTextureData(RenderTexture::kNormal1).srvIndex);
+
 }
 
 void DirectXCommon::InitializeFence()
@@ -393,7 +399,7 @@ void DirectXCommon::ScissorRectSetting()
 {
     //ViewportとScissor(シザー)
     scissorRect = CreateScissorRect(window_->GetClientWidth(), window_->GetClientHeight());
-    LogFile::Log("ViewportAndScissor\n");
+    LogFile::Log("Viewport And Scissor\n");
 }
 
 void DirectXCommon::CreateDXCCompiler()
@@ -415,10 +421,11 @@ void DirectXCommon::InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap
 
 void DirectXCommon::UpdateRenderTexture(SrvDescriptorHeap* srvDescriptorHeap)
 {
-
+    //レンダーテクスチャの更新
     renderTexture_->Update();
+
 #ifdef USE_IMGUI
-    ImGui::Begin("Post Effect");
+    ImGui::Begin("PostEffect Viewer");
 
     // 例：表示したいSRVのインデックス番号
     DebugUI::CheckSRVTexture(depthTextureData_.srvIndex, srvDescriptorHeap);
@@ -427,6 +434,7 @@ void DirectXCommon::UpdateRenderTexture(SrvDescriptorHeap* srvDescriptorHeap)
     }
 
     ImGui::End();
+
 #endif
 }
 

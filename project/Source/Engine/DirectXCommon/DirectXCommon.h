@@ -104,7 +104,7 @@ public:
     void InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap, SrvDescriptorHeap* srvDescriptorHeap);
     void InitializeRenderTargetView(RtvDescriptorHeap* rtvDescriptorHeap);
     void InitializeDepthStencilView(DsvDescriptorHeap* dsvDescriptorHeap);
-
+    void UpdateGameScreen(SrvDescriptorHeap* srvDescriptorHeap);
     void UpdateRenderTexture(SrvDescriptorHeap* srvDescriptorHeap);
     /// @brief BufferResourceの作成関数
     /// @param sizeInBytes 
