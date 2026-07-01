@@ -6,9 +6,10 @@
 #include<cmath>
 #include"Input.h"
 #include"TimeManager.h"
+#ifdef _USE_IMGUI
 #include"DebugUI.h"
 #include"ImGuizmo.h"
-
+#endif
 void DebugCamera::Initialize(const PROJECTION_TYPE& type)
 {
    cameraData_. projectionType = type;

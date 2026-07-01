@@ -41,10 +41,6 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
 {
     std::string directoryPath = filePath.parent_path().string();
     std::string filename = filePath.filename().string();
-    //std::string ext = filePath.extension().string();
-
-    // .stem() で拡張子抜きのファイル名を取得し、.string() で std::string に変換
-    //std::string tag = std::filesystem::path(filename).stem().string();
 
     //読み込み済みテクスチャを検索
     if (models_.contains(filename)) {
@@ -73,7 +69,6 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
         aiProcess_SortByPType);
 
     assert(scene->HasMeshes());
-
 
     // 全メッシュの合計頂点数とインデックス数を先に数える 
 
@@ -179,13 +174,9 @@ void ModelManager::LoadModel(const std::filesystem::path& filePath)
         modelData->animations_ = AnimationManager::LoadAnimation(filePath);
     }
 
-
-
     model->SetModelData(std::move(modelData));
     //モデルを作成する
     model->CreateModel();
-
-
 
     //ハンドルとモデルをセットにする
     models_.insert(std::make_pair(filename, std::move(model)));
