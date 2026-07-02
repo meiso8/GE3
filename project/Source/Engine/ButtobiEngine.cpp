@@ -325,10 +325,10 @@ void ButtobiEngine::PreCommandSet() {
     srvDescriptorHeap_->PreDraw(commandList);
 
     directXCommon_->VeiwPortAndScissorRect();
-#ifdef _DEVELOP
-    // デバッグカメラ
-    auto* camera = SceneManager::GetCurrentCamera();
 
+    // カメラ
+    auto* camera = SceneManager::GetCurrentCamera();
+#ifdef _DEVELOP
     if (camera) {
 
         DrawGrid::Draw(*camera);

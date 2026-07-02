@@ -491,7 +491,7 @@ void DebugUI::CheckTextures(SrvDescriptorHeap* srvDescriptorHeap)
 
 void DebugUI::CheckStageManager()
 {
-
+#ifdef USE_IMGUI
     auto* stageManager = StageManager::GetInstance();
     // 現在トリガーに設定されている遷移先ステージ名を取得
     std::string currentStageName = stageManager->GetCurrentStageName();
@@ -510,6 +510,7 @@ void DebugUI::CheckStageManager()
         ImGui::EndCombo();
     }
 
+#endif
 }
 
 void DebugUI::CheckSpotLight()
@@ -853,6 +854,12 @@ void DebugUI::CheckObject3d(Object3d& object3d)
 
         CheckWorldTransform(object3d.GetWorldTransform(), "WorldTransform");
         ShowMatrix4x4(object3d.GetWorldMatrix());
+       
+        //表示と非表示を切り替える
+        bool disable = object3d.GetDisabled();
+        ImGui::Checkbox("disable", &disable);
+        object3d.SetDisabled(disable);
+
         auto& material = object3d.GetMaterial();
 
         CheckObject3dMaterial(
@@ -863,6 +870,7 @@ void DebugUI::CheckObject3d(Object3d& object3d)
             material.uvTransform,
             material.environmentCoefficient, "Material");
 
+
         CheckTransform(object3d.GetUVTransform(), "UVTransfrom");
         CheckWaveData(object3d.GetWaveData(0), "Wave0");
         CheckWaveData(object3d.GetWaveData(1), "Wave1");
@@ -871,6 +879,13 @@ void DebugUI::CheckObject3d(Object3d& object3d)
         auto* primitive = object3d.GetPrimitive();
 
         if (primitive) {
+            
+            //プリミティブならテクスチャをセットできる
+            int textureIndex = object3d.GetTextureHandle();
+            if (ImGui::SliderInt("texture", &textureIndex, 0, TextureFactory::TEXTURES)) {
+                //テクスチャのセット
+                object3d.SetTextureHandle(static_cast<TextureFactory::Handle>(textureIndex));
+            };
 
             std::string currentModelName = "unknow";
             if (auto model = dynamic_cast<Model*>(primitive)) {
@@ -896,7 +911,7 @@ void DebugUI::CheckObject3d(Object3d& object3d)
                 ImGui::EndCombo();
             }
 
-            const char* topologyType[Primitive::kMaxTopology] =
+            const char* topologyType[] =
             {
             "Plane",
             "Cube",
@@ -905,12 +920,21 @@ void DebugUI::CheckObject3d(Object3d& object3d)
             "Cylinder"
             };
 
-            int currentPrimitive = 0;
+            std::string currentPrimitiveName = primitive->GetMeshName();
 
-            if (ImGui::Combo("Set Primitive", &currentPrimitive, topologyType, IM_ARRAYSIZE(topologyType))) {
-                Primitive::MeshType topo = static_cast<Primitive::MeshType>(currentPrimitive % Primitive::kMaxTopology);
-                object3d.SetMeshAndMaterial(PrimitiveFactory::GetPrimitive(topo));
-            };
+            if (ImGui::BeginCombo("Set Primitive", currentPrimitiveName.c_str())) {
+                // オブジェクト名を選択肢に入れる
+                for (auto name : topologyType) {
+                    // 選択肢を表示（クリックされたら true を返す）
+                    if (ImGui::Selectable(name, true)) {
+                        // クリックされたらセットする
+                        object3d.SetMeshAndMaterial(PrimitiveFactory::GetPrimitiveForName(name));
+                        break;
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
         }
 
         if (auto* aniObj = dynamic_cast<AnimationObject3d*>(&object3d)) {

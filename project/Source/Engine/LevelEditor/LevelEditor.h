@@ -1,61 +1,18 @@
 #pragma once
-#include<string>
-#include<vector>
+#include"../LevelData/LevelData.h"
+
 #include "nlohmann/json.hpp"
-#include"Transform.h"
+
 #include<memory>
+#include<array>
 #include<fstream>
+#include<vector>
+
 #include"Object3d/Object3d.h"
 #include"../System/Collider.h"
 #include "../../Application/GameObject/StageChangeTrigger/StageChangeTrigger.h"
 
-#include<array>
-struct LevelData {
-
-    struct ColliderData {
-        Vector3 center = { 0.0f,0.0f,0.0f };
-        Vector3 size = { 1.0f,1.0f,1.0f };
-    };
-
-    struct MeshFileData {
-        std::string fileName;
-        std::string directoryPath;
-    };
-
-    struct ObjectData {
-        std::string objectName;
-        MeshFileData filePath;
-        std::string meshTypeName;
-        EulerTransform transform;
-        ColliderData colliderData;
-
-    };
-
-    struct PlayerSpawnData {
-        EulerTransform transform;
-    };
-
-    struct EnemySpawnData {
-        MeshFileData filePath;
-        EulerTransform transform;
-    };
-
-    struct StageChangeTriggerData {
-        std::string nextStageName;
-        MeshFileData filePath;
-        EulerTransform transform;
-        ColliderData colliderData;
-    };
-
-    std::vector<ObjectData>objects;
-    //自キャラ配列
-    std::vector<PlayerSpawnData>players;
-    //敵キャラ配列
-    std::vector<EnemySpawnData>enemies;
-
-    //シーン遷移トリガー配列
-    std::vector<StageChangeTriggerData>stageChangeTriggers_;
-};
+class StageChangeTrigger;
 
 class LevelEditor
 {
@@ -101,29 +58,33 @@ public:
     LevelData* GetLevelData() { return levelData_.get(); };
     void Load(const std::string& fileName, bool useButtobiEditor = false);
     /// @brief オブジェクトの作成関数
-    /// @param objects 
+    /// @param objects json
     void CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects);
+    /// @brief ステージ移動トリガーの作成関数
+    /// @param triggers ステージトリガーのvector
     void CreateStageChangeTriggers(std::vector<std::unique_ptr<StageChangeTrigger>>& triggers);
 private:
-
     void LoadObject(nlohmann::json& object, LevelData* levelData);
     /// @brief 名前の読み込み
     /// @param fileName セットする名前の変数
-    /// @param object オブジェクト
+    /// @param object json
     /// @param loadName どの名前を読み込むか
     void LoadName(std::string& fileName, nlohmann::json& object, const std::string& loadName = "file_name");
+    /// @brief メッシュ情報の読み込み
+    /// @param meshData メッシュ情報
+    /// @param object json
     void LoadMeshData(LevelData::MeshFileData& meshData, nlohmann::json& object);
-    
+    void LoadTempareture(float& tempareture, nlohmann::json& object);
     /// @brief 位置情報の読み込み
-    /// @param object オブジェクト
+    /// @param object json
     /// @param transform 位置情報
     void LoadTransform(nlohmann::json& object, EulerTransform& transform);
     /// @brief 子要素の走査
-    /// @param object オブジェクト
+    /// @param object json
     /// @param levelData レベルデータ
     void LoadChildren(nlohmann::json& object, LevelData* levelData);
     /// @brief 衝突判定のロード
-    /// @param object オブジェクト
+    /// @param object json
     /// @param levelData　レベルデータ 
     void LoadCollider(LevelData::ColliderData& colliderData, nlohmann::json& object);
 };

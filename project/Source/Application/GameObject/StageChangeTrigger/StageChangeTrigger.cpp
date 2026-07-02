@@ -7,6 +7,7 @@
 #include"DebugUI.h"
 #include"ObjectManager/ObjectManager.h"
 
+
 StageChangeTrigger::StageChangeTrigger()
 {
     object_ = std::make_shared<Object3d>();
@@ -23,39 +24,40 @@ StageChangeTrigger::StageChangeTrigger()
 }
 
 void StageChangeTrigger::Create(
-    const std::string& meshName,
-    const std::string& directoryPath,
-    const std::string& nextStageName, 
-    const EulerTransform& transform, 
-    const Vector3& center,
-    const Vector3& size
+    const LevelData::StageChangeTriggerData& data
 )
 {
     //オブジェクトの初期化
     object_->Initialize();
     //オブジェクト名の設定
     object_->SetObjectType("StageChangeTrigger");
+    //温度の設定
+    object_->SetTemperature(data.tempareture);
+    //カラーの設定
+    object_->SetColor(data.color);
+    
     //メッシュの設定
-    if (meshName != "empty") {
+    if (data.filePath.fileName != "empty") {
         //メッシュ名が空ではないとき
-        if (PrimitiveFactory::GetPrimitives().contains(meshName)) {
+        if (PrimitiveFactory::GetPrimitives().contains(data.filePath.fileName)) {
             //プリミティブだったら
-            object_->SetMeshAndMaterial(PrimitiveFactory::GetPrimitiveForName(meshName));
+            object_->SetMeshAndMaterial(PrimitiveFactory::GetPrimitiveForName(data.filePath.fileName));
         } else {
-            object_->SetMeshAndMaterial(ModelManager::LoadModelAndGet(directoryPath  + "/" +meshName ));
+            object_->SetMeshAndMaterial(ModelManager::LoadModelAndGet(data.filePath.directoryPath  + "/" + data.filePath.fileName));
+            object_->SetTextureHandle(static_cast<TextureFactory::Handle>(data.textureHandle));
         }
     }
 
     //ステージ名の設定
-    object_ -> SetNextStageName(nextStageName);
+    object_ -> SetNextStageName(data.nextStageName);
 
     //トランスフォームのセット
-    object_->SetTransform(transform);
+    object_->SetTransform(data.transform);
 
     //コライダーの中心を記録
-    SetCenter(center);
+    SetCenter(data.colliderData.center);
     
-    Vector3 halfSize = size * 0.5f; // AABBは中心からの「半径（半分のサイズ）」を指定するため
+    Vector3 halfSize = data.colliderData.size * 0.5f; // AABBは中心からの「半径（半分のサイズ）」を指定するため
     //AABBの大きさを記録
     SetAABB({ .min = -halfSize, .max = halfSize });
     //レジスターに入れる

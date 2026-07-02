@@ -14,6 +14,8 @@
 #include"Quaternion/Quaternion.h"
 #include"MakeMatrix.h"
 #include"Animation.h"
+#include"Log.h"
+
 
 std::map < const std::filesystem::path, std::unique_ptr< Model> > ModelManager::models_;
 

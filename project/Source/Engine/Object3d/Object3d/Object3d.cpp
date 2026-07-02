@@ -155,7 +155,7 @@ void Object3d::DrawModel(ModelData* modelData)
         }
 
         //拡散反射テクスチャ
-        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, srvIndex,commandList_);
+        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, srvIndex, commandList_);
         // 3. インデックスの開始位置と個数を指定して描画コールを呼ぶ
         commandList_->DrawIndexedInstanced(
             section.indexCount,  // 描画するインデックス数
@@ -165,6 +165,12 @@ void Object3d::DrawModel(ModelData* modelData)
             0
         );
     }
+}
+
+TextureFactory::Handle Object3d::GetTextureHandle(const TEXTURE_USAGE& textureUsage)
+{
+    //テクスチャハンドルを取得する
+    return Texture::GetTextureHandle(textureHandles_[textureUsage]);
 }
 
 void Object3d::SetMeshAndMaterial(Primitive* mesh)

@@ -30,6 +30,12 @@ public:
         MEMO3,
         MEMO4,
         MEMO5,
+
+        GLYPH_NB,
+        GLYPH_SM,
+        GLYPH_HT,
+        GLYPH_H,
+
         BOOK,
         BOOK2,
         BOOK3,
@@ -42,6 +48,7 @@ public:
         HIERO_P,
         HIERO_D,
         HIERO_T,
+
         BD_HUNEFER,
 
         ENDING1,
@@ -54,6 +61,9 @@ public:
         SKYBOX_TEX,
         BEAM,
         WATER_TEXTURE,
+        //ネベト・シャムート・ケト
+        GLYPH_NBT_SMT_HT,
+
         // ======================
         TEXTURES,
     };
