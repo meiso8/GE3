@@ -64,7 +64,17 @@ public:
     /// @param triggers ステージトリガーのvector
     void CreateStageChangeTriggers(std::vector<std::unique_ptr<StageChangeTrigger>>& triggers);
 private:
+ 
+
     void LoadObject(nlohmann::json& object, LevelData* levelData);
+    /// @brief テクスチャハンドルの読みこみ
+    /// @param object json
+    /// @param handle テクスチャハンドル
+    void LoadTextureHandle(nlohmann::json& object, uint32_t& handle);
+    /// @brief Vector4型の読み込み
+    /// @param object json
+    /// @param vector ベクター4
+    void LoadVector4(nlohmann::json& object, Vector4& vector);
     /// @brief 名前の読み込み
     /// @param fileName セットする名前の変数
     /// @param object json

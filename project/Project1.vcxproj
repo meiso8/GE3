@@ -146,7 +146,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>MinSpace</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)externals\freetype\src;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\freetype\include;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\DirectXCommon;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh\MeshCommon;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source\Engine\Mesh\Primitive;$(ProjectDir)Source\Engine\Object3d;$(ProjectDir)Source\Engine\Object3d\Object3d;$(ProjectDir)Source\Engine\Object3d\LineObject3d;$(ProjectDir)Source\Engine\Object3d\BeamObject3d;$(ProjectDir)Source\Engine\Object3d\SkyBoxObject3d;$(ProjectDir)Source\Engine\Object3d\AnimationObject3d;$(ProjectDir)Source\Engine\DescriptorHeap\RtvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap\DsvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap\SrvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\PSO;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Particle;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\Camera;$(ProjectDir)Source\Application/Scene;$(ProjectDir)Source\Application/Object;$(ProjectDir)Source\Application/GameObject;$(ProjectDir)Source\Application/Physics;$(ProjectDir)Source\Application/System;$(ProjectDir)Source\Engine\Math\Easing;$(ProjectDir)Source\Engine\Math\Lerp;$(ProjectDir)Source\Engine\Mesh\Sphere;$(ProjectDir)Source\Engine\Mesh\Circle;$(ProjectDir)Source\Engine\Math\Random;$(ProjectDir)Source\Engine\Math\Structs;$(ProjectDir)Source\Engine\Math\Collision;$(ProjectDir)Source\Engine\Math\Matrix;$(ProjectDir)Source\Engine\Math\Vector;$(ProjectDir)Source\Engine\Mesh\Grid;$(ProjectDir)Source\Engine\Mesh\Model;$(ProjectDir)Source\Engine\Mesh\Cube;$(ProjectDir)Source\Engine\Mesh\Sprite;$(ProjectDir)Source\Engine\Math\SphericalCoordinate;$(ProjectDir)Source\Engine\Math\WorldTransform;$(ProjectDir)Source\Engine\Mesh\Line;$(ProjectDir)Source\Engine\Math\Cotangent;$(ProjectDir)Source\Engine\Math\CoordinateTransform;$(ProjectDir)Source\Engine\Mesh\ModelManager;$(ProjectDir)Source\Engine\Mesh\Plane;$(ProjectDir)Source\Engine\SceneManager;$(ProjectDir)externals\;$(ProjectDir)Source\Engine\JsonFile;$(ProjectDir)Source\Engine\Animation;$(ProjectDir)Source\Engine\Math\Quaternion;$(ProjectDir)Source\Engine\Time;$(ProjectDir)Source\Engine\TimeManager;$(ProjectDir)Source\Application\Factory;$(ProjectDir)Source\Application\Factory\ModelFactory;$(ProjectDir)Source\Application\Factory\TextureFactory;$(ProjectDir)Source\Application\Factory\SoundFactory;$(ProjectDir)Source\Application\Factory\SceneFactory;$(ProjectDir)Source\Engine\SceneManager\BaseScene</AdditionalIncludeDirectories>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -171,10 +171,19 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\StageChangeTrigger\StageChangeTrigger.cpp" />
     <ClCompile Include="Source\Engine\SceneManager\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Source\Application\System\CollisionConfig.cpp" />
-    <ClCompile Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.cpp" />
+    <ClCompile Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\DescriptorHeap\RtvDescriptorHeap\RtvDescriptorHeap.cpp" />
-    <ClCompile Include="Source\Engine\DescriptorHeap\BaseDescriptor\BaseDescriptor.cpp" />
-    <ClCompile Include="Source\Engine\DescriptorHeap\DsvDescriptorHeap\DsvDescriptorHeap.cpp" />
+    <ClCompile Include="Source\Engine\DescriptorHeap\BaseDescriptor\BaseDescriptor.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\DescriptorHeap\DsvDescriptorHeap\DsvDescriptorHeap.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Primitive\Primitive.cpp" />
     <ClCompile Include="Source\Engine\ObjectManager\ObjectCommandManager.cpp" />
@@ -268,7 +277,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\SceneManager\SceneManager.cpp" />
     <ClCompile Include="Source\Application\Scene\GameScene\GameScene.cpp" />
     <ClCompile Include="Source\Engine\Mesh\ModelManager\ModelManager.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
     <ClCompile Include="Source\Engine\ButtobiEngine.cpp" />
     <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
@@ -278,7 +290,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Math\Vector\Vector4.cpp" />
     <ClCompile Include="Source\Engine\PSO\RootSignature.cpp" />
     <ClCompile Include="Source\Engine\PSO\InputLayout.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\ImGui\ImGuiClass.cpp" />
     <ClCompile Include="Source\Engine\Math\Easing\Easing.cpp" />
     <ClCompile Include="Source\Engine\Math\Lerp\Lerp.cpp" />
@@ -289,15 +304,35 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp" />
     <ClCompile Include="Source\Engine\PSO\BlendState.cpp" />
     <ClCompile Include="Source\Engine\PSO\CompileShader.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\Log.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\DebugError.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\Log.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\DirectXCommon\DebugError.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\PSO\PSO.cpp" />
     <ClCompile Include="Source\Engine\PSO\RasterizerState.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\RenderTargetView.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\CommandList.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\CommandQueue.cpp" />
-    <ClCompile Include="Source\Engine\DirectXCommon\DXGIFactory.cpp" />
+    <ClCompile Include="Source\Engine\DirectXCommon\RenderTargetView.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\DirectXCommon\CommandList.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\DirectXCommon\CommandQueue.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\DirectXCommon\DXGIFactory.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Camera\Camera.cpp" />
     <ClCompile Include="Source\Engine\Camera\DebugCamera.cpp" />
     <ClCompile Include="Source\main.cpp">
