@@ -43,6 +43,8 @@ void FreeTypeScene::Initialize()
 {
 
     ParticleManager::ResetAll();
+    LevelEditor::GetInstance()->Load("FreeTypeScene_objectEditor", true);
+    LevelEditor::GetInstance()->CreateObject(objects_);
 
     camera_->Initialize();
 
@@ -84,6 +86,12 @@ void FreeTypeScene::Update()
 
     beam_->Update();
 
+
+    for (auto& obj : objects_) {
+        obj->obj_->Update();
+    }
+
+
     for (int i = 0; i < particleEmitters_.size(); ++i) {
         particleEmitters_[i]->Update();
     }
@@ -106,6 +114,9 @@ void FreeTypeScene::DrawModel()
 
     beam_->Draw(currentCamera_);
 
+    for (auto& obj : objects_) {
+        obj->obj_->Draw(*currentCamera_);
+    }
 
 }
 

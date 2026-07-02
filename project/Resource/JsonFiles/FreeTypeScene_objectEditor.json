@@ -1,0 +1,30 @@
+{
+    "name": "FreeTypeScene",
+    "objects": [
+        {
+            "directoryPath": "Resource/Models/Building",
+            "disabled": false,
+            "file_name": "Building.obj",
+            "name": "Object1",
+            "nextStageName": "",
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "MESH"
+        }
+    ]
+}
