@@ -33,6 +33,7 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/book02.png", BOOK2);
     Texture::LoadAndMapHandle("Resource/Textures/book03.png", BOOK3);
     Texture::LoadAndMapHandle("Resource/Textures/book04.png", BOOK4);
+    Texture::LoadAndMapHandle("Resource/Textures/book05.png", BOOK5);
 
     Texture::LoadAndMapHandle("Resource/Textures/none.png", NONE);
     Texture::LoadAndMapHandle("Resource/Textures/puzzle.png", PUZZLE);

@@ -111,6 +111,7 @@ void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handl
         case TextureFactory::BOOK2: key = "book2"; break;
         case TextureFactory::BOOK3: key = "book3"; break;
         case TextureFactory::BOOK4: key = "book4"; break;
+        case TextureFactory::BOOK5: key = "book5"; break;
         default: continue;
         }
 
@@ -125,7 +126,7 @@ void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handl
             memo->GetWorldTransform().eTransform_ = transform;
         }
 
-        if (handle == TextureFactory::BOOK || handle == TextureFactory::BOOK2) {
+        if (handle == TextureFactory::BOOK || handle == TextureFactory::BOOK2 || handle == TextureFactory::BOOK5) {
             memo->SetCubeSize(memoAABB["bookSize"]);
         } else if (handle == TextureFactory::BOOK3 || handle == TextureFactory::BOOK4) {
             memo->SetCubeSize(memoAABB["noteSize"]);

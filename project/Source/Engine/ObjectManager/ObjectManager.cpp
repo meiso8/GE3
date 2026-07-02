@@ -57,9 +57,9 @@ void ObjectManager::UnregisterObject(Object3d* gameObject) {
 }
 
 Object3d* ObjectManager::FindObjectByID(uint32_t id) {
-    
+
     auto it = idMap_.find(id);
-    
+
     if (it != idMap_.end()) {
         return it->second;
     }
@@ -75,7 +75,7 @@ void ObjectManager::ClickObject(Camera& camera)
 
     DebugUI::CreateJsonFile(kJsonFileName_.c_str());
     //フィルターかけてObjecFileNameを探す
-   
+
     //セーブフラグ
     bool isSave = false;
     if (ImGui::Button("Save")) {
@@ -83,8 +83,8 @@ void ObjectManager::ClickObject(Camera& camera)
     }
     //同じラインに表示
     ImGui::SameLine();
-    DebugUI::FindJsonFile(jsonFileName_,true,kJsonFileName_.c_str());
-   
+    DebugUI::FindJsonFile(jsonFileName_, true, kJsonFileName_.c_str());
+
     //オブジェクトの生成
     if (ImGui::Button("CreateObject")) {
         CreateObject();
@@ -179,7 +179,7 @@ void ObjectManager::Save()
 {
 
     nlohmann::json& json = JsonFile::GetJsonFiles(jsonFileName_);
-    std::string sceneName = SceneManager::GetCurrentSceneName()+"Scene";
+    std::string sceneName = SceneManager::GetCurrentSceneName() + "Scene";
     //シーン名
     json["name"] = sceneName;
 
@@ -244,6 +244,8 @@ void ObjectManager::CreateObject()
     std::unique_ptr<Object3d> newObject = std::make_unique<Object3d>();
     newObject->Create();
     newObject->SetMeshAndMaterial(ModelManager::GetModel("medjed.gltf"));
+    //メッシュ
+    newObject->SetObjectType("MESH");
     RegisterObject(newObject.get());
 
     createObjects_.push_back(std::move(newObject));

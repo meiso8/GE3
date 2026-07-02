@@ -52,7 +52,7 @@ void Item::Draw(Camera& camera)
 
 void Item::DrawForSlotItem(Camera& camera)
 {
-    object_->Draw(camera, kBlendModeNormal, kCullModeBack, kZero, true);
+    object_->Draw(camera, kBlendModeNormal, kCullModeBack, kNone, true);
 }
 
 void Item::OnCollision(Collider* collider)
