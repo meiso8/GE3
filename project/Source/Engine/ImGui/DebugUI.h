@@ -54,6 +54,8 @@ public:
     static void CheckSRVIndex(SrvDescriptorHeap* srvDescriptorHeap);
     static void CheckSRVTexture(const int srvIndex, SrvDescriptorHeap* srvDescriptorHeap);
     static void CheckTextures(SrvDescriptorHeap* srvDescriptorHeap);
+    static void CheckStageManager();
+    
     /// @brief 入力
     /// @param input 
     static void CheckInput();

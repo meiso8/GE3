@@ -1,5 +1,5 @@
 #pragma once
-#include"../Loader/SoundFactory.h"
+#include"SoundFactory.h"
 
 #include<vector>
 struct RhythmBeat {

@@ -1,43 +1,6 @@
 #include "SceneManager.h"
 #include"DirectXCommon.h"
 #include"ObjectManager/ObjectManager.h"
-#include"DebugCamera.h"
-
-
-
-BaseScene::BaseScene()
-{
-    sceneChange_ = std::make_unique<SceneChange>();
-    sceneChange_->Initialize();
-    sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
-
-    camera_ = std::make_unique<Camera>();
-}
-
-void BaseScene::Initialize()
-{
-
-}
-
-void BaseScene::Update()
-{
-
-}
-
-
-void BaseScene::SceneChangeUpdate()
-{
-
-    sceneChange_->Update();
-}
-
-void BaseScene::SwitchCamera()
-{
-    isDebugCameraActive_ = !isDebugCameraActive_;
-    currentCamera_ = (isDebugCameraActive_) ? DebugCamera::GetInstance() : camera_.get();
-}
-
-// =========================================================================================
 
 std::map < std::string, std::unique_ptr<BaseScene>> SceneManager::scenes_;
 std::map <BaseScene*, std::string> SceneManager::sceneNames_;
@@ -54,11 +17,9 @@ void SceneManager::Finalize()
 
 void SceneManager::Update()
 {
-
     currentScene_->SceneChangeUpdate();
 
     if (currentScene_->GetIsEndScene()) {
-
         InitScene();
     }
 
@@ -75,7 +36,6 @@ void SceneManager::DrawSprite()
 {
     currentScene_->DrawSprite();
 }
-
 
 void SceneManager::Debug()
 {

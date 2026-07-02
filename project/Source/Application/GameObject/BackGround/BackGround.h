@@ -1,8 +1,8 @@
 #pragma once
 
-#include"Field.h"
-#include "Building.h"
-#include"World.h"
+#include"../Field/Field.h"
+#include "../Building/Building.h"
+#include"../World/World.h"
 #include<memory>
 
 class BackGround

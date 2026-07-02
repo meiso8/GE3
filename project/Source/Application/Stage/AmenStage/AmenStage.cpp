@@ -2,7 +2,7 @@
 
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
-#include"../StageManager.h"
+#include"../StageManager/StageManager.h"
 
 AmenStage::AmenStage()
 {

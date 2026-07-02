@@ -17,11 +17,11 @@
 #include"Sound.h"
 
 #include"SceneManager.h"
-#include"SceneFactory.h"
 
-#include"Application/Loader/ModelFactory.h"
-#include"Application/Loader/SoundFactory.h"
-#include"Application/Loader/TextureFactory.h"
+#include"SceneFactory.h"
+#include"ModelFactory.h"
+#include"SoundFactory.h"
+#include"TextureFactory.h"
 
 #include"ObjectManager/ObjectManager.h"
 #include"Particle/ParticleEmitter.h"

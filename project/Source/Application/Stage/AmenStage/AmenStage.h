@@ -6,7 +6,7 @@
 
 #include<memory>
 #include"Memo/MemoManager.h"
-#include"AmenRa.h"
+#include"AmenRa/AmenRa.h"
 #include"BackGround/BackGround.h"
 
 class AmenStage :public Stage

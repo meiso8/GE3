@@ -1,5 +1,5 @@
 #include "StageChangeTrigger.h"
-#include"../../Stage/StageManager.h"
+#include"../../StageManager/StageManager.h"
 #include"Log.h"
 #include"PrimitiveFactory/PrimitiveFactory.h"
 #include"ModelManager.h"
