@@ -2,7 +2,8 @@
 
 #include"Collider.h"
 #include <memory>
-#include"Object3d.h"
+#include"AnimationObject3d.h"
+
 class PuzzleObj : public Collider {
 public:
     PuzzleObj();
@@ -10,11 +11,14 @@ public:
     void Update();
     void Draw(Camera& camera);
     void OnCollision(Collider* collider) override;
-    void SetColor(const Vector4& color) { object_->SetColor(color); };
+    void SetColor(const Vector4& color) { aniObj_->SetColor(color); };
     Vector3 GetWorldPosition() {
-      return  object_->GetWorldTransform().GetWorldPosition();
+      return  aniObj_->GetWorldTransform().GetWorldPosition();
     }
+    void SetIsOpen(const bool flag) { isOpen_ = flag; }
+
 private:
-    std::unique_ptr<Object3d> object_ = nullptr;
-    std::unique_ptr<Primitive> cubeMesh_ = nullptr;
+    bool isOpen_ = false;
+    std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
+
 };

@@ -15,6 +15,7 @@ class AnimationObject3d :public Object3d
 public:
 
     AnimationObject3d();
+~AnimationObject3d();
     void Initialize()override;
     void InitTime();
     void SetModelAndLoadAnimation(Model* model);

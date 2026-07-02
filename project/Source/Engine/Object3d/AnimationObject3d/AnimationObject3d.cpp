@@ -23,6 +23,10 @@ AnimationObject3d::AnimationObject3d() {
 #endif
 }
 
+AnimationObject3d::~AnimationObject3d()
+{
+}
+
 void AnimationObject3d::Initialize()
 {
     animationTime_ = 0.0f;

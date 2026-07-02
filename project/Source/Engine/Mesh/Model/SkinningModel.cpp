@@ -7,6 +7,10 @@ SkinningModel::SkinningModel()
     skinCluster_ = std::make_unique<SkinCluster>();
 }
 
+SkinningModel::~SkinningModel()
+{
+}
+
 void SkinningModel::SetModel(Model* model)
 {
     //モデルのメッシュ

@@ -38,6 +38,8 @@ void SlidePuzzleSystem::Update(const Vector2& screenPos)
         clearTimer_ = std::clamp(clearTimer_, 0.0f, maxTimer_);
 
         if (clearTimer_ == 0.0f) {
+            //開ける
+            puzzleObj_->SetIsOpen(true);
             isEnd_ = true;
             isActive_ = false;
         }

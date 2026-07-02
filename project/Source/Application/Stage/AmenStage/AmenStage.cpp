@@ -67,7 +67,10 @@ void AmenStage::DrawSprite()
 
 void AmenStage::CheckCollision(CollisionManager& collisionManager)
 {
-    slidePuzzleSystem_->RayCastHit(*player_->GerRaySprite());
+    if (!isGenerateItem_) {
+        //アイテムを生成していないときスライドパズルのレイキャストをヒットさせる
+        slidePuzzleSystem_->RayCastHit(*player_->GerRaySprite());
+    }
 
     collisionManager.AddCollider(slidePuzzleSystem_->GetPuzzleObj());
     collisionManager.AddCollider(amenRa_.get());

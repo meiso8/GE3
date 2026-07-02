@@ -24,6 +24,7 @@ void GoldHeart::Update()
         object_->SetTranslate(Lerp(startPos_, endPos_, localTimer));
     }
 
+    object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
     object_->Update();
     ColliderUpdate();
 }
