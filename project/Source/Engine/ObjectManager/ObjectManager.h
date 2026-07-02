@@ -35,7 +35,7 @@ private:
     ObjectManager() = default;
     ~ObjectManager() = default;
     ObjectCommandManager objectCommandManager_;
-    std::vector<Object3d* > objects_;
+    std::vector<Object3d*> objects_;
     std::unordered_map<uint32_t, Object3d* > idMap_;
     uint32_t nextID_ = 1; // 1から順にAllocateしていく
     uint32_t clickedID_ = 0;
