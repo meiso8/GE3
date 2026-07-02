@@ -101,6 +101,7 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
             newObjctData->obj_->SetTextureHandle(static_cast<TextureFactory::Handle>(objectData.textureHandle));
         }
 
+        newObjctData->obj_->SetColor(objectData.color);
         newObjctData->obj_->SetTemperature(objectData.tempareture);
         newObjctData->obj_->SetObjectName(objectData.objectName);
         newObjctData->obj_->RegisterObject();
@@ -138,6 +139,21 @@ void LevelEditor::CreateStageChangeTriggers(std::vector<std::unique_ptr<StageCha
 }
 
 
+void LevelEditor::LoadVector4(nlohmann::json& object, Vector4& vector)
+{      
+    //色の取得
+    if (object.contains("color")) {
+        vector = {
+            .x = (float)object["color"]["x"] ,
+            .y = (float)object["color"]["y"] ,
+            .z = (float)object["color"]["z"] ,
+            .w = (float)object["color"]["w"]
+        };
+    } else {
+        vector = { 1.0f,1.0f,1.0f,1.0f };
+    }
+}
+
 void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
 
     assert(object.contains("type"));
@@ -147,16 +163,15 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
 
     //MESHがある場合
     if (type.compare(objectTypeName_[kMesh]) == 0) {
+
         //要素追加
         levelData->objects.emplace_back(LevelData::ObjectData{});
         LevelData::ObjectData& objectData = levelData->objects.back();
         
-        if (object.contains("textureHandle")) {
-            objectData.textureHandle = object["textureHandle"];
-        } else {
-            objectData.textureHandle = TextureFactory::WHITE_1X1;
-        }
-
+        //テクスチャハンドルの読み込み
+        LoadTextureHandle(object, objectData.textureHandle);
+        //色の読み込み
+        LoadVector4(object, objectData.color);
         //温度の読み込み
         LoadTempareture(objectData.tempareture, object);
         //オブジェクト名の読み込み
@@ -195,25 +210,10 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         //要素追加
         levelData->stageChangeTriggers_.emplace_back(LevelData::StageChangeTriggerData{});
         LevelData::StageChangeTriggerData& stageChangeTriggerData = levelData->stageChangeTriggers_.back();
-        
-        //色の取得
-        if (object.contains("color")) {
-            stageChangeTriggerData.color = {
-                .x = (float)object["color"]["x"] ,
-                .y = (float)object["color"]["y"] ,
-                .z = (float)object["color"]["z"] ,
-                .w = (float)object["color"]["w"]
-            };
-        } else {
-            stageChangeTriggerData.color = { 1.0f,1.0f,1.0f,1.0f };
-        }
-
-        if (object.contains("textureHandle")) {
-            stageChangeTriggerData.textureHandle = object["textureHandle"];
-        } else {
-            stageChangeTriggerData.textureHandle = TextureFactory::WHITE_1X1;
-        }
-
+        //テクスチャハンドルの読み込み
+        LoadTextureHandle(object,stageChangeTriggerData.textureHandle);
+        //色の読み込み
+        LoadVector4(object, stageChangeTriggerData.color);
         //温度の読み込み
         LoadTempareture(stageChangeTriggerData.tempareture, object);
         //次のステージ名を記録
@@ -224,6 +224,17 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LoadTransform(object, stageChangeTriggerData.transform);
         //コライダーの読み込み
         LoadCollider(stageChangeTriggerData.colliderData, object);
+    }
+
+}
+
+void LevelEditor::LoadTextureHandle(nlohmann::json& object, uint32_t& handle)
+{
+    if (object.contains("textureHandle")) {
+
+        handle = object["textureHandle"];
+    } else {
+        handle = TextureFactory::WHITE_1X1;
     }
 
 }

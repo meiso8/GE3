@@ -8,10 +8,106 @@
                 "y": 1.0,
                 "z": 1.0
             },
+            "disabled": false,
+            "file_name": "Cube",
+            "name": "Object52211",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "textureHandle": 0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 5.699583530426025,
+                    "y": 3.1360840797424316,
+                    "z": 0.2696601152420044
+                },
+                "translate": {
+                    "x": 0.04264652729034424,
+                    "y": 1.0125954151153564,
+                    "z": 9.617549896240234
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "file_name": "Plane",
+            "name": "Object62",
+            "nextStageName": "",
+            "temperature": 0.5,
+            "textureHandle": 24,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415908336639404,
+                    "y": 0.0015925478655844927,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.001580710057169199,
+                    "y": 1.199040174484253,
+                    "z": 9.847620010375977
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\FontModel\\nbt_smt_ht",
+            "disabled": false,
+            "file_name": "nbt_smt_ht.obj",
+            "name": "Object3",
+            "nextStageName": "",
+            "temperature": 0.5,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415908336639404,
+                    "y": 0.0015925478655844927,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -0.007548870984464884,
+                    "y": 1.8495240211486816,
+                    "z": 9.478754043579102
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/Medjed",
             "disabled": false,
             "file_name": "medjed.gltf",
-            "name": "Object1",
+            "name": "Object4",
             "nextStageName": "AmenStage",
             "temperature": 0.0,
             "transform": {
@@ -26,7 +122,7 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 3.922384738922119,
+                    "x": 0.0,
                     "y": -7.103988650669635e-07,
                     "z": 25.495498657226563
                 }
@@ -40,12 +136,12 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/Medjed",
             "disabled": false,
-            "file_name": "medjed.gltf",
-            "name": "Object2",
-            "nextStageName": "WaterStage",
+            "file_name": "Cube",
+            "name": "Object5",
+            "nextStageName": "AmenStage",
             "temperature": 0.0,
+            "textureHandle": 0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -53,14 +149,14 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
+                    "x": 2.5345005989074707,
+                    "y": 3.8587558269500732,
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -5.625274181365967,
-                    "y": -5.960464477539063e-08,
-                    "z": 24.790882110595703
+                    "x": 0.012772679328918457,
+                    "y": 0.0057343989610672,
+                    "z": -25.386138916015625
                 }
             },
             "type": "StageChangeTrigger"
@@ -75,13 +171,13 @@
             "directoryPath": "Resource/Models/player",
             "disabled": false,
             "file_name": "player.obj",
-            "name": "Player5",
+            "name": "Player6",
             "nextStageName": "",
             "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": -18.044414520263672,
+                    "y": 56.16570281982422,
                     "z": 0.0
                 },
                 "scale": {
@@ -90,9 +186,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -7.257329940795898,
+                    "x": 1.3874887228012085,
                     "y": -0.5,
-                    "z": -3.3588480949401855
+                    "z": -2.9777610301971436
                 }
             },
             "type": "EMPTY"
@@ -107,7 +203,7 @@
             "directoryPath": "Resource/Models/Fountain",
             "disabled": false,
             "file_name": "Fountain.obj",
-            "name": "Fountain3",
+            "name": "Fountain6",
             "nextStageName": "",
             "temperature": 0.20000000298023224,
             "transform": {
@@ -136,17 +232,17 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\FontModel\\nbt_smt_ht",
             "disabled": false,
-            "file_name": "nbt_smt_ht.obj",
-            "name": "Object4",
+            "file_name": "Plane",
+            "name": "Object7",
             "nextStageName": "",
             "temperature": 0.0,
+            "textureHandle": 48,
             "transform": {
                 "rotate": {
-                    "x": -3.1415908336639404,
-                    "y": 0.0015925478655844927,
-                    "z": -3.1415908336639404
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
                 },
                 "scale": {
                     "x": 1.0,
@@ -154,40 +250,41 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -0.007548870984464884,
-                    "y": 1.8495240211486816,
-                    "z": 9.478754043579102
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 35.0880012512207
                 }
             },
             "type": "MESH"
         },
         {
             "color": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             },
             "disabled": false,
-            "file_name": "Cube",
-            "name": "Object5",
+            "file_name": "Plane",
+            "name": "Object8",
             "nextStageName": "",
-            "temperature": 0.0,
+            "temperature": 0.5,
+            "textureHandle": 21,
             "transform": {
                 "rotate": {
-                    "x": 0.0,
-                    "y": -0.0,
+                    "x": 1.5699999332427979,
+                    "y": 5.386000156402588,
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 5.699583530426025,
-                    "y": 3.1360843181610107,
-                    "z": 0.2696601450443268
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
                 },
                 "translate": {
-                    "x": 0.0,
-                    "y": 1.0098121166229248,
-                    "z": 9.617549896240234
+                    "x": -9.368569374084473,
+                    "y": -0.05138899013400078,
+                    "z": 4.325231552124023
                 }
             },
             "type": "MESH"

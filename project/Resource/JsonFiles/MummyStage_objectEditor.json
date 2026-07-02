@@ -1,12 +1,51 @@
 {
-    "name": "SampleScene",
+    "name": "GameScene",
     "objects": [
         {
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "disabled": false,
+            "file_name": "Plane",
+            "name": "Object61",
+            "nextStageName": "",
+            "temperature": 1.0,
+            "textureHandle": 22,
+            "transform": {
+                "rotate": {
+                    "x": 1.5700000524520874,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.00418660044670105,
+                    "y": 0.6974138617515564,
+                    "z": 3.176121234893799
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/mummy",
+            "disabled": false,
             "file_name": "dummyMummy.gltf",
             "name": "Object2",
             "nextStageName": "WaterStage",
+            "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -27,11 +66,18 @@
             "type": "StageChangeTrigger"
         },
         {
-            "disabled": false,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/Medjed",
+            "disabled": false,
             "file_name": "medjed.gltf",
-            "name": "Object4",
+            "name": "Object3",
             "nextStageName": "MedjedStage",
+            "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -45,18 +91,25 @@
                 },
                 "translate": {
                     "x": 8.888033866882324,
-                    "y": 0.0,
+                    "y": -1.1920928955078125e-07,
                     "z": 10.400885581970215
                 }
             },
             "type": "StageChangeTrigger"
         },
         {
-            "disabled": false,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/Papyrus",
+            "disabled": false,
             "file_name": "Papyrus.obj",
-            "name": "Papyrus5",
+            "name": "Papyrus4",
             "nextStageName": "",
+            "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -77,16 +130,23 @@
             "type": "EMPTY"
         },
         {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/player",
             "disabled": false,
-            "directoryPath": "Resource/Models/Medjed",
-            "file_name": "medjed.gltf",
-            "name": "MedjedRoomDoor4",
-            "nextStageName": "MedjedStage",
+            "file_name": "player.obj",
+            "name": "Player6",
+            "nextStageName": "",
+            "temperature": 0.0,
             "transform": {
                 "rotate": {
-                    "x": 3.1415927410125732,
-                    "y": -5.035249710083008,
-                    "z": 3.1415927410125732
+                    "x": 0.0,
+                    "y": 8.805091857910156,
+                    "z": 0.0
                 },
                 "scale": {
                     "x": 1.0,
@@ -94,12 +154,12 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -10.75,
+                    "x": 0.0,
                     "y": 0.0,
-                    "z": 8.289514541625977
+                    "z": -5.0
                 }
             },
-            "type": "StageChangeTrigger"
+            "type": "EMPTY"
         }
     ]
 }

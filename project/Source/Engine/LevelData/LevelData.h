@@ -18,7 +18,9 @@ struct LevelData {
     };
 
     struct ObjectData {
+     
         uint32_t textureHandle;
+        Vector4 color;
         float tempareture;
         std::string objectName;
         MeshFileData filePath;
