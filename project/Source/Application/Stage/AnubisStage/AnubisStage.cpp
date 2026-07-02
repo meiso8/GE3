@@ -15,14 +15,13 @@ void AnubisStage::Initialize()
     //ステージのロード
     LoadAndCreateObject("AnubisStage_objectEditor");
 
-    memoManager_->GenerateMemos({ TextureFactory::MEMO1, TextureFactory::MEMO3,TextureFactory::MEMO4,TextureFactory::BOOK4 });
+    memoManager_->GenerateMemos({TextureFactory::BOOK5 });
     // ミイラ前に移動
     player_->Init({ 0.0f, 0.0f, -5.0f });
 
     Sound::StopAllSound();
 
     backGround_->Initialize();
-
 
     Sound::bgmVolume_ = 0.1f;
 

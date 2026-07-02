@@ -13,10 +13,12 @@ AmenStage::AmenStage()
 
 void AmenStage::Initialize()
 {
+    //アイテムの生成を初期化する
+    isGenerateItem_ = false;
+
     //ステージのロード
     LoadAndCreateObject("AmenStage_objectEditor");
 
-    itemManager_->GenerateItems({ "Crowbar","SolarDisc"});
     memoManager_->GenerateMemos({ TextureFactory::MEMO1, TextureFactory::MEMO3,TextureFactory::MEMO4,TextureFactory::BOOK4 });
     // ミイラ前に移動
     player_->Init({ 0.0f, 0.0f, -5.0f });
@@ -39,6 +41,12 @@ void AmenStage::Update()
 
     //オブジェクトの更新
     UpdateObject();
+
+    if (!isGenerateItem_ && slidePuzzleSystem_->GetIsGameEnd()) {
+        //太陽円盤を生成する
+        itemManager_->GenerateItems({ "SolarDisc" });
+        isGenerateItem_ = true;
+    }
 
 }
 

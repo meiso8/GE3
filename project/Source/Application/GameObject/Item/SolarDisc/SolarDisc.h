@@ -11,5 +11,6 @@ public:
         object_->SetObjectName(name_);
         object_->RegisterObject();
     }
+   void Init()override;
     void Use() override;
 };

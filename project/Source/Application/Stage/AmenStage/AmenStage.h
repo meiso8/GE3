@@ -16,6 +16,7 @@ private:
     std::unique_ptr<SlidePuzzleSystem>slidePuzzleSystem_ = nullptr;
     std::unique_ptr<BackGround>backGround_ = nullptr;
     std::unique_ptr<AmenRa>amenRa_ = nullptr;
+    bool isGenerateItem_ = false;
 public:
     AmenStage();
     void Initialize()override;

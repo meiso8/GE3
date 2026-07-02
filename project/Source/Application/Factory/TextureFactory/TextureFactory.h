@@ -63,7 +63,9 @@ public:
         WATER_TEXTURE,
         //ネベト・シャムート・ケト
         GLYPH_NBT_SMT_HT,
-    
+        //一旦この順序出ないとバグになるね
+        BOOK5,
+
         // ======================
         TEXTURES,
     };
