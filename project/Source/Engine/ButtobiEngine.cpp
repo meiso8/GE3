@@ -232,6 +232,8 @@ void ButtobiEngine::Update() {
 #endif
     VibrateManager::Update();
     SceneManager::Update();
+    //オブジェクト管理の更新
+    ObjectManager::GetInstance()->Update();
 
     auto* camera = SceneManager::GetCurrentCamera();
 #ifdef _DEVELOP
@@ -336,6 +338,12 @@ void ButtobiEngine::PreCommandSet() {
 
     // シーンの描画
     SceneManager::DrawModel();
+
+    //生成オブジェクト描画
+    if (camera) {
+        ObjectManager::GetInstance()->Draw(*camera);
+    }
+
     //パーティクルの描画
     particleManager_->Draw();
     //ポストエフェクトのあと設定

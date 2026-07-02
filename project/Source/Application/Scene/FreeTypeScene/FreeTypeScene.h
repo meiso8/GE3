@@ -6,7 +6,8 @@
 #include"Particle/ParticleEmitter.h"
 #include"../GameObject/Beam/Beam.h"
 #include"BaseScene.h"
-
+#include"LevelEditor/LevelEditor.h"
+#include <vector>
 class FreeTypeScene : public BaseScene
 {
 public:
@@ -26,13 +27,8 @@ private:
 
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
     std::unique_ptr<Beam>beam_ = nullptr;
+    std::vector<std::unique_ptr<LevelEditor::ObjectSet>> objects_;
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
-
-
-
-    int srvIndex = 0;
-
-
 };
 

@@ -75,13 +75,19 @@ void ObjectManager::ClickObject(Camera& camera)
 
     DebugUI::CreateJsonFile(kJsonFileName_.c_str());
     //フィルターかけてObjecFileNameを探す
-    DebugUI::FindJsonFile(jsonFileName_,true,kJsonFileName_.c_str());
-    //同じラインに表示
-    ImGui::SameLine();
+   
     //セーブフラグ
     bool isSave = false;
     if (ImGui::Button("Save")) {
         isSave = true;
+    }
+    //同じラインに表示
+    ImGui::SameLine();
+    DebugUI::FindJsonFile(jsonFileName_,true,kJsonFileName_.c_str());
+   
+    //オブジェクトの生成
+    if (ImGui::Button("CreateObject")) {
+        CreateObject();
     }
 
     // 保存完了メッセージを表示
@@ -139,6 +145,7 @@ void ObjectManager::ClickObject(Camera& camera)
 void ObjectManager::Clear() {
     objects_.clear();
     idMap_.clear();
+    createObjects_.clear();
     nextID_ = 1; // IDのリセット
     clickedID_ = 0;
 }
@@ -152,6 +159,20 @@ void ObjectManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList
 {
     Object3d::SetCommandListAndSrvDescriptorHeap(commandList, srvDescriptorHeap);
     LogFile::Log("Objects Set CommandList And Srv DescriptorHeap\n");
+}
+
+void ObjectManager::Update()
+{
+    for (auto& obj : createObjects_) {
+        obj->Update();
+    }
+}
+
+void ObjectManager::Draw(Camera& camera)
+{
+    for (auto& obj : createObjects_) {
+        obj->Draw(camera);
+    }
 }
 
 void ObjectManager::Save()
@@ -211,6 +232,16 @@ void ObjectManager::SetName()
             jsonFileName_ = filename;
         }
     }
+}
+
+void ObjectManager::CreateObject()
+{
+    std::unique_ptr<Object3d> newObject = std::make_unique<Object3d>();
+    newObject->Create();
+    newObject->SetMeshAndMaterial(ModelManager::GetModel("medjed.gltf"));
+    RegisterObject(newObject.get());
+
+    createObjects_.push_back(std::move(newObject));
 }
 
 bool ObjectManager::UpdateImGuizmo(Camera& camera)

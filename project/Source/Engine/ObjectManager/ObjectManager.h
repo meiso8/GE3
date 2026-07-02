@@ -28,9 +28,13 @@ public:
     void Clear();
     void Initialize();
     void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
+
+    void Update();
+    void Draw(Camera& camera);
 private:   
     void Save();
     void SetName();
+    void CreateObject();
     bool UpdateImGuizmo(Camera& camera);
     ObjectManager() = default;
     ~ObjectManager() = default;
@@ -43,6 +47,6 @@ private:
     const std::string kJsonFileName_ = "objectEditor";
     /// @brief jsonファイル名
     std::string jsonFileName_ = kJsonFileName_;
-
+    std::vector<std::unique_ptr<Object3d>> createObjects_;
 };
 
