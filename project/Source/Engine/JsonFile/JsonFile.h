@@ -10,6 +10,7 @@ struct JsonData {
     bool modified = false; // ← 変更されたかどうかを記録！
 };
 struct Vector3;
+struct Vector4;
 struct EulerTransform;
 
 class JsonFile {
@@ -36,6 +37,7 @@ public:
     }
 
     static   nlohmann::json Vector3ToJson(const Vector3& vector);
+    static   nlohmann::json Vector4ToJson(const Vector4& vector);
 
     static  nlohmann::json EulerTransformToJson(const EulerTransform& eTransform);
 private:

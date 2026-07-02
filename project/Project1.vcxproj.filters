@@ -1124,6 +1124,9 @@
     <ClInclude Include="Source\Engine\SceneManager\BaseScene\BaseScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\LevelData\LevelData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\JsonFiles\config.json" />

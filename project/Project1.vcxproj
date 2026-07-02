@@ -144,7 +144,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MinSpace</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)externals\freetype\src;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\freetype\include;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\DirectXCommon;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh\MeshCommon;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source\Engine\Mesh\Primitive;$(ProjectDir)Source\Engine\Object3d;$(ProjectDir)Source\Engine\Object3d\Object3d;$(ProjectDir)Source\Engine\Object3d\LineObject3d;$(ProjectDir)Source\Engine\Object3d\BeamObject3d;$(ProjectDir)Source\Engine\Object3d\SkyBoxObject3d;$(ProjectDir)Source\Engine\Object3d\AnimationObject3d;$(ProjectDir)Source\Engine\DescriptorHeap\RtvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap\DsvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap\SrvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\PSO;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Particle;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\Camera;$(ProjectDir)Source\Application/Scene;$(ProjectDir)Source\Application/Object;$(ProjectDir)Source\Application/GameObject;$(ProjectDir)Source\Application/Physics;$(ProjectDir)Source\Application/System;$(ProjectDir)Source\Engine\Math\Easing;$(ProjectDir)Source\Engine\Math\Lerp;$(ProjectDir)Source\Engine\Mesh\Sphere;$(ProjectDir)Source\Engine\Mesh\Circle;$(ProjectDir)Source\Engine\Math\Random;$(ProjectDir)Source\Engine\Math\Structs;$(ProjectDir)Source\Engine\Math\Collision;$(ProjectDir)Source\Engine\Math\Matrix;$(ProjectDir)Source\Engine\Math\Vector;$(ProjectDir)Source\Engine\Mesh\Grid;$(ProjectDir)Source\Engine\Mesh\Model;$(ProjectDir)Source\Engine\Mesh\Cube;$(ProjectDir)Source\Engine\Mesh\Sprite;$(ProjectDir)Source\Engine\Math\SphericalCoordinate;$(ProjectDir)Source\Engine\Math\WorldTransform;$(ProjectDir)Source\Engine\Mesh\Line;$(ProjectDir)Source\Engine\Math\Cotangent;$(ProjectDir)Source\Engine\Math\CoordinateTransform;$(ProjectDir)Source\Engine\Mesh\ModelManager;$(ProjectDir)Source\Engine\Mesh\Plane;$(ProjectDir)Source\Engine\SceneManager;$(ProjectDir)externals\;$(ProjectDir)Source\Engine\JsonFile;$(ProjectDir)Source\Engine\Animation;$(ProjectDir)Source\Engine\Math\Quaternion;$(ProjectDir)Source\Engine\Time;$(ProjectDir)Source\Engine\TimeManager;$(ProjectDir)Source\Application\Factory;$(ProjectDir)Source\Application\Factory\ModelFactory;$(ProjectDir)Source\Application\Factory\TextureFactory;$(ProjectDir)Source\Application\Factory\SoundFactory;$(ProjectDir)Source\Application\Factory\SceneFactory;$(ProjectDir)Source\Engine\SceneManager\BaseScene</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -231,7 +231,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Animation\Bone.cpp" />
     <ClCompile Include="Source\Engine\Animation\SkinCluster.cpp" />
     <ClCompile Include="Source\Engine\Object3d\AnimationObject3d\AnimationObject3d.cpp" />
-    <ClCompile Include="Source\Engine\Animation\Animation.cpp" />
+    <ClCompile Include="Source\Engine\Animation\Animation.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MaxSpeed</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MaxSpeed</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MaxSpeed</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Puzzle\Puzzle.cpp" />
     <ClCompile Include="Source\Engine\Math\Quaternion\Quaternion.cpp" />
     <ClCompile Include="Source\Application\Factory\SceneFactory\SceneFactory.cpp" />
@@ -335,6 +339,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\Item\Item.h" />
     <ClInclude Include="Source\Application\GameObject\Item\SolarDisc\SolarDisc.h" />
     <ClInclude Include="Source\Application\GameObject\StageChangeTrigger\StageChangeTrigger.h" />
+    <ClInclude Include="Source\Engine\LevelData\LevelData.h" />
     <ClInclude Include="Source\Engine\SceneManager\BaseScene\BaseScene.h" />
     <ClInclude Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.h" />
     <ClInclude Include="Source\Engine\DescriptorHeap\RtvDescriptorHeap\RtvDescriptorHeap.h" />

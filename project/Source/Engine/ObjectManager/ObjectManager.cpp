@@ -202,6 +202,8 @@ void ObjectManager::Save()
             {"file_name", meshName},
             {"transform", JsonFile::EulerTransformToJson(object->GetTransform())},
             {"disabled", object->GetDisabled()},
+            {"temperature",object->GetTemperature()},
+            {"color",JsonFile::Vector4ToJson(object->GetColor())},
             {"name", name},
             {"type", object->GetObjectType() },
             {"nextStageName",object->GetNextStageName()}
@@ -210,6 +212,9 @@ void ObjectManager::Save()
         //モデルだった場合ディレクトリパスの要素を追加
         if (auto model = dynamic_cast<Model*>(primitive)) {
             objectJson["directoryPath"] = model->GetModelData()->directoryPath_;
+        } else {
+            //テクスチャハンドルを設定する
+            objectJson["textureHandle"] = object->GetTextureHandle();
         }
 
         // 4. 配列に要素を追加

@@ -186,6 +186,11 @@ public:
         textureHandles_[textureUsage] = Texture::GetSRVHandle(textureHandle);
     };
 
+    /// @brief テクスチャハンドルの取得関数
+    /// @param textureUsage テクスチャ利用
+    /// @return ファクトリーで設定したテクスチャハンドル
+    TextureFactory::Handle GetTextureHandle(const TEXTURE_USAGE& textureUsage = TEXTURE_USAGE_DIFFUSE);
+   
     // ==============メッシュ==================
     Primitive* GetPrimitive() { return primitive_; }
 

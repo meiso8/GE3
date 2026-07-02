@@ -56,5 +56,6 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/beam.png", BEAM);
 
     Texture::LoadAndMapHandle("Resource/Textures/waterTexture.png", WATER_TEXTURE);
+    Texture::LoadAndMapHandle("Resource/Textures/glyph.png", GLYPH_NBT_SMT_HT);
     
 }

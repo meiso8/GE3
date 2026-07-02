@@ -1,6 +1,8 @@
 #include "JsonFile.h"
 #include <filesystem>
 #include"Vector3.h"
+#include"Vector4.h"
+
 #include"Transform.h"
 
 std::unordered_map<std::string, JsonData>JsonFile::jsonFiles_;
@@ -69,6 +71,16 @@ nlohmann::json JsonFile::Vector3ToJson(const Vector3& vector)
         {"x", vector.x},
         {"y", vector.y},
         {"z", vector.z},
+    };
+}
+
+nlohmann::json JsonFile::Vector4ToJson(const Vector4& vector)
+{
+    return {
+       {"x", vector.x},
+       {"y", vector.y},
+       {"z", vector.z},
+       {"w", vector.w},
     };
 }
 

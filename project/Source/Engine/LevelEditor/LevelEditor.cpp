@@ -82,18 +82,26 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
         std::unique_ptr<ObjectSet> newObjctData = std::make_unique<ObjectSet>();
         auto filePath = objectData.filePath;
 
-        Model* model = ModelManager::LoadModelAndGet(filePath.directoryPath + "/" + filePath.fileName);
-       
+        Model* model = nullptr;
+
+        if (!filePath.directoryPath.empty()) {
+            model = ModelManager::LoadModelAndGet(filePath.directoryPath + "/" + filePath.fileName);
+        }
+      
         newObjctData->obj_ = std::make_unique<Object3d>();
         newObjctData->obj_->Create();
 
+        
         if (model) {
             newObjctData->obj_->SetMeshAndMaterial(model);
         } else {
             auto* primitive = PrimitiveFactory::GetPrimitiveForName(objectData.filePath.fileName);
             newObjctData->obj_->SetMeshAndMaterial(primitive);
+            //テクスチャハンドルのセット
+            newObjctData->obj_->SetTextureHandle(static_cast<TextureFactory::Handle>(objectData.textureHandle));
         }
 
+        newObjctData->obj_->SetTemperature(objectData.tempareture);
         newObjctData->obj_->SetObjectName(objectData.objectName);
         newObjctData->obj_->RegisterObject();
 
@@ -122,16 +130,7 @@ void LevelEditor::CreateStageChangeTriggers(std::vector<std::unique_ptr<StageCha
 
         // インスタンスを作成
         std::unique_ptr<StageChangeTrigger> newTrigger = std::make_unique<StageChangeTrigger>();
-
-        newTrigger->Create(
-            triggerData.filePath.fileName,
-            triggerData.filePath.directoryPath,
-            triggerData.nextStageName,
-            triggerData.transform,
-            triggerData.colliderData.center,
-            triggerData.colliderData.size
-        );
-
+        newTrigger->Create(triggerData);
         // 管理用配列に追加
         triggers.push_back(std::move(newTrigger));
     }
@@ -151,9 +150,17 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         //要素追加
         levelData->objects.emplace_back(LevelData::ObjectData{});
         LevelData::ObjectData& objectData = levelData->objects.back();
+        
+        if (object.contains("textureHandle")) {
+            objectData.textureHandle = object["textureHandle"];
+        } else {
+            objectData.textureHandle = TextureFactory::WHITE_1X1;
+        }
 
+        //温度の読み込み
+        LoadTempareture(objectData.tempareture, object);
         //オブジェクト名の読み込み
-        LoadName(objectData.objectName, object,"name");
+        LoadName(objectData.objectName, object, "name");
         //メッシュファイルパスデータをロードする
         LoadMeshData(objectData.filePath, object);
         //トランスフォームのパラメータ読み込み
@@ -174,6 +181,9 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         //要素追加
         levelData->enemies.emplace_back(LevelData::EnemySpawnData{});
         LevelData::EnemySpawnData& enemyData = levelData->enemies.back();
+     
+        //温度の読み込み
+        LoadTempareture(enemyData.tempareture, object);
         //トランスフォームのパラメータ読み込み
         LoadTransform(object, enemyData.transform);
         //子要素の走査
@@ -185,10 +195,31 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         //要素追加
         levelData->stageChangeTriggers_.emplace_back(LevelData::StageChangeTriggerData{});
         LevelData::StageChangeTriggerData& stageChangeTriggerData = levelData->stageChangeTriggers_.back();
+        
+        //色の取得
+        if (object.contains("color")) {
+            stageChangeTriggerData.color = {
+                .x = (float)object["color"]["x"] ,
+                .y = (float)object["color"]["y"] ,
+                .z = (float)object["color"]["z"] ,
+                .w = (float)object["color"]["w"]
+            };
+        } else {
+            stageChangeTriggerData.color = { 1.0f,1.0f,1.0f,1.0f };
+        }
+
+        if (object.contains("textureHandle")) {
+            stageChangeTriggerData.textureHandle = object["textureHandle"];
+        } else {
+            stageChangeTriggerData.textureHandle = TextureFactory::WHITE_1X1;
+        }
+
+        //温度の読み込み
+        LoadTempareture(stageChangeTriggerData.tempareture, object);
         //次のステージ名を記録
         LoadName(stageChangeTriggerData.nextStageName, object, "nextStageName");
         //メッシュファイルパスデータをロードする
-        LoadMeshData(stageChangeTriggerData.filePath,object);
+        LoadMeshData(stageChangeTriggerData.filePath, object);
         //トランスフォームのパラメータ読み込み
         LoadTransform(object, stageChangeTriggerData.transform);
         //コライダーの読み込み
@@ -209,6 +240,15 @@ void LevelEditor::LoadMeshData(LevelData::MeshFileData& meshData, nlohmann::json
     LoadName(meshData.fileName, object);
     //ファイルディレクトリの読み込み
     LoadName(meshData.directoryPath, object, "directoryPath");
+}
+
+void LevelEditor::LoadTempareture(float& tempareture, nlohmann::json& object)
+{
+    if (object.contains("temperature")) {
+        tempareture = object["temperature"];
+    } else {
+        tempareture = 0.0f;
+    }
 }
 
 void LevelEditor::LoadTransform(nlohmann::json& object, EulerTransform& transform)
