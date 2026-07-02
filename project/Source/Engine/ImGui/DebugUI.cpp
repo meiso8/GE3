@@ -15,7 +15,7 @@
 #include"ObjectManager/ObjectManager.h"
 #include"LevelEditor/LevelEditor.h"
 #include"../../Application/GameObject/StageChangeTrigger/StageChangeTrigger.h"
-#include"../../Application/Stage/StageManager.h"
+#include"../../Application/StageManager/StageManager.h"
 #include"Sound.h"
 
 #include"Lights/Light.h"
@@ -31,6 +31,7 @@
 
 #include"SphericalCoordinate.h"
 
+#include"../StageManager/StageManager.h"
 
 #include<numbers>
 #include<algorithm>
@@ -486,6 +487,29 @@ void DebugUI::CheckTextures(SrvDescriptorHeap* srvDescriptorHeap)
     }
 
 #endif
+}
+
+void DebugUI::CheckStageManager()
+{
+
+    auto* stageManager = StageManager::GetInstance();
+    // 現在トリガーに設定されている遷移先ステージ名を取得
+    std::string currentStageName = stageManager->GetCurrentStageName();
+
+    if (ImGui::BeginCombo("StageName", currentStageName.c_str())) {
+        // オブジェクト名を選択肢に入れる
+        for (auto [stage, nextStageName] : stageManager->GetStageNames()) {
+            // 選択肢を表示（クリックされたら true を返す）
+            if (ImGui::Selectable(nextStageName.c_str(), true)) {
+                // クリックされたらStageNameをセットする
+                stageManager->SetNestStage(nextStageName);
+                break;
+            }
+        }
+
+        ImGui::EndCombo();
+    }
+
 }
 
 void DebugUI::CheckSpotLight()

@@ -111,7 +111,7 @@
     <ClCompile Include="Source\Engine\PSO\Depth.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Math\Lerp\Easing.cpp">
+    <ClCompile Include="Source\Engine\Math\Easing\Easing.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\Fence.cpp">
@@ -231,7 +231,7 @@
     <ClCompile Include="Source\Engine\SceneManager\SceneManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Scene\SampleScene.cpp">
+    <ClCompile Include="Source\Application\Scene\GameScene\GameScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Camera\SpriteCamera.cpp">
@@ -255,19 +255,19 @@
     <ClCompile Include="Source\Application\GameObject\Player\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\BackGround\World.cpp">
+    <ClCompile Include="Source\Application\GameObject\World\World.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\BackGround\Field.cpp">
+    <ClCompile Include="Source\Application\GameObject\Field\Field.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Medjed\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Scene\TitleScene.cpp">
+    <ClCompile Include="Source\Application\Scene\TitleScene\TitleScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Scene\ResultScene.cpp">
+    <ClCompile Include="Source\Application\Scene\ResultScene\ResultScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\JsonFile\JsonFile.cpp">
@@ -300,7 +300,7 @@
     <ClCompile Include="Source\Application\GameObject\Medjed\Medjed.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\BackGround\Building.cpp">
+    <ClCompile Include="Source\Application\GameObject\Building\Building.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game.cpp">
@@ -321,7 +321,7 @@
     <ClCompile Include="Source\Engine\Lights\SpotLightManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\SceneManager\SceneFactory.cpp">
+    <ClCompile Include="Source\Application\Factory\SceneFactory\SceneFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Puzzle\Puzzle.cpp">
@@ -348,7 +348,7 @@
     <ClCompile Include="Source\Application\GameObject\Medjed\MedjedManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Item\ItemSlot.cpp">
+    <ClCompile Include="Source\Application\GameObject\ItemSlot\ItemSlot.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Item\Crowbar\Crowbar.cpp">
@@ -366,7 +366,7 @@
     <ClCompile Include="Source\Application\GameObject\SoundManager\SoundManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\GameObject\Item\ItemManager.cpp">
+    <ClCompile Include="Source\Application\GameObject\ItemManager\ItemManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\Structs\Line.cpp">
@@ -387,7 +387,7 @@
     <ClCompile Include="Source\Application\GameObject\Player\EyeCollider.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\MummyStage\Mummy.cpp">
+    <ClCompile Include="Source\Application\GameObject\Mummy\Mummy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Bullet\RhythmManager.cpp">
@@ -399,7 +399,7 @@
     <ClCompile Include="Source\Application\System\InputBind.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\Platform.cpp">
+    <ClCompile Include="Source\Application\GameObject\Platform\Platform.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Memo\Memo.cpp">
@@ -408,13 +408,13 @@
     <ClCompile Include="Source\Application\GameObject\Memo\MemoManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\MummyStage\Papyrus.cpp">
+    <ClCompile Include="Source\Application\GameObject\Papyrus\Papyrus.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\WaterStage\Water.cpp">
+    <ClCompile Include="Source\Application\GameObject\Water\Water.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\WaterStage\PapyrusWall.cpp">
+    <ClCompile Include="Source\Application\GameObject\PapyrusWall\PapyrusWall.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\Stage\WaterStage\WaterStage.cpp">
@@ -426,7 +426,7 @@
     <ClCompile Include="Source\Application\Stage\MedjedStage\MedjedStage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\WaterStage\Block.cpp">
+    <ClCompile Include="Source\Application\GameObject\Block\Block.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Puzzle\SlidePuzzleSystem.cpp">
@@ -438,28 +438,28 @@
     <ClCompile Include="Source\Application\Stage\AmenStage\AmenStage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\AmenStage\AmenRa.cpp">
+    <ClCompile Include="Source\Application\GameObject\AmenRa\AmenRa.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\UI\PauseScreen.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\MummyStage\MummyRoom.cpp">
+    <ClCompile Include="Source\Application\GameObject\MummyRoom\MummyRoom.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\UI\CurPos.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\MummyStage\DummyMummy.cpp">
+    <ClCompile Include="Source\Application\GameObject\DummyMummy\DummyMummy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Loader\ModelFactory.cpp">
+    <ClCompile Include="Source\Application\Factory\ModelFactory\ModelFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Loader\SoundFactory.cpp">
+    <ClCompile Include="Source\Application\Factory\SoundFactory\SoundFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Loader\TextureFactory.cpp">
+    <ClCompile Include="Source\Application\Factory\TextureFactory\TextureFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\FreeTypeManager\FreeTypeManager.cpp">
@@ -468,7 +468,7 @@
     <ClCompile Include="Source\Engine\FreeTypeManager\Text.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Scene\FreeTypeScene.cpp">
+    <ClCompile Include="Source\Application\Scene\FreeTypeScene\FreeTypeScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\Font\Font.cpp">
@@ -495,7 +495,7 @@
     <ClCompile Include="Source\Engine\TimeManager\TimeManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Stage\StageManager.cpp">
+    <ClCompile Include="Source\Application\StageManager\StageManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Beam\Beam.cpp">
@@ -558,6 +558,9 @@
     <ClCompile Include="Source\Application\GameObject\Item\Item.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\SceneManager\BaseScene\BaseScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Math\Structs\AABB.h">
@@ -584,7 +587,7 @@
     <ClInclude Include="Source\Engine\Mesh\Grid\DrawGrid.h">
       <Filter>ヘッダー ファイル\Engine\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Math\Lerp\Easing.h">
+    <ClInclude Include="Source\Engine\Math\Easing\Easing.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\ImGui\ImGuiClass.h">
@@ -749,7 +752,7 @@
     <ClInclude Include="Source\Engine\SceneManager\SceneManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Scene\SampleScene.h">
+    <ClInclude Include="Source\Application\Scene\GameScene\GameScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Camera\SpriteCamera.h">
@@ -791,10 +794,10 @@
     <ClInclude Include="Source\Application\GameObject\Player\Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\BackGround\World.h">
+    <ClInclude Include="Source\Application\GameObject\World\World.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\BackGround\Field.h">
+    <ClInclude Include="Source\Application\GameObject\Field\Field.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Math\Structs\Circle.h">
@@ -806,10 +809,10 @@
     <ClInclude Include="Source\Application\GameObject\Medjed\Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Scene\TitleScene.h">
+    <ClInclude Include="Source\Application\Scene\TitleScene\TitleScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Scene\ResultScene.h">
+    <ClInclude Include="Source\Application\Scene\ResultScene\ResultScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\JsonFile\JsonFile.h">
@@ -839,7 +842,7 @@
     <ClInclude Include="Source\Application\GameObject\Medjed\Medjed.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\BackGround\Building.h">
+    <ClInclude Include="Source\Application\GameObject\Building\Building.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game.h">
@@ -863,7 +866,7 @@
     <ClInclude Include="Source\Engine\Lights\SpotLightManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\SceneManager\SceneFactory.h">
+    <ClInclude Include="Source\Application\Factory\SceneFactory\SceneFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Puzzle\Puzzle.h">
@@ -902,7 +905,7 @@
     <ClInclude Include="Source\Application\GameObject\Medjed\MedjedManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Item\ItemSlot.h">
+    <ClInclude Include="Source\Application\GameObject\ItemSlot\ItemSlot.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Item\Crowbar\Crowbar.h">
@@ -920,7 +923,7 @@
     <ClInclude Include="Source\Application\GameObject\SoundManager\SoundManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\GameObject\Item\ItemManager.h">
+    <ClInclude Include="Source\Application\GameObject\ItemManager\ItemManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Player\RaySprite.h">
@@ -938,7 +941,7 @@
     <ClInclude Include="Source\Application\GameObject\Player\EyeCollider.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\MummyStage\Mummy.h">
+    <ClInclude Include="Source\Application\GameObject\Mummy\Mummy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Bullet\RhythmManager.h">
@@ -950,7 +953,7 @@
     <ClInclude Include="Source\Application\System\InputBind.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\Platform.h">
+    <ClInclude Include="Source\Application\GameObject\Platform\Platform.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Memo\Memo.h">
@@ -959,13 +962,13 @@
     <ClInclude Include="Source\Application\GameObject\Memo\MemoManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\MummyStage\Papyrus.h">
+    <ClInclude Include="Source\Application\GameObject\Papyrus\Papyrus.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\WaterStage\Water.h">
+    <ClInclude Include="Source\Application\GameObject\Water\Water.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\WaterStage\PapyrusWall.h">
+    <ClInclude Include="Source\Application\GameObject\PapyrusWall\PapyrusWall.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\Stage\WaterStage\WaterStage.h">
@@ -977,7 +980,7 @@
     <ClInclude Include="Source\Application\Stage\MedjedStage\MedjedStage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\WaterStage\Block.h">
+    <ClInclude Include="Source\Application\GameObject\Block\Block.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Puzzle\SlidePuzzleSystem.h">
@@ -989,31 +992,31 @@
     <ClInclude Include="Source\Application\Stage\AmenStage\AmenStage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\AmenStage\AmenRa.h">
+    <ClInclude Include="Source\Application\GameObject\AmenRa\AmenRa.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\UI\PauseScreen.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\MummyStage\MummyRoom.h">
+    <ClInclude Include="Source\Application\GameObject\MummyRoom\MummyRoom.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\UI\CurPos.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\MummyStage\DummyMummy.h">
+    <ClInclude Include="Source\Application\GameObject\DummyMummy\DummyMummy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Loader\ModelFactory.h">
+    <ClInclude Include="Source\Application\Factory\ModelFactory\ModelFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\TimeManager\TimeManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Loader\SoundFactory.h">
+    <ClInclude Include="Source\Application\Factory\SoundFactory\SoundFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Loader\TextureFactory.h">
+    <ClInclude Include="Source\Application\Factory\TextureFactory\TextureFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\FreeTypeManager\FreeTypeManager.h">
@@ -1022,7 +1025,7 @@
     <ClInclude Include="Source\Engine\FreeTypeManager\Text.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Scene\FreeTypeScene.h">
+    <ClInclude Include="Source\Application\Scene\FreeTypeScene\FreeTypeScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Mesh\Font\Font.h">
@@ -1043,7 +1046,7 @@
     <ClInclude Include="Source\Engine\PostProcessManager\PostProcessManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Stage\StageManager.h">
+    <ClInclude Include="Source\Application\StageManager\StageManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Beam\Beam.h">
@@ -1109,9 +1112,6 @@
     <ClInclude Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DescriptorHeap.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Application\GameObject\StageChangeTrigger\StageChangeTrigger.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -1119,6 +1119,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\GameObject\Item\Item.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\SceneManager\BaseScene\BaseScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

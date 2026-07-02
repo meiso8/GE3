@@ -1,9 +1,9 @@
 #pragma once
 #include"../Stage.h"
 
-#include "PapyrusWall.h"
-#include"Water.h"
-#include"Block.h"
+#include "PapyrusWall/PapyrusWall.h"
+#include"Water/Water.h"
+#include"Block/Block.h"
 #include<memory>
 #include"Memo/MemoManager.h"
 

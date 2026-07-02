@@ -18,7 +18,7 @@
 #include"RenderTexture/RenderTexture.h"
 #include"Sound.h"
 #include"DebugUI.h"
-#include"Item/ItemManager.h"
+#include"ItemManager/ItemManager.h"
 
 
 void Player::OnCollision(Collider* collider)

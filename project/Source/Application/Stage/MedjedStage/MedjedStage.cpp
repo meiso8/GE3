@@ -2,7 +2,7 @@
 #include"SoundManager/SoundManager.h"
 #include"Sound.h"
 #include "ParticleEmitter.h"
-#include"../StageManager.h"
+#include"../StageManager/StageManager.h"
 #include"DebugUI.h"
 
 const bool MedjedStage::IsClear()

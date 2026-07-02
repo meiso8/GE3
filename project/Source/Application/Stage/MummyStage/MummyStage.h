@@ -1,11 +1,11 @@
 #pragma once
 #include"../Stage.h"
-#include"Mummy.h"
+#include"Mummy/Mummy.h"
 #include<memory>
 #include"Player/RaySprite.h"
-#include"Papyrus.h"
-#include "MummyRoom.h" 
-#include"DummyMummy.h"
+#include"Papyrus/Papyrus.h"
+#include "MummyRoom/MummyRoom.h" 
+#include"DummyMummy/DummyMummy.h"
 #include<array>
 class MummyStage :public Stage
 {

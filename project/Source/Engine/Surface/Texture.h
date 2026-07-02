@@ -12,7 +12,7 @@
 
 #include"CommandList.h"
 #include<unordered_map>
-#include"Application/Loader/TextureFactory.h"
+#include"TextureFactory.h"
 #include<filesystem>
 
 class SrvDescriptorHeap;
