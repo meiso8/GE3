@@ -116,6 +116,7 @@ void Item::SetStartEndPos(const Vector3& start, const Vector3& end)
 
 void Item::Update()
 {
+    object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
     object_->Update();
     ColliderUpdate();
 }

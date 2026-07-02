@@ -1,11 +1,8 @@
 #include "PuzzleObj.h"
 
-#include"Window.h"
 #include "CollisionConfig.h"
 #include"ModelManager.h"
 #include"Model.h"
-#include"DebugUI.h"
-#include"Lerp.h"
 
 PuzzleObj::PuzzleObj() {
 
@@ -17,38 +14,39 @@ PuzzleObj::PuzzleObj() {
     // memoのサイズに合わせる
     SetAABB(aabb);
 
-    cubeMesh_ = std::make_unique<Primitive>();
-    cubeMesh_->Create(PrimitiveGenerator::CreateCube(aabb));
+    aniObj_ = std::make_unique<AnimationObject3d>();
 
+    auto* model = ModelManager::GetModel("Puzzle.gltf");
+    aniObj_->Create();
+    aniObj_->SetModelAndLoadAnimation(model);
+    aniObj_->SetMeshAndMaterial(model);
+    aniObj_->SetTemperature(0.75f);
 
-    object_ = std::make_unique<Object3d>();
-
-    object_->Create();
-    object_->SetMeshAndMaterial(cubeMesh_.get());
-
-    object_->SetTextureHandle(TextureFactory::PUZZLE_NUM);
-    object_->SetTemperature(0.75f);
-
-    SetWorldMatrix(object_->GetWorldTransform().matWorld_);
+    SetWorldMatrix(aniObj_->GetWorldTransform().matWorld_);
 
 }
 
 void PuzzleObj::Initialize() {
 
-    object_->Initialize();
-    object_->SetTranslate({ -24.0f,0.25f,-24.0f });
-    object_->SetObjectName("PuzzleObj");
-    object_->RegisterObject();
+    isOpen_ = false;
+    aniObj_->Initialize();
+    aniObj_->SetTranslate({ -24.0f,0.25f,-24.0f });
+    aniObj_->SetObjectName("PuzzleObj");
+    aniObj_->RegisterObject();
 }
 
 void PuzzleObj::Update() {
 
-    object_->Update();
-    object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+    if (isOpen_) {
+        aniObj_->UpdateAniTimer(false);
+    }
+
+    aniObj_->Update();
+    aniObj_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 }
 
 void PuzzleObj::Draw(Camera& camera) {
-    object_->Draw(camera);
+    aniObj_->Draw(camera);
 
 }
 

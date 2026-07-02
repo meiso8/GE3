@@ -11,6 +11,7 @@ class SkinningModel :public Primitive
 {
 public:
     SkinningModel();
+    ~SkinningModel();
     void SetModel(Model* model);
     void SetRootSignatureAndGraphicsPipeline(
         ID3D12GraphicsCommandList* commandList,
@@ -35,8 +36,8 @@ public:
     Matrix4x4* GetJointMatrix(const std::string jointName);
 
 private:
-    std::unique_ptr< Skeleton> skeleton_;
-    std::unique_ptr< SkinCluster> skinCluster_;
+    std::unique_ptr< Skeleton> skeleton_ = nullptr;
+    std::unique_ptr< SkinCluster> skinCluster_ = nullptr;
     ModelData* modelData_ = nullptr;
 };
 

@@ -124,7 +124,6 @@ void ItemSlot::CombineItems(int indexA, int indexB)
     if (combined) {
         slots_[indexA] = combined;
         slots_[indexB].reset();
-        //ShowMessage("アイテムを組み合わせて「" + combined->name_ + "」を作成した！");
         SoundManager::PlayCorrectSE();
     } else {
         SoundManager::PlayCancelSE();
