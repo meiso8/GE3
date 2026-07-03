@@ -43,6 +43,7 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/p.png", HIERO_P);
     Texture::LoadAndMapHandle("Resource/Textures/d.png", HIERO_D);
     Texture::LoadAndMapHandle("Resource/Textures/t.png", HIERO_T);
+
     Texture::LoadAndMapHandle("Resource/Textures/BD_Hunefer.jpg", BD_HUNEFER);
 
    Texture::LoadAndMapHandle("Resource/Textures/ending01.png", ENDING1);
@@ -62,5 +63,5 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/sm.png", GLYPH_SM);
     Texture::LoadAndMapHandle("Resource/Textures/h.png", GLYPH_H);
     Texture::LoadAndMapHandle("Resource/Textures/ht.png", GLYPH_HT);
-
+    Texture::LoadAndMapHandle("Resource/Textures/n.png", GLYPH_N);
 }

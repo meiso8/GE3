@@ -1,12 +1,19 @@
 {
-    "name": "SampleScene",
+    "name": "GameScene",
     "objects": [
         {
-            "disabled": false,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/mummy",
+            "disabled": false,
             "file_name": "dummyMummy.gltf",
-            "name": "MummyRoomDoor1",
+            "name": "Object1",
             "nextStageName": "MummyStage",
+            "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -27,11 +34,18 @@
             "type": "StageChangeTrigger"
         },
         {
-            "disabled": false,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/AmenRa",
+            "disabled": false,
             "file_name": "AmenRa.obj",
             "name": "Object2",
             "nextStageName": "AmenStage",
+            "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -52,11 +66,18 @@
             "type": "StageChangeTrigger"
         },
         {
-            "disabled": false,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/Water",
+            "disabled": false,
             "file_name": "Water.obj",
             "name": "Water3",
             "nextStageName": "",
+            "temperature": 0.10000000149011612,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -70,22 +91,29 @@
                 },
                 "translate": {
                     "x": 0.0,
-                    "y": 0.75,
+                    "y": -0.625,
                     "z": 0.0
                 }
             },
             "type": "EMPTY"
         },
         {
-            "disabled": false,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
             "directoryPath": "Resource/Models/player",
+            "disabled": false,
             "file_name": "player.obj",
-            "name": "Player4",
+            "name": "Player5",
             "nextStageName": "",
+            "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": -9.632196426391602,
+                    "y": 14.049602508544922,
                     "z": 0.0
                 },
                 "scale": {
@@ -94,12 +122,76 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 10.591726303100586,
+                    "x": 4.246762752532959,
                     "y": 0.0,
-                    "z": 8.18345832824707
+                    "z": -10.75
                 }
             },
             "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/hart",
+            "disabled": false,
+            "file_name": "hart.obj",
+            "name": "GoldHeart4",
+            "nextStageName": "",
+            "temperature": 1.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": -1.2000000476837158,
+                    "z": 0.0
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "file_name": "Plane",
+            "name": "Object5",
+            "nextStageName": "",
+            "temperature": 0.5,
+            "textureHandle": 47,
+            "transform": {
+                "rotate": {
+                    "x": 1.5699999332427979,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.33030128479003906,
+                    "z": 7.334268569946289
+                }
+            },
+            "type": "MESH"
         }
     ]
 }
