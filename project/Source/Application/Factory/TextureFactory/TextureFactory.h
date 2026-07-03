@@ -65,7 +65,8 @@ public:
         GLYPH_NBT_SMT_HT,
         //一旦この順序出ないとバグになるね
         BOOK5,
-
+        //N　波
+        GLYPH_N,
         // ======================
         TEXTURES,
     };
