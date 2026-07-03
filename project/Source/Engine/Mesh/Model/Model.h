@@ -7,6 +7,7 @@
 class Model :public Primitive
 {
 public:
+    ~Model();
     void CreateModel();
     void SetModelData(std::unique_ptr<ModelData> modelData) {
         //メッシュの名前を記録

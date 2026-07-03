@@ -38,7 +38,7 @@ private:
     bool UpdateImGuizmo(Camera& camera);
 
     ObjectManager() = default;
-    ~ObjectManager() = default;
+    ~ObjectManager();
 private:
     ObjectCommandManager objectCommandManager_;
     std::vector<Object3d*> objects_;

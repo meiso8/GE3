@@ -31,6 +31,39 @@ void Object3d::UpdateUV() {
 }
 
 
+Object3d::~Object3d()
+{
+    if (transformationMatrixResource_) {
+        transformationMatrixResource_->Unmap(0, nullptr);
+        transformationMatrixResource_.Reset();
+        transformationMatrixResource_ = nullptr;
+    }
+
+    if (materialResource_) {
+        materialResource_->Unmap(0, nullptr);
+        materialResource_.Reset();
+        materialResource_ = nullptr;
+    }
+
+    if (expansionResource_) {
+        expansionResource_->Unmap(0, nullptr);
+        expansionResource_.Reset();
+        expansionResource_ = nullptr;
+    }
+
+    if (waveResource_) {
+        waveResource_->Unmap(0, nullptr);
+        waveResource_.Reset();
+        waveResource_ = nullptr;
+    }
+
+    if (idResource_) {
+        idResource_->Unmap(0, nullptr);
+        idResource_.Reset();
+        idResource_ = nullptr;
+    }
+}
+
 void Object3d::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
@@ -220,6 +253,7 @@ void Object3d::Initialize()
     worldTransform_.Initialize();
 }
 
+
 void Object3d::RegisterObject()
 {
     ObjectManager::GetInstance()->RegisterObject(this);
@@ -236,6 +270,7 @@ void Object3d::CreateTransformationMatrix() {
 
     //Matrix4x4　1つ分のサイズを用意
     transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrixFor3D));
+    transformationMatrixResource_->SetName(L"Object3d_Transformation_Matrix_Resource");
     //データを書き込む
     //書き込むためのアドレスを取得
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
@@ -250,6 +285,7 @@ void Object3d::CreateWaveData()
     int waveCount = 2;
     size_t bufferSize = (sizeof(Wave) * waveCount + 255) & ~255;
     waveResource_ = DirectXCommon::CreateBufferResource(bufferSize);
+    waveResource_->SetName(L"Object3d_WaveDataResoource");
     //書き込むためのアドレスを取得
     waveResource_->Map(0, nullptr, reinterpret_cast<void**>(&waveData_));
 
@@ -259,7 +295,7 @@ void Object3d::CreateWaveData()
 void Object3d::CreateBalloonData()
 {
     expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
-
+    expansionResource_->SetName(L"Object3d_Expansion_Resource");
     //書き込むためのアドレスを取得
     expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&balloonData_));
     //データを初期化する
@@ -270,7 +306,7 @@ void Object3d::CreateBalloonData()
 void Object3d::CreateID()
 {
     idResource_ = DirectXCommon::CreateBufferResource(sizeof(int));
-
+    idResource_->SetName(L"Object3d_Id_Resource");
     //書き込むためのアドレスを取得
     idResource_->Map(0, nullptr, reinterpret_cast<void**>(&idData_));
     idData_->id = 0;

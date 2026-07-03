@@ -30,7 +30,7 @@ public:
     void Initialize(const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE)override;
 private:
     DebugCamera();
-    ~DebugCamera() =default;
+    ~DebugCamera();
     void UpdateProjectionMatrix();
     void MouseInputMove();
     void InputTranslate();

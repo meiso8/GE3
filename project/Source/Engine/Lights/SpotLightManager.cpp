@@ -20,6 +20,7 @@ SpotLightManager::SpotLightManager(SrvDescriptorHeap *srvDescriptorHeap)
 {    //スポットライトのResourceを作成する
     spotLightResource_ =
         DirectXCommon::CreateBufferResource(sizeof(SpotLight) * kMaxData_);
+    spotLightResource_->SetName(L"spotLightResource");
     //書き込むためのアドレスを取得
     spotLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&spotLightData_));
 

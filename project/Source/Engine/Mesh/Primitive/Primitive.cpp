@@ -863,7 +863,7 @@ void Primitive::Create(const MeshData& meshData)
     // 1. 頂点バッファの作成とデータ転送
     UINT vertexBufferSize = sizeof(VertexData) * vertexCount_;
     vertexResource_ = DirectXCommon::CreateBufferResource(vertexBufferSize);
-
+    vertexResource_->SetName(L"Primitive_VertexResource");
     //頂点バッファビューを作成する
     vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
     vertexBufferView_.SizeInBytes = vertexBufferSize;
@@ -882,7 +882,7 @@ void Primitive::Create(const MeshData& meshData)
         UINT indexBufferSize = sizeof(uint32_t) * indexCount_;
         indexResource_ = DirectXCommon::CreateBufferResource(indexBufferSize);
         //Viewを作成する IndexBufferView(IBV)
-
+        indexResource_->SetName(L"Primitive_IndexResource");
         //リソースの先頭アドレスから使う
         indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
         //使用するリソースのサイズ
@@ -905,6 +905,7 @@ Primitive::~Primitive()
         vertexResource_.Reset();
         vertexResource_ = nullptr;
     }
+
     if (indexResource_) {
         indexResource_.Reset();
         indexResource_ = nullptr;

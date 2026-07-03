@@ -74,6 +74,7 @@ void DirectXCommon::CreateDepthStencilResourceSRV(SrvDescriptorHeap* srvDescript
     depthTextureData_.srvHandleCPU = srvDescriptorHeap->GetCPUDescriptorHandle(depthTextureData_.srvIndex);
     depthTextureData_.srvHandleGPU = srvDescriptorHeap->GetGPUDescriptorHandle(depthTextureData_.srvIndex);
     DirectXCommon::GetDevice()->CreateShaderResourceView(depthTextureData_.depthStencilResource.Get(), &depthTextureSrvDesc, depthTextureData_.srvHandleCPU);
+    depthTextureData_.depthStencilResource->SetName(L"depthTextureData_depthStencilResource");
     LogFile::Log("Rendertexture : DepthTextureResource : CreateShaderResourceView\n");
 
 }
@@ -304,6 +305,8 @@ void DirectXCommon::InitializeDevice()
     //ファイルへのログ出力
     LogFile::Log("Complete create D3D12Device!!!\n");//初期化完了のログを出す
 
+
+
 #ifdef _DEBUG
     debugError.Create(device);
     LogFile::Log("SetDebugError\n");
@@ -467,7 +470,10 @@ ComPtr<ID3D12Resource> DirectXCommon::CreateBufferResource(
         return resource;
     }
 
+    resource->SetName(L"DirectXCommon_BufferResource");
+
     return nullptr;
+
 
 };
 
@@ -498,7 +504,7 @@ ComPtr<ID3D12Resource> DirectXCommon::CreateReadbackBufferResource(size_t sizeIn
         IID_PPV_ARGS(&resource)))) {
         return resource;
     }
-
+    resource->SetName(L"DirectXCommon_ReadbackBufferResource");
     return nullptr;
 }
 
@@ -542,6 +548,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateTextureResource(cons
         nullptr,//Clear最適地。使わない
         IID_PPV_ARGS(&resource));//ポインタのポインタ
 
+    resource->SetName(L"DirectXCommon_TextureResource");
     assert(SUCCEEDED(hr));
 
     return resource;
@@ -621,7 +628,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateDepthStencileTexture
         &depthClearValue,//Clear最適地
         IID_PPV_ARGS(&resource));
     assert(SUCCEEDED(hr));
-
+    resource->SetName(L"DirectXCommon_DepthStencile_TextureResource");
     return resource;
 }
 
@@ -636,6 +643,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::UploadTextureData(
     DirectX::PrepareUpload(device.Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
     uint64_t intermediateSize = GetRequiredIntermediateSize(texture.Get(), 0, UINT(subresources.size()));
     Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = CreateBufferResource(intermediateSize);//中間リソース
+    intermediateResource->SetName(L"texture:intermediateResource");
     UpdateSubresources(commandList, texture.Get(), intermediateResource.Get(), 0, 0, UINT(subresources.size()), subresources.data());
     //Textureへの転送後は利用できるよう,D3D12_RESOURCE_STATE_COPY_DESTからRESOURCE_STATE_GENERIC_READへResourceStateを変更する
     D3D12_RESOURCE_BARRIER barrier{};

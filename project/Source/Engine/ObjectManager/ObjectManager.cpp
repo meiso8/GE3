@@ -54,6 +54,15 @@ void ObjectManager::UnregisterObject(Object3d* gameObject) {
     if (it != objects_.end()) {
         objects_.erase(it, objects_.end());
     }
+
+    // 【追加】実体を管理している unique_ptr の配列からも削除して完全に解放する
+    auto itCreate = std::remove_if(createObjects_.begin(), createObjects_.end(),
+        [gameObject](const std::unique_ptr<Object3d>& obj) {
+            return obj.get() == gameObject;
+        });
+    if (itCreate != createObjects_.end()) {
+        createObjects_.erase(itCreate, createObjects_.end());
+    }
 }
 
 Object3d* ObjectManager::FindObjectByID(uint32_t id) {
@@ -389,4 +398,16 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera)
     return isUsingPrev;
 
 #endif
+}
+
+ObjectManager::~ObjectManager()
+{
+    for (auto& obj : createObjects_) {
+        if (obj) {
+            obj.reset();
+        }
+    }
+
+    createObjects_.clear();
+
 }

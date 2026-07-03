@@ -86,9 +86,23 @@ void DebugBone::Draw(Camera& camera)
     }
 }
 
+DebugBone::~DebugBone()
+{
+    for (auto& value : bones_) {
+        value.reset();
+    }
+
+    bones_.clear();
+}
+
 void DebugBone::Create(Skeleton& skeleton)
 {
     skeleton_ = &skeleton;
+
+    for (auto& value : bones_) {
+        value.reset();
+    }
+
     bones_.clear();
     assert(!skeleton_->joints.empty());
 

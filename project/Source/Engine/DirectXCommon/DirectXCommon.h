@@ -162,7 +162,7 @@ public:
         const DirectX::ScratchImage& mipImages);
     /// @brief デバイスの取得関数
     /// @return  デバイス
-    static Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() { return device; };
+    static Microsoft::WRL::ComPtr<ID3D12Device>& GetDevice() { return device; };
     /// @brief コンパイラーの取得関数
     /// @return コンパイラー
     static DxcCompiler* GetDxcCompiler() { return dxcCompiler.get(); }

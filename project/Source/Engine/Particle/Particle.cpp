@@ -187,6 +187,7 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
 
     //Instancing用のTransformationMatrixリソースを作成
     newParticleGroup->instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
+    newParticleGroup->instancingResource->SetName(L"Particle_InstancingResource");
     //書き込むためのアドレスを取得
     newParticleGroup->instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&newParticleGroup->instancingData));
 
@@ -521,7 +522,7 @@ void ParticleManager::CreateMaterial(ParticleGroup& group,const float temperatur
     //マテリアル用のリソースを作る。
     group.materialResource = DirectXCommon::CreateBufferResource(sizeof(Object3d::Material));
     //マテリアルにデータを書き込む
-
+    group.materialResource->SetName(L"ParticleGroup_MaterialResource");
     //書き込むためのアドレスを取得
     HRESULT result = group.materialResource->Map(0, nullptr, reinterpret_cast<void**>(&group.material));
     group.material->color = { 1.0f,1.0f,1.0f,1.0f };

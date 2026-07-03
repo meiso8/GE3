@@ -73,11 +73,11 @@ protected:
     std::array<int32_t, TEXTURE_USAGE_COUNT> textureHandles_;
 
     // ==============膨張データ==================
-    Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_;
+    Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_ = nullptr;
     Balloon* balloonData_ = nullptr;
 
     // ==============波データ==================
-    Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_;
+    Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_ = nullptr;
     Wave* waveData_ = nullptr;
     // ==============ID情報==================
     Microsoft::WRL::ComPtr <ID3D12Resource> idResource_ = nullptr;
@@ -89,7 +89,7 @@ protected:
 private:
 
 public:
-
+    ~Object3d();
     /// @brief コマンドリストのとsrvDescriptorHeapの借り物を入れる
     /// @param commandList コマンドリストクラス
     ///  @param srvDescriptorHeap srvDescriptorHeap

@@ -111,7 +111,7 @@ private:
     RenderTextureData thermographyTextureData_;
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, PSO::kCountOfEffect> materialResource_;
     //ID用リソース
-    Microsoft::WRL::ComPtr<ID3D12Resource> idReadbackResource_;
+    Microsoft::WRL::ComPtr<ID3D12Resource> idReadbackResource_ = nullptr;
 
     MaterialForRenderTexture* materialForGrayScale_ = nullptr;
     MaterialForVignette* materialForVignette_ = nullptr;
@@ -123,7 +123,7 @@ private:
     MaterialForRadialBlur* materialForRadialBlur_ = nullptr;
     MaterialForDissolve* materialForDissolve_ = nullptr;
     MaterialForThermography* materialForThermography_ = nullptr;
-    Microsoft::WRL::ComPtr <ID3D12Resource>materialResourceRandom_;
+    Microsoft::WRL::ComPtr <ID3D12Resource>materialResourceRandom_ = nullptr;
     MaterialForRandom* materialForRandom_ = nullptr;
     ID3D12GraphicsCommandList* commandList_ = nullptr;
     SrvDescriptorHeap* srvDescriptorHeap_ = nullptr;

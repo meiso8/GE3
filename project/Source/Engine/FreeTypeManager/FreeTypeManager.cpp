@@ -377,7 +377,8 @@ FreeTypeManager::FTResource FreeTypeManager::CreateResourceFromFTBitmap(const FT
 
 
     UpdateSubresources(commandList_, result.resource.Get(), result.intermediateResource.Get(), 0, 0, 1, &subResourceData);
-
+    result.intermediateResource->SetName(L"Font_intermediateResource");
+    result.resource->SetName(L"Font_Resource");
     // 4. コピー先を PIXEL_SHADER_RESOURCE に遷移 テクスチャをシェーダーで使える状態に切り替える
     CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
         result.resource.Get(),

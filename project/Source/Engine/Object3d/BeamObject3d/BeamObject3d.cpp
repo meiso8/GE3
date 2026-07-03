@@ -3,6 +3,11 @@
 #include"SrvDescriptorHeap.h"
 #include"Log.h"
 
+BeamObject3d::~BeamObject3d()
+{
+    Object3d::~Object3d();
+}
+
 void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, const TextureFactory::Handle skyBoxTexture)
 {
 

@@ -8,6 +8,7 @@ Microsoft::WRL::ComPtr <ID3D12Resource> DirectionalLightManager::directionalLigh
 DirectionalLightManager::DirectionalLightManager()
 {    //平行光源用のResourceを作成する
     directionalLightResource = DirectXCommon::CreateBufferResource(sizeof(DirectionalLight));
+    directionalLightResource->SetName(L"Directional_Light_Resource");
     //書き込むためのアドレスを取得
     directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
     //デフォルト値はとりあえず以下のようにしておく   

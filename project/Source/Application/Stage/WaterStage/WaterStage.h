@@ -3,7 +3,7 @@
 
 #include "PapyrusWall/PapyrusWall.h"
 #include"Water/Water.h"
-#include"Block/Block.h"
+#include"BlockMap/BlockMap.h"
 #include<memory>
 #include"Memo/MemoManager.h"
 

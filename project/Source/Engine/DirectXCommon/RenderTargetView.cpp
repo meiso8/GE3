@@ -17,6 +17,7 @@ void RenderTargetView::Create(
         uint32_t index = rtvDescriptorHeap->Allocate();
         rtvHandles_[i] = rtvDescriptorHeap->GetCPUDescriptorHandle(index);
         DirectXCommon::GetDevice()->CreateRenderTargetView(swapChainResources[i].Get(), &rtvDesc_, rtvHandles_[i]);
+        swapChainResources[i]->SetName(L"swapChainResource");
     }
 
 }
