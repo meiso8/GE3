@@ -9,6 +9,7 @@ SkinningModel::SkinningModel()
 
 SkinningModel::~SkinningModel()
 {
+    Primitive::~Primitive();
 }
 
 void SkinningModel::SetModel(Model* model)

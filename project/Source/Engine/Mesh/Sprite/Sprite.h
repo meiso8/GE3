@@ -33,7 +33,7 @@ public:
     );
 public:
     void Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
-
+    ~Sprite();
     void Update();
     void UpdateAnchorPoint();
     static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
@@ -98,7 +98,7 @@ private:
     Vector2 textureSize = { 100.0f,100.0f };
 
 
-    Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
+    Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_ = nullptr;
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     VertexData* vertexData_ = nullptr;
 

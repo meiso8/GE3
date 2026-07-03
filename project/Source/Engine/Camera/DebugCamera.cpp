@@ -50,6 +50,11 @@ DebugCamera::DebugCamera()
     CreateResource();
 }
 
+DebugCamera::~DebugCamera()
+{
+    Camera::~Camera();
+}
+
 void DebugCamera::UpdateMatrix() {
 
 #ifdef USE_IMGUI

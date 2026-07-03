@@ -40,6 +40,7 @@ PointLightManager::PointLightManager(SrvDescriptorHeap* srvDescriptorHeap)
 {
     pointLightResource_ =
         DirectXCommon::CreateBufferResource(sizeof(PointLight) * kMaxData_);
+    pointLightResource_->SetName(L"pointLightResource");
     //書き込むためのアドレスを取得
     pointLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&pointLightData_));
 

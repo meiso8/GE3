@@ -62,6 +62,7 @@
     <IntDir>$(SolutionDir)..\generated\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\generated\outputs\$(Configuration)\</OutDir>
     <IncludePath>$(SolutionDir)externals\freetype;$(SolutionDir)externals\imgui;$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(SolutionDir)externals\ImGuizmo;$(IncludePath)</IncludePath>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'">
     <IntDir>$(SolutionDir)..\generated\obj\$(ProjectName)\$(Configuration)\</IntDir>
@@ -81,11 +82,13 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(ProjectDir)externals\freetype\src;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\freetype\include;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\DirectXCommon;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh\MeshCommon;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source\Engine\Mesh\Primitive;$(ProjectDir)Source\Engine\Object3d;$(ProjectDir)Source\Engine\Object3d\Object3d;$(ProjectDir)Source\Engine\Object3d\LineObject3d;$(ProjectDir)Source\Engine\Object3d\BeamObject3d;$(ProjectDir)Source\Engine\Object3d\SkyBoxObject3d;$(ProjectDir)Source\Engine\Object3d\AnimationObject3d;$(ProjectDir)Source\Engine\DescriptorHeap\RtvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap\DsvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap\SrvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\PSO;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Particle;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\Camera;$(ProjectDir)Source\Application/Scene;$(ProjectDir)Source\Application/Object;$(ProjectDir)Source\Application/GameObject;$(ProjectDir)Source\Application/Physics;$(ProjectDir)Source\Application/System;$(ProjectDir)Source\Engine\Math\Easing;$(ProjectDir)Source\Engine\Math\Lerp;$(ProjectDir)Source\Engine\Mesh\Sphere;$(ProjectDir)Source\Engine\Mesh\Circle;$(ProjectDir)Source\Engine\Math\Random;$(ProjectDir)Source\Engine\Math\Structs;$(ProjectDir)Source\Engine\Math\Collision;$(ProjectDir)Source\Engine\Math\Matrix;$(ProjectDir)Source\Engine\Math\Vector;$(ProjectDir)Source\Engine\Mesh\Grid;$(ProjectDir)Source\Engine\Mesh\Model;$(ProjectDir)Source\Engine\Mesh\Cube;$(ProjectDir)Source\Engine\Mesh\Sprite;$(ProjectDir)Source\Engine\Math\SphericalCoordinate;$(ProjectDir)Source\Engine\Math\WorldTransform;$(ProjectDir)Source\Engine\Mesh\Line;$(ProjectDir)Source\Engine\Math\Cotangent;$(ProjectDir)Source\Engine\Math\CoordinateTransform;$(ProjectDir)Source\Engine\Mesh\ModelManager;$(ProjectDir)Source\Engine\Mesh\Plane;$(ProjectDir)Source\Engine\SceneManager;$(ProjectDir)externals\;$(ProjectDir)Source\Engine\JsonFile;$(ProjectDir)Source\Engine\Animation;$(ProjectDir)Source\Engine\Math\Quaternion;$(ProjectDir)Source\Engine\Time;$(ProjectDir)Source\Engine\TimeManager;$(ProjectDir)Source\Application\Factory;$(ProjectDir)Source\Application\Factory\ModelFactory;$(ProjectDir)Source\Application\Factory\TextureFactory;$(ProjectDir)Source\Application\Factory\SoundFactory;$(ProjectDir)Source\Application\Factory\SceneFactory;$(ProjectDir)Source\Engine\SceneManager\BaseScene</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USE_IMGUI;_DEVELOP;FT2_BUILD_LIBRARY;_CRT_SECURE_NO_WARNINGS;FT_CONFIG_OPTION_USE_MODULE_ERRORS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -94,7 +97,7 @@
       <AdditionalOptions>/ignore:4049 /ignore:4099 
  %(AdditionalOptions)</AdditionalOptions>
       <AdditionalLibraryDirectories>$(SolutionDir)..\generated\outputs\$(Configuration)\;$(ProjectDir)externals\assimp\lib\Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;ImGuizmo.lib;imgui.lib;DirectXTex.lib;assimp-vc143-mtd.lib</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;ImGuizmo.lib;imgui.lib;DirectXTex.lib;assimp-vc143-mdd.lib</AdditionalDependencies>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
@@ -116,6 +119,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>MinSpace</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)externals\freetype\src;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\freetype\include;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\DirectXCommon;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh\MeshCommon;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source\Engine\Mesh\Primitive;$(ProjectDir)Source\Engine\Object3d;$(ProjectDir)Source\Engine\Object3d\Object3d;$(ProjectDir)Source\Engine\Object3d\LineObject3d;$(ProjectDir)Source\Engine\Object3d\BeamObject3d;$(ProjectDir)Source\Engine\Object3d\SkyBoxObject3d;$(ProjectDir)Source\Engine\Object3d\AnimationObject3d;$(ProjectDir)Source\Engine\DescriptorHeap\RtvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap\DsvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap\SrvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\PSO;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Particle;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\Camera;$(ProjectDir)Source\Application/Scene;$(ProjectDir)Source\Application/Object;$(ProjectDir)Source\Application/GameObject;$(ProjectDir)Source\Application/Physics;$(ProjectDir)Source\Application/System;$(ProjectDir)Source\Engine\Math\Easing;$(ProjectDir)Source\Engine\Math\Lerp;$(ProjectDir)Source\Engine\Mesh\Sphere;$(ProjectDir)Source\Engine\Mesh\Circle;$(ProjectDir)Source\Engine\Math\Random;$(ProjectDir)Source\Engine\Math\Structs;$(ProjectDir)Source\Engine\Math\Collision;$(ProjectDir)Source\Engine\Math\Matrix;$(ProjectDir)Source\Engine\Math\Vector;$(ProjectDir)Source\Engine\Mesh\Grid;$(ProjectDir)Source\Engine\Mesh\Model;$(ProjectDir)Source\Engine\Mesh\Cube;$(ProjectDir)Source\Engine\Mesh\Sprite;$(ProjectDir)Source\Engine\Math\SphericalCoordinate;$(ProjectDir)Source\Engine\Math\WorldTransform;$(ProjectDir)Source\Engine\Mesh\Line;$(ProjectDir)Source\Engine\Math\Cotangent;$(ProjectDir)Source\Engine\Math\CoordinateTransform;$(ProjectDir)Source\Engine\Mesh\ModelManager;$(ProjectDir)Source\Engine\Mesh\Plane;$(ProjectDir)Source\Engine\SceneManager;$(ProjectDir)externals\;$(ProjectDir)Source\Engine\JsonFile;$(ProjectDir)Source\Engine\Animation;$(ProjectDir)Source\Engine\Math\Quaternion;$(ProjectDir)Source\Engine\Time;$(ProjectDir)Source\Engine\TimeManager;$(ProjectDir)Source\Application\Factory;$(ProjectDir)Source\Application\Factory\ModelFactory;$(ProjectDir)Source\Application\Factory\TextureFactory;$(ProjectDir)Source\Application\Factory\SoundFactory;$(ProjectDir)Source\Application\Factory\SceneFactory;$(ProjectDir)Source\Engine\SceneManager\BaseScene</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,9 +148,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <Optimization>MinSpace</Optimization>
+      <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)externals\freetype\src;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\freetype\include;$(ProjectDir)Source;$(ProjectDir)Source\Engine;$(ProjectDir)Source\Engine\DirectXCommon;$(ProjectDir)Source\Engine\Math;$(ProjectDir)Source\Engine\Mesh\MeshCommon;$(ProjectDir)Source\Engine\Mesh;$(ProjectDir)Source\Engine\Mesh\Primitive;$(ProjectDir)Source\Engine\Object3d;$(ProjectDir)Source\Engine\Object3d\Object3d;$(ProjectDir)Source\Engine\Object3d\LineObject3d;$(ProjectDir)Source\Engine\Object3d\BeamObject3d;$(ProjectDir)Source\Engine\Object3d\SkyBoxObject3d;$(ProjectDir)Source\Engine\Object3d\AnimationObject3d;$(ProjectDir)Source\Engine\DescriptorHeap\RtvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap\DsvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap\SrvDescriptorHeap;$(ProjectDir)Source\Engine\DescriptorHeap;$(ProjectDir)Source\Engine\Surface;$(ProjectDir)Source\Engine\PSO;$(ProjectDir)Source\Engine\Sound;$(ProjectDir)Source\Engine\Particle;$(ProjectDir)Source\Engine\Input;$(ProjectDir)Source\Engine\ImGui;$(ProjectDir)Source\Engine\Camera;$(ProjectDir)Source\Application/Scene;$(ProjectDir)Source\Application/Object;$(ProjectDir)Source\Application/GameObject;$(ProjectDir)Source\Application/Physics;$(ProjectDir)Source\Application/System;$(ProjectDir)Source\Engine\Math\Easing;$(ProjectDir)Source\Engine\Math\Lerp;$(ProjectDir)Source\Engine\Mesh\Sphere;$(ProjectDir)Source\Engine\Mesh\Circle;$(ProjectDir)Source\Engine\Math\Random;$(ProjectDir)Source\Engine\Math\Structs;$(ProjectDir)Source\Engine\Math\Collision;$(ProjectDir)Source\Engine\Math\Matrix;$(ProjectDir)Source\Engine\Math\Vector;$(ProjectDir)Source\Engine\Mesh\Grid;$(ProjectDir)Source\Engine\Mesh\Model;$(ProjectDir)Source\Engine\Mesh\Cube;$(ProjectDir)Source\Engine\Mesh\Sprite;$(ProjectDir)Source\Engine\Math\SphericalCoordinate;$(ProjectDir)Source\Engine\Math\WorldTransform;$(ProjectDir)Source\Engine\Mesh\Line;$(ProjectDir)Source\Engine\Math\Cotangent;$(ProjectDir)Source\Engine\Math\CoordinateTransform;$(ProjectDir)Source\Engine\Mesh\ModelManager;$(ProjectDir)Source\Engine\Mesh\Plane;$(ProjectDir)Source\Engine\SceneManager;$(ProjectDir)externals\;$(ProjectDir)Source\Engine\JsonFile;$(ProjectDir)Source\Engine\Animation;$(ProjectDir)Source\Engine\Math\Quaternion;$(ProjectDir)Source\Engine\Time;$(ProjectDir)Source\Engine\TimeManager;$(ProjectDir)Source\Application\Factory;$(ProjectDir)Source\Application\Factory\ModelFactory;$(ProjectDir)Source\Application\Factory\TextureFactory;$(ProjectDir)Source\Application\Factory\SoundFactory;$(ProjectDir)Source\Application\Factory\SceneFactory;$(ProjectDir)Source\Engine\SceneManager\BaseScene</AdditionalIncludeDirectories>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -166,6 +170,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\AnubisBlockMap\AnubisBlockMap.cpp" />
+    <ClCompile Include="Source\Application\GameObject\BlockMap\BlockMap.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\Item.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\SolarDisc\SolarDisc.cpp" />
     <ClCompile Include="Source\Application\GameObject\StageChangeTrigger\StageChangeTrigger.cpp" />
@@ -371,6 +377,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\DescriptorHeap\SrvDescriptorHeap\SrvDescriptorHeap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\AnubisBlockMap\AnubisBlockMap.h" />
+    <ClInclude Include="Source\Application\GameObject\BlockMap\BlockMap.h" />
     <ClInclude Include="Source\Application\GameObject\Item\Item.h" />
     <ClInclude Include="Source\Application\GameObject\Item\SolarDisc\SolarDisc.h" />
     <ClInclude Include="Source\Application\GameObject\StageChangeTrigger\StageChangeTrigger.h" />

@@ -8,7 +8,7 @@ using namespace  Microsoft::WRL;
 //コマンドリストに必要な命令保存用メモリ管理構造を生成
 void CommandList::Create() {
 
-    ComPtr<ID3D12Device> device = DirectXCommon::GetDevice();
+    auto& device = DirectXCommon::GetDevice();
 
     HRESULT result = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator_));
     //コマンドアロケータの生成が上手くいかなかったので起動できない
@@ -18,6 +18,8 @@ void CommandList::Create() {
     result = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_.Get(), nullptr,
         IID_PPV_ARGS(&commandList_));
 
+    commandList_->SetName(L"CommandList");
+    commandAllocator_->SetName(L"CommandAllocator");
     //コマンドリスト生成が上手くいかなかったので起動できない
     assert(SUCCEEDED(result));
 };

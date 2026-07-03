@@ -134,7 +134,7 @@ void Font::CreateVertex()
 {
     //VertexResourceとVertexBufferViewを用意 矩形を表現するための三角形を二つ(頂点4つ)
     vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 4);
-
+    vertexResource_->SetName(L"Font_vertexResource");
     //頂点バッファビューを作成する
     //リソースの先頭アドレスから使う
     vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
@@ -184,6 +184,7 @@ void Font::CreateTransformationMatrix() {
 
     //Matrix4x4　1つ分のサイズを用意
     transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrixFor2D));
+    transformationMatrixResource_->SetName(L"Font_Transformation_Matrix_Resource");
     //データを書き込む
     //書き込むためのアドレスを取得
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
@@ -198,6 +199,7 @@ void Font::CreateMaterial(const Vector4& color) {
 
     //Matrix4x4　1つ分のサイズを用意
     materialResource_ = DirectXCommon::CreateBufferResource(sizeof(MaterialForFont));
+    materialResource_->SetName(L"Font_materialResource");
     materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&material_));
 
     material_->color = color;

@@ -7,7 +7,7 @@ std::array< std::unique_ptr<LineObject3d>, 102>DrawGrid::lineTransforms2_;
 
 void DrawGrid::Finalize()
 {
-    for (auto& c : cubes_) {
+    for (auto& c : cubes_) {   
         c.reset();
     }
 
@@ -22,7 +22,6 @@ void DrawGrid::Finalize()
 
 void DrawGrid::Create()
 {
-
     for (auto& line : lineTransforms2_) {
         line = std::make_unique<LineObject3d>();
     }
@@ -72,6 +71,7 @@ void DrawGrid::Create()
     cubes_[0]->SetColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
     cubes_[1]->SetMeshAndMaterial(cube_[1].get());
     cubes_[1]->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+
 }
 
 void DrawGrid::Draw(Camera& camera) {

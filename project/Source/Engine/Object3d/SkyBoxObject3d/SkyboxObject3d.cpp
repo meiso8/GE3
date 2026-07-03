@@ -21,6 +21,11 @@ void SkyboxObject3d::Create()
 }
 
 
+SkyboxObject3d::~SkyboxObject3d()
+{
+    Object3d::~Object3d();
+}
+
 void SkyboxObject3d::Initialize()
 {
     worldTransform_.Initialize();
@@ -61,6 +66,7 @@ void SkyboxObject3d::CreateMaterial(const Vector4& color)
     materialResource_ = DirectXCommon::CreateBufferResource(sizeof(MaterialForSkyBox));
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialForSkyBox_));
+    materialResource_->SetName(L"SkyBox_MaterialResource");
     assert(SUCCEEDED(result));
     //マテリアルにデータを書き込む
     materialForSkyBox_->color = color;

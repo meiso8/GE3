@@ -35,6 +35,28 @@ void Sprite::Create(const TextureFactory::Handle& textureHandle, const Vector2& 
     AdjustTextureSize();
 }
 
+Sprite::~Sprite()
+{
+    if (transformationMatrixResource_) {
+        transformationMatrixResource_->Unmap(0, nullptr);
+        transformationMatrixResource_.Reset();
+        transformationMatrixResource_ = nullptr;
+    }
+
+
+    if (materialResource_) {
+        materialResource_->Unmap(0, nullptr);
+        materialResource_.Reset();
+        materialResource_ = nullptr;
+    }
+
+    if (vertexResource_) {
+        vertexResource_->Unmap(0, nullptr);
+        vertexResource_.Reset();
+        vertexResource_ = nullptr;
+    }
+}
+
 void Sprite::Update()
 {
     UpdateAnchorPoint();
@@ -132,7 +154,7 @@ void Sprite::CreateVertex()
 {
     //VertexResourceとVertexBufferViewを用意 矩形を表現するための三角形を二つ(頂点4つ)
     vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 4);
-
+    vertexResource_->SetName(L"Sprite_VertexResource");
     //頂点バッファビューを作成する
     //リソースの先頭アドレスから使う
     vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
@@ -185,6 +207,9 @@ void Sprite::CreateTransformationMatrix() {
 
     //Matrix4x4　1つ分のサイズを用意
     transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrixFor2D));
+    
+    transformationMatrixResource_->SetName(L"Sprite_transformation_Matrix_Resource");
+    
     //データを書き込む
     //書き込むためのアドレスを取得
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
@@ -199,6 +224,7 @@ void Sprite::CreateMaterial(const Vector4& color) {
 
     //Matrix4x4　1つ分のサイズを用意
     materialResource_ = DirectXCommon::CreateBufferResource(sizeof(Material));
+    materialResource_->SetName(L"Sprite_MaterialResource");
     materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&material_));
 
     material_->color = color;

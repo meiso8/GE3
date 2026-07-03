@@ -8,6 +8,13 @@ struct Vector4 {
     }
 };
 
+namespace COLOR{
+    const Vector4 RED = { 1.0f,0.0f,0.0f,1.0f };
+    const Vector4 GREEN = { 0.0f,1.0f,0.0f,1.0f };
+    const Vector4 BLUE = { 0.0f,0.0f,1.0f,1.0f };
+    const Vector4 CYAN = { 0.0f,1.0f,1.0f,1.0f };
+}
+
 Vector4 Add(const Vector4& v1, const Vector4& v2);
 Vector4 Subtract(const Vector4& v1, const Vector4& v2);
 Vector4 Multiply(const float scalar, const Vector4& v);

@@ -18,6 +18,7 @@ SkinCluster Skin::CreateSkinCluster(const Skeleton& skeleton, const ModelData& m
     skinCluster.paletteResource = DirectXCommon::CreateBufferResource(sizeof(WellForGPU) * skeleton.joints.size());
     WellForGPU* mappedPalette = nullptr;
     skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
+    skinCluster.paletteResource->SetName(L"skincluster_paletteResource");
     skinCluster.mappedPalette = { mappedPalette,skeleton.joints.size() };//spanを使ってアクセスするようにする
     //インデックスを格納
     skinCluster.paletteSrvIndex = srvDescriptorHeap_->Allocate();
@@ -31,6 +32,7 @@ SkinCluster Skin::CreateSkinCluster(const Skeleton& skeleton, const ModelData& m
     skinCluster.influenceResource = DirectXCommon::CreateBufferResource(sizeof(VertexInfluence) * modelData.vertices.size());
     VertexInfluence* mappedInfluence = nullptr;
     skinCluster.influenceResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedInfluence));
+    skinCluster.influenceResource->SetName(L"skinCluster_influenceResouce");
     std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.vertices.size());//0埋め。wightを0にしておく
     skinCluster.mappedInfluence = { mappedInfluence,modelData.vertices.size() };
 

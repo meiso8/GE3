@@ -49,7 +49,7 @@ void SpriteCommon::CreateIndexResource() {
 #pragma region//IndexResourceを作成
     indexResource_ = DirectXCommon::CreateBufferResource(sizeof(uint32_t) * 6);
     //Viewを作成する IndexBufferView(IBV)
-
+    indexResource_->SetName(L"SpriteCommon_IndexResource");
     //リソースの先頭アドレスから使う
     indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
     //使用するリソースのサイズはインデックス6つ分のサイズ

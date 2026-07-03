@@ -50,6 +50,7 @@ private:
     std::vector < std::unique_ptr<LineObject3d>>bones_;
     Skeleton* skeleton_ = nullptr;
 public:
+    ~DebugBone();
     void Create(Skeleton& skeleton);
     void Update(const Matrix4x4& parentMatrix);
     void Draw(Camera& camera);

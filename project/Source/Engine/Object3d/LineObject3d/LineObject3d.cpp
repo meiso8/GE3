@@ -62,12 +62,17 @@ void LineObject3d::Draw(Camera& camera,
     
 }
 
+LineObject3d::~LineObject3d()
+{
+    Object3d::~Object3d();
+}
+
 void LineObject3d::CreateMaterial(const Vector4& color)
 {   
     //マテリアル用のリソースを作る。
     materialResource_ = DirectXCommon::CreateBufferResource(sizeof(MaterialForLine));
     //マテリアルにデータを書き込む
-
+    materialResource_->SetName(L"LineObject3d_materialResource");
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialForLine_));
     materialForLine_->color = color;

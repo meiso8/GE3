@@ -25,6 +25,7 @@ AnimationObject3d::AnimationObject3d() {
 
 AnimationObject3d::~AnimationObject3d()
 {
+    Object3d::~Object3d();
 }
 
 void AnimationObject3d::Initialize()

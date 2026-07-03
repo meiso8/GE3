@@ -62,6 +62,7 @@ void Camera::UpdateWorldMatrix()
 void Camera::CreateResource()
 {
     cameraResource_ = DirectXCommon::CreateBufferResource(sizeof(CameraForGPU));
+    cameraResource_->SetName(L"Camera:cameraResource");
     UpdateData();
 }
 
@@ -84,6 +85,14 @@ Camera::Camera()
     Initialize(PERSPECTIVE);
     //座標が確定後リソースを作成
     CreateResource();
+}
+
+Camera::~Camera()
+{
+    if (cameraResource_) {
+        cameraResource_.Reset();
+        cameraResource_ = nullptr;
+    }
 }
 
 

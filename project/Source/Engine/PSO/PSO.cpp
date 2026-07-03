@@ -472,7 +472,6 @@ PSO::~PSO()
         }
     }
 
-
     for (auto& blendModes : graphicsPipelineStates_) {
         for (auto& pso : blendModes) {
             if (pso) {
@@ -485,6 +484,15 @@ PSO::~PSO()
         graphicsPipelineStateSkyBox_.Reset();
     }
 
+
+    for (auto& [key, pso] : psoCache_) {
+        if (pso) {
+            pso.Reset();
+        }
+    }
+
+    psoCache_.clear();
+
     rootSignature.reset();
 
 
@@ -492,9 +500,6 @@ PSO::~PSO()
 
 Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::GetOrCreatePSO(const PSOKey& key)
 {
-
-    LogFile::Log("GetOrCreatePSO : Start");
-
     // 1. キャッシュに存在するかチェック
     auto it = psoCache_.find(key);
     if (it != psoCache_.end()) {
@@ -527,7 +532,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::GetOrCreatePSO(const PSOKey& ke
 
     // 3. キャッシュに保存して返す
     psoCache_[key] = newPso;
-    LogFile::Log("GetOrCreatePSO : END");
+
     return newPso;
 }
 

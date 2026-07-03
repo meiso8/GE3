@@ -39,6 +39,9 @@ public:
         const DxcCompiler::VS_TYPE vsType = DxcCompiler::VS_TYPE::VS_Line,
         const DxcCompiler::PS_TYPE psType = DxcCompiler::PS_TYPE::PS_Line
     );
+    //デストラクタ
+    ~LineObject3d();
+
     // ==============マテリアルデータ==================
     Vector4& GetColor() override { return materialForLine_->color; };
     void SetColor(const Vector4& color)override { materialForLine_->color = color; }

@@ -31,7 +31,7 @@ void RenderTexture::Create(RtvDescriptorHeap* rtvDescriptorHeap)
     CreateResource(kObjectID, rtvDescriptorHeap,DXGI_FORMAT_R32_UINT, false);
     //ObjectID用リソース
     idReadbackResource_ = DirectXCommon::CreateReadbackBufferResource(sizeof(uint32_t));
-
+    idReadbackResource_->SetName(L"RenderTexture_Id_ReadBackResource");
     CreateMaterialBUfferForFullScreen();
     CreateMaterialBufferForGrayScale();
     CreateMaterialBufferForVignette();
@@ -365,6 +365,7 @@ void RenderTexture::CreateMaterialBufferForGrayScale()
 {
     //マテリアル用のリソースを作る。
     materialResource_[PSO::kEffectGrayScale] = DirectXCommon::CreateBufferResource(sizeof(MaterialForRenderTexture));
+    materialResource_[PSO::kEffectGrayScale]->SetName(L"RenderTexture_GrayScale_MaterialResource");
     //マテリアルにデータを書き込む
 
     //書き込むためのアドレスを取得
@@ -377,6 +378,7 @@ void RenderTexture::CreateMaterialBufferForGrayScale()
 void RenderTexture::CreateMaterialBufferForVignette()
 {    //マテリアル用のリソースを作る。
     materialResource_[PSO::kEffectVignette] = DirectXCommon::CreateBufferResource(sizeof(MaterialForVignette));
+    materialResource_[PSO::kEffectVignette]->SetName(L"RenderTexture_Vignette_MaterialResource");
     //マテリアルにデータを書き込む
 
     //書き込むためのアドレスを取得
@@ -391,6 +393,7 @@ void RenderTexture::CreateMaterialBufferForBoxFilter()
 {
 
     materialResource_[PSO::kEffectBoxFilter] = DirectXCommon::CreateBufferResource(sizeof(MaterialForBoxFilter));
+    materialResource_[PSO::kEffectBoxFilter]->SetName(L"RenderTexture_BoxFilter_MaterialResource");
     //マテリアルにデータを書き込む
 
     //書き込むためのアドレスを取得
@@ -404,6 +407,7 @@ void RenderTexture::CreateMaterialBUfferForFullScreen()
 {
     //マテリアル用のリソースを作る。
     materialResource_[PSO::kEffectNone] = DirectXCommon::CreateBufferResource(sizeof(MaterialForRenderTexture));
+    materialResource_[PSO::kEffectNone]->SetName(L"RenderTexture_None_MaterialResource");
     //マテリアルにデータを書き込む
 
     //書き込むためのアドレスを取得
@@ -418,6 +422,7 @@ void RenderTexture::CreateMaterialBufferForGaussianFilter()
 
     //マテリアル用のリソースを作る。
     materialResource_[PSO::kEffectGaussianFilter] = DirectXCommon::CreateBufferResource(sizeof(MaterialForGaussianFilter));
+    materialResource_[PSO::kEffectGaussianFilter]->SetName(L"RenderTexture_GaussianFilter_MaterialResource");
     //マテリアルにデータを書き込む
 
     //書き込むためのアドレスを取得
@@ -432,8 +437,8 @@ void RenderTexture::CreateMaterialLuminanceBasedOutline()
 {
     //マテリアル用のリソースを作る。
     materialResource_[PSO::kEffectLuminanceBasedOutline] = DirectXCommon::CreateBufferResource(sizeof(MaterialForLuminanceBasedOutline));
+    materialResource_[PSO::kEffectLuminanceBasedOutline]->SetName(L"RenderTexture_LuminanceBasedOutline_MaterialResource");
     //マテリアルにデータを書き込む
-
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectLuminanceBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForLuminanceBasedOutline_));
     materialForLuminanceBasedOutline_->weightVal = 0.0f;
@@ -446,6 +451,7 @@ void RenderTexture::CreateMaterialDepthBasedOutline()
 
     //マテリアル用のリソースを作る。
     materialResource_[PSO::kEffectDepthBasedOutline] = DirectXCommon::CreateBufferResource(sizeof(MaterialForDepthBasedOutline));
+    materialResource_[PSO::kEffectDepthBasedOutline]->SetName(L"RenderTexture_DepthBasedOutline_MaterialResource");
     //マテリアルにデータを書き込む
 
     //書き込むためのアドレスを取得
@@ -463,6 +469,7 @@ void RenderTexture::CreateMaterialRadialBlur()
 
     //マテリアル用のリソースを作る。
     materialResource_[PSO::kEffectRadialBlur] = DirectXCommon::CreateBufferResource(sizeof(MaterialForRadialBlur));
+    materialResource_[PSO::kEffectRadialBlur]->SetName(L"RenderTexture_Dissolve_MaterialResource");
     //マテリアルにデータを書き込む
 
     //書き込むためのアドレスを取得
@@ -478,6 +485,7 @@ void RenderTexture::CreateMaterialDissolve() {
 
     //マテリアル用のリソースを作る。
     materialResource_[PSO::kEffectDissolve] = DirectXCommon::CreateBufferResource(sizeof(MaterialForDissolve));
+    materialResource_[PSO::kEffectDissolve]->SetName(L"RenderTexture_Dissolve_MaterialResource");
     //マテリアルにデータを書き込む
 
     //書き込むためのアドレスを取得
@@ -490,10 +498,12 @@ void RenderTexture::CreateMaterialRandom()
 {
     //マテリアル用のリソースを作る。
     materialResourceRandom_ = DirectXCommon::CreateBufferResource(sizeof(MaterialForDissolve));
-    //マテリアルにデータを書き込む
-
+ 
+    materialResourceRandom_->SetName(L"RenderTexture_Random_MaterialResource");
+   
     //書き込むためのアドレスを取得
     HRESULT result = materialResourceRandom_->Map(0, nullptr, reinterpret_cast<void**>(&materialForRandom_));
+    //マテリアルにデータを書き込む
     materialForRandom_->time = 1.0f;
 
     LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve\n");
@@ -502,7 +512,7 @@ void RenderTexture::CreateMaterialThermography()
 {//マテリアル用のリソースを作る。
     materialResource_[PSO::kEffectThermography] = DirectXCommon::CreateBufferResource(sizeof(MaterialForThermography));
     //マテリアルにデータを書き込む
-
+    materialResource_[PSO::kEffectThermography]->SetName(L"RenderTexture_Thermography_MaterialResource");
     //書き込むためのアドレスを取得
     HRESULT result = materialResource_[PSO::kEffectThermography]->Map(0, nullptr, reinterpret_cast<void**>(&materialForThermography_));
     materialForThermography_->alpha = { 1.0f };

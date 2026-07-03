@@ -169,9 +169,9 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
 
     textureData.metadata = mipImages.GetMetadata();
     textureData.resource = DirectXCommon::CreateTextureResource(textureData.metadata);
-
+    textureData.resource->SetName(L"TextureData_Resource");
     textureData.intermediateResource = DirectXCommon::UploadTextureData(commandList_,textureData.resource, mipImages);
-
+    textureData.intermediateResource->SetName(L"intermediate_Resource");
     //テクスチャデータの要素数番号をSRVのインデックスとする
     textureData.srvIndex = srvDescriptorHeap_->Allocate();
 
