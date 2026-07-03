@@ -20,12 +20,10 @@ Fountain::Fountain()
     waterObject_->SetMeshAndMaterial(ModelManager::GetModel("Water2.obj"));
     waterObject_->SetTemperature(0.1f);
 
-    AABB aabb = { .min = {-1.0f,0.0f,-1.0f},.max = {1.0f,1.0f,1.0f} };
     SetCollisionAttribute(CollisionTag::GetTag("Wall")); // ミイラの衝突属性
     SetCollisionMask(CollisionTag::GetTag("Player") | CollisionTag::GetTag("Enemy")); // プレイヤーや壁と衝突
-
     //サイズに合わせる
-    SetAABB(aabb);
+    SetRadius(3.0f);
     SetWorldMatrix(object_->GetWorldTransform());
 
     CreateParticle();

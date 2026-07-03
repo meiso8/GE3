@@ -3,166 +3,6 @@
     "objects": [
         {
             "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/mummy",
-            "disabled": false,
-            "file_name": "dummyMummy.gltf",
-            "name": "Object1",
-            "nextStageName": "MummyStage",
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 10.282463073730469,
-                    "y": -7.103988650669635e-07,
-                    "z": 11.138555526733398
-                }
-            },
-            "type": "StageChangeTrigger"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/AmenRa",
-            "disabled": false,
-            "file_name": "AmenRa.obj",
-            "name": "Object2",
-            "nextStageName": "AmenStage",
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": -10.0,
-                    "y": -5.960464477539063e-08,
-                    "z": 10.62145709991455
-                }
-            },
-            "type": "StageChangeTrigger"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/Water",
-            "disabled": false,
-            "file_name": "Water.obj",
-            "name": "Water3",
-            "nextStageName": "",
-            "temperature": 0.10000000149011612,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": -0.625,
-                    "z": 0.0
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/player",
-            "disabled": false,
-            "file_name": "player.obj",
-            "name": "Player5",
-            "nextStageName": "",
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 14.049602508544922,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 4.246762752532959,
-                    "y": 0.0,
-                    "z": -10.75
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/hart",
-            "disabled": false,
-            "file_name": "hart.obj",
-            "name": "GoldHeart4",
-            "nextStageName": "",
-            "temperature": 1.0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": -1.2000000476837158,
-                    "z": 0.0
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
                 "w": 0.0,
                 "x": 1.0,
                 "y": 1.0,
@@ -170,7 +10,7 @@
             },
             "disabled": false,
             "file_name": "Plane",
-            "name": "Object5",
+            "name": "Object51",
             "nextStageName": "",
             "temperature": 0.5,
             "textureHandle": 47,
@@ -192,6 +32,134 @@
                 }
             },
             "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "disabled": false,
+            "file_name": "UpStairs.obj",
+            "name": "Object2",
+            "nextStageName": "MummyStage",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 10.282463073730469,
+                    "y": -7.103988650669635e-07,
+                    "z": 10.810820579528809
+                }
+            },
+            "type": "StageChangeTrigger"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "disabled": false,
+            "file_name": "UpStairs.obj",
+            "name": "Object3",
+            "nextStageName": "AmenStage",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -10.0,
+                    "y": -5.960464477539063e-08,
+                    "z": 10.815906524658203
+                }
+            },
+            "type": "StageChangeTrigger"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Water",
+            "disabled": false,
+            "file_name": "Water.obj",
+            "name": "Water4",
+            "nextStageName": "",
+            "temperature": 0.10000000149011612,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.75,
+                    "z": 0.0
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/player",
+            "disabled": false,
+            "file_name": "player.obj",
+            "name": "Player5",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 1.0638628005981445,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.005094228312373161,
+                    "z": -10.0
+                }
+            },
+            "type": "EMPTY"
         }
     ]
 }
