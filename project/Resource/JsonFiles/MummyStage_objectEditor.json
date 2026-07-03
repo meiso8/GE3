@@ -10,7 +10,7 @@
             },
             "disabled": false,
             "file_name": "Plane",
-            "name": "Object61",
+            "name": "Object611",
             "nextStageName": "",
             "temperature": 1.0,
             "textureHandle": 22,
@@ -40,9 +40,9 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/mummy",
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\DownStaris",
             "disabled": false,
-            "file_name": "dummyMummy.gltf",
+            "file_name": "DownStairs.obj",
             "name": "Object2",
             "nextStageName": "WaterStage",
             "temperature": 0.0,
@@ -58,9 +58,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -11.004061698913574,
-                    "y": 5.960464477539063e-08,
-                    "z": 11.070149421691895
+                    "x": 9.034221649169922,
+                    "y": -0.49410176277160645,
+                    "z": -10.131844520568848
                 }
             },
             "type": "StageChangeTrigger"
@@ -72,9 +72,9 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/Medjed",
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
             "disabled": false,
-            "file_name": "medjed.gltf",
+            "file_name": "UpStairs.obj",
             "name": "Object3",
             "nextStageName": "MedjedStage",
             "temperature": 0.0,
@@ -90,7 +90,7 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 8.888033866882324,
+                    "x": -9.767820358276367,
                     "y": -1.1920928955078125e-07,
                     "z": 10.400885581970215
                 }
@@ -139,13 +139,13 @@
             "directoryPath": "Resource/Models/player",
             "disabled": false,
             "file_name": "player.obj",
-            "name": "Player6",
+            "name": "Player5",
             "nextStageName": "",
             "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 8.805091857910156,
+                    "y": -7.509794235229492,
                     "z": 0.0
                 },
                 "scale": {
@@ -154,9 +154,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 0.0,
+                    "x": -8.663122177124023,
                     "y": 0.0,
-                    "z": -5.0
+                    "z": 1.7097939252853394
                 }
             },
             "type": "EMPTY"

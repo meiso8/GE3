@@ -53,9 +53,10 @@ void WaterStage::Draw(Camera& camera)
 {
     papyrusWall_->Draw(camera);
     blockMap_->Draw(camera);
-    water_->Draw(camera);
     //オブジェクトの描画
     DrawObject(camera);
+    water_->Draw(camera);
+ 
 }
 
 void WaterStage::CheckCollision(CollisionManager& collisionManager)

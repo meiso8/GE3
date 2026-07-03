@@ -10,7 +10,7 @@
             },
             "disabled": false,
             "file_name": "Plane",
-            "name": "Object61",
+            "name": "Object611",
             "nextStageName": "",
             "temperature": 0.5,
             "textureHandle": 23,
@@ -35,6 +35,38 @@
         },
         {
             "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/AmenRa",
+            "disabled": false,
+            "file_name": "AmenRa.obj",
+            "name": "AmenRa82",
+            "nextStageName": "",
+            "temperature": 0.10000000149011612,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415908336639404,
+                    "y": -8.74227694680485e-08,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 1.1920928955078125e-07,
+                    "y": 9.313261273291573e-10,
+                    "z": 7.450580152834618e-09
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
                 "w": 0.007843137718737125,
                 "x": 1.0,
                 "y": 1.0,
@@ -42,7 +74,7 @@
             },
             "disabled": false,
             "file_name": "Plane",
-            "name": "Object2",
+            "name": "Object3",
             "nextStageName": "AnubisStage",
             "temperature": 0.5,
             "textureHandle": 0,
@@ -72,94 +104,30 @@
                 "y": 1.0,
                 "z": 1.0
             },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\DownStaris",
             "disabled": false,
-            "file_name": "Cube",
-            "name": "Object3",
+            "file_name": "DownStairs.obj",
+            "name": "Object4",
             "nextStageName": "WaterStage",
             "temperature": 0.0,
-            "textureHandle": 29,
             "transform": {
                 "rotate": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
+                    "x": -3.1415908336639404,
+                    "y": 0.0015925478655844927,
+                    "z": -3.1415908336639404
                 },
                 "scale": {
-                    "x": 2.5199999809265137,
-                    "y": 0.41591745615005493,
-                    "z": 2.5199999809265137
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
                 },
                 "translate": {
-                    "x": 0.026001006364822388,
-                    "y": 0.0,
+                    "x": 0.026001866906881332,
+                    "y": -0.586564302444458,
                     "z": 19.555145263671875
                 }
             },
             "type": "StageChangeTrigger"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "directoryPath": "Resource/Models/sunMedal",
-            "disabled": false,
-            "file_name": "crowbarItem.obj",
-            "name": "Crowbar4",
-            "nextStageName": "",
-            "temperature": 0.5,
-            "transform": {
-                "rotate": {
-                    "x": 1.0,
-                    "y": 6.557924270629883,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 0.03125,
-                    "y": 0.03125,
-                    "z": 0.03125
-                },
-                "translate": {
-                    "x": -0.03865993395447731,
-                    "y": -0.034057557582855225,
-                    "z": 0.10000000149011612
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "directoryPath": "Resource/Models/SolarDisc",
-            "disabled": false,
-            "file_name": "SolarDisc.obj",
-            "name": "SolarDisc5",
-            "nextStageName": "",
-            "temperature": 0.5,
-            "transform": {
-                "rotate": {
-                    "x": 1.0,
-                    "y": 6.560093402862549,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 0.03125,
-                    "y": 0.03125,
-                    "z": 0.03125
-                },
-                "translate": {
-                    "x": -0.027614235877990723,
-                    "y": -0.034057557582855225,
-                    "z": 0.10000000149011612
-                }
-            },
-            "type": "EMPTY"
         },
         {
             "color": {
@@ -171,13 +139,13 @@
             "directoryPath": "Resource/Models/player",
             "disabled": false,
             "file_name": "player.obj",
-            "name": "Player6",
+            "name": "Player5",
             "nextStageName": "",
             "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 29.188724517822266,
+                    "y": 22.110782623291016,
                     "z": 0.0
                 },
                 "scale": {
@@ -186,9 +154,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 2.6142327785491943,
+                    "x": -1.3554801940917969,
                     "y": -0.5,
-                    "z": 8.896902084350586
+                    "z": 15.266088485717773
                 }
             },
             "type": "EMPTY"
@@ -200,12 +168,12 @@
                 "y": 1.0,
                 "z": 1.0
             },
+            "directoryPath": "Resource/Models/Puzzle",
             "disabled": false,
-            "file_name": "Cube",
-            "name": "PuzzleObj7",
+            "file_name": "Puzzle.gltf",
+            "name": "PuzzleObj6",
             "nextStageName": "",
             "temperature": 0.75,
-            "textureHandle": 31,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -235,45 +203,13 @@
             "directoryPath": "Resource/Models/AmenRa",
             "disabled": false,
             "file_name": "AmenRa.obj",
-            "name": "AmenRa8",
+            "name": "AmenRa7",
             "nextStageName": "",
             "temperature": 0.10000000149011612,
             "transform": {
                 "rotate": {
-                    "x": -3.1415908336639404,
-                    "y": -8.74227694680485e-08,
-                    "z": -3.1415908336639404
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 1.1920928955078125e-07,
-                    "y": 9.313261273291573e-10,
-                    "z": 7.450580152834618e-09
-                }
-            },
-            "type": "MESH"
-        },
-        {
-            "color": {
-                "w": 0.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "disabled": false,
-            "file_name": "Plane",
-            "name": "Object9",
-            "nextStageName": "",
-            "temperature": 0.5,
-            "textureHandle": 23,
-            "transform": {
-                "rotate": {
-                    "x": 1.5699999332427979,
-                    "y": -0.0,
+                    "x": 0.0,
+                    "y": 3.1415927410125732,
                     "z": 0.0
                 },
                 "scale": {
@@ -283,8 +219,8 @@
                 },
                 "translate": {
                     "x": 0.0,
-                    "y": -0.007809661794453859,
-                    "z": 8.85273551940918
+                    "y": 0.0,
+                    "z": 0.0
                 }
             },
             "type": "EMPTY"

@@ -10,7 +10,7 @@
             },
             "disabled": false,
             "file_name": "Cube",
-            "name": "Object52211",
+            "name": "Object5221111",
             "nextStageName": "",
             "temperature": 0.0,
             "textureHandle": 0,
@@ -28,7 +28,7 @@
                 "translate": {
                     "x": 0.04264652729034424,
                     "y": 1.0125954151153564,
-                    "z": 9.617549896240234
+                    "z": 14.453215599060059
                 }
             },
             "type": "MESH"
@@ -42,7 +42,7 @@
             },
             "disabled": false,
             "file_name": "Plane",
-            "name": "Object62",
+            "name": "Object6222",
             "nextStageName": "",
             "temperature": 0.5,
             "textureHandle": 24,
@@ -58,9 +58,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 0.001580710057169199,
-                    "y": 1.199040174484253,
-                    "z": 9.847620010375977
+                    "x": -0.006029806565493345,
+                    "y": 1.199048399925232,
+                    "z": 14.626447677612305
                 }
             },
             "type": "MESH"
@@ -75,7 +75,7 @@
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\FontModel\\nbt_smt_ht",
             "disabled": false,
             "file_name": "nbt_smt_ht.obj",
-            "name": "Object3",
+            "name": "Object333",
             "nextStageName": "",
             "temperature": 0.5,
             "transform": {
@@ -90,9 +90,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -0.007548870984464884,
-                    "y": 1.8495240211486816,
-                    "z": 9.478754043579102
+                    "x": 0.03323143720626831,
+                    "y": 1.8009544610977173,
+                    "z": 14.28604507446289
                 }
             },
             "type": "MESH"
@@ -104,137 +104,9 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/Medjed",
-            "disabled": false,
-            "file_name": "medjed.gltf",
-            "name": "Object4",
-            "nextStageName": "AmenStage",
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": -7.103988650669635e-07,
-                    "z": 25.495498657226563
-                }
-            },
-            "type": "StageChangeTrigger"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "disabled": false,
-            "file_name": "Cube",
-            "name": "Object5",
-            "nextStageName": "AmenStage",
-            "temperature": 0.0,
-            "textureHandle": 0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 2.5345005989074707,
-                    "y": 3.8587558269500732,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.012772679328918457,
-                    "y": 0.0057343989610672,
-                    "z": -25.386138916015625
-                }
-            },
-            "type": "StageChangeTrigger"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/player",
-            "disabled": false,
-            "file_name": "player.obj",
-            "name": "Player6",
-            "nextStageName": "",
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 56.16570281982422,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 1.3874887228012085,
-                    "y": -0.5,
-                    "z": -2.9777610301971436
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/Fountain",
-            "disabled": false,
-            "file_name": "Fountain.obj",
-            "name": "Fountain6",
-            "nextStageName": "",
-            "temperature": 0.20000000298023224,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": 0.25,
-                    "z": 0.0
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
             "disabled": false,
             "file_name": "Plane",
-            "name": "Object7",
+            "name": "Object744",
             "nextStageName": "",
             "temperature": 0.0,
             "textureHandle": 48,
@@ -266,7 +138,7 @@
             },
             "disabled": false,
             "file_name": "Plane",
-            "name": "Object8",
+            "name": "Object855",
             "nextStageName": "",
             "temperature": 0.5,
             "textureHandle": 21,
@@ -285,6 +157,454 @@
                     "x": -9.368569374084473,
                     "y": -0.05138899013400078,
                     "z": 4.325231552124023
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "disabled": false,
+            "file_name": "UpStairs.obj",
+            "name": "Object6",
+            "nextStageName": "AmenStage",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": -0.22030577063560486,
+                    "z": 24.281574249267578
+                }
+            },
+            "type": "StageChangeTrigger"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "disabled": false,
+            "file_name": "UpStairs.obj",
+            "name": "Object7",
+            "nextStageName": "AmenStage",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415908336639404,
+                    "y": 0.0015925478655844927,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.010423573665320873,
+                    "y": -0.18772436678409576,
+                    "z": -23.910863876342773
+                }
+            },
+            "type": "StageChangeTrigger"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/player",
+            "disabled": false,
+            "file_name": "player.obj",
+            "name": "Player5",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -4.212067604064941,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -2.7240397930145264,
+                    "y": -0.5,
+                    "z": -9.001441955566406
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Fountain",
+            "disabled": false,
+            "file_name": "Fountain.obj",
+            "name": "Fountain8",
+            "nextStageName": "",
+            "temperature": 0.20000000298023224,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.25,
+                    "z": 0.0
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "disabled": false,
+            "file_name": "Anubis.obj",
+            "name": "Object8",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415908336639404,
+                    "y": 0.0015925478655844927,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 6.172227382659912,
+                    "y": 4.166556755080819e-05,
+                    "z": 23.31540870666504
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "disabled": false,
+            "file_name": "Anubis.obj",
+            "name": "Object9",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415908336639404,
+                    "y": 0.0015925478655844927,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -6.62665319442749,
+                    "y": 3.846740582957864e-05,
+                    "z": 23.113975524902344
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "disabled": false,
+            "file_name": "Anubis.obj",
+            "name": "Object10",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -1.5699999332427979,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 0.9999999403953552,
+                    "y": 1.0,
+                    "z": 1.0000001192092896
+                },
+                "translate": {
+                    "x": 7.921504974365234,
+                    "y": -3.3579155456209264e-08,
+                    "z": -4.9505534172058105
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "disabled": false,
+            "file_name": "Anubis.obj",
+            "name": "Object11",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 1.5699999332427979,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -7.835757732391357,
+                    "y": 0.0,
+                    "z": -4.936206817626953
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "disabled": false,
+            "file_name": "Anubis.obj",
+            "name": "Object12",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 1.5699999332427979,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -7.811194896697998,
+                    "y": 0.0,
+                    "z": 4.74628210067749
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "disabled": false,
+            "file_name": "Anubis.obj",
+            "name": "Object13",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -1.5699999332427979,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 7.620306015014648,
+                    "y": 0.0,
+                    "z": 5.09382438659668
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "disabled": false,
+            "file_name": "Anubis.obj",
+            "name": "Object14",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 1.5699999332427979,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -7.884093761444092,
+                    "y": 0.0,
+                    "z": 14.849129676818848
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "disabled": false,
+            "file_name": "Anubis.obj",
+            "name": "Object15",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -1.5699999332427979,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 7.423182010650635,
+                    "y": 0.0,
+                    "z": 15.060320854187012
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "disabled": false,
+            "file_name": "Anubis.obj",
+            "name": "Object16",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -1.5699999332427979,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 7.627442359924316,
+                    "y": 0.0,
+                    "z": -14.580937385559082
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "disabled": false,
+            "file_name": "Anubis.obj",
+            "name": "Object17",
+            "nextStageName": "",
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 1.5699999332427979,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -7.922228813171387,
+                    "y": 0.0,
+                    "z": -14.374555587768555
                 }
             },
             "type": "MESH"
