@@ -98,11 +98,14 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
             auto* primitive = PrimitiveFactory::GetPrimitiveForName(objectData.filePath.fileName);
             newObjctData->obj_->SetMeshAndMaterial(primitive);
             //繝・け繧ｹ繝√Ε繝上Φ繝峨Ν縺ｮ繧ｻ繝・ヨ
-            newObjctData->obj_->SetTextureHandle(static_cast<TextureFactory::Handle>(objectData.textureHandle));
+            newObjctData->obj_->SetTextureHandle(static_cast<TextureFactory::Handle>(objectData.materialData.textureHandle));
         }
 
-        newObjctData->obj_->SetColor(objectData.color);
-        newObjctData->obj_->SetTemperature(objectData.tempareture);
+        newObjctData->obj_->SetColor(objectData.materialData.color);
+        newObjctData->obj_->SetTemperature(objectData.materialData.tempareture);
+        newObjctData->obj_->SetShininess(objectData.materialData.shininess);
+        //環境光
+        newObjctData->obj_->SetEnvironmentCoefficient(objectData.materialData.environmentCoefficient);
         newObjctData->obj_->SetObjectName(objectData.objectName);
         newObjctData->obj_->RegisterObject();
 
@@ -169,11 +172,15 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LevelData::ObjectData& objectData = levelData->objects.back();
         
         //繝・け繧ｹ繝√Ε繝上Φ繝峨Ν縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadTextureHandle(object, objectData.textureHandle);
+        LoadTextureHandle(object, objectData.materialData.textureHandle);
         //濶ｲ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadVector4(object, objectData.color);
+        LoadVector4(object, objectData.materialData.color);
         //貂ｩ蠎ｦ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadTempareture(objectData.tempareture, object);
+        LoadFloat(objectData.materialData.tempareture, object);
+        //輝度の読みこみ
+        LoadFloat(objectData.materialData.shininess, object,"shininess");
+        //環境
+        LoadFloat(objectData.materialData.environmentCoefficient, object, "environmentCoefficient");
         //繧ｪ繝悶ず繧ｧ繧ｯ繝亥錐縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
         LoadName(objectData.objectName, object, "name");
         //繝｡繝・す繝･繝輔ぃ繧､繝ｫ繝代せ繝・・繧ｿ繧偵Ο繝ｼ繝峨☆繧・
@@ -198,7 +205,7 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         LevelData::EnemySpawnData& enemyData = levelData->enemies.back();
      
         //貂ｩ蠎ｦ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadTempareture(enemyData.tempareture, object);
+        LoadFloat(enemyData.tempareture, object);
         //繝医Λ繝ｳ繧ｹ繝輔か繝ｼ繝縺ｮ繝代Λ繝｡繝ｼ繧ｿ隱ｭ縺ｿ霎ｼ縺ｿ
         LoadTransform(object, enemyData.transform);
         //蟄占ｦ∫ｴ縺ｮ襍ｰ譟ｻ
@@ -211,11 +218,15 @@ void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
         levelData->stageChangeTriggers_.emplace_back(LevelData::StageChangeTriggerData{});
         LevelData::StageChangeTriggerData& stageChangeTriggerData = levelData->stageChangeTriggers_.back();
         //繝・け繧ｹ繝√Ε繝上Φ繝峨Ν縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadTextureHandle(object,stageChangeTriggerData.textureHandle);
+        LoadTextureHandle(object,stageChangeTriggerData.materialData.textureHandle);
         //濶ｲ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadVector4(object, stageChangeTriggerData.color);
+        LoadVector4(object, stageChangeTriggerData.materialData.color);
         //貂ｩ蠎ｦ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadTempareture(stageChangeTriggerData.tempareture, object);
+        LoadFloat(stageChangeTriggerData.materialData.tempareture, object);
+        //輝度の読み込み
+        LoadFloat(stageChangeTriggerData.materialData.shininess, object, "shininess");
+        //環境
+        LoadFloat(stageChangeTriggerData.materialData.environmentCoefficient, object, "environmentCoefficient");
         //谺｡縺ｮ繧ｹ繝・・繧ｸ蜷阪ｒ險倬鹸
         LoadName(stageChangeTriggerData.nextStageName, object, "nextStageName");
         //繝｡繝・す繝･繝輔ぃ繧､繝ｫ繝代せ繝・・繧ｿ繧偵Ο繝ｼ繝峨☆繧・
@@ -253,10 +264,10 @@ void LevelEditor::LoadMeshData(LevelData::MeshFileData& meshData, nlohmann::json
     LoadName(meshData.directoryPath, object, "directoryPath");
 }
 
-void LevelEditor::LoadTempareture(float& tempareture, nlohmann::json& object)
+void LevelEditor::LoadFloat(float& tempareture, nlohmann::json& object,const std::string& name)
 {
-    if (object.contains("temperature")) {
-        tempareture = object["temperature"];
+    if (object.contains(name)) {
+        tempareture = object[name];
     } else {
         tempareture = 0.0f;
     }

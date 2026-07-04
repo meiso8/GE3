@@ -213,10 +213,15 @@ void ObjectManager::Save()
             {"disabled", object->GetDisabled()},
             {"temperature",object->GetTemperature()},
             {"color",JsonFile::Vector4ToJson(object->GetColor())},
+            {"shininess",object->GetShininess()},
+            {"environmentCoefficient",object->GetEnvironmentCoefficient()},
             {"name", name},
             {"type", object->GetObjectType() },
-            {"nextStageName",object->GetNextStageName()}
+            {"nextStageName",object->GetNextStageName()},
+      
         };
+
+        //輝度を追加
 
         //モデルだった場合ディレクトリパスの要素を追加
         if (auto model = dynamic_cast<Model*>(primitive)) {
@@ -225,6 +230,8 @@ void ObjectManager::Save()
             //テクスチャハンドルを設定する
             objectJson["textureHandle"] = object->GetTextureHandle();
         }
+
+
 
         // 4. 配列に要素を追加
         json["objects"].push_back(objectJson);

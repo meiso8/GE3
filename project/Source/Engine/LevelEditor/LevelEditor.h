@@ -84,7 +84,7 @@ private:
     /// @param meshData メッシュ情報
     /// @param object json
     void LoadMeshData(LevelData::MeshFileData& meshData, nlohmann::json& object);
-    void LoadTempareture(float& tempareture, nlohmann::json& object);
+    void LoadFloat(float& tempareture, nlohmann::json& object ,const std::string & name ="temperature");
     /// @brief 位置情報の読み込み
     /// @param object json
     /// @param transform 位置情報

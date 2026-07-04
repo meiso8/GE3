@@ -9,9 +9,11 @@
                 "z": 1.0
             },
             "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "Cube",
-            "name": "Object5221111",
+            "name": "Object52211111",
             "nextStageName": "",
+            "shininess": 0.0,
             "temperature": 0.0,
             "textureHandle": 0,
             "transform": {
@@ -41,9 +43,11 @@
                 "z": 1.0
             },
             "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object6222",
+            "name": "Object62222",
             "nextStageName": "",
+            "shininess": 0.0,
             "temperature": 0.5,
             "textureHandle": 24,
             "transform": {
@@ -74,9 +78,11 @@
             },
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\FontModel\\nbt_smt_ht",
             "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "nbt_smt_ht.obj",
-            "name": "Object333",
+            "name": "Object3333",
             "nextStageName": "",
+            "shininess": 0.0,
             "temperature": 0.5,
             "transform": {
                 "rotate": {
@@ -105,9 +111,11 @@
                 "z": 1.0
             },
             "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object744",
+            "name": "Object7444",
             "nextStageName": "",
+            "shininess": 0.0,
             "temperature": 0.0,
             "textureHandle": 48,
             "transform": {
@@ -137,9 +145,11 @@
                 "z": 1.0
             },
             "disabled": false,
+            "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object855",
+            "name": "Object8555",
             "nextStageName": "",
+            "shininess": 0.0,
             "temperature": 0.5,
             "textureHandle": 21,
             "transform": {
@@ -168,139 +178,13 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
-            "disabled": false,
-            "file_name": "UpStairs.obj",
-            "name": "Object6",
-            "nextStageName": "AmenStage",
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": -0.22030577063560486,
-                    "z": 24.281574249267578
-                }
-            },
-            "type": "StageChangeTrigger"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
-            "disabled": false,
-            "file_name": "UpStairs.obj",
-            "name": "Object7",
-            "nextStageName": "AmenStage",
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": -3.1415908336639404,
-                    "y": 0.0015925478655844927,
-                    "z": -3.1415908336639404
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.010423573665320873,
-                    "y": -0.18772436678409576,
-                    "z": -23.910863876342773
-                }
-            },
-            "type": "StageChangeTrigger"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/player",
-            "disabled": false,
-            "file_name": "player.obj",
-            "name": "Player5",
-            "nextStageName": "",
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": -4.212067604064941,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": -2.7240397930145264,
-                    "y": -0.5,
-                    "z": -9.001441955566406
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/Fountain",
-            "disabled": false,
-            "file_name": "Fountain.obj",
-            "name": "Fountain8",
-            "nextStageName": "",
-            "temperature": 0.20000000298023224,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": 0.25,
-                    "z": 0.0
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
             "disabled": false,
+            "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object8",
+            "name": "Object86",
             "nextStageName": "",
+            "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
@@ -330,9 +214,11 @@
             },
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
             "disabled": false,
+            "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object9",
+            "name": "Object97",
             "nextStageName": "",
+            "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
@@ -362,9 +248,11 @@
             },
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
             "disabled": false,
+            "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object10",
+            "name": "Object108",
             "nextStageName": "",
+            "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
@@ -394,9 +282,11 @@
             },
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
             "disabled": false,
+            "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object11",
+            "name": "Object119",
             "nextStageName": "",
+            "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
@@ -426,9 +316,11 @@
             },
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
             "disabled": false,
+            "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object12",
+            "name": "Object1210",
             "nextStageName": "",
+            "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
@@ -458,9 +350,11 @@
             },
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
             "disabled": false,
+            "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object13",
+            "name": "Object1311",
             "nextStageName": "",
+            "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
@@ -490,9 +384,11 @@
             },
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
             "disabled": false,
+            "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object14",
+            "name": "Object1412",
             "nextStageName": "",
+            "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
@@ -522,9 +418,11 @@
             },
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
             "disabled": false,
+            "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object15",
+            "name": "Object1513",
             "nextStageName": "",
+            "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
@@ -554,9 +452,11 @@
             },
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
             "disabled": false,
+            "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object16",
+            "name": "Object1614",
             "nextStageName": "",
+            "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
@@ -586,9 +486,11 @@
             },
             "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
             "disabled": false,
+            "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object17",
+            "name": "Object1715",
             "nextStageName": "",
+            "shininess": 100.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
@@ -608,6 +510,142 @@
                 }
             },
             "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "UpStairs.obj",
+            "name": "Object16",
+            "nextStageName": "AmenStage",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": -0.22030577063560486,
+                    "z": 24.281574249267578
+                }
+            },
+            "type": "StageChangeTrigger"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "UpStairs.obj",
+            "name": "Object17",
+            "nextStageName": "AmenStage",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415908336639404,
+                    "y": 0.0015925478655844927,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.010423573665320873,
+                    "y": -0.18772436678409576,
+                    "z": -23.910863876342773
+                }
+            },
+            "type": "StageChangeTrigger"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/player",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "player.obj",
+            "name": "Player4",
+            "nextStageName": "",
+            "shininess": 491.148193359375,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 6.652068138122559,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -4.910693168640137,
+                    "y": -0.5,
+                    "z": -7.9842305183410645
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Fountain",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Fountain.obj",
+            "name": "Fountain18",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.20000000298023224,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.25,
+                    "z": 0.0
+                }
+            },
+            "type": "EMPTY"
         }
     ]
 }
