@@ -455,8 +455,8 @@ void Player::MouseLook()
     }
 
 
-    cameraRotateY_ += Input::GetMousePosFiltered().x *kDeltaTime / cameraSpeed_*0.5f;
-    cameraRotateX_ += Input::GetMousePosFiltered().y *kDeltaTime / cameraSpeed_*0.5f;
+    cameraRotateY_ += Input::GetMousePosFiltered().x *kDeltaTime / cameraSpeed_*0.25f;
+    cameraRotateX_ += Input::GetMousePosFiltered().y *kDeltaTime / cameraSpeed_*0.25f;
 
     cameraRotateX_ = std::clamp(
         cameraRotateX_,
