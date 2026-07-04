@@ -17,11 +17,17 @@ struct LevelData {
         std::string directoryPath;
     };
 
-    struct ObjectData {
-     
+    struct MaterialData {
         uint32_t textureHandle;
         Vector4 color;
         float tempareture;
+        float shininess;
+        float environmentCoefficient;
+    };
+
+    struct ObjectData {
+     
+        MaterialData materialData;
         std::string objectName;
         MeshFileData filePath;
         std::string meshTypeName;
@@ -41,9 +47,7 @@ struct LevelData {
     };
 
     struct StageChangeTriggerData {
-        uint32_t textureHandle;
-        Vector4 color;
-        float tempareture;
+        MaterialData materialData;
         std::string nextStageName;
         MeshFileData filePath;
         EulerTransform transform;

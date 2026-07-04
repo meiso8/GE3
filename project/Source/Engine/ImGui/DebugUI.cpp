@@ -340,11 +340,10 @@ nlohmann::json& DebugUI::FindJsonFile(std::string& tagName, bool useFilter, cons
         return JsonFile::GetJsonFiles(tagName);
 
     }
-
+#endif
     static nlohmann::json empty_json;
     tagName = "";
     return empty_json;
-#endif
 }
 
 void DebugUI::CreateJsonFile(const char* containFileName)

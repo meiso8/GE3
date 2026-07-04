@@ -32,10 +32,13 @@ void StageChangeTrigger::Create(
     //オブジェクト名の設定
     object_->SetObjectType("StageChangeTrigger");
     //温度の設定
-    object_->SetTemperature(data.tempareture);
+    object_->SetTemperature(data.materialData.tempareture);
     //カラーの設定
-    object_->SetColor(data.color);
-    
+    object_->SetColor(data.materialData.color);
+    //輝度の設定
+    object_->SetShininess(data.materialData.shininess);
+    //環境光
+    object_->SetEnvironmentCoefficient(data.materialData.environmentCoefficient);
     //メッシュの設定
     if (data.filePath.fileName != "empty") {
         //メッシュ名が空ではないとき
@@ -44,7 +47,7 @@ void StageChangeTrigger::Create(
             object_->SetMeshAndMaterial(PrimitiveFactory::GetPrimitiveForName(data.filePath.fileName));
         } else {
             object_->SetMeshAndMaterial(ModelManager::LoadModelAndGet(data.filePath.directoryPath  + "/" + data.filePath.fileName));
-            object_->SetTextureHandle(static_cast<TextureFactory::Handle>(data.textureHandle));
+            object_->SetTextureHandle(static_cast<TextureFactory::Handle>(data.materialData.textureHandle));
         }
     }
 

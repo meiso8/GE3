@@ -63,12 +63,14 @@ void AnubisBlockMap::Update()
         blocks_[i]->SetColor(color);
     }
 
+#ifdef USE_IMGUI
+
     ImGui::Begin("Debug");
     if (ImGui::Button("AnubisBlockClear")) {
         ClearSet();
     }
     ImGui::End();
-
+#endif
     if (isClear_) {
         return;
     }
