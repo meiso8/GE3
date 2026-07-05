@@ -11,7 +11,7 @@
 #include"TimeManager.h"
 #include"Memo/MemoManager.h"
 #include"RenderTexture/RenderTexture.h"
-
+#include"PostProcessManager/PostProcessManager.h"
 
 
 bool PauseScreen::isActive_ = false;
@@ -46,7 +46,7 @@ PauseScreen::PauseScreen()
 void PauseScreen::Initialize()
 {
     isPause_ = false;
-    
+
     isShowMenu_ = false;
     isLookGameItem_ = false;
 
@@ -72,10 +72,14 @@ void PauseScreen::Update()
     //タイトル
     isLookGameItem_ = SlidePuzzleSystem::IsActive() || MemoManager::isLookItem_;
 
-    if (isLookGameItem_ ||isShowMenu_) {
+    auto* gaussianFilter = PostProcessManager::GetInstance()->
+        GetPostEffectMaterial(PostProcessManager::kModel)->
+        GetMaterialGaussianFilter();
 
-        RenderTexture::GetInstance()->GetMaterialGaussianFilter()->sigma = 4.0f;
-        RenderTexture::GetInstance()->GetMaterialGaussianFilter()->kernel = 10;
+    if (isLookGameItem_ || isShowMenu_) {
+
+        gaussianFilter->sigma = 4.0f;
+        gaussianFilter->kernel = 10;
 
         if (!isPause_) {
             isPause_ = true;
@@ -92,8 +96,8 @@ void PauseScreen::Update()
 
     } else {
 
-        RenderTexture::GetInstance()->GetMaterialGaussianFilter()->sigma = 1.0f;
-        RenderTexture::GetInstance()->GetMaterialGaussianFilter()->kernel = 0;
+        gaussianFilter->sigma = 1.0f;
+        gaussianFilter->kernel = 0;
 
         isPause_ = false;
         isActive_ = false;
@@ -117,7 +121,7 @@ void PauseScreen::Update()
     Vector2 pos = pos_[kBackToGame];
 
     if (isLookGameItem_) {
-       pos.x = 640.0f;
+        pos.x = 640.0f;
     }
 
     sprites_[kBackToGame]->SetPosition(pos);
@@ -156,19 +160,19 @@ void PauseScreen::SelectButton()
 
 
     for (int i = kBackToGame; i < kMaxLayer; ++i) {
-       
-        if (isLookGameItem_&& i == kBackToTitle) {
+
+        if (isLookGameItem_ && i == kBackToTitle) {
             continue;
         }
 
         if (IsCollision(*sprites_[i], *curPos_)) {
-            
+
             selectButtonNum_ = i;
-            
+
             sprites_[i]->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
             if (InputBind::IsClick()) {
-                
+
                 Sound::PlaySE(SoundFactory::FALL);
 
                 switch (selectButtonNum_)

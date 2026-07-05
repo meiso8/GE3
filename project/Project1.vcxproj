@@ -170,6 +170,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.cpp" />
     <ClCompile Include="Source\Application\GameObject\AnubisBlockMap\AnubisBlockMap.cpp" />
     <ClCompile Include="Source\Application\GameObject\BlockMap\BlockMap.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\Item.cpp" />
@@ -377,6 +378,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\DescriptorHeap\SrvDescriptorHeap\SrvDescriptorHeap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.h" />
     <ClInclude Include="Source\Application\GameObject\AnubisBlockMap\AnubisBlockMap.h" />
     <ClInclude Include="Source\Application\GameObject\BlockMap\BlockMap.h" />
     <ClInclude Include="Source\Application\GameObject\Item\Item.h" />

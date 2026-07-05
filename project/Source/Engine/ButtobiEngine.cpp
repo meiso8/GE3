@@ -32,17 +32,6 @@
 #include"DebugCamera.h"
 #include"Animation/SkinCluster.h"
 
-void ButtobiEngine::SetCommandListAndSrvDescriptorHeap()
-{
-    auto* commandList = directXCommon_->GetCommandListClass()->Get();
-    auto* srv = srvDescriptorHeap_.get();
-    Sprite::SetCommandListAndSrvDescriptorHeap(commandList, srv);
-    texture_->SetCommandListAndSrvDescriptorHeap(commandList, srv);
-    freeTypeManager_->SetCommandListAndSrvDescriptorHeap(commandList, srv);
-    ObjectManager::GetInstance()->SetCommandListAndSrvDescriptorHeap(commandList, srv);
-    particleManager_->SetCommandListAndSrvDescriptorHeap(commandList, srv);
-}
-
 void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
 
 
@@ -97,6 +86,10 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     auto* commandList = directXCommon_->GetCommandListClass()->Get();
 
     directXCommon_->InitializeRenderTexture(rtvDescriptorHeap_.get(), srvDescriptorHeap_.get());
+    //ポストプロセス管理の生成
+    auto* ppm = PostProcessManager::GetInstance();
+    ppm->Create(commandList, srvDescriptorHeap_.get());
+    LogFile::Log("Create PostProcessManager");
 
     directXCommon_->CreateDepthStencilResourceSRV(srvDescriptorHeap_.get());
 
@@ -204,12 +197,16 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     SceneFactory::Create();
     LogFile::Log("CreateScene");
 
+    //ポストプロセス管理にカメラを設定する
     auto* camera = SceneManager::GetCurrentCamera();
+
     if (camera) {
-        directXCommon_->SetRenderTextureCamera(camera);
+        ppm->SetPostEffectMaterialCamera(camera, PostProcessManager::kSprite);
+        ppm->SetPostEffectMaterialCamera(camera, PostProcessManager::kModel);
         LogFile::Log("Set RenderTexture Camera");
     } else {
-        directXCommon_->SetRenderTextureCamera(DebugCamera::GetInstance());
+        ppm->SetPostEffectMaterialCamera(DebugCamera::GetInstance(), PostProcessManager::kModel);
+        ppm->SetPostEffectMaterialCamera(DebugCamera::GetInstance(), PostProcessManager::kSprite);
         LogFile::Log("Set Debug Camera");
     }
 
@@ -253,6 +250,14 @@ void ButtobiEngine::Update() {
         particleManager_->Update(*camera);
     }
 
+    auto* ppm = PostProcessManager::GetInstance();
+
+    if (camera) {
+        ppm->SetPostEffectMaterialCamera(camera, PostProcessManager::kSprite);
+        ppm->SetPostEffectMaterialCamera(camera, PostProcessManager::kModel);
+    }
+    //ポストエフェクトの更新
+    ppm->Update();
     //ポストプロセス用の更新
     directXCommon_->UpdateRenderTexture(srvDescriptorHeap_.get());
 
@@ -432,7 +437,6 @@ void ButtobiEngine::Finalize() {
     //DirecectXCommonのリセット
     directXCommon_->Finalize();
     directXCommon_.reset();
-
 
     //バイブレーションの終了処理
     VibrateManager::Finalize();

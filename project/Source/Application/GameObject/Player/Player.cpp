@@ -15,7 +15,7 @@
 #include"CollisionConfig.h"
 #include"InputBind.h"
 #include"TimeManager.h"
-#include"RenderTexture/RenderTexture.h"
+#include"PostProcessManager/PostProcessManager.h"
 #include"Sound.h"
 #include"DebugUI.h"
 #include"ItemManager/ItemManager.h"
@@ -129,7 +129,10 @@ void Player::Init(const Vector3& pos)
     isThermographyEnd_ = false;
     thermography_ = 0.0f;
 
-    RenderTexture::GetInstance()->GetMaterialDissolve()->maskVal = 1.0f - thermography_;
+    PostProcessManager::GetInstance()->
+        GetPostEffectMaterial(PostProcessManager::kModel)->
+        GetMaterialDissolve()
+        ->maskVal = 1.0f - thermography_;
 
     Json file = JsonFile::GetJsonFiles("config");
 
@@ -397,7 +400,10 @@ void Player::Thermography()
         return;
     }
 
-    RenderTexture::GetInstance()->GetMaterialDissolve()->maskVal = 1.0f - thermography_;
+    PostProcessManager::GetInstance()->
+        GetPostEffectMaterial(PostProcessManager::kModel)->
+        GetMaterialDissolve()
+        ->maskVal = 1.0f - thermography_;
 
     if (InputBind::IsClickR()) {
         isThermography_ = true;

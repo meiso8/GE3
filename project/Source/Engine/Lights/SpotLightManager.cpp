@@ -2,7 +2,7 @@
 #include"DirectXCommon.h"
 #include"SrvDescriptorHeap.h"
 #include"Log.h"
-
+#include"Transform.h"
 SpotLight* SpotLightManager::spotLightData_ = nullptr;
 Microsoft::WRL::ComPtr <ID3D12Resource> SpotLightManager::spotLightResource_ = nullptr;
 uint32_t SpotLightManager::srvIndex_;
