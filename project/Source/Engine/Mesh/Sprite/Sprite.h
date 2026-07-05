@@ -23,6 +23,8 @@ public:
     {
         float4 color;
         float32_t4x4 uvTransform;
+        float temperature;
+        float padding[3];
     };
 
 
@@ -62,7 +64,8 @@ public:
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
     Vector4& GetColor() { return material_->color; }
     const Vector4& GetColor() const { return material_->color; }
-
+    void SetTemperature(const float temperature)const {material_->temperature = temperature;  }
+    const float GetTemperature() { return material_->temperature; }
     Vector2& GetAnchorPoint() { return anchorPoint_; }
     /// @brief アンカーポイント
     /// @param anchorPoint 0.0f~1.0f

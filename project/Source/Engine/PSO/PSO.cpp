@@ -254,7 +254,7 @@ void PSO::CreateALLPSO()
             rtvFormat
         );
 
-    //スプライトもサーモなし
+    //スプライトもサーモあり
     for (int b = 0; b < kCountOfBlendMode; ++b) {
         graphicsPipelineStateSprite_[b] = Create(
             static_cast<BlendMode>(b),
@@ -266,12 +266,12 @@ void PSO::CreateALLPSO()
             DxcCompiler::PS_Sprite,
             kTriangle,
             InputLayout::kInputLayoutTypeNormal,
-            rtvFormat
+            rtvFormatsForTermo
         );
 
     }
 
-    //Fontもサーモなし
+    //Fontもサーモあり
     for (int b = 0; b < kCountOfBlendMode; ++b) {
         graphicsPipelineStateFont_[b] = Create(
             static_cast<BlendMode>(b),
@@ -283,7 +283,7 @@ void PSO::CreateALLPSO()
             DxcCompiler::PS_Font,
             kTriangle,
             InputLayout::kInputLayoutTypeNormal,
-            rtvFormat
+            rtvFormatsForTermo
         );
     }
 

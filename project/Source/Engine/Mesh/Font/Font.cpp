@@ -204,6 +204,7 @@ void Font::CreateMaterial(const Vector4& color) {
 
     material_->color = color;
     material_->uvTransform = MakeIdentity4x4();
+    material_->temperature = 0.5f;
 }
 
 void Font::UpdateUV() {
