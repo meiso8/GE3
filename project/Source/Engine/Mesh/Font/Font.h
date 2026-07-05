@@ -24,6 +24,8 @@ public:
     struct MaterialForFont {
         float4 color;
         float32_t4x4 uvTransform;
+        float temperature;
+        float padding[3];
     };
 
 public:
@@ -60,6 +62,9 @@ public:
 
     Vector4& GetColor() { return material_->color; };
     void SetColor(const Vector4& color) { material_->color = color; };
+
+    void SetTemperature(const float temperature)const { material_->temperature = temperature; }
+    const float GetTemperature() { return material_->temperature; }
 
     void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; };
     void SetUVRotate(const Vector3& rotate) { uvTransform_.rotate = rotate; };

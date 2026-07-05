@@ -5,6 +5,7 @@ struct Material
 {
     float4 color;
     float32_t4x4 uvTransform;
+    float temperature;
 };
 
 //ConstantBufferを定義する
@@ -17,11 +18,17 @@ SamplerState gSampler : register(s0); //Samplerはs これを介してtextureを
 struct PixelShaderOutput
 {
     float4 color : SV_TARGET0;
+    float4 temperature : SV_TARGET1; //AddTemperature
 };
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
     PixelShaderOutput output;
+    
+    float outlineMask = 1.0f - gMaterial.color.a;
+    outlineMask = clamp(outlineMask, 0.0f, 1.0f);
+    //SetTemperature　Use G Channel for OutlineMask
+    output.temperature = float4(gMaterial.temperature, outlineMask, 0.0, 1.0);
     
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);

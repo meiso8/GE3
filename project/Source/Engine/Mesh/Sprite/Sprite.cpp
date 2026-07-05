@@ -228,6 +228,7 @@ void Sprite::CreateMaterial(const Vector4& color) {
     materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&material_));
 
     material_->color = color;
+    material_->temperature = 0.5f;
     material_->uvTransform = MakeIdentity4x4();
 }
 
