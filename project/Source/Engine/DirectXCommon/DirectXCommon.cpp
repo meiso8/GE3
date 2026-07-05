@@ -142,18 +142,23 @@ void DirectXCommon::VeiwPortAndScissorRect()
 
 void DirectXCommon::DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap)
 {
-    PostProcessManager ppm;
-    ppm.ClearEffects();
-    ppm.AddEffect(PSO::kEffectGrayScale);
-    ppm.AddEffect(PSO::kEffectDepthBasedOutline);
-    ppm.AddEffect(PSO::kEffectLuminanceBasedOutline);
-    ppm.AddEffect(PSO::kEffectBoxFilter);
-    ppm.AddEffect(PSO::kEffectGaussianFilter);
-    ppm.AddEffect(PSO::kEffectRadialBlur);
-    ppm.AddEffect(PSO::kEffectVignette);
+    auto* ppm = PostProcessManager::GetInstance();
+
+    PostProcessManager::Layer modelLayer = PostProcessManager::kModel;
+    //Executeまでにこれをセットしておく
+    ppm->SetRenderTexture(renderTexture_,modelLayer);
+    ppm->ClearEffects(modelLayer);
+   
+    ppm->AddEffect(PSO::kEffectGrayScale, modelLayer);
+    ppm->AddEffect(PSO::kEffectDepthBasedOutline, modelLayer);
+    ppm->AddEffect(PSO::kEffectLuminanceBasedOutline, modelLayer);
+    ppm->AddEffect(PSO::kEffectBoxFilter,modelLayer);
+    ppm->AddEffect(PSO::kEffectGaussianFilter, modelLayer);
+    ppm->AddEffect(PSO::kEffectRadialBlur, modelLayer);
+    ppm->AddEffect(PSO::kEffectVignette, modelLayer);
     //ppm.AddEffect(PSO::kEffectRandom);
-    ppm.AddEffect(PSO::kEffectThermography);
-    ppm.AddEffect(PSO::kEffectDissolve);
+    ppm->AddEffect(PSO::kEffectThermography, modelLayer);
+    ppm->AddEffect(PSO::kEffectDissolve, modelLayer);
 
     //描画先を画面(バックバッファ)のRTVにする
     // バックバッファは PreDraw で既に RENDER_TARGET 状態になっています
@@ -161,7 +166,7 @@ void DirectXCommon::DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap)
     
     auto backBufferRTV = rtvDescriptorHeap->GetCPUDescriptorHandle(backBufferIndex);
 
-    ppm.Execute(renderTexture_, backBufferRTV, &barrier, depthTextureData_.srvIndex, kBlendModeMultiply);
+    ppm->Execute(modelLayer,backBufferRTV, &barrier, depthTextureData_.srvIndex, kBlendModeMultiply);
 }
 
 void DirectXCommon::RenderTexturePostDraw()
@@ -188,11 +193,6 @@ void DirectXCommon::RenderTexturePostDraw()
     // ★追加: ID用テクスチャのバリアを元に戻す
     auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
     barrier.SettingBarrierRTVforSRV( renderTextureDataID.resource);
-}
-
-void DirectXCommon::SetRenderTextureCamera(Camera* camera)
-{
-    renderTexture_->SetCamera(camera);
 }
 
 void DirectXCommon::SettingIdTextureBarrierPost()
@@ -424,8 +424,6 @@ void DirectXCommon::InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap
 
 void DirectXCommon::UpdateRenderTexture(SrvDescriptorHeap* srvDescriptorHeap)
 {
-    //レンダーテクスチャの更新
-    renderTexture_->Update();
 
 #ifdef USE_IMGUI
     ImGui::Begin("PostEffect Viewer");

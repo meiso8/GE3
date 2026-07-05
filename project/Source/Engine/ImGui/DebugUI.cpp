@@ -36,6 +36,8 @@
 #include<numbers>
 #include<algorithm>
 
+
+
 namespace {
     struct Param {
         char name[128];
@@ -806,6 +808,112 @@ void DebugUI::CheckPointLightData()
 #endif
 }
 
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForRenderTexture& material)
+{
+
+    if (ImGui::TreeNode("GrayScale")) {
+        DebugUI::CheckColor(material.color, "RenderTextureColor");
+        ImGui::Checkbox("UseEffect", &material.useEffect);
+        const char* lights[] = { "Sepia", "Grayscale", "None" };
+        int type_current = int(material.type);
+
+        if (ImGui::Combo("EffectType", &type_current, lights, IM_ARRAYSIZE(lights))) {
+            material.type = type_current % 3;
+        };
+        ImGui::TreePop();
+    }
+}
+
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForVignette& material)
+{
+    if (ImGui::TreeNode("Vignette")) {
+        DebugUI::CheckFloat(material.correctVal, "correctVal");
+        DebugUI::CheckFloat(material.viignetteVal, "viignetteVal");
+        ImGui::TreePop();
+    }
+}
+
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForBoxFilter& material)
+{
+    if (ImGui::TreeNode("BoxFilter")) {
+
+        ImGui::DragFloat("kernel", &material.kernel, 1.0f, 0.0f, 1001.0f);
+        ImGui::TreePop();
+    }
+}
+
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForGaussianFilter& material)
+{
+    if (ImGui::TreeNode("GaussianFilter")) {
+
+        ImGui::DragInt("kernel", &material.kernel, 1, 1);
+        ImGui::DragFloat("sigma", &material.sigma);
+        ImGui::TreePop();
+    }
+}
+
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForLuminanceBasedOutline& material)
+{
+    if (ImGui::TreeNode("LuminanceBasedOutline")) {
+
+        ImGui::DragFloat("weightVal", &material.weightVal, 0.1f);
+        ImGui::TreePop();
+    }
+}
+
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForDepthBasedOutline& material)
+{
+
+    if (ImGui::TreeNode("DepthBasedOutline")) {
+        ImGui::DragFloat("lineWidth", &material.lineWidth, 0.1f);
+        DebugUI::ShowMatrix4x4(material.projectionInverse);
+        ImGui::ColorEdit3("color", &material.color.x);
+        ImGui::TreePop();
+    }
+
+}
+
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForRadialBlur& material)
+{
+    if (ImGui::TreeNode("RadialBulr")) {
+
+        ImGui::DragFloat2("center", &material.center.x, 0.01f, 0.0f, 1.0f);
+        ImGui::DragInt("numSamples", &material.numSamples, 1.0f, 1);
+        ImGui::DragFloat("blurWidth", &material.blurWidth, 0.01f);
+        ImGui::TreePop();
+    }
+}
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForDissolve& material)
+{
+
+    if (ImGui::TreeNode("Dissolve")) {
+        //ImGui::Checkbox("useDissolve", &materialForDissolve_->useDissolve);
+        ImGui::DragFloat("maskVal", &material.maskVal, 0.01f, 0.0f, 1.0f);
+        ImGui::ColorEdit3("color", &material.rgb.x);
+        ImGui::TreePop();
+    }
+
+}
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForRandom& material)
+{
+    if (ImGui::TreeNode("Random")) {
+        //ImGui::Checkbox("useRandom", &materialForRandom_->useRandom);
+        ImGui::DragFloat("time", &material.time, 0.01f);
+        ImGui::TreePop();
+    }
+
+}
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForThermography& material)
+{
+    if (ImGui::TreeNode("Thermography")) {
+        ImGui::DragFloat("alpha", &material.alpha);
+        ImGui::DragInt("kernel", &material.kernel, 1, 1);
+        ImGui::DragFloat("sigma", &material.sigma);
+        ImGui::TreePop();
+    }
+
+}
+
 
 void DebugUI::CheckObject3d(Object3d& object3d)
 {
@@ -1308,5 +1416,10 @@ void DebugUI::Button(const char* label, std::function<void()> onSwitch)
         }
     }
 #endif
+}
+
+void DebugUI::CheckPostEffect()
+{
+
 }
 

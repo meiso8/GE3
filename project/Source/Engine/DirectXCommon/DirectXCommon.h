@@ -18,6 +18,7 @@
 #include"TransitionBarrier.h"
 
 #include"RenderTexture/RenderTexture.h"
+#include"PostEffectMaterial/PostEffectMaterial.h"
 
 //Textureデータを読み込むためにDirectXTex.hをインクルード
 #include"../externals/DirectXTex/DirectXTex.h"
@@ -57,6 +58,8 @@ private:
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, 2> swapChainResources;
     RenderTargetView rtvClass = {};
     RenderTexture* renderTexture_ = nullptr;
+
+
     Fence fence = {};
 
     DepthTextureData depthTextureData_;
@@ -82,7 +85,7 @@ public:
     void VeiwPortAndScissorRect();
     void DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap);
     void RenderTexturePostDraw();
-    void SetRenderTextureCamera(Camera* camera);
+
     void SettingIdTextureBarrierPre();
     void SettingIdTextureBarrierPost();
 

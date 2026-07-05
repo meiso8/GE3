@@ -72,8 +72,6 @@ private:
     std::unique_ptr<SpriteCommon> spriteCommon_ = nullptr;
     /// @brief テキスト管理
     std::unique_ptr<FreeTypeManager> freeTypeManager_ = nullptr;
-private:
-    void SetCommandListAndSrvDescriptorHeap();
 
 protected:
     

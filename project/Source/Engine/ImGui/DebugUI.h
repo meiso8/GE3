@@ -12,6 +12,7 @@
 #include<memory>
 #include<unordered_map>
 #include"Matrix/CameraMatrix.h"
+#include"PostEffectMaterial/PostEffectMaterial.h"
 
 enum BlendMode;
 
@@ -38,6 +39,18 @@ struct PointLight;
 
 struct CharacterState;
 class SrvDescriptorHeap;
+
+//class PostEffectMaterial;
+//struct MaterialForRenderTexture;
+//struct MaterialForVignette;
+//struct MaterialForBoxFilter;
+//struct MaterialForGaussianFilter;
+//struct MaterialForLuminanceBasedOutline;
+//struct MaterialForDepthBasedOutline;
+//struct MaterialForRadialBlur;
+//struct MaterialForDissolve;
+//struct MaterialForRandom;
+//struct MaterialForThermography;
 
 #include "nlohmann/json.hpp"
 class DebugUI
@@ -129,6 +142,7 @@ public:
     static void CheckFlag(bool& flag, const char* label);
     static void SwitchFlag(bool& flag, const char* label);
     static void Button(const char* label, std::function<void()> onSwitch);
+    static void CheckPostEffect();
 private:
     /// @brief 光源
 /// @param directionalLights 
@@ -140,5 +154,16 @@ private:
     static void CheckSpotLight();
 
     static void CheckPointLightData();
+
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForRenderTexture& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForVignette& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForBoxFilter& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForGaussianFilter& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForLuminanceBasedOutline& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForDepthBasedOutline& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForRadialBlur& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForDissolve& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForRandom& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForThermography& material);
 };
 
