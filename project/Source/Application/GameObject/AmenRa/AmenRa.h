@@ -12,6 +12,6 @@ public:
     void Draw(Camera& camera);
     void OnCollision(Collider* collider) override;
 private:
-    std::unique_ptr<Object3d> object_;
+    std::unique_ptr<Object3d> object_ = nullptr;
 
 };

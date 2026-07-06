@@ -27,4 +27,6 @@ void ModelFactory::Load() {
     ModelManager::LoadModel("Resource/Models/Building/Building.obj");
 
     ModelManager::LoadModel("Resource/Models/Puzzle/Puzzle.gltf");
+
+    ModelManager::LoadModel("Resource/Models/Thoth/thoth.obj");
 };
