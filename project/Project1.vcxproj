@@ -376,6 +376,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\FreeTypeManager\Text.cpp" />
     <ClCompile Include="Source\Application\StageManager\StageManager.cpp" />
     <ClCompile Include="Source\Engine\DescriptorHeap\SrvDescriptorHeap\SrvDescriptorHeap.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Thoth\Thoth.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.h" />
@@ -569,6 +570,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\FreeTypeManager\Text.h" />
     <ClInclude Include="Source\Application\StageManager\StageManager.h" />
     <ClInclude Include="Source\Engine\DescriptorHeap\SrvDescriptorHeap\SrvDescriptorHeap.h" />
+    <ClInclude Include="Source\Application\GameObject\Thoth\Thoth.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
