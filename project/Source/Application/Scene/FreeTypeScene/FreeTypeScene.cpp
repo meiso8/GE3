@@ -75,12 +75,18 @@ void FreeTypeScene::Update()
 
 #ifdef _DEVELOP
 
-    if (Input::IsTriggerKey(DIK_1)) {
-        SwitchCamera();
-    }
-
     DebugUI::CheckEmitter(particleEmitters_[0]->GetEmitter());
     DebugUI::CheckEmitter(particleEmitters_[1]->GetEmitter());
+
+    ImGui::Begin("Debug");
+
+    if (ImGui::Button("SwitchCamera")) {
+        SwitchCamera();
+    };
+
+    DebugUI::CheckFlag(isDebugCameraActive_, "isDebugCameraAvtive");
+
+    ImGui::End();
 
 #endif //_DEVELOP
 
