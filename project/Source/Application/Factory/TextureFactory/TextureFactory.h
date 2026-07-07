@@ -12,7 +12,9 @@ public:
     
 
         NUMBERS,
+        
         UI,
+
         SKIP,
         TITLE,
         CREDIT,
@@ -67,6 +69,14 @@ public:
         BOOK5,
         //N　波
         GLYPH_N,
+
+        UI_A,
+        UI_L,
+        UI_LB,
+        UI_R,
+        UI_RB,
+        UI_X,
+
         // ======================
         TEXTURES,
     };

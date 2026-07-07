@@ -16,6 +16,13 @@ void TransformAni::PoyoPoyo(WorldTransform& worldTransform,const float& timer,co
 
 }
 
+void TransformAni::PoyoPoyo(Vector2& size, const float& timer, const float& defaultScale, const float& amplitude)
+{
+    float theta = std::numbers::pi_v<float>*2.0f * timer;
+    size.x = defaultScale + cos(theta) * amplitude;
+    size.y = defaultScale + cos(theta) * amplitude;
+}
+
 void TransformAni::LookTarget(WorldTransform& worldTransform, const Vector3& target)
 {
     Vector3 direction = target - worldTransform.GetWorldPosition();

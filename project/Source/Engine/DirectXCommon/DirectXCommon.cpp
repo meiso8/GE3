@@ -476,13 +476,13 @@ void DirectXCommon::InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap
 {
     renderTexture_ = std::make_unique<RenderTexture>();
     renderTexture_->SetCommandListAndSrvDescriptorHeap(commandList_->Get(), srvDescriptorHeap);
-    renderTexture_->Create(rtvDescriptorHeap);
+    renderTexture_->Create(rtvDescriptorHeap, { 1.0f,0.0f,0.0f,1.0f });
 
     //スプライト用のレンダーテクスチャを作成
     renderTextureForSprite_ = std::make_unique<RenderTexture>();
     renderTextureForSprite_->SetCommandListAndSrvDescriptorHeap(commandList_->Get(), srvDescriptorHeap);
-    renderTextureForSprite_->Create(rtvDescriptorHeap);
-    renderTextureForSprite_->SetRenderTargetClearValue({ 0.0f,0.0f,0.0f,0.0f });
+    renderTextureForSprite_->Create(rtvDescriptorHeap, { 0.0f,0.0f,0.0f,0.0f });
+
 }
 
 void DirectXCommon::UpdateRenderTexture(SrvDescriptorHeap* srvDescriptorHeap)

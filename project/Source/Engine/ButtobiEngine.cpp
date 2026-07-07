@@ -367,8 +367,13 @@ void ButtobiEngine::PostCommandSet() {
 
     //ポストエフェクト
     directXCommon_->DrawRenderTexture(rtvDescriptorHeap_.get());
-    // シーンの描画
+
+    //directXCommon_->RenderTextureForSpritePreDraw();
+    // スプライトの描画
     SceneManager::DrawSprite();
+    //directXCommon_->RenderTextureForSpritePostDraw();
+    
+    //directXCommon_->DrawRenderTextureForSprite(rtvDescriptorHeap_.get());
 
 #ifdef USE_IMGUI
     //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む

@@ -1,17 +1,17 @@
 #include "UIManager.h"
 #include"Window.h"
+#include"ItemManager/ItemManager.h"
 UIManager::UIManager()
 {
     effectSprite_ = std::make_unique<Sprite>();
     effectSprite_->Create(TextureFactory::WHITE_1X1, { 0.0f,0.0f }, { 1.0f,0.75f,0.75f,1.0f });
     effectSprite_->SetSize({ 1280.0f,720.0f });
-   
-    uiSprite_ = std::make_unique<Sprite>();
-    uiSprite_->Create(TextureFactory::UI, { 0.0f,0.0f });
+
+    buttonSprite_ = std::make_unique<ButtonSprite>();
 
     curPos_ = std::make_unique<CurPos>();
     curPos_->Initialize();
-    
+
     pauseScreen_ = std::make_unique<PauseScreen>();
     pauseScreen_->SetCurPosPtr(curPos_->GetScreenPosPtr());
 }
@@ -21,7 +21,9 @@ void UIManager::Initialize()
     for (const auto& [type, gage] : hpGages_) {
         gage->Initialize();
     }
-   pauseScreen_->Initialize();
+
+    buttonSprite_->Initialize();
+    pauseScreen_->Initialize();
     curPos_->Initialize();
 }
 
@@ -31,10 +33,17 @@ void UIManager::UpdateGage()
         gage->Update();
     }
 
+
 }
 
 void UIManager::UpdatePauseScreen()
 {
+
+    //太陽円盤によってサーモ可能かどうか
+    buttonSprite_->SetIsGetThermography(ItemManager::IsGetSolarDisc());
+
+    buttonSprite_->Update();
+
     if (pauseScreen_->isActive_) {
         curPos_->Update();
     } else {
@@ -63,7 +72,8 @@ void UIManager::DrawPauseScreen()
 void UIManager::DrawCurPos()
 {
     Sprite::PreDraw();
-    uiSprite_->Draw();
+
+    buttonSprite_->Draw();
 
     if (pauseScreen_->isActive_) {
         curPos_->Draw();

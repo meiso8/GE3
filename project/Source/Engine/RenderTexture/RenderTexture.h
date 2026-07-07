@@ -41,8 +41,7 @@ private:
     ID3D12GraphicsCommandList* commandList_ = nullptr;
     SrvDescriptorHeap* srvDescriptorHeap_ = nullptr;
 public:
-    void SetRenderTargetClearValue(const Vector4& value) { renderTargetClearValue_ = value; }
-    void Create(RtvDescriptorHeap* rtvDescriptorHeap);
+    void Create(RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& value);
   
     void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
 

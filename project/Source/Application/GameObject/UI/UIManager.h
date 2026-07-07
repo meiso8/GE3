@@ -3,6 +3,7 @@
 #include"HPIcon.h"
 #include"PauseScreen.h"
 #include"CurPos.h"
+#include"ButtonSprite/ButtonSprite.h"
 
 #include<unordered_map>
 
@@ -26,8 +27,8 @@ public:
 private:
     std::unique_ptr<PauseScreen> pauseScreen_;
     std::unordered_map<GageType, std::unique_ptr<HPGage>>hpGages_;
-    std::unique_ptr<Sprite> effectSprite_;
+    std::unique_ptr<Sprite> effectSprite_ = nullptr;
     std::unique_ptr<CurPos>  curPos_ = nullptr;
-    std::unique_ptr<Sprite> uiSprite_;
+    std::unique_ptr<ButtonSprite>  buttonSprite_ = nullptr;
 };
 
