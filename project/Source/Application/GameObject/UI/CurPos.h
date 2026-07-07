@@ -2,7 +2,7 @@
 #include"Sprite.h"
 #include<memory>
 #include"../Puzzle/Puzzle.h"
-#include<array>
+#include<vector>
 class CurPos
 {
 private:
@@ -21,4 +21,4 @@ public:
     void SetPuzzle(Puzzle& puzzle) { puzzle_ = &puzzle; };
 };
 
-Vector2 SnapCursorToNearestSprite(const Vector2& cursorPos, std::array<std::unique_ptr<Sprite>, Puzzle::maxArrayNum_>& sprites, float snapThreshold = 70.0f);
+Vector2 SnapCursorToNearestSprite(const Vector2& cursorPos, std::vector<std::unique_ptr<Sprite>>& sprites, float snapThreshold = 70.0f);

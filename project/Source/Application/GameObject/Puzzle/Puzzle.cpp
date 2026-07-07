@@ -27,8 +27,12 @@ void Puzzle::Change(int x, int y)
 
 }
 
-Puzzle::Puzzle()
+Puzzle::Puzzle(const int horizontal, const int vertical)
 {
+    horizontal_ = horizontal;
+    vertical_ = vertical;
+    maxArrayNum_ = vertical_ * horizontal_;
+
     centerPos_ = { float(Window::GetClientWidth() * 0.5f),float(Window::GetClientHeight() * 0.5f) };
 
     sprite_ = make_unique<Sprite>();
@@ -39,6 +43,9 @@ Puzzle::Puzzle()
     size_ = { size.x / horizontal_,size.y / vertical_ };
 
     centerPos_ -= size_ * horizontal_ * 0.375f;
+
+    sprites_.resize(maxArrayNum_);
+    panel_.resize(maxArrayNum_);
 
     rep(i, maxArrayNum_) sprites_[i] = make_unique<Sprite>(),
         sprites_[i]->Create(TextureFactory::PUZZLE, { 0.0f,0.0f });
@@ -106,7 +113,7 @@ void Puzzle::Game(const Vector2& screenPos)
     }
 
     for (int i = 0; i < maxArrayNum_; ++i) {
-        if (panel_[i] < 15) {
+        if (panel_[i] < maxArrayNum_-1) {
             int col = i % horizontal_; // 横方向のインデックス（0〜3）
             int row = i / horizontal_; // 縦方向のインデックス（0〜3）
             sprites_[panel_[i]]->SetPosition({ centerPos_.x + col * size_.x,centerPos_.y + row * size_.y });
@@ -123,7 +130,7 @@ void Puzzle::Draw()
     if (isClear_) {
         sprite_->Draw();
     } else {
-        rep(i, maxArrayNum_)   if (panel_[i] < 15) {
+        rep(i, maxArrayNum_)   if (panel_[i] < maxArrayNum_ - 1) {
             sprites_[panel_[i]]->Draw();
         }
     }
