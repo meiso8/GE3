@@ -10,7 +10,7 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/noise1.png", NOIZE1);
 
     Texture::LoadAndMapHandle("Resource/Textures/numbers.png", NUMBERS);
-    //Texture::LoadAndMapHandle("Resource/Textures/ui.png", UI);
+    Texture::LoadAndMapHandle("Resource/Textures/puzzle1.png", PUZZLE1);
 
     Texture::LoadAndMapHandle("Resource/Textures/skip.png", SKIP);
     Texture::LoadAndMapHandle("Resource/Textures/Title.png", TITLE);

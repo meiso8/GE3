@@ -20,7 +20,7 @@ Thoth::Thoth()
     //ピカピカ！！
     object_->SetEnvironmentCoefficient(1.0f);
 
-    AABB aabb = { .min = {-0.5f,0.0f,-0.5f},.max = {0.5f,3.0f,0.5f} };
+    AABB aabb = { .min = {-0.75f,0.0f,-0.75f},.max = {0.75f,3.0f,0.75f} };
 
     SetCollisionAttribute(CollisionTag::GetTag("Wall"));
     SetCollisionMask(CollisionTag::GetTag("Player") | CollisionTag::GetTag("Enemy")); // プレイヤーや壁と衝突

@@ -22,8 +22,8 @@ void AnubisStage::Initialize()
     anubisBlockMap_->Initialize();
     anubisBlockMap_->Update();
 
-    // ミイラ前に移動
-    player_->Init({ 0.0f, 0.0f, -5.0f });
+    //少し手前側に移動する
+    player_->Init({ 0.0f, 0.0f, -10.0f });
 
     Sound::StopAllSound();
 
