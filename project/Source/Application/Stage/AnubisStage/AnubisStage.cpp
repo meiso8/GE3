@@ -22,7 +22,6 @@ void AnubisStage::Initialize()
     anubisBlockMap_->Initialize();
     anubisBlockMap_->Update();
 
-
     // ミイラ前に移動
     player_->Init({ 0.0f, 0.0f, -5.0f });
 
@@ -49,7 +48,7 @@ void AnubisStage::Update()
             thoth_->SetIsActive(true);
         }
 
-       
+
     }
 
     backGround_->Update();
@@ -66,10 +65,8 @@ void AnubisStage::Draw(Camera& camera)
     backGround_->Draw(camera);
     anubisBlockMap_->Draw(camera);
     //なぞ解きをクリアしたらトートが出てくる
+    thoth_->Draw(camera);
 
-    if (thoth_->GetIsActive()) {
-        thoth_->Draw(camera);
-    }
 
     //オブジェクトの描画
     DrawObject(camera);
