@@ -165,6 +165,7 @@ void DirectXCommon::DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap)
     UINT backBufferIndex = swapChainClass.GetSwapChain()->GetCurrentBackBufferIndex();
     
     auto backBufferRTV = rtvDescriptorHeap->GetCPUDescriptorHandle(backBufferIndex);
+    ppm->Execute(spriteLayer, backBufferRTV, &barrier, depthTextureData_.srvIndex, kBlendModeMultiply);
 
     ppm->Execute(modelLayer,backBufferRTV, &barrier, depthTextureData_.srvIndex, kBlendModeMultiply);
 }
