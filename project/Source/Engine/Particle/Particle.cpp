@@ -32,8 +32,8 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("ring", TextureFactory::GRADATION_LINE, Primitive::kRing);
     CreateParticleGroup("medjedParticle", TextureFactory::UV_CHECKER, Primitive::kPlane, true,1.0f, "people.obj");
     CreateParticleGroup("powerCharge", TextureFactory::CIRCLE, Primitive::kPlane, false);
-    CreateParticleGroup("fountain", TextureFactory::WATER_TEXTURE, Primitive::kPlane,false,0.01f);
-    CreateParticleGroup("fountain2", TextureFactory::WATER_TEXTURE, Primitive::kPlane, false,0.01f);
+    CreateParticleGroup("fountain", TextureFactory::WATER_TEXTURE, Primitive::kPlane,false,0.0f);
+    CreateParticleGroup("fountain2", TextureFactory::WATER_TEXTURE, Primitive::kPlane, false,0.0f);
     CreateParticleGroup("shockParticle", TextureFactory::CIRCLE, Primitive::kPlane, false);
 }
 

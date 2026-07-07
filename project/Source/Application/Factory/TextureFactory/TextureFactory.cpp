@@ -10,7 +10,7 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/noise1.png", NOIZE1);
 
     Texture::LoadAndMapHandle("Resource/Textures/numbers.png", NUMBERS);
-    Texture::LoadAndMapHandle("Resource/Textures/ui.png", UI);
+    //Texture::LoadAndMapHandle("Resource/Textures/ui.png", UI);
 
     Texture::LoadAndMapHandle("Resource/Textures/skip.png", SKIP);
     Texture::LoadAndMapHandle("Resource/Textures/Title.png", TITLE);
@@ -64,4 +64,11 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/h.png", GLYPH_H);
     Texture::LoadAndMapHandle("Resource/Textures/ht.png", GLYPH_HT);
     Texture::LoadAndMapHandle("Resource/Textures/n.png", GLYPH_N);
+
+    Texture::LoadAndMapHandle("Resource/Textures/UI/UI_A.png", UI_A);
+    Texture::LoadAndMapHandle("Resource/Textures/UI/UI_L.png", UI_L);
+    Texture::LoadAndMapHandle("Resource/Textures/UI/UI_LB.png", UI_LB);
+    Texture::LoadAndMapHandle("Resource/Textures/UI/UI_R.png", UI_R);
+    Texture::LoadAndMapHandle("Resource/Textures/UI/UI_RB.png", UI_RB);
+    Texture::LoadAndMapHandle("Resource/Textures/UI/UI_X.png", UI_X);
 }

@@ -10,9 +10,9 @@
 #endif
 #include"Log.h"
 
-void RenderTexture::Create(RtvDescriptorHeap* rtvDescriptorHeap)
+void RenderTexture::Create(RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& value)
 {
-    kRenderTargetClearValue_ = { 1.0f,0.0f,0.0f,1.0f };
+    renderTargetClearValue_ = value;
 
     CreateResource(kNormal0, rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
     CreateResource(kNormal1, rtvDescriptorHeap, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, true);
@@ -45,7 +45,7 @@ void RenderTexture::CreateResource(
             Window::GetClientWidth(),
             Window::GetClientHeight(),
             format,
-            kRenderTargetClearValue_
+            renderTargetClearValue_
         );
 
     LogFile::Log("Rendertexture : CreateRTV\n");

@@ -160,6 +160,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     LogFile::Log("Create Tag");
 
     //オブジェクト管理の初期化
+    ObjectManager::GetInstance()->SetRenderTextureForModel(directXCommon_->GetRenderTexture());
     ObjectManager::GetInstance()->Initialize();
     ObjectManager::GetInstance()->SetCommandListAndSrvDescriptorHeap(
         commandList,
@@ -363,10 +364,16 @@ void ButtobiEngine::PreCommandSet() {
 
 void ButtobiEngine::PostCommandSet() {
 
+
     //ポストエフェクト
     directXCommon_->DrawRenderTexture(rtvDescriptorHeap_.get());
-    // シーンの描画
+
+    //directXCommon_->RenderTextureForSpritePreDraw();
+    // スプライトの描画
     SceneManager::DrawSprite();
+    //directXCommon_->RenderTextureForSpritePostDraw();
+    
+    //directXCommon_->DrawRenderTextureForSprite(rtvDescriptorHeap_.get());
 
 #ifdef USE_IMGUI
     //諸々の描画処理が終了下タイミングでImGuiの描画コマンドを積む

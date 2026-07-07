@@ -170,6 +170,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\UI\ButtonSprite\ButtonSprite.cpp" />
     <ClCompile Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.cpp" />
     <ClCompile Include="Source\Application\GameObject\AnubisBlockMap\AnubisBlockMap.cpp" />
     <ClCompile Include="Source\Application\GameObject\BlockMap\BlockMap.cpp" />
@@ -379,6 +380,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Thoth\Thoth.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\UI\ButtonSprite\ButtonSprite.h" />
     <ClInclude Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.h" />
     <ClInclude Include="Source\Application\GameObject\AnubisBlockMap\AnubisBlockMap.h" />
     <ClInclude Include="Source\Application\GameObject\BlockMap\BlockMap.h" />
