@@ -1435,9 +1435,48 @@ void DebugUI::Button(const char* label, std::function<void()> onSwitch)
     }
 #endif
 }
+#include"PostProcessManager/PostProcessManager.h"
 
 void DebugUI::CheckPostEffect()
 {
+
+#ifdef USE_IMGUI
+    auto* postProcessManager = PostProcessManager::GetInstance();
+
+    if (ImGui::TreeNode("PostEffect Model")) {
+
+        auto* modelMaterial = postProcessManager->GetPostEffectMaterial(PostProcessManager::kModel);
+
+        CheckPostEffectMaterial(*modelMaterial->GetMaterialGaussianFilter());
+        CheckPostEffectMaterial(*modelMaterial->GetMaterialGrayScale());
+        CheckPostEffectMaterial(*modelMaterial->GetMaterialForVignette());
+        CheckPostEffectMaterial(*modelMaterial->GetMaterialForBoxFilter());
+        CheckPostEffectMaterial(*modelMaterial->GetMaterialForLuminanceBasedOutline());
+        CheckPostEffectMaterial(*modelMaterial->GetMaterialForDepthBasedOutline());
+        CheckPostEffectMaterial(*modelMaterial->GetMaterialForRadialBlur());
+        CheckPostEffectMaterial(*modelMaterial->GetMaterialForDissolve());
+        CheckPostEffectMaterial(*modelMaterial->GetMaterialThermography());
+        CheckPostEffectMaterial(*modelMaterial->GetmaterialForRandom());
+        ImGui::TreePop();
+    }
+    if (ImGui::TreeNode("PostEffect Sprite")) {
+
+        auto* spritelMaterial = postProcessManager ->GetPostEffectMaterial(PostProcessManager::kSprite);
+
+        CheckPostEffectMaterial(*spritelMaterial->GetMaterialGaussianFilter());
+        CheckPostEffectMaterial(*spritelMaterial->GetMaterialGrayScale());
+        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForVignette());
+        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForBoxFilter());
+        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForLuminanceBasedOutline());
+        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForDepthBasedOutline());
+        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForRadialBlur());
+        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForDissolve());
+        CheckPostEffectMaterial(*spritelMaterial->GetMaterialThermography());
+        CheckPostEffectMaterial(*spritelMaterial->GetmaterialForRandom());
+        ImGui::TreePop();
+    }
+
+#endif
 
 }
 

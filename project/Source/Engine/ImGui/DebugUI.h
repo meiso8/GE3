@@ -40,18 +40,6 @@ struct PointLight;
 struct CharacterState;
 class SrvDescriptorHeap;
 
-//class PostEffectMaterial;
-//struct MaterialForRenderTexture;
-//struct MaterialForVignette;
-//struct MaterialForBoxFilter;
-//struct MaterialForGaussianFilter;
-//struct MaterialForLuminanceBasedOutline;
-//struct MaterialForDepthBasedOutline;
-//struct MaterialForRadialBlur;
-//struct MaterialForDissolve;
-//struct MaterialForRandom;
-//struct MaterialForThermography;
-
 #include "nlohmann/json.hpp"
 class DebugUI
 {
