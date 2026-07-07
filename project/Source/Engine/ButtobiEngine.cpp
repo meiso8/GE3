@@ -160,6 +160,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     LogFile::Log("Create Tag");
 
     //オブジェクト管理の初期化
+    ObjectManager::GetInstance()->SetRenderTextureForModel(directXCommon_->GetRenderTexture());
     ObjectManager::GetInstance()->Initialize();
     ObjectManager::GetInstance()->SetCommandListAndSrvDescriptorHeap(
         commandList,
@@ -362,6 +363,7 @@ void ButtobiEngine::PreCommandSet() {
 }
 
 void ButtobiEngine::PostCommandSet() {
+
 
     //ポストエフェクト
     directXCommon_->DrawRenderTexture(rtvDescriptorHeap_.get());

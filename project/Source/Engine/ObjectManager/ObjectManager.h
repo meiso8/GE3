@@ -7,7 +7,7 @@
 #include"ObjectCommandManager.h"
 #include "nlohmann/json.hpp"
 class SrvDescriptorHeap;
-
+class RenderTexture;
 class ObjectManager
 {
 public:
@@ -21,6 +21,7 @@ public:
     Object3d* FindObjectByID(uint32_t id);
     // オブジェクトチェック
     void ClickObject(Camera& camera);
+    void SetRenderTextureForModel(RenderTexture* renderTexture);
     // シーン切り替え時などの全クリア
     void Clear();
     //初期化
@@ -40,6 +41,8 @@ private:
     ObjectManager() = default;
     ~ObjectManager();
 private:
+    RenderTexture* renderTexture_ = nullptr;
+
     ObjectCommandManager objectCommandManager_;
     std::vector<Object3d*> objects_;
     std::unordered_map<uint32_t, Object3d* > idMap_;

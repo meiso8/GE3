@@ -139,7 +139,7 @@ void ObjectManager::ClickObject(Camera& camera)
 
     if (!isClicked && !ImGui::GetIO().WantCaptureMouse) {
         //ImGuiでどこにもマウスがキャプチャーしてないとき
-        clickedID_ = RenderTexture::GetInstance()->GetClickedObjectID();
+        clickedID_ = renderTexture_->GetClickedObjectID();
     }
 
     if (isSave) {
@@ -149,6 +149,11 @@ void ObjectManager::ClickObject(Camera& camera)
     ImGui::End();
 
 #endif
+}
+
+void ObjectManager::SetRenderTextureForModel(RenderTexture* rendterTexture)
+{
+    renderTexture_ = rendterTexture;
 }
 
 void ObjectManager::Clear() {

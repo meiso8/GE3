@@ -57,8 +57,8 @@ private:
     DebugError debugError = {};
     std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, 2> swapChainResources;
     RenderTargetView rtvClass = {};
-    RenderTexture* renderTexture_ = nullptr;
-
+    std::unique_ptr<RenderTexture> renderTexture_ = nullptr;
+    std::unique_ptr<RenderTexture> renderTextureForSprite_ = nullptr;
 
     Fence fence = {};
 
@@ -69,7 +69,7 @@ private:
     D3D12_RECT scissorRect = {};
     TransitionBarrier barrier = {};
 public:
-
+    RenderTexture* GetRenderTexture() { return renderTexture_.get(); };
     void Finalize();
     ~DirectXCommon();
     
@@ -84,7 +84,11 @@ public:
     void RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap);
     void VeiwPortAndScissorRect();
     void DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap);
+    void DrawRenderTextureForSprite(RtvDescriptorHeap* rtvDescriptorHeap);
     void RenderTexturePostDraw();
+ 
+
+
 
     void SettingIdTextureBarrierPre();
     void SettingIdTextureBarrierPost();
@@ -95,6 +99,10 @@ public:
     void PostDraw();
     /// @brief 次フレームの準備
     void PrepareCommand();
+    
+    void RenderTextureForSpritePreDraw();
+    void RenderTextureForSpritePostDraw();
+
     /// @brief スワップチェインの取得関数
     /// @return スワップチェイン
     SwapChain& GetSwapChain() { return swapChainClass; };

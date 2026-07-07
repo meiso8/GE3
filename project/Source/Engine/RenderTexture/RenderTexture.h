@@ -30,7 +30,7 @@ public:
 
 private:
 
-    Vector4 kRenderTargetClearValue_ = { 1.0f,1.0f,1.0f,1.0f };
+    Vector4 renderTargetClearValue_ = { 1.0f,1.0f,1.0f,1.0f };
 
     std::array< RenderTextureData, kMaxRenderTexutre> renderTextureDatas_;
     RenderTextureData thermographyTextureData_;
@@ -41,11 +41,7 @@ private:
     ID3D12GraphicsCommandList* commandList_ = nullptr;
     SrvDescriptorHeap* srvDescriptorHeap_ = nullptr;
 public:
-    static RenderTexture* GetInstance() {
-        static RenderTexture instance;
-        return &instance;
-    };
-
+    void SetRenderTargetClearValue(const Vector4& value) { renderTargetClearValue_ = value; }
     void Create(RtvDescriptorHeap* rtvDescriptorHeap);
   
     void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
@@ -57,14 +53,17 @@ public:
     uint32_t GetClickedObjectID();
 
     const Vector4& GetColor() {
-        return kRenderTargetClearValue_;
+        return renderTargetClearValue_;
     }
+
     RenderTextureData& GetRenderTextureData(const RenderTextureType index) {
         return renderTextureDatas_[index];
     }
+
     std::array< RenderTextureData, kMaxRenderTexutre>& GetRenderTextureDatas() { return renderTextureDatas_; };
 
     void Clear();
+
 private:
     void CreateResource(
         const uint32_t index, 
