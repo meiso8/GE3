@@ -38,7 +38,7 @@ struct QuaternionTransform;
 struct PointLight;
 
 struct CharacterState;
-class SrvDescriptorHeap;
+class CbvSrvUavDescriptorHeap;
 
 //class PostEffectMaterial;
 //struct MaterialForRenderTexture;
@@ -56,7 +56,7 @@ class SrvDescriptorHeap;
 class DebugUI
 {
 public:
-    static void ShowMainViewPort(SrvDescriptorHeap* srvDescriptorHeap, const uint32_t srvIndex);
+    static void ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const uint32_t srvIndex);
     static void CheckCaracterState(CharacterState& characterState, const char* label);
     static void CheckFPS();
     static void CheckSound();
@@ -64,9 +64,9 @@ public:
     static nlohmann::json& FindJsonFile(std::string& tagName, bool useFilter = false, const char* containFileName = "unKnown");
     static void ShowJsonFileSaveMessage(const std::string& name);
     static void CreateJsonFile(const char* containFileName = "JsonFileName");
-    static void CheckSRVIndex(SrvDescriptorHeap* srvDescriptorHeap);
-    static void CheckSRVTexture(const int srvIndex, SrvDescriptorHeap* srvDescriptorHeap);
-    static void CheckTextures(SrvDescriptorHeap* srvDescriptorHeap);
+    static void CheckSRVIndex(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+    static void CheckSRVTexture(const int srvIndex, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+    static void CheckTextures(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     static void CheckStageManager();
     
     /// @brief 入力

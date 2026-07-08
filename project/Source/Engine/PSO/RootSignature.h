@@ -13,7 +13,7 @@ public:
         NORMAL,
         PARTICLE,
         SPRITE,
-        SKINNING,
+  /*      SKINNING,*/
         FONT,
         SKYBOX,
         OFFSCREEN,
@@ -32,6 +32,8 @@ public:
         BEAM,
         //ライン用
         LINE,
+        //ComputeShader用Skinning
+        CS_SKINNING,
         TYPES,
     };
 

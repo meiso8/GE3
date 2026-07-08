@@ -31,7 +31,7 @@ public:
 public:
     static void SetCommandListAndSrvDescriptorHeap(
         ID3D12GraphicsCommandList* commandList,
-        SrvDescriptorHeap* srvDescriptorHeap
+        CbvSrvUavDescriptorHeap* srvDescriptorHeap
     );
 public:
     void Create(const TextureFactory::Handle& textureHandle, const Vector2& position, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
@@ -91,7 +91,7 @@ private:
     //コマンドリストの借り物
     static ID3D12GraphicsCommandList* commandList_;
     /// @brief　SRV管理の借り物
-    static  SrvDescriptorHeap* srvDescriptorHeap_;
+    static  CbvSrvUavDescriptorHeap* srvDescriptorHeap_;
 
     uint32_t textureHandle_ = 0;
     Vector2 anchorPoint_ = { 0.0f,0.0f };

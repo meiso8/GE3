@@ -9,7 +9,7 @@
 
 ID3D12GraphicsCommandList* Font::commandList_  = nullptr;
 /// @brief　SRV管理の借り物
-SrvDescriptorHeap* Font::srvDescriptorHeap_ = nullptr;
+CbvSrvUavDescriptorHeap* Font::srvDescriptorHeap_ = nullptr;
 void Font::Create(
     const TextureFactory::Handle& textureHandle, 
     const Vector2& position, 
@@ -81,7 +81,7 @@ void Font::SetTexture(const TextureFactory::Handle& textureHandle)
     textureHandle_ = Texture::GetSRVHandle(textureHandle);
 }
 
-void Font::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
+void Font::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
     assert(commandList_);

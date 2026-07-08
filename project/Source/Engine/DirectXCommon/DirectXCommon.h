@@ -27,7 +27,7 @@
 
 #include"Vector4.h"
 
-class SrvDescriptorHeap;
+class CbvSrvUavDescriptorHeap;
 class RtvDescriptorHeap;
 class DsvDescriptorHeap;
 
@@ -78,7 +78,7 @@ public:
     void PreInitialize(Window& window);
     void PostInitialize();
    
-    void CreateDepthStencilResourceSRV(SrvDescriptorHeap* srvDescriptorHeap);
+    void CreateDepthStencilResourceSRV(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     /// @brief 描画前処理
 /// @param color 画面の色を指定する
     void RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap);
@@ -112,15 +112,20 @@ public:
         return rtvClass ;
     }
     
-    void InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap, SrvDescriptorHeap* srvDescriptorHeap);
+    void InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     void InitializeRenderTargetView(RtvDescriptorHeap* rtvDescriptorHeap);
     void InitializeDepthStencilView(DsvDescriptorHeap* dsvDescriptorHeap);
-    void UpdateGameScreen(SrvDescriptorHeap* srvDescriptorHeap);
-    void UpdateRenderTexture(SrvDescriptorHeap* srvDescriptorHeap);
+    void UpdateGameScreen(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+    void UpdateRenderTexture(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     /// @brief BufferResourceの作成関数
     /// @param sizeInBytes 
     /// @return BufferResource
     static Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(
+        size_t sizeInBytes);
+    /// @brief BufferResourceの作成関数
+/// @param sizeInBytes 
+/// @return BufferResource
+    static Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResourceForUAV(
         size_t sizeInBytes);
     /// @brief ReadbackBufferResource作成関数
     /// @param sizeInBytes 

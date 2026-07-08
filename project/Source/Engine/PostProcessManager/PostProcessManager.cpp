@@ -8,10 +8,10 @@
 #include"Camera.h"
 
  ID3D12GraphicsCommandList* PostProcessManager::commandList_ = nullptr;
- SrvDescriptorHeap* PostProcessManager::srvDescriptorHeap_ = nullptr;
+ CbvSrvUavDescriptorHeap* PostProcessManager::srvDescriptorHeap_ = nullptr;
 
  void PostProcessManager::Create(ID3D12GraphicsCommandList* commandList,
-     SrvDescriptorHeap* srvDescriptorHeap)
+     CbvSrvUavDescriptorHeap* srvDescriptorHeap)
  {
      commandList_ = commandList;
      assert(commandList_);

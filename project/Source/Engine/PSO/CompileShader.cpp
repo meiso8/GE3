@@ -39,7 +39,7 @@ void DxcCompiler::ShaderSetting() {
     vertexShaderBlobs_[VS_Sprite] = CompileShader(L"Resource/shader/VertexShader/Sprite.VS.hlsl", L"vs_6_0");
     pixelShaderBlobs_[PS_Sprite] = CompileShader(L"Resource/shader/PixelShader/Sprite.PS.hlsl", L"ps_6_0");
     //SkinninigはVSのみ　PixelShaderはNormalと同じにする
-    vertexShaderBlobs_[VS_Skinning] = CompileShader(L"Resource/shader/VertexShader/SkinningObject3d.VS.hlsl", L"vs_6_0");
+    //vertexShaderBlobs_[VS_Skinning] = CompileShader(L"Resource/shader/VertexShader/SkinningObject3d.VS.hlsl", L"vs_6_0");
     //FontのVSはSpriteと同じにする
     pixelShaderBlobs_[PS_Font] = CompileShader(L"Resource/shader/PixelShader/Font.PS.hlsl", L"ps_6_0");
     //skybox

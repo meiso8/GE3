@@ -29,7 +29,7 @@ public:
     PostProcessManager(const PostProcessManager&) = delete;
     PostProcessManager& operator=(const PostProcessManager&) = delete;
 
-    void Create(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
+    void Create(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     void Update();
 
     void SetPostEffectMaterialCamera(Camera* camera, const Layer& layer);
@@ -72,6 +72,6 @@ private:
 
     std::array<RenderLayer, Layer::kMaxLayer> renderLayer_;
     static ID3D12GraphicsCommandList* commandList_;
-    static SrvDescriptorHeap* srvDescriptorHeap_;
+    static CbvSrvUavDescriptorHeap* srvDescriptorHeap_;
 
 };

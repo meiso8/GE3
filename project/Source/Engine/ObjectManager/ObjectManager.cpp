@@ -169,7 +169,7 @@ void ObjectManager::Initialize()
     objectCommandManager_.Initialize();
 }
 
-void ObjectManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
+void ObjectManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     Object3d::SetCommandListAndSrvDescriptorHeap(commandList, srvDescriptorHeap);
     LogFile::Log("Objects Set CommandList And Srv DescriptorHeap\n");

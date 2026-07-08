@@ -36,7 +36,7 @@ void PointLightManager::Finalize()
     LogFile::Log("Finalize PointLightManager");
 }
 
-PointLightManager::PointLightManager(SrvDescriptorHeap* srvDescriptorHeap)
+PointLightManager::PointLightManager(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     pointLightResource_ =
         DirectXCommon::CreateBufferResource(sizeof(PointLight) * kMaxData_);

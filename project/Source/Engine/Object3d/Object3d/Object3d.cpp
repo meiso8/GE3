@@ -10,7 +10,7 @@
 #include"Log.h"
 
 ID3D12GraphicsCommandList* Object3d::commandList_ = nullptr;
-SrvDescriptorHeap* Object3d::srvDescriptorHeap_ = nullptr;
+CbvSrvUavDescriptorHeap* Object3d::cbvSrvUavDescriptorHeap_ = nullptr;
 
 void Object3d::CreateUV()
 {
@@ -64,13 +64,13 @@ Object3d::~Object3d()
     }
 }
 
-void Object3d::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
+void Object3d::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
     assert(commandList_);
 
-    srvDescriptorHeap_ = srvDescriptorHeap;
-    assert(srvDescriptorHeap_);
+    cbvSrvUavDescriptorHeap_ = srvDescriptorHeap;
+    assert(cbvSrvUavDescriptorHeap_);
 }
 
 void Object3d::InitBalloonData()
@@ -115,7 +115,7 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         //wvp用のCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
         //SrvDescriptorHeapクラスでテクスチャを設定する
-        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE], commandList_);
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE], commandList_);
         //cameraのCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(3, camera.GetResource()->GetGPUVirtualAddress());
         //ID
@@ -127,11 +127,11 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         //timeのSRVの場所を設定
         commandList_->SetGraphicsRootShaderResourceView(7, waveResource_->GetGPUVirtualAddress());
         //ライトのCBufferの場所を設定
-        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(8, PointLightManager::GetSrvIndex(), commandList_);
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(8, PointLightManager::GetSrvIndex(), commandList_);
         //SpotLightのDescriptorTableの設定をする
-        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(9, SpotLightManager::GetSrvIndex(), commandList_);
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(9, SpotLightManager::GetSrvIndex(), commandList_);
 
-        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture), commandList_);
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture), commandList_);
 
         MeshDraw();
 
@@ -188,7 +188,7 @@ void Object3d::DrawModel(ModelData* modelData)
         }
 
         //拡散反射テクスチャ
-        srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, srvIndex, commandList_);
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(2, srvIndex, commandList_);
         // 3. インデックスの開始位置と個数を指定して描画コールを呼ぶ
         commandList_->DrawIndexedInstanced(
             section.indexCount,  // 描画するインデックス数

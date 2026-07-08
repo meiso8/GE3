@@ -381,14 +381,14 @@ void DebugUI::CreateJsonFile(const char* containFileName)
 #endif
 }
 
-void DebugUI::CheckSRVIndex(SrvDescriptorHeap* srvDescriptorHeap) {
+void DebugUI::CheckSRVIndex(CbvSrvUavDescriptorHeap* srvDescriptorHeap) {
 #ifdef USE_IMGUI
     static int index = 0;
 
     ImGui::Begin("SRVTexture");
     // 例：表示したいSRVのインデックス番号
     // （テクスチャを読み込んだ時のインデックスや、RenderTextureのsrvIndexなど）
-    ImGui::SliderInt("srvIndex", &index, 0, SrvDescriptorHeap::kMaxSRVCount_ - 1);
+    ImGui::SliderInt("srvIndex", &index, 0, CbvSrvUavDescriptorHeap::kMaxCount_ - 1);
 
     // SrvManager から GPUハンドルを取得
     D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = srvDescriptorHeap->GetGPUDescriptorHandle(index);
@@ -404,11 +404,11 @@ void DebugUI::CheckSRVIndex(SrvDescriptorHeap* srvDescriptorHeap) {
 #endif
 }
 
-void DebugUI::CheckSRVTexture(const int srvIndex, SrvDescriptorHeap* srvDescriptorHeap)
+void DebugUI::CheckSRVTexture(const int srvIndex, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
 #ifdef USE_IMGUI
 
-    if (srvIndex >= (int)SrvDescriptorHeap::kMaxSRVCount_) {
+    if (srvIndex >= (int)CbvSrvUavDescriptorHeap::kMaxCount_) {
         return;
     };
 
@@ -424,7 +424,7 @@ void DebugUI::CheckSRVTexture(const int srvIndex, SrvDescriptorHeap* srvDescript
 #endif
 }
 
-void DebugUI::CheckTextures(SrvDescriptorHeap* srvDescriptorHeap)
+void DebugUI::CheckTextures(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
 
 #ifdef USE_IMGUI
@@ -458,7 +458,7 @@ void DebugUI::CheckTextures(SrvDescriptorHeap* srvDescriptorHeap)
             uint32_t currentSrvIndex = srvIndexes[i];
 
             // ★ 0 などの未割り当て、あるいは無効な定数(0xFFFFFFFF等)の場合は描画しないガードを入れる
-            if (currentSrvIndex != 0 && currentSrvIndex < SrvDescriptorHeap::kMaxSRVCount_ && !Texture::GetMetaData(currentSrvIndex).IsCubemap()) {
+            if (currentSrvIndex != 0 && currentSrvIndex < CbvSrvUavDescriptorHeap::kMaxCount_ && !Texture::GetMetaData(currentSrvIndex).IsCubemap()) {
 
                 // 安全であることを確認してからハンドルを取得
                 D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = srvDescriptorHeap->GetGPUDescriptorHandle(currentSrvIndex);
@@ -1238,7 +1238,7 @@ void DebugUI::CheckBlendMode(BlendMode& blendMode) {
 #endif
 };
 
-void DebugUI::ShowMainViewPort(SrvDescriptorHeap* srvDescriptorHeap, const uint32_t srvIndex)
+void DebugUI::ShowMainViewPort(CbvSrvUavDescriptorHeap* srvDescriptorHeap, const uint32_t srvIndex)
 {
 #ifdef USE_IMGUI
     // 1. 画面の中心座標を計算

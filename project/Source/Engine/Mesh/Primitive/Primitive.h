@@ -61,8 +61,8 @@ protected:
     UINT vertexCount_ = 0;
     Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_ = nullptr;
     std::string meshName_ = "unKnown";
-private:
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+private:
     D3D12_INDEX_BUFFER_VIEW  indexBufferView_{};
     D3D_PRIMITIVE_TOPOLOGY topology_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
     Microsoft::WRL::ComPtr <ID3D12Resource> indexResource_ = nullptr;

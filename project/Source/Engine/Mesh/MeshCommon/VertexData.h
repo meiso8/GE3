@@ -3,7 +3,7 @@
 
 struct VertexData {
     float4 position;
-    float32_t2 texcoord;
+    float2 texcoord;
     float3 normal;
 };
 

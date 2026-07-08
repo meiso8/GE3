@@ -5,7 +5,7 @@
 #include<stdint.h>
 #include<array>
 class RtvDescriptorHeap;
-class SrvDescriptorHeap;
+class CbvSrvUavDescriptorHeap;
 class CommandList;
 
 class RenderTexture
@@ -39,11 +39,11 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> idReadbackResource_ = nullptr;
 
     ID3D12GraphicsCommandList* commandList_ = nullptr;
-    SrvDescriptorHeap* srvDescriptorHeap_ = nullptr;
+    CbvSrvUavDescriptorHeap* srvDescriptorHeap_ = nullptr;
 public:
     void Create(RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& value);
   
-    void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
+    void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
 
     // 1. 描画コマンドの最後にコピー命令を積む関数 (PostDrawの直前に呼ぶ)
     void CopyClickPixelCommand(int mouseX, int mouseY);

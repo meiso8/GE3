@@ -42,7 +42,7 @@ Puzzle::Puzzle(const int horizontal, const int vertical)
     Vector2 size = sprite_->GetSize();
     size_ = { size.x / horizontal_,size.y / vertical_ };
 
-    centerPos_ -= size_ * horizontal_ * 0.375f;
+    centerPos_ -= size_ * static_cast<float>(horizontal_) * 0.375f;
 
     sprites_.resize(maxArrayNum_);
     panel_.resize(maxArrayNum_);

@@ -65,7 +65,7 @@ void DirectXCommon::PostInitialize()
     CreateDXCCompiler();
 
 }
-void DirectXCommon::CreateDepthStencilResourceSRV(SrvDescriptorHeap* srvDescriptorHeap)
+void DirectXCommon::CreateDepthStencilResourceSRV(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC depthTextureSrvDesc{};
     depthTextureSrvDesc.Format = DXGI_FORMAT_R32_FLOAT;
@@ -434,7 +434,7 @@ void DirectXCommon::InitializeDepthStencilView(DsvDescriptorHeap* dsvDescriptorH
     LogFile::Log("Initialize DepthStencilView\n");
 }
 
-void DirectXCommon::UpdateGameScreen(SrvDescriptorHeap* srvDescriptorHeap)
+void DirectXCommon::UpdateGameScreen(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {    //一旦ここでゲーム画面の描画
     DebugUI::ShowMainViewPort(srvDescriptorHeap, renderTexture_->GetRenderTextureData(RenderTexture::kNormal1).srvIndex);
 
@@ -472,7 +472,7 @@ void DirectXCommon::CreateDXCCompiler()
 }
 
 
-void DirectXCommon::InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap, SrvDescriptorHeap* srvDescriptorHeap)
+void DirectXCommon::InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     renderTexture_ = std::make_unique<RenderTexture>();
     renderTexture_->SetCommandListAndSrvDescriptorHeap(commandList_->Get(), srvDescriptorHeap);
@@ -485,7 +485,7 @@ void DirectXCommon::InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap
 
 }
 
-void DirectXCommon::UpdateRenderTexture(SrvDescriptorHeap* srvDescriptorHeap)
+void DirectXCommon::UpdateRenderTexture(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
 
 #ifdef USE_IMGUI
@@ -505,6 +505,53 @@ void DirectXCommon::UpdateRenderTexture(SrvDescriptorHeap* srvDescriptorHeap)
 }
 
 // =============================================================================================
+
+
+
+ComPtr<ID3D12Resource> DirectXCommon::CreateBufferResourceForUAV(
+    size_t sizeInBytes) {
+
+    Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
+
+    //ヒープの設定
+    D3D12_HEAP_PROPERTIES heapProperties{};
+    //GPUに近く置くためHeapをDefaultで作成する
+    heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+   
+    //頂点リソースの設定
+    D3D12_RESOURCE_DESC resourceDesc{};
+
+
+    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    resourceDesc.Width = sizeInBytes;//リソースサイズ。
+    //バッファの場合はこれらは1にする決まり
+    resourceDesc.Height = 1;
+    resourceDesc.DepthOrArraySize = 1;
+    resourceDesc.MipLevels = 1;
+    resourceDesc.SampleDesc.Count = 1;
+    //バッファの場合はこれにする決まり
+    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    //UAVの設定
+    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+   
+
+    if (SUCCEEDED(device->CreateCommittedResource(
+        &heapProperties,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc, 
+        D3D12_RESOURCE_STATE_COMMON,
+        nullptr,
+        IID_PPV_ARGS(&resource)))) {
+        return resource;
+    }
+
+    resource->SetName(L"DirectXCommon_UAV_BufferResource");
+
+    return resource;
+
+
+};
+
 
 ComPtr<ID3D12Resource> DirectXCommon::CreateBufferResource(
     size_t sizeInBytes) {
@@ -535,7 +582,7 @@ ComPtr<ID3D12Resource> DirectXCommon::CreateBufferResource(
 
     resource->SetName(L"DirectXCommon_BufferResource");
 
-    return nullptr;
+    return resource;
 
 
 };
@@ -568,7 +615,7 @@ ComPtr<ID3D12Resource> DirectXCommon::CreateReadbackBufferResource(size_t sizeIn
         return resource;
     }
     resource->SetName(L"DirectXCommon_ReadbackBufferResource");
-    return nullptr;
+    return resource;
 }
 
 ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible)

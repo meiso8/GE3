@@ -25,7 +25,7 @@ namespace ImGuiLoadFile {
 
 #ifdef USE_IMGUI
 void ImGuiClass::Initialize(Window& window,
-    SrvDescriptorHeap* srvDescriptorHeap,
+    CbvSrvUavDescriptorHeap* srvDescriptorHeap,
     const Microsoft::WRL::ComPtr<ID3D12Device>& device,
     SwapChain& swapChain,
     RenderTargetView& rtv) {
@@ -208,7 +208,7 @@ void HandleDroppedFile(const std::filesystem::path& fullPath) {
 
 }
 
-void ImGuiClass::DrawModelLoaderWindow(SrvDescriptorHeap* srvDescriptorHeap)
+void ImGuiClass::DrawModelLoaderWindow(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
  
     ImGui::Begin("Assets");

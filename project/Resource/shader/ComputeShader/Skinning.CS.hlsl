@@ -21,15 +21,13 @@ struct SkinningInformation
 //SkinningObject3d.VS.hlsl Same
 StructuredBuffer<Well> gMatrixPalette : register(t6);
 //VertexBufferView stream0 inputVertex
-StructuredBuffer<Vertex> gInputVertices : register(t7);
+StructuredBuffer<Vertex> gInputVertices : register(t9);
 //VertexBufferView stream1 inputInfluences
-StructuredBuffer<VertexInfluence> gInfluences : register(t8);
-//SkinningAfterCulVertex
+StructuredBuffer<VertexInfluence> gInfluences : register(t10);
+//SkinningAfterCulVertex UAV
 RWStructuredBuffer<Vertex> gOutputVertices : register(u0);
 //SkiningInformation
 ConstantBuffer<SkinningInformation> gSkinningInformation : register(b0);
-
-
 
 [numthreads(1024, 1, 1)]
 void main(uint3 DTid : SV_DispatchThreadID)
@@ -57,6 +55,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
 
         skinned.texcoord = input.texcoord;
         
+        //SkinningData
         gOutputVertices[vertexIndex] = skinned;
     }
     

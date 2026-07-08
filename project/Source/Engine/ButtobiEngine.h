@@ -45,7 +45,7 @@ private:
     /// @brief RTV管理
     std::unique_ptr<RtvDescriptorHeap> rtvDescriptorHeap_ = nullptr;
     /// @brief SRV管理
-    std::unique_ptr<SrvDescriptorHeap> srvDescriptorHeap_ = nullptr;
+    std::unique_ptr<CbvSrvUavDescriptorHeap> srvDescriptorHeap_ = nullptr;
     /// @brief DSV管理
     std::unique_ptr<DsvDescriptorHeap> dsvDescriptorHeap_ = nullptr;
 

@@ -15,7 +15,7 @@ void SpotLightManager::Finalize()
     LogFile::Log("Finalize  SpotLightManager");
 }
 
-SpotLightManager::SpotLightManager(SrvDescriptorHeap *srvDescriptorHeap)
+SpotLightManager::SpotLightManager(CbvSrvUavDescriptorHeap *srvDescriptorHeap)
 
 {    //スポットライトのResourceを作成する
     spotLightResource_ =
