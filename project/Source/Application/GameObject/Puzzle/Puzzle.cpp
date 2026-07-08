@@ -48,7 +48,7 @@ Puzzle::Puzzle(const int horizontal, const int vertical)
     panel_.resize(maxArrayNum_);
 
     rep(i, maxArrayNum_) sprites_[i] = make_unique<Sprite>(),
-        sprites_[i]->Create(TextureFactory::PUZZLE, { 0.0f,0.0f });
+        sprites_[i]->Create(TextureFactory::PUZZLE1, { 0.0f,0.0f });
 
     for (int i = 0; i < maxArrayNum_; ++i) {
         int col = i % horizontal_; // 横方向のインデックス（0〜3）

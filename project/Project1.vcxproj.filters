@@ -577,6 +577,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.cpp">
+    <ClCompile Include="Source\Application\Stage\MeltStage\MeltStage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1161,6 +1162,7 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h">
+    <ClInclude Include="Source\Application\Stage\MeltStage\MeltStage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

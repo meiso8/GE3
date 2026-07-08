@@ -131,7 +131,7 @@ void Player::Init(const Vector3& pos)
 
     PostProcessManager::GetInstance()->
         GetPostEffectMaterial(PostProcessManager::kModel)->
-        GetMaterialDissolve()
+        GetMaterialForDissolve()
         ->maskVal = 1.0f - thermography_;
 
     Json file = JsonFile::GetJsonFiles("config");
@@ -402,7 +402,7 @@ void Player::Thermography()
 
     PostProcessManager::GetInstance()->
         GetPostEffectMaterial(PostProcessManager::kModel)->
-        GetMaterialDissolve()
+        GetMaterialForDissolve()
         ->maskVal = 1.0f - thermography_;
 
     if (InputBind::IsClickR()) {

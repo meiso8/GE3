@@ -11,7 +11,8 @@ bool SlidePuzzleSystem::isEnd_ = false;
 std::unique_ptr<Puzzle>SlidePuzzleSystem::puzzle_ = nullptr;
 SlidePuzzleSystem::SlidePuzzleSystem()
 {
-    puzzle_ = std::make_unique<Puzzle>();
+    puzzle_ = std::make_unique<Puzzle>(3,3);
+    puzzle_->SetTexture(TextureFactory::PUZZLE1);
     puzzleObj_ = std::make_unique<PuzzleObj>();
 }
 

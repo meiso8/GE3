@@ -13,7 +13,7 @@ public:
 
         NUMBERS,
         
-        UI,
+        PUZZLE1,
 
         SKIP,
         TITLE,

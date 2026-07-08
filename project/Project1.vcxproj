@@ -171,6 +171,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.cpp" />
+    <ClCompile Include="Source\Application\Stage\MeltStage\MeltStage.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\ButtonSprite\ButtonSprite.cpp" />
     <ClCompile Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.cpp" />
     <ClCompile Include="Source\Application\GameObject\AnubisBlockMap\AnubisBlockMap.cpp" />
@@ -382,6 +383,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
+    <ClInclude Include="Source\Application\Stage\MeltStage\MeltStage.h" />
     <ClInclude Include="Source\Application\GameObject\UI\ButtonSprite\ButtonSprite.h" />
     <ClInclude Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.h" />
     <ClInclude Include="Source\Application\GameObject\AnubisBlockMap\AnubisBlockMap.h" />

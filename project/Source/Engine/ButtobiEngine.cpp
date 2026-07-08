@@ -282,7 +282,7 @@ void ButtobiEngine::Debug()
     DebugUI::CheckLights();
     DebugUI::CheckJsonFile();
     DebugUI::CheckParticle(particleManager_.get());
-
+    DebugUI::CheckPostEffect();
     ImGui::End();
 
     //Loaderをここで
