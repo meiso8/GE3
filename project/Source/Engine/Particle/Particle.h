@@ -111,7 +111,7 @@ private:
 
     RootSignature* rootSignature_ = nullptr;
     ID3D12GraphicsCommandList* commandList_ = nullptr;
-    SrvDescriptorHeap* srvDescriptorHeap_ = nullptr;
+    CbvSrvUavDescriptorHeap* srvDescriptorHeap_ = nullptr;
 
     Camera* camera_ = nullptr;
 
@@ -144,7 +144,7 @@ public:
 
     void CreateAll();
     void Create( RootSignature* rootSignature);
-    void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
+    void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     void CreateParticleGroup(const std::string name, const TextureFactory::Handle& textureHandle,const Primitive::MeshType& topoligyType, const bool& useModel = false, const float temperature = 1.0f, const std::string& modelFileName = "Box.obj");
 
     void Update(Camera& camera);

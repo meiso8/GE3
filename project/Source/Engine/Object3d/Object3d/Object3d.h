@@ -12,7 +12,7 @@
 #include<memory>
 
 class Model;
-class SrvDescriptorHeap;
+class CbvSrvUavDescriptorHeap;
 
 class Object3d
 {
@@ -49,7 +49,7 @@ protected:
 
     //コマンドリストの借り物
     static ID3D12GraphicsCommandList* commandList_;
-    static SrvDescriptorHeap* srvDescriptorHeap_;
+    static CbvSrvUavDescriptorHeap* cbvSrvUavDescriptorHeap_;
     // ==============位置情報==================
     WorldTransform worldTransform_;
     Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
@@ -95,7 +95,7 @@ public:
     ///  @param srvDescriptorHeap srvDescriptorHeap
     static void SetCommandListAndSrvDescriptorHeap(
         ID3D12GraphicsCommandList* commandList,
-        SrvDescriptorHeap* srvDescriptorHeap
+        CbvSrvUavDescriptorHeap* srvDescriptorHeap
     );
 
     // ==============位置情報==================

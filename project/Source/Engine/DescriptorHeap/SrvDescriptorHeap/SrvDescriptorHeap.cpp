@@ -2,18 +2,18 @@
 #include"DirectXCommon.h"
 #include"Log.h"
 
-SrvDescriptorHeap::SrvDescriptorHeap()
+CbvSrvUavDescriptorHeap::CbvSrvUavDescriptorHeap()
 {
-    CreateDescriptorHeapAndSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, kMaxSRVCount_);
+    CreateDescriptorHeapAndSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, kMaxCount_);
 }
 
-void SrvDescriptorHeap::PreDraw(ID3D12GraphicsCommandList* commandList)
+void CbvSrvUavDescriptorHeap::PreDraw(ID3D12GraphicsCommandList* commandList)
 {    //描画用のDescriptorHeapの設定
     ID3D12DescriptorHeap* descriptorHeaps[] = { descriptorHeap_.Get() };
     commandList->SetDescriptorHeaps(1, descriptorHeaps);
 }
 
-void SrvDescriptorHeap::CreateSRVforTexture(uint32_t srvIndex, ID3D12Resource* pResource, DirectX::TexMetadata& metadata)
+void CbvSrvUavDescriptorHeap::CreateSRVforTexture(uint32_t index, ID3D12Resource* pResource, DirectX::TexMetadata& metadata)
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 
@@ -33,10 +33,12 @@ void SrvDescriptorHeap::CreateSRVforTexture(uint32_t srvIndex, ID3D12Resource* p
     }
 
     //SRVの生成
-    DirectXCommon::GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
+    DirectXCommon::GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(index));
 }
 
-void SrvDescriptorHeap::CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride)
+
+
+void CbvSrvUavDescriptorHeap::CreateSRVforStructuredBuffer(uint32_t index, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride)
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
     srvDesc.Format = DXGI_FORMAT_UNKNOWN;
@@ -47,10 +49,29 @@ void SrvDescriptorHeap::CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Re
     srvDesc.Buffer.NumElements = numElements;
     srvDesc.Buffer.StructureByteStride = structureByteStride;
 
-    DirectXCommon::GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
+    DirectXCommon::GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(index));
 }
 
-void SrvDescriptorHeap::SetGraphicsRootDescriptorTable(UINT RootParameterIndex, uint32_t srvIndex, ID3D12GraphicsCommandList* commandList)
+void CbvSrvUavDescriptorHeap::CreateUAV(uint32_t index, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride)
 {
-    commandList->SetGraphicsRootDescriptorTable(RootParameterIndex, GetGPUDescriptorHandle(srvIndex));
+    D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc{};
+    uavDesc.Format = DXGI_FORMAT_UNKNOWN;
+    uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+    uavDesc.Buffer.FirstElement = 0;
+    uavDesc.Buffer.NumElements = numElements;//頂点数
+    uavDesc.Buffer.CounterOffsetInBytes = 0;
+    uavDesc.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
+    uavDesc.Buffer.StructureByteStride = structureByteStride;
+    //UAVの作成
+    DirectXCommon::GetDevice()->CreateUnorderedAccessView(pResource, nullptr, &uavDesc, GetCPUDescriptorHandle(index));
+
 }
+void CbvSrvUavDescriptorHeap::SetGraphicsRootDescriptorTable(UINT RootParameterIndex, uint32_t index, ID3D12GraphicsCommandList* commandList)
+{
+    commandList->SetGraphicsRootDescriptorTable(RootParameterIndex, GetGPUDescriptorHandle(index));
+}
+void CbvSrvUavDescriptorHeap::SetComputeRootDescriptorTable(UINT RootParameterIndex, uint32_t index, ID3D12GraphicsCommandList* commandList)
+{
+    commandList->SetComputeRootDescriptorTable(RootParameterIndex, GetGPUDescriptorHandle(index));
+}
+

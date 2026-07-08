@@ -8,7 +8,7 @@
 #include"MakeMatrix.h"
 
 
-SrvDescriptorHeap* Skin::srvDescriptorHeap_ = nullptr;
+CbvSrvUavDescriptorHeap* Skin::srvDescriptorHeap_ = nullptr;
 
 SkinCluster Skin::CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData)
 {
@@ -36,10 +36,9 @@ SkinCluster Skin::CreateSkinCluster(const Skeleton& skeleton, const ModelData& m
     std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.vertices.size());//0埋め。wightを0にしておく
     skinCluster.mappedInfluence = { mappedInfluence,modelData.vertices.size() };
 
-    //influence用のVBVを作成
-    skinCluster.influenceBufferView.BufferLocation = skinCluster.influenceResource->GetGPUVirtualAddress();
-    skinCluster.influenceBufferView.SizeInBytes = UINT(sizeof(VertexInfluence) * modelData.vertices.size());
-    skinCluster.influenceBufferView.StrideInBytes = sizeof(VertexInfluence);
+    //influence用のsrvを作成
+    skinCluster.influenceSrvIndex = srvDescriptorHeap_->Allocate();
+    srvDescriptorHeap_->CreateSRVforStructuredBuffer(skinCluster.influenceSrvIndex, skinCluster.influenceResource.Get(), UINT(modelData.vertices.size()), sizeof(VertexInfluence));
 
     //inverseBindMatrixを格納する場所を作成して、単位行列で埋める
     skinCluster.inverseBindPoseMatrices.resize(skeleton.joints.size());
@@ -87,7 +86,7 @@ void Skin::UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton)
     }
 }
 
-void Skin::SetSrvDescriptorHeap(SrvDescriptorHeap* srvDescriptorHeap)
+void Skin::SetSrvDescriptorHeap(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     srvDescriptorHeap_ = srvDescriptorHeap;
     assert(srvDescriptorHeap);

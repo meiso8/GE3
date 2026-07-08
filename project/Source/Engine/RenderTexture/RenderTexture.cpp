@@ -25,7 +25,7 @@ void RenderTexture::Create(RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& 
     idReadbackResource_->SetName(L"RenderTexture_Id_ReadBackResource");
 }
 
-void RenderTexture::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
+void RenderTexture::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
     assert(commandList_);

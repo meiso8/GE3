@@ -4,13 +4,13 @@
 #include"Lights/Light.h"
 #include<stdint.h>
 class CommandList;
-class SrvDescriptorHeap;
+class CbvSrvUavDescriptorHeap;
 class SpotLightManager
 {
 public:
      void Finalize();
      SpotLightManager() = default;
-    SpotLightManager(SrvDescriptorHeap* srvDescriptorHeap);
+    SpotLightManager(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     static void InitData(const uint32_t index);
     static void InitDatas();
     static SpotLight& GetData(const uint32_t& index) { return spotLightData_[index]; }

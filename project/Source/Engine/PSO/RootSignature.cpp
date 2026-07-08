@@ -52,12 +52,7 @@ void RootSignature::Create() {
     descriptorRangeForSpotLight[0].NumDescriptors = 1;
     descriptorRangeForSpotLight[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     descriptorRangeForSpotLight[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-    //MatrixPalette用
-    D3D12_DESCRIPTOR_RANGE descriptorRangeForMatrixPalette[1] = {};
-    descriptorRangeForMatrixPalette[0].BaseShaderRegister = 6;// StructuredBuffer<Well> gMatrixPalette : register(t6);
-    descriptorRangeForMatrixPalette[0].NumDescriptors = 1;
-    descriptorRangeForMatrixPalette[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-    descriptorRangeForMatrixPalette[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+  
     //DescriptorRange SkyBox
     D3D12_DESCRIPTOR_RANGE descriptorRangeForSkyBox[1] = {};
     descriptorRangeForSkyBox[0].BaseShaderRegister = 7;
@@ -70,6 +65,37 @@ void RootSignature::Create() {
     descriptorRangeForTemperature[0].NumDescriptors = 1;//1つ
     descriptorRangeForTemperature[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
     descriptorRangeForTemperature[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
+
+    // ===================Skinning 用=============================
+    //MatrixPalette用 
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForMatrixPalette[1] = {};
+    descriptorRangeForMatrixPalette[0].BaseShaderRegister = 6;// StructuredBuffer<Well> gMatrixPalette : register(t6);
+    descriptorRangeForMatrixPalette[0].NumDescriptors = 1;
+    descriptorRangeForMatrixPalette[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+    descriptorRangeForMatrixPalette[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+    //入力頂点情報
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForInputVertices[1] = {};
+    descriptorRangeForInputVertices[0].BaseShaderRegister = 9;
+    descriptorRangeForInputVertices[0].NumDescriptors = 1;
+    descriptorRangeForInputVertices[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+    descriptorRangeForInputVertices[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForInfluences[1] = {};
+    descriptorRangeForInfluences[0].BaseShaderRegister = 10;
+    descriptorRangeForInfluences[0].NumDescriptors = 1;
+    descriptorRangeForInfluences[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+    descriptorRangeForInfluences[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+    //UAV
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForOutputVertices[1] = {};
+    descriptorRangeForOutputVertices[0].BaseShaderRegister = 0;// RWStructuredBuffer<Vertex> gOutputVertices : register(u0);
+    descriptorRangeForOutputVertices[0].NumDescriptors = 1;
+    descriptorRangeForOutputVertices[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+    descriptorRangeForOutputVertices[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+    // ===================ComputeShader用RootSignature=============================
+
+
 #pragma endregion
 
 #pragma region//Sampler
@@ -100,6 +126,8 @@ void RootSignature::Create() {
     }
 
 #pragma endregion
+
+
 
 #pragma region//NormalRootParameters
     //CBufferを利用することになったので、RootParameterに設定を追加する
@@ -157,20 +185,33 @@ void RootSignature::Create() {
 
 #pragma endregion
 
+#pragma region//rootParametersForComputeShaderSkinning
 
-#pragma region//rootParametersForSkinning
+    D3D12_ROOT_PARAMETER rootParametersForCsSkinning[5] = {};
+    rootParametersForCsSkinning[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForCsSkinning[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForCsSkinning[0].DescriptorTable.pDescriptorRanges = descriptorRangeForMatrixPalette;//Tableの中身の配列を指定
+    rootParametersForCsSkinning[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForMatrixPalette);//Tableで利用する数
+                              
+    rootParametersForCsSkinning[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForCsSkinning[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForCsSkinning[1].DescriptorTable.pDescriptorRanges = descriptorRangeForInputVertices;//Tableの中身の配列を指定
+    rootParametersForCsSkinning[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInputVertices);//Tableで利用する数
 
-    D3D12_ROOT_PARAMETER rootParametersForSkinning[12] = {};
+    rootParametersForCsSkinning[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForCsSkinning[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForCsSkinning[2].DescriptorTable.pDescriptorRanges = descriptorRangeForInfluences;//Tableの中身の配列を指定
+    rootParametersForCsSkinning[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInfluences);//Tableで利用する数
+    //UAV
+    rootParametersForCsSkinning[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForCsSkinning[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForCsSkinning[3].DescriptorTable.pDescriptorRanges = descriptorRangeForOutputVertices;//Tableの中身の配列を指定
+    rootParametersForCsSkinning[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForOutputVertices);//Tableで利用する数
 
-    for (int i = 0; i < 11; ++i) {
-        rootParametersForSkinning[i] = rootParameters[i];
-    }
+    rootParametersForCsSkinning[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForCsSkinning[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForCsSkinning[4].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
 
-    //MatrixPalette StructuredBuffer<Well> gMatrixPalette : register(t6);
-    rootParametersForSkinning[11].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
-    rootParametersForSkinning[11].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    rootParametersForSkinning[11].DescriptorTable.pDescriptorRanges = descriptorRangeForMatrixPalette;//Tableの中身の配列を指定
-    rootParametersForSkinning[11].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForMatrixPalette);//Tableで利用する数
 #pragma endregion
 
 #pragma region//ParticleRootParameters
@@ -348,9 +389,6 @@ void RootSignature::Create() {
     descriptionRootSignature[SPRITE].pParameters = rootParametersForSprite;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[SPRITE].NumParameters = _countof(rootParametersForSprite);//配列の長さ
 
-    descriptionRootSignature[SKINNING].pParameters = rootParametersForSkinning;//ルートパラメータ配列へのポインタ
-    descriptionRootSignature[SKINNING].NumParameters = _countof(rootParametersForSkinning);//配列の長さ
-
     descriptionRootSignature[FONT].pParameters = rootParametersForFont;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[FONT].NumParameters = _countof(rootParametersForFont);//配列の長さ
 
@@ -392,6 +430,10 @@ void RootSignature::Create() {
     //ライン
     descriptionRootSignature[LINE].pParameters = rootParametersForLine;
     descriptionRootSignature[LINE].NumParameters = _countof(rootParametersForLine);//配列の長さ
+    //ComputeShader用Skinning
+    descriptionRootSignature[CS_SKINNING].pParameters = rootParametersForCsSkinning;
+    descriptionRootSignature[CS_SKINNING].NumParameters = _countof(rootParametersForCsSkinning);//配列の長さ
+
 
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;

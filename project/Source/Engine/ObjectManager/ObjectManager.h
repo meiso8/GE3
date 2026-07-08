@@ -6,7 +6,7 @@
 #include "Object3d.h"
 #include"ObjectCommandManager.h"
 #include "nlohmann/json.hpp"
-class SrvDescriptorHeap;
+class CbvSrvUavDescriptorHeap;
 class RenderTexture;
 class ObjectManager
 {
@@ -27,7 +27,7 @@ public:
     //初期化
     void Initialize();
     //コマンドリストとSRVDescriptorHeapの設定
-    void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap);
+    void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     //更新
     void Update();
     //描画

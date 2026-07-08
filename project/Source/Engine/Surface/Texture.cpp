@@ -8,15 +8,15 @@ std::vector<uint32_t> Texture::srvIndexes_;
 std::unordered_map<uint32_t, std::filesystem::path> Texture::handleToPath_;
 std::unordered_map<std::filesystem::path, Texture::TextureData> Texture::textureDatas;
 ID3D12GraphicsCommandList* Texture::commandList_ = nullptr;
-SrvDescriptorHeap* Texture::srvDescriptorHeap_ = nullptr;
+CbvSrvUavDescriptorHeap* Texture::srvDescriptorHeap_ = nullptr;
 void Texture::Initialize()
 {
-    textureDatas.reserve(SrvDescriptorHeap::kMaxSRVCount_);
+    textureDatas.reserve(CbvSrvUavDescriptorHeap::kMaxCount_);
     // handles 配列を初期化（未ロード状態を示すために 0 で埋める）
     srvIndexes_.resize(TextureFactory::TEXTURES, 0);
 }
 
-void Texture::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
+void Texture::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
     assert(commandList_);

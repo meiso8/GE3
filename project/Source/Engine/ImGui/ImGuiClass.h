@@ -19,13 +19,13 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 class Camera;
 class CommandList;
-class SrvDescriptorHeap;
+class CbvSrvUavDescriptorHeap;
 
 class ImGuiClass
 {
 public:
     void Initialize(Window& window,
-        SrvDescriptorHeap* srvDescriptorHeap,
+        CbvSrvUavDescriptorHeap* srvDescriptorHeap,
         const Microsoft::WRL::ComPtr<ID3D12Device>& device,
         SwapChain& swapChain,
         RenderTargetView& rtv);
@@ -34,7 +34,7 @@ public:
     void Render();
     void DrawImGui(ID3D12GraphicsCommandList* commandList);
     void ShutDown();
-   void DrawModelLoaderWindow(SrvDescriptorHeap* srvDescriptorHeap);
+   void DrawModelLoaderWindow(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
    static void DropFiles(WPARAM wParam);
 };
 

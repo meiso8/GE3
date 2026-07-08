@@ -15,11 +15,8 @@ std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::
 Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStateSkyBox_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSO::kCountOfEffect> PSO::graphicsPipelineStateOffScreen_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateRandom_;
-std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode>PSO::graphicsPipelineStatesSkinning_;
+
 std::unordered_map<PSO::PSOKey, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSO::PSOKeyHasher> PSO::psoCache_;
-
-Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::computePipelineStatesForSkinning_;
-
 
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     const BlendMode& blendMode,
@@ -44,9 +41,6 @@ Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
     DirectXCommon::GetDxcCompiler()->GetPixelShaderBlob(psShaderType)->GetBufferSize() };//PixelShader
     graphicsPipelineStateDesc.BlendState = blendStates[blendMode].GetDesc();//BlendState
     graphicsPipelineStateDesc.RasterizerState = rasterizerStates[cullMode].GetDesc();//RasterizerState
-
-    //DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-    //DXGI_FORMAT_R32_UINT
 
     // レンダーターゲットの数を設定する
     graphicsPipelineStateDesc.NumRenderTargets = uint32_t(rtvFormats.size());
@@ -191,23 +185,6 @@ void PSO::CreateALLPSO()
         }
     }
 
-    //スキニング
-    for (uint32_t b = 0; b < kCountOfBlendMode; ++b) {
-        for (uint32_t c = 0; c < kCountOfCullMode; ++c) {
-            graphicsPipelineStatesSkinning_[b][c] = Create(
-                static_cast<BlendMode>(b),
-                static_cast<CullMode>(c),
-                kAll,
-                true,
-                RootSignature::SKINNING,
-                DxcCompiler::VS_Skinning,
-                DxcCompiler::PS_Normal,
-                kTriangle,
-                InputLayout::kInputLayoutTypeSkinning,
-                rtvFormatsForTermoAndObjectID
-            );
-        }
-    }
 
     //パーティクル
     for (int b = 0; b < kCountOfBlendMode; ++b) {
@@ -441,14 +418,6 @@ void PSO::CreateALLPSO()
 
 PSO::~PSO()
 {
-
-    for (auto& blendModes : graphicsPipelineStatesSkinning_) {
-        for (auto& pso : blendModes) {
-            if (pso) {
-                pso.Reset(); // Release() と同じ効果
-            }
-        }
-    }
 
     for (auto& pso : graphicsPipelineStateSprite_) {
         if (pso) {

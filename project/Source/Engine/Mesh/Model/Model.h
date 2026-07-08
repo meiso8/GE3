@@ -13,6 +13,7 @@ public:
         //メッシュの名前を記録
         meshName_ = modelData->meshName;
         modelData_ = std::move(modelData);
+       
     }
     ModelData* GetModelData() {
         return modelData_.get();

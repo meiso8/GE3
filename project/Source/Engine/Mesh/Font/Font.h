@@ -15,7 +15,7 @@
 #include"hlslTypeToCpp.h"
 
 class CommandList;
-class SrvDescriptorHeap;
+class CbvSrvUavDescriptorHeap;
 
 class Font
 {
@@ -32,7 +32,7 @@ public:
 
     static void SetCommandListAndSrvDescriptorHeap(
         ID3D12GraphicsCommandList* commandList,
-        SrvDescriptorHeap* srvDescriptorHeap
+        CbvSrvUavDescriptorHeap* srvDescriptorHeap
     );
     static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
     void Draw();
@@ -105,7 +105,7 @@ private:
     //コマンドリストの借り物
     static ID3D12GraphicsCommandList* commandList_;
     /// @brief　SRV管理の借り物
-    static  SrvDescriptorHeap* srvDescriptorHeap_;
+    static  CbvSrvUavDescriptorHeap* srvDescriptorHeap_;
 
     bool inUse_ = false;
     uint32_t textureHandle_ = 0;

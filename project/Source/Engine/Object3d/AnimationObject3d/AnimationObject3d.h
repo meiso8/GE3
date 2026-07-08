@@ -4,6 +4,7 @@
 #include"Animation/Animation.h"
 #include<memory>
 
+
 class DebugBone;
 struct SkinCluster;
 class SkinningModel;
@@ -15,7 +16,7 @@ class AnimationObject3d :public Object3d
 public:
 
     AnimationObject3d();
-~AnimationObject3d();
+    ~AnimationObject3d();
     void Initialize()override;
     void InitTime();
     void SetModelAndLoadAnimation(Model* model);
@@ -37,8 +38,10 @@ public:
     Matrix4x4 GetWorldJointMatrix(const std::string name);
 private:
 
-
     void UpdateAnimation();
+
+private:
+
     float animationTime_ = 0.0f;
     std::string currentAnimation_ = "Idle";
 

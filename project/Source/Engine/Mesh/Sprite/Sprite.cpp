@@ -11,8 +11,8 @@
 
 ID3D12GraphicsCommandList* Sprite::commandList_ = nullptr;
 /// @brief　SRV管理の借り物
-SrvDescriptorHeap* Sprite::srvDescriptorHeap_ = nullptr;
-void Sprite::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
+CbvSrvUavDescriptorHeap* Sprite::srvDescriptorHeap_ = nullptr;
+void Sprite::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
     assert(commandList_);

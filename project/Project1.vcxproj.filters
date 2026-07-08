@@ -576,6 +576,7 @@
     <ClCompile Include="Source\Application\GameObject\UI\ButtonSprite\ButtonSprite.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.cpp">
     <ClCompile Include="Source\Application\Stage\MeltStage\MeltStage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -1160,6 +1161,7 @@
     <ClInclude Include="Source\Application\GameObject\UI\ButtonSprite\ButtonSprite.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h">
     <ClInclude Include="Source\Application\Stage\MeltStage\MeltStage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

@@ -13,7 +13,7 @@ public:
         VS_Normal,
         VS_Particle,
         VS_Sprite,
-        VS_Skinning,
+        //VS_Skinning,
         VS_SkyBox,
         VS_OffScreen,
         VS_Beam,

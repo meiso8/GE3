@@ -18,7 +18,7 @@ unordered_map<GlyphKey, FreeTypeManager::FTTextureData> FreeTypeManager::glyphTe
 std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Font>>> FreeTypeManager::fontPool_;
 
 ID3D12GraphicsCommandList* FreeTypeManager::commandList_ = nullptr;
-SrvDescriptorHeap* FreeTypeManager::srvDescriptorHeap_ = nullptr;
+CbvSrvUavDescriptorHeap* FreeTypeManager::srvDescriptorHeap_ = nullptr;
 
 FreeTypeManager::FreeTypeManager()
 {    
@@ -106,7 +106,7 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
 
 }
 
-void FreeTypeManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, SrvDescriptorHeap* srvDescriptorHeap)
+void FreeTypeManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 
 {    //コマンドリストをセットする
     commandList_ = commandList;

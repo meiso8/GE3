@@ -6,6 +6,8 @@
 #include"VibrateManager.h"
 #include"Log.h"
 #include"PSO.h"
+#include"ComputeShaderPSO/ComputeShaderPSO.h"
+
 #include"CrashHandler.h"
 
 #include"SpriteCamera.h"
@@ -69,7 +71,7 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     LogFile::Log("DirectXCommon PostInitialize\n");
 
     //SRV管理
-    srvDescriptorHeap_ = std::make_unique<SrvDescriptorHeap>();
+    srvDescriptorHeap_ = std::make_unique<CbvSrvUavDescriptorHeap>();
 
 #ifdef USE_IMGUI
     //ImGuiの初期化。
@@ -96,6 +98,10 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     auto* pso = PSO::GetInstance();
     pso->CreateALLPSO();
     LogFile::Log("CreatePSO");
+
+    auto* csPso = ComputeShaderPSO::GetInstance();
+    //改造の余地あり
+    csPso->CreatePSO(DirectXCommon::GetDxcCompiler(), pso->GetRootSignature());
 
 #pragma region//LightManager
     //方向ライト管理の作成

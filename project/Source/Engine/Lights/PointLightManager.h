@@ -5,13 +5,13 @@
 #include"Lights/Light.h"
 #include<cstdint>
 #include<cassert>
-class SrvDescriptorHeap;
+class CbvSrvUavDescriptorHeap;
 class PointLightManager
 {
 public:
     void Finalize();
     PointLightManager()= default;
-    PointLightManager(SrvDescriptorHeap* srvDescriptorHeap);
+    PointLightManager(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     static uint32_t GetSrvIndex() { return srvIndex_; };
     static void InitData(const uint32_t& index);
     static void InitDatas();
