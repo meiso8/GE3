@@ -61,16 +61,17 @@ void Camera::UpdateWorldMatrix()
 
 void Camera::CreateResource()
 {
-    cameraResource_ = DirectXCommon::CreateBufferResource(sizeof(CameraForGPU));
-    cameraResource_->SetName(L"Camera:cameraResource");
+    cameraResource_.CreateBufferResource(L"Camera:cameraResource");
+
     UpdateData();
 }
 
 void Camera::UpdateData()
 {
     //書き込むためのアドレスを取得
-    cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-    cameraForGPU_->worldPosition = GetWorldPos();
+    cameraResource_.Map();
+    cameraResource_.data->worldPosition = GetWorldPos();
+
 }
 
 void Camera::SetScreenSize(const float& width, const float& height)
@@ -89,10 +90,7 @@ Camera::Camera()
 
 Camera::~Camera()
 {
-    if (cameraResource_) {
-        cameraResource_.Reset();
-        cameraResource_ = nullptr;
-    }
+    cameraResource_.Reset();
 }
 
 

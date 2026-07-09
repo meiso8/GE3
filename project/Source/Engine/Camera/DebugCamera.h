@@ -28,9 +28,11 @@ public:
     /// @brief 更新
     void UpdateMatrix()override;
     void Initialize(const PROJECTION_TYPE& type = PROJECTION_TYPE::PERSPECTIVE)override;
+    void Finalize();
+    void Create();
 private:
-    DebugCamera();
-    ~DebugCamera();
+    DebugCamera() = default;
+    ~DebugCamera() = default;
     void UpdateProjectionMatrix();
     void MouseInputMove();
     void InputTranslate();

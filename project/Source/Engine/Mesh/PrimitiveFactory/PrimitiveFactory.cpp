@@ -27,6 +27,15 @@ void PrimitiveFactory::CreateAllPrimitive()
     CreateAndSetMeshType(Primitive::kCylinder);
 }
 
+PrimitiveFactory::~PrimitiveFactory()
+{
+    for (auto& [name, primitive] : primitives_) {
+        primitive.~Primitive();
+    }
+
+    primitives_.clear();
+}
+
 void PrimitiveFactory::CreateAndSetMeshType(const Primitive::MeshType& topologyType)
 {
     MeshData mesh = GetMeshData(topologyType);

@@ -6,21 +6,22 @@
 #include<memory>
 #include"Depth.h"
 #include"VertexData.h"
+#include"../ResourceManager/ResourceManager.h"
 
 class Model;
 class CbvSrvUavDescriptorHeap;
 class SkinningModel :public Primitive
 {
 public:
-    struct Resources {
-        Microsoft::WRL::ComPtr <ID3D12Resource> resource = nullptr;
-        uint32_t index;
+    struct SkinningInformation
+    {
+        uint32_t numVertices;
     };
 
     struct SkinningCSResorce {
-        Resources inputVertexResources_;
-        Resources outputVertexResources_;
-        Microsoft::WRL::ComPtr <ID3D12Resource> skinningInformationResource_ = nullptr;
+        SRVResource<VertexData> inputVertexResource_;
+        UAVResource<VertexData> outputVertexResource_;
+        CResource<SkinningInformation> skinningInformationResource_;
     };
 public:
     SkinningModel();
@@ -55,22 +56,12 @@ private:
     void CreateInputVertexResource();
     void CreateOutVertexResource();
     void CreateSkinningInformation();
-private:
-
-    struct SkinningInformation
-    {
-        uint32_t numVertices;
-    };
 
 private:
     CbvSrvUavDescriptorHeap* cbvSrvUavDescriptorHeap_ = nullptr;
     std::unique_ptr< Skeleton> skeleton_ = nullptr;
     std::unique_ptr< SkinCluster> skinCluster_ = nullptr;
     ModelData* modelData_ = nullptr;
-
-    VertexData* inputVertexData_ = nullptr;
-    VertexData* outputVertexData_ = nullptr;
-    SkinningInformation* skinningInformation_ = nullptr;
 
     SkinningCSResorce skinningCSResorce_;
 };

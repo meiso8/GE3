@@ -12,25 +12,10 @@ void PostEffectMaterial::SetCamera(Camera* camera)
     camera_ = camera;
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource>& PostEffectMaterial::GetMaterialResouce(const PSO::EffectType& effectType)
-{
-    assert(effectType < PSO::kCountOfEffect);
-    return materialResource_[effectType];
-}
-
 void PostEffectMaterial::Update()
 {
     assert(camera_);
-    materialForDepthBasedOutline_->projectionInverse = Inverse(camera_->GetProjectionMatrixForOutline());
-
-#ifdef _DEVELOP
-
-    ImGui::Begin("PostEffect");
-
-    
-    ImGui::End();
-
-#endif
+    materialForDepthBasedOutline_.data->projectionInverse = Inverse(camera_->GetProjectionMatrixForOutline());
 }
 
 void PostEffectMaterial::Create()
@@ -50,113 +35,142 @@ void PostEffectMaterial::Create()
 
 void PostEffectMaterial::Clear()
 {
+    materialForGrayScale_.Reset();
+    materialForVignette_.Reset();
+    materialForBoxFilter_.Reset();
+    materialForFullScreen_.Reset();
+    materialForGaussianFilter_.Reset();
+    materialForLuminanceBasedOutline_.Reset();
+    materialForDepthBasedOutline_.Reset();
+    materialForRadialBlur_.Reset();
+    materialForDissolve_.Reset();
+    materialForThermography_.Reset();
+    materialForRandom_.Reset();
+}
 
-    for (auto& mat : materialResource_) {
-        mat.Reset();
+PostEffectMaterial::~PostEffectMaterial()
+{
+    Clear();
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS PostEffectMaterial::GetGPUVirtualAddress(const PSO::EffectType& type)
+{
+    if (resourceMap_.contains(type)) {
+        return resourceMap_.at(type)->GetGPUVirtualAddress();
     }
 
+    return D3D12_GPU_VIRTUAL_ADDRESS();
 }
 
 void PostEffectMaterial::CreateMaterialBufferForGrayScale()
 {
     //マテリアル用のリソースを作る。
-    materialResource_[PSO::kEffectGrayScale] = DirectXCommon::CreateBufferResource(sizeof(MaterialForRenderTexture));
-    materialResource_[PSO::kEffectGrayScale]->SetName(L"RenderTexture_GrayScale_MaterialResource");
-    //マテリアルにデータを書き込む
-
+    materialForGrayScale_.CreateBufferResource(L"GrayScale_MaterialResource");
+    //マップする
+    resourceMap_[PSO::kEffectGrayScale] = materialForGrayScale_.Get();
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_[PSO::kEffectGrayScale]->Map(0, nullptr, reinterpret_cast<void**>(&materialForGrayScale_));
-    materialForGrayScale_->color = sepiaColor_;
+    materialForGrayScale_.Map();
+    //マテリアルにデータを書き込む
+    materialForGrayScale_.data->color = sepiaColor_;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale\n");
+    LogFile::Log("Create : MaterialBuffer : GrayScale\n");
 }
 
 void PostEffectMaterial::CreateMaterialBufferForVignette()
 {    //マテリアル用のリソースを作る。
-    materialResource_[PSO::kEffectVignette] = DirectXCommon::CreateBufferResource(sizeof(MaterialForVignette));
-    materialResource_[PSO::kEffectVignette]->SetName(L"RenderTexture_Vignette_MaterialResource");
-    //マテリアルにデータを書き込む
+    materialForVignette_.CreateBufferResource(L"Vignette_MaterialResource");
+    
+    //マップする
+    resourceMap_[PSO::kEffectVignette] = materialForVignette_.Get();
 
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_[PSO::kEffectVignette]->Map(0, nullptr, reinterpret_cast<void**>(&materialForVignette_));
-    materialForVignette_->correctVal = 16.0f;
-    materialForVignette_->viignetteVal = 0.8f;
+    materialForVignette_.Map();
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : Vignette\n");
+    //マテリアルにデータを書き込む
+    materialForVignette_.data->correctVal = 16.0f;
+    materialForVignette_.data->viignetteVal = 0.8f;
+
+    LogFile::Log("Create : MaterialBuffer : Vignette\n");
 }
 
 void PostEffectMaterial::CreateMaterialBufferForBoxFilter()
 {
-
-    materialResource_[PSO::kEffectBoxFilter] = DirectXCommon::CreateBufferResource(sizeof(MaterialForBoxFilter));
-    materialResource_[PSO::kEffectBoxFilter]->SetName(L"RenderTexture_BoxFilter_MaterialResource");
-    //マテリアルにデータを書き込む
+    materialForBoxFilter_.CreateBufferResource(L"BoxFilter_MaterialResource");
+  
+    //マップする
+    resourceMap_[PSO::kEffectBoxFilter] = materialForBoxFilter_.Get();
 
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_[PSO::kEffectBoxFilter]->Map(0, nullptr, reinterpret_cast<void**>(&materialForBoxFilter_));
-    materialForBoxFilter_->kernel = 1.0f;
+    materialForBoxFilter_.Map();
+    //マテリアルにデータを書き込む
+    materialForBoxFilter_.data->kernel = 1.0f;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : BoxFilter\n");
+    LogFile::Log("Create : MaterialBuffer : BoxFilter\n");
 }
 
 void PostEffectMaterial::CreateMaterialBUfferForFullScreen()
 {
     //マテリアル用のリソースを作る。
-    materialResource_[PSO::kEffectNone] = DirectXCommon::CreateBufferResource(sizeof(MaterialForRenderTexture));
-    materialResource_[PSO::kEffectNone]->SetName(L"RenderTexture_None_MaterialResource");
-    //マテリアルにデータを書き込む
+    materialForFullScreen_.CreateBufferResource(L"FullScreen_MaterialResource");
+
+    //マップする
+    resourceMap_[PSO::kEffectNone] = materialForFullScreen_.Get();
 
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_[PSO::kEffectNone]->Map(0, nullptr, reinterpret_cast<void**>(&materialForFullScreen_));
-    materialForFullScreen_->color = { 1.0f,1.0f,1.0f,1.0f };
+    materialForFullScreen_.Map();
+    //マテリアルにデータを書き込む
+    materialForFullScreen_.data->color = { 1.0f,1.0f,1.0f,1.0f };
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : GrayScale\n");
+    LogFile::Log("Create : MaterialBuffer : GrayScale\n");
 }
 
 void PostEffectMaterial::CreateMaterialBufferForGaussianFilter()
 {
-
     //マテリアル用のリソースを作る。
-    materialResource_[PSO::kEffectGaussianFilter] = DirectXCommon::CreateBufferResource(sizeof(MaterialForGaussianFilter));
-    materialResource_[PSO::kEffectGaussianFilter]->SetName(L"RenderTexture_GaussianFilter_MaterialResource");
-    //マテリアルにデータを書き込む
+    materialForGaussianFilter_.CreateBufferResource(L"GaussianFilter_MaterialResource");
+    
+    //マップする
+    resourceMap_[PSO::kEffectGaussianFilter] = materialForGaussianFilter_.Get();
 
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_[PSO::kEffectGaussianFilter]->Map(0, nullptr, reinterpret_cast<void**>(&materialForGaussianFilter_));
-    materialForGaussianFilter_->sigma = 1.0f;
-    materialForGaussianFilter_->kernel = 1;
+    materialForGaussianFilter_.Map();
+    //マテリアルにデータを書き込む
+    materialForGaussianFilter_.data->sigma = 1.0f;
+    materialForGaussianFilter_.data->kernel = 1;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : GaussianFilter\n");
+    LogFile::Log("Create : MaterialBuffer : GaussianFilter\n");
 }
 
 void PostEffectMaterial::CreateMaterialLuminanceBasedOutline()
 {
     //マテリアル用のリソースを作る。
-    materialResource_[PSO::kEffectLuminanceBasedOutline] = DirectXCommon::CreateBufferResource(sizeof(MaterialForLuminanceBasedOutline));
-    materialResource_[PSO::kEffectLuminanceBasedOutline]->SetName(L"RenderTexture_LuminanceBasedOutline_MaterialResource");
-    //マテリアルにデータを書き込む
+    materialForLuminanceBasedOutline_.CreateBufferResource(L"LuminanceBasedOutline_MaterialResource");
+  
+    //マップする
+    resourceMap_[PSO::kEffectLuminanceBasedOutline] = materialForLuminanceBasedOutline_.Get();
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_[PSO::kEffectLuminanceBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForLuminanceBasedOutline_));
-    materialForLuminanceBasedOutline_->weightVal = 0.0f;
+    materialForLuminanceBasedOutline_.Map();
+    //マテリアルにデータを書き込む
+    materialForLuminanceBasedOutline_.data->weightVal = 0.0f;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : LuminanceBasedOutline\n");
+    LogFile::Log("Create : MaterialBuffer : LuminanceBasedOutline\n");
 }
 
 void PostEffectMaterial::CreateMaterialDepthBasedOutline()
 {
-
     //マテリアル用のリソースを作る。
-    materialResource_[PSO::kEffectDepthBasedOutline] = DirectXCommon::CreateBufferResource(sizeof(MaterialForDepthBasedOutline));
-    materialResource_[PSO::kEffectDepthBasedOutline]->SetName(L"RenderTexture_DepthBasedOutline_MaterialResource");
-    //マテリアルにデータを書き込む
-
+    materialForDepthBasedOutline_.CreateBufferResource(L"DepthBasedOutline_MaterialResource");
+    //マップする
+    resourceMap_[PSO::kEffectDepthBasedOutline] = materialForDepthBasedOutline_.Get();
+    
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_[PSO::kEffectDepthBasedOutline]->Map(0, nullptr, reinterpret_cast<void**>(&materialForDepthBasedOutline_));
-    materialForDepthBasedOutline_->projectionInverse = MakeIdentity4x4();
-    materialForDepthBasedOutline_->lineWidth = 10000.0f;
-    materialForDepthBasedOutline_->color = { 0.0f,0.0f,0.0f };
+    materialForDepthBasedOutline_.Map();
+    //マテリアルにデータを書き込む
+    materialForDepthBasedOutline_.data->projectionInverse = MakeIdentity4x4();
+    materialForDepthBasedOutline_.data->lineWidth = 10000.0f;
+    materialForDepthBasedOutline_.data->color = { 0.0f,0.0f,0.0f };
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : DepthBasedOutline\n");
+    LogFile::Log("Create : MaterialBuffer : DepthBasedOutline\n");
 }
 
 
@@ -164,55 +178,61 @@ void PostEffectMaterial::CreateMaterialRadialBlur()
 {
 
     //マテリアル用のリソースを作る。
-    materialResource_[PSO::kEffectRadialBlur] = DirectXCommon::CreateBufferResource(sizeof(MaterialForRadialBlur));
-    materialResource_[PSO::kEffectRadialBlur]->SetName(L"RenderTexture_Dissolve_MaterialResource");
-    //マテリアルにデータを書き込む
+    materialForRadialBlur_.CreateBufferResource(L"Dissolve_MaterialResource");
+
+    //マップする
+    resourceMap_[PSO::kEffectRadialBlur] = materialForRadialBlur_.Get();
 
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_[PSO::kEffectRadialBlur]->Map(0, nullptr, reinterpret_cast<void**>(&materialForRadialBlur_));
-    materialForRadialBlur_->center = { 0.5f,0.5f };
-    materialForRadialBlur_->numSamples = 1;
-    materialForRadialBlur_->blurWidth = 0.01f;
+    materialForRadialBlur_.Map();
+    //マテリアルにデータを書き込む
+    materialForRadialBlur_.data->center = { 0.5f,0.5f };
+    materialForRadialBlur_.data->numSamples = 1;
+    materialForRadialBlur_.data->blurWidth = 0.01f;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : RadialBlur\n");
+    LogFile::Log("Create : MaterialBuffer : RadialBlur\n");
 }
 
 void PostEffectMaterial::CreateMaterialDissolve() {
 
     //マテリアル用のリソースを作る。
-    materialResource_[PSO::kEffectDissolve] = DirectXCommon::CreateBufferResource(sizeof(MaterialForDissolve));
-    materialResource_[PSO::kEffectDissolve]->SetName(L"RenderTexture_Dissolve_MaterialResource");
-    //マテリアルにデータを書き込む
+    materialForDissolve_.CreateBufferResource(L"Dissolve_MaterialResource");
+
+    //マップする
+    resourceMap_[PSO::kEffectDissolve] = materialForDissolve_.Get();
 
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_[PSO::kEffectDissolve]->Map(0, nullptr, reinterpret_cast<void**>(&materialForDissolve_));
-    materialForDissolve_->maskVal = 1.0f;
-    materialForDissolve_->rgb = { 8.0f / 255.0f, 16.0f / 255.0f,0.0f };
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve\n");
+    materialForDissolve_.Map();
+    //マテリアルにデータを書き込む
+    materialForDissolve_.data->maskVal = 1.0f;
+    materialForDissolve_.data->rgb = { 8.0f / 255.0f, 16.0f / 255.0f,0.0f };
+    LogFile::Log("Create : MaterialBuffer : Dissolve\n");
 }
 void PostEffectMaterial::CreateMaterialRandom()
 {
     //マテリアル用のリソースを作る。
-    materialResource_[PSO::kEffectRandom] = DirectXCommon::CreateBufferResource(sizeof(MaterialForDissolve));
-
-    materialResource_[PSO::kEffectRandom]->SetName(L"RenderTexture_Random_MaterialResource");
-
+    materialForRandom_.CreateBufferResource(L"Random_MaterialResource");
+   
+    //マップする
+    resourceMap_[PSO::kEffectRandom] = materialForRandom_.Get();
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_[PSO::kEffectRandom]->Map(0, nullptr, reinterpret_cast<void**>(&materialForRandom_));
+    materialForRandom_.Map();
     //マテリアルにデータを書き込む
-    materialForRandom_->time = 1.0f;
+    materialForRandom_.data->time = 1.0f;
 
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : Dissolve\n");
+    LogFile::Log("Create : MaterialBuffer : Dissolve\n");
 }
 void PostEffectMaterial::CreateMaterialThermography()
-{//マテリアル用のリソースを作る。
-    materialResource_[PSO::kEffectThermography] = DirectXCommon::CreateBufferResource(sizeof(MaterialForThermography));
-    //マテリアルにデータを書き込む
-    materialResource_[PSO::kEffectThermography]->SetName(L"RenderTexture_Thermography_MaterialResource");
+{
+    //マテリアル用のリソースを作る。
+    materialForThermography_.CreateBufferResource(L"Thermography_MaterialResource");
+    //マップする
+    resourceMap_[PSO::kEffectThermography] = materialForThermography_.Get();
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_[PSO::kEffectThermography]->Map(0, nullptr, reinterpret_cast<void**>(&materialForThermography_));
-    materialForThermography_->alpha = { 1.0f };
-    materialForThermography_->sigma = 10.0f;
-    materialForThermography_->kernel = 14;
-    LogFile::Log("Rendertexture : Create : MaterialBuffer : Thermography\n");
+    materialForThermography_.Map();
+    //データを書きこむ
+    materialForThermography_.data->alpha = { 1.0f };
+    materialForThermography_.data->sigma = 10.0f;
+    materialForThermography_.data->kernel = 14;
+    LogFile::Log("Create : MaterialBuffer : Thermography\n");
 };

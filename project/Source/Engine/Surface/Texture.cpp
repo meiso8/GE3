@@ -9,6 +9,7 @@ std::unordered_map<uint32_t, std::filesystem::path> Texture::handleToPath_;
 std::unordered_map<std::filesystem::path, Texture::TextureData> Texture::textureDatas;
 ID3D12GraphicsCommandList* Texture::commandList_ = nullptr;
 CbvSrvUavDescriptorHeap* Texture::srvDescriptorHeap_ = nullptr;
+
 void Texture::Initialize()
 {
     textureDatas.reserve(CbvSrvUavDescriptorHeap::kMaxCount_);
@@ -84,7 +85,7 @@ TextureFactory::Handle Texture::GetTextureHandle(const uint32_t& srvIndex)
 void Texture::Finalize()
 {
     for (auto& data : textureDatas) {
-        data.second.intermediateResource.Reset();
+        data.second.resource.intermediateResource.Reset();
         data.second.resource.Reset();
     }
 
@@ -96,7 +97,7 @@ uint32_t Texture::GetSrvIndexByFilePath(const std::filesystem::path& filePath)
 
     //読み込み済みテクスチャを検索
     if (textureDatas.contains(filePath)) {
-        return textureDatas.at(filePath).srvIndex;
+        return textureDatas.at(filePath).resource.srvIndex;
     }
 
     assert(0);
@@ -109,7 +110,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE Texture::GetSrvHandleGPU(const std::filesystem::path
     //テクスチャ番号が正常範囲内にある
     assert(srvDescriptorHeap_->CanUseIndex());
     //テクスチャデータの参照を取得
-    return textureDatas[filePath].srvHandleGPU;
+    return  srvDescriptorHeap_->GetGPUDescriptorHandle(textureDatas[filePath].resource.srvIndex);
 }
 
 const DirectX::TexMetadata& Texture::GetMetaData(const uint32_t& handle)
@@ -117,7 +118,7 @@ const DirectX::TexMetadata& Texture::GetMetaData(const uint32_t& handle)
     //テクスチャ番号が正常範囲内にある
     assert(srvDescriptorHeap_->CanUseIndex());
 
-    return textureDatas[handleToPath_[handle]].metadata;
+    return textureDatas[handleToPath_[handle]].resource.metadata;
 }
 
 void Texture::LoadTexture(const std::filesystem::path& filePath)
@@ -167,17 +168,18 @@ void Texture::LoadTexture(const std::filesystem::path& filePath)
     //追加したテクスチャデータの参照を取得する
     TextureData& textureData = textureDatas[filePath];
 
-    textureData.metadata = mipImages.GetMetadata();
-    textureData.resource = DirectXCommon::CreateTextureResource(textureData.metadata);
-    textureData.resource->SetName(L"TextureData_Resource");
-    textureData.intermediateResource = DirectXCommon::UploadTextureData(commandList_,textureData.resource, mipImages);
-    textureData.intermediateResource->SetName(L"intermediate_Resource");
+    textureData.resource.metadata = mipImages.GetMetadata();
+
+    textureData.resource.CreateTextureResource(L"TextureData_Resource");
+
+    textureData.resource.UploadTextureData(L"intermediate_Resource", commandList_, mipImages);
+
     //テクスチャデータの要素数番号をSRVのインデックスとする
-    textureData.srvIndex = srvDescriptorHeap_->Allocate();
+    textureData.resource.Allocate(srvDescriptorHeap_);
 
-    textureData.srvHandleCPU =  srvDescriptorHeap_->GetCPUDescriptorHandle(textureData.srvIndex);
-    textureData.srvHandleGPU =  srvDescriptorHeap_->GetGPUDescriptorHandle(textureData.srvIndex);
-
-    srvDescriptorHeap_->CreateSRVforTexture(textureData.srvIndex, textureData.resource.Get(), textureData.metadata);
+    //textureData.srvHandleCPU =  srvDescriptorHeap_->GetCPUDescriptorHandle(textureData.srvIndex);
+    //textureData.srvHandleGPU =  srvDescriptorHeap_->GetGPUDescriptorHandle(textureData.srvIndex);
+    textureData.resource.CreateSRVforTexture(srvDescriptorHeap_);
+    //srvDescriptorHeap_->CreateSRVforTexture(textureData.srvIndex, textureData.resource.Get(), textureData.metadata);
 
 }

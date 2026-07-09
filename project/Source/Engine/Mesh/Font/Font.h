@@ -13,7 +13,7 @@
 
 #include"Texture.h"
 #include"hlslTypeToCpp.h"
-
+#include"Engine/ResourceManager/ResourceManager.h"
 class CommandList;
 class CbvSrvUavDescriptorHeap;
 
@@ -60,11 +60,11 @@ public:
 
     void SetTexture(const TextureFactory::Handle& textureHandle);
 
-    Vector4& GetColor() { return material_->color; };
-    void SetColor(const Vector4& color) { material_->color = color; };
+    Vector4& GetColor() { return materialResource_.data->color; };
+    void SetColor(const Vector4& color) { materialResource_.data->color = color; };
 
-    void SetTemperature(const float temperature)const { material_->temperature = temperature; }
-    const float GetTemperature() { return material_->temperature; }
+    void SetTemperature(const float temperature)const { materialResource_.data->temperature = temperature; }
+    const float GetTemperature() { return  materialResource_.data->temperature; }
 
     void SetUVScale(const Vector3& scale) { uvTransform_.scale = scale; };
     void SetUVRotate(const Vector3& rotate) { uvTransform_.rotate = rotate; };
@@ -107,6 +107,25 @@ private:
     /// @brief　SRV管理の借り物
     static  CbvSrvUavDescriptorHeap* srvDescriptorHeap_;
 
+    //頂点リソース
+    Resource<VertexData> vertexResource_{};
+    //座標リソース
+    CResource<TransformationMatrixFor2D> transformationMatrixResource_{};
+    //マテリアルリソース
+    CResource<MaterialForFont>materialResource_;
+    //VBV
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+
+    Vector2 position_ = { 0.0f,0.0f };
+    float rotate_ = 0.0f;
+    Vector2 size_ = { 0.0f,0.0f };
+    Vector2 scale_ = { 1.0f,1.0f };
+    EulerTransform transform_{};
+    Matrix4x4 worldMatrix_{};
+
+    EulerTransform uvTransform_ = { 0.0f };
+    Matrix4x4 uvTransformMatrix_{};
+
     bool inUse_ = false;
     uint32_t textureHandle_ = 0;
     Vector2 anchorPoint_ = { 0.0f,0.0f };
@@ -114,26 +133,6 @@ private:
     bool isFlipY_ = false;
     Vector2 textureLeftTop = { 0.0f,0.0f };
     Vector2 textureSize = { 100.0f,100.0f };
-
-
-    Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_{};
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
-    VertexData* vertexData_ = nullptr;
-
-    Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
-    Vector2 position_ = { 0.0f,0.0f };
-    float rotate_ = 0.0f;
-    Vector2 size_ = { 0.0f,0.0f };
-    Vector2 scale_ = { 1.0f,1.0f };
-    EulerTransform transform_{};
-    Matrix4x4 worldMatrix_{};
-    TransformationMatrixFor2D* transformationMatrixData_ = nullptr;
-
-    EulerTransform uvTransform_ = { 0.0f };
-    Matrix4x4 uvTransformMatrix_{};
-
-    Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
-    MaterialForFont* material_ = nullptr;
 
 };
 

@@ -1122,7 +1122,7 @@ void DebugUI::CheckParticle(ParticleManager* particleManager)
 
                 ImGui::Checkbox("useModel", &group->useModel);
                 ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
-                auto& material = group->material;
+                auto& material = group->materialResource.data;
                 CheckObject3dMaterial(
                     material->color, material->lightMode, material->shininess, material->temperature, material->uvTransform, material->environmentCoefficient, "Material");
                 ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));

@@ -5,14 +5,13 @@
 #include FT_FREETYPE_H
 
 //DirectX
-#include<wrl.h>
-#include<d3d12.h>
 
 #include<vector>
 #include<string>
 #include<memory>
 #include<unordered_map>
 #include"Vector2.h"
+#include"ResourceManager/ResourceManager.h"
 
 class Font;
 class CommandList;
@@ -60,18 +59,9 @@ public:
         std::vector<uint8_t> fontData;
     };
 
-    struct FTResource {
-        //リソース
-        Microsoft::WRL::ComPtr<ID3D12Resource> resource;
-        Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource;
-    };
-
     //FreeType用テクスチャデータ
     struct FTTextureData {
-        FTResource ftResource;
-        uint32_t srvIndex;
-        D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
-        D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
+        SRVTextureResource texResource;
         //文字のサイズ
         Vector2 glyphSize;
         float bearingY = 0.0f;
@@ -80,6 +70,8 @@ public:
 private:
     //コマンドリストの借り物を格納する
     static ID3D12GraphicsCommandList* commandList_;
+    static CbvSrvUavDescriptorHeap* srvDescriptorHeap_;
+
     //一つのライブラリで複数のFaceを保持できる
     static FT_Library library_;
     // フォント（←注意）ごとのFTData（faceとfontData）
@@ -88,7 +80,7 @@ private:
     static std::unordered_map<GlyphKey, FTTextureData> glyphTextures_;
     //文字ごとのFontを格納する
     static std::unordered_map<GlyphKey, std::vector<std::unique_ptr<Font>>> fontPool_;
-    static CbvSrvUavDescriptorHeap* srvDescriptorHeap_;
+
 public:
     /// @brief ライブラリの初期化
     FreeTypeManager();
@@ -171,13 +163,13 @@ private:
     /// @brief FreeTypeのResource生成
     /// @param bitmap bitmapを入れる
     /// @return FTResource resource intermediateResource
-    static FTResource CreateResourceFromFTBitmap(const FT_Bitmap& bitmap);
+    static FTTextureData CreateResourceFromFTBitmap(const FT_Bitmap& bitmap);
     /// @brief 文字のテクスチャ生成
     /// @param handle 
     /// @param glyphIndex 
     static void CreateGlyphTexture(uint32_t handle, FT_UInt glyphIndex);
     /// @brief リソールリリース
     /// @param resource 
-    static void ReleaseResource(FTResource& resource);
+    static void ReleaseResource(FTTextureData& resource);
 
 };

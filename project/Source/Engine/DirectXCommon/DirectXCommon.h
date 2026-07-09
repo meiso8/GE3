@@ -16,33 +16,24 @@
 #include<array>
 #include"ImGuiClass.h"
 #include"TransitionBarrier.h"
+#include <memory>
 
-#include"RenderTexture/RenderTexture.h"
 #include"PostEffectMaterial/PostEffectMaterial.h"
 
 //Textureデータを読み込むためにDirectXTex.hをインクルード
 #include"../externals/DirectXTex/DirectXTex.h"
-//Textureの転送のために
-#include"../externals/DirectXTex/d3dx12.h"
 
 #include"Vector4.h"
+#include"../RenderTexture/RenderTexture.h"
 
+struct TextureResource;
+class DepthTexture;
 class CbvSrvUavDescriptorHeap;
 class RtvDescriptorHeap;
 class DsvDescriptorHeap;
 
 class DirectXCommon
 {
-public:
-
-private:
-
-    struct DepthTextureData {
-        Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource = nullptr;
-        uint32_t srvIndex = 0;
-        D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU = {};
-        D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU = {};
-    };
 private:
     Window* window_ = nullptr;
     DXGIFactory dxgiFactory = {};
@@ -62,9 +53,6 @@ private:
 
     Fence fence = {};
 
-    DepthTextureData depthTextureData_;
-
-    D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
     D3D12_VIEWPORT viewport = {};
     D3D12_RECT scissorRect = {};
     TransitionBarrier barrier = {};
@@ -77,19 +65,15 @@ public:
     /// @param window windowクラスを渡す
     void PreInitialize(Window& window);
     void PostInitialize();
-   
-    void CreateDepthStencilResourceSRV(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+
     /// @brief 描画前処理
 /// @param color 画面の色を指定する
-    void RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap);
+    void RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, DepthTexture* depthTexture);
     void VeiwPortAndScissorRect();
     void DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap);
     void DrawRenderTextureForSprite(RtvDescriptorHeap* rtvDescriptorHeap);
-    void RenderTexturePostDraw();
+    void RenderTexturePostDraw(DepthTexture* depthTexture);
  
-
-
-
     void SettingIdTextureBarrierPre();
     void SettingIdTextureBarrierPost();
 
@@ -114,23 +98,10 @@ public:
     
     void InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     void InitializeRenderTargetView(RtvDescriptorHeap* rtvDescriptorHeap);
-    void InitializeDepthStencilView(DsvDescriptorHeap* dsvDescriptorHeap);
+
     void UpdateGameScreen(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     void UpdateRenderTexture(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
-    /// @brief BufferResourceの作成関数
-    /// @param sizeInBytes 
-    /// @return BufferResource
-    static Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(
-        size_t sizeInBytes);
-    /// @brief BufferResourceの作成関数
-/// @param sizeInBytes 
-/// @return BufferResource
-    static Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResourceForUAV(
-        size_t sizeInBytes);
-    /// @brief ReadbackBufferResource作成関数
-    /// @param sizeInBytes 
-    /// @return 
-    static Microsoft::WRL::ComPtr<ID3D12Resource> CreateReadbackBufferResource(size_t sizeInBytes);
+
     /// @brief DescriptorHeapの作成関数
     /// @param heapType ヒープタイプの指定
     /// @param numDescriptors 
@@ -141,41 +112,7 @@ public:
         UINT numDescriptors,
         bool shaderVisible);
 
-    /// @brief テクスチャリソースの作成関数
-    /// @param metadata metadataの指定
-    /// @return テクスチャリソース
-    static Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(
-        const DirectX::TexMetadata& metadata);
-    /// @brief レンダーテクスチャの作成
-    /// @param device デバイス
-    /// @param width 幅
-    /// @param height 高さ
-    /// @param format フォーマット
-    /// @param clearColor クリアカラー
-    /// @return レンダーテクスチャ
-    static Microsoft::WRL::ComPtr<ID3D12Resource>CreateRenderTextureResource(
-        uint32_t width, uint32_t height,
-        DXGI_FORMAT format,
-        const Vector4& clearColor);
 
-    /// @brief StencilTextureの作成関数　奥行き
-    /// @param device 
-    /// @param width 
-    /// @param height 
-    /// @return StencilTexture
-   static Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencileTextureResource(
-        int32_t width,
-        int32_t height);
-
-    /// @brief テクスチャデータの転送関数
-    /// @param texture 
-    /// @param mipImages 
-    /// @return テクスチャデータ中間リソース
-    [[nodiscard]]
-    static Microsoft::WRL::ComPtr<ID3D12Resource> UploadTextureData(
-        ID3D12GraphicsCommandList* commandList,
-        const Microsoft::WRL::ComPtr<ID3D12Resource>& texture,
-        const DirectX::ScratchImage& mipImages);
     /// @brief デバイスの取得関数
     /// @return  デバイス
     static Microsoft::WRL::ComPtr<ID3D12Device>& GetDevice() { return device; };
@@ -192,8 +129,6 @@ private:
     void InitializeDevice();
     void InitializeCommand();
     void CreateSwapChain();
-    void CreateDepthBuffer();
-
 
     void InitializeFence();
     void InitializeViewPort();

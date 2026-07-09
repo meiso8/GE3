@@ -11,13 +11,12 @@ void ComputeShaderPSO::CreatePSO(DxcCompiler* dxCompiler,
     computePipelineStatesForSkinning_ =  Create(RootSignature::TYPE::CS_SKINNING, DxcCompiler::CS_Skinning);
 }
 
-ComputeShaderPSO::~ComputeShaderPSO()
+void ComputeShaderPSO::Finalize()
 {
     if (computePipelineStatesForSkinning_) {
         computePipelineStatesForSkinning_.Reset();
     }
 }
-
 
 Microsoft::WRL::ComPtr<ID3D12PipelineState> ComputeShaderPSO::Create(
     const RootSignature::TYPE& rootSignatureType,

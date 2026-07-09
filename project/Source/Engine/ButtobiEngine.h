@@ -22,7 +22,7 @@
 #include"Texture.h"
 #include"SpriteCommon.h"
 #include"CollisionConfig.h"
-
+#include"DepthTexture/DepthTexture.h"
 
 class DirectXCommon;
 
@@ -40,14 +40,22 @@ private:
     std::unique_ptr <Input> input = nullptr;
     /// @brief 時間管理
     std::unique_ptr<TimeManager> time_ = nullptr;
+
     /// @brief DirectXCommon後で改変する
     std::unique_ptr<DirectXCommon> directXCommon_ = nullptr;
     /// @brief RTV管理
     std::unique_ptr<RtvDescriptorHeap> rtvDescriptorHeap_ = nullptr;
-    /// @brief SRV管理
-    std::unique_ptr<CbvSrvUavDescriptorHeap> srvDescriptorHeap_ = nullptr;
+
     /// @brief DSV管理
     std::unique_ptr<DsvDescriptorHeap> dsvDescriptorHeap_ = nullptr;
+    /// @brief SRV管理
+    std::unique_ptr<CbvSrvUavDescriptorHeap> srvDescriptorHeap_ = nullptr;
+    /// @brief 深度テクスチャ
+    std::unique_ptr<DepthTexture> depthTexture_ = nullptr;
+
+#ifdef USE_IMGUI
+    ImGuiClass imGuiClass = {};
+#endif // USE_IMGUI
 
     /// @brief 方向ライト
     std::unique_ptr<DirectionalLightManager> directionalLightManager_ = nullptr;
@@ -55,23 +63,21 @@ private:
     std::unique_ptr<PointLightManager> pointLightManager_ = nullptr;
     /// @brief スポットライト
     std::unique_ptr<SpotLightManager> spotLightManager_ = nullptr;
-    /// @brief タグ作成クラス
-    std::unique_ptr<TagFactory> tagFactory_ = nullptr;
-#ifdef USE_IMGUI
-    ImGuiClass imGuiClass = {};
-#endif // USE_IMGUI
 
-    /// @brief　プリミティブ
-    std::unique_ptr<PrimitiveFactory> primitiveFactory_ = nullptr;
-   
-    /// @brief　パーティクル管理
-    std::unique_ptr<ParticleManager> particleManager_ = nullptr;
     /// @brief テクスチャ
     std::unique_ptr<Texture> texture_ = nullptr;
     /// @brief スプライト
     std::unique_ptr<SpriteCommon> spriteCommon_ = nullptr;
     /// @brief テキスト管理
     std::unique_ptr<FreeTypeManager> freeTypeManager_ = nullptr;
+
+    /// @brief　プリミティブ生成工場
+    std::unique_ptr<PrimitiveFactory> primitiveFactory_ = nullptr;
+    /// @brief タグ生成工場
+    std::unique_ptr<TagFactory> tagFactory_ = nullptr;
+    /// @brief　パーティクル管理
+    std::unique_ptr<ParticleManager> particleManager_ = nullptr;
+
 
 protected:
     

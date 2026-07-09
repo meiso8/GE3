@@ -10,7 +10,7 @@
 #include"Wave.h"
 #include"Transform.h"
 #include<memory>
-
+#include"ResourceManager/ResourceManager.h"
 class Model;
 class CbvSrvUavDescriptorHeap;
 
@@ -52,8 +52,7 @@ protected:
     static CbvSrvUavDescriptorHeap* cbvSrvUavDescriptorHeap_;
     // ==============位置情報==================
     WorldTransform worldTransform_;
-    Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
-    TransformationMatrixFor3D* transformationMatrixData_ = nullptr;
+    CResource<TransformationMatrixFor3D>transformationMatrixResource_;
 
     // ==============表示非表示切り替え==================
     bool disabled_ = false;
@@ -64,7 +63,8 @@ protected:
     std::string nextStageName_ = "";
 
     // ==============マテリアル==================
-    Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
+    //マテリアルに関しては継承先で色々と変えるためどうするか迷う。
+    IResource materialResource_;
     Material* material_ = nullptr;
 
     EulerTransform uvTransform_ = { 0.0f };
@@ -73,16 +73,11 @@ protected:
     std::array<int32_t, TEXTURE_USAGE_COUNT> textureHandles_;
 
     // ==============膨張データ==================
-    Microsoft::WRL::ComPtr<ID3D12Resource> expansionResource_ = nullptr;
-    Balloon* balloonData_ = nullptr;
-
+    CResource<Balloon>expansionResource_;
     // ==============波データ==================
-    Microsoft::WRL::ComPtr<ID3D12Resource> waveResource_ = nullptr;
-    Wave* waveData_ = nullptr;
+    CResource<Wave>waveResource_;
     // ==============ID情報==================
-    Microsoft::WRL::ComPtr <ID3D12Resource> idResource_ = nullptr;
-    ObjectID* idData_ = nullptr;
-
+    CResource<ObjectID>idResource_;
     // ==============メッシュ情報==================
     Primitive* primitive_ = nullptr;
 
@@ -123,8 +118,8 @@ public:
     void SetNextStageName(const std::string& stageName) { nextStageName_ = stageName; }
 
     // ==============ID情報==================
-    void SetObjectID(uint32_t id) { if (idData_) { idData_->id = id; } }
-    uint32_t GetObjectID() const { if (idData_) { return idData_->id; }; return 0; }
+    void SetObjectID(uint32_t id) { if (idResource_.data) { idResource_.data->id = id; } }
+    uint32_t GetObjectID() const { if (idResource_.data) { return idResource_.data->id; }; return 0; }
 
     // ==============表示非表示切り替え==================
     void SetDisabled(const bool flag) { disabled_ = flag; };
@@ -132,12 +127,12 @@ public:
 
     // ==============膨張データ==================
 
-    Balloon& GetBalloonData() { return *balloonData_; }
+    Balloon& GetBalloonData() { return *expansionResource_.data; }
     void InitBalloonData();
 
     // ==============波データ==================
 
-    Wave& GetWaveData(size_t index) { return waveData_[index]; };
+    Wave& GetWaveData(size_t index) { return waveResource_.data[index]; };
     void InitWaveData();
     void InitWaveDataIndex(const uint32_t& index);
 

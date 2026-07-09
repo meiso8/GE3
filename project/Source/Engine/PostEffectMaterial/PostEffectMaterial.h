@@ -6,6 +6,7 @@
 #include<wrl.h>
 #include<array>
 #include<PSO.h>
+#include"ResourceManager/ResourceManager.h"
 
 class Camera;
 class PostEffectMaterial
@@ -82,42 +83,38 @@ public:
 public:
     void SetCamera(Camera* camera);
 
-    Microsoft::WRL::ComPtr<ID3D12Resource>& GetMaterialResouce(const PSO::EffectType& effectType);
-
     void Update();
     void Create();
     void Clear();
-  
-    MaterialForGaussianFilter* GetMaterialGaussianFilter() { return materialForGaussianFilter_; };
-    MaterialForRenderTexture* GetMaterialGrayScale() {return materialForGrayScale_; };
-    MaterialForVignette* GetMaterialForVignette() { return materialForVignette_; };
-    MaterialForBoxFilter* GetMaterialForBoxFilter() {return materialForBoxFilter_;  };
+    ~PostEffectMaterial();
+    MaterialForGaussianFilter* GetMaterialGaussianFilter() { return materialForGaussianFilter_.data; };
+    MaterialForRenderTexture* GetMaterialGrayScale() {return materialForGrayScale_.data; };
+    MaterialForVignette* GetMaterialForVignette() { return materialForVignette_.data; };
+    MaterialForBoxFilter* GetMaterialForBoxFilter() {return materialForBoxFilter_.data;  };
 
-   /* MaterialForRenderTexture* materialForFullScreen_ = nullptr;*/
-
-    MaterialForLuminanceBasedOutline* GetMaterialForLuminanceBasedOutline() { return materialForLuminanceBasedOutline_; };
-    MaterialForDepthBasedOutline* GetMaterialForDepthBasedOutline(){ return  materialForDepthBasedOutline_; };
-    MaterialForRadialBlur* GetMaterialForRadialBlur(){ return materialForRadialBlur_; };
-    MaterialForDissolve* GetMaterialForDissolve(){ return materialForDissolve_; };
-    MaterialForThermography* GetMaterialThermography() { return materialForThermography_; };
-    MaterialForRandom* GetmaterialForRandom() { return materialForRandom_; };
+    MaterialForLuminanceBasedOutline* GetMaterialForLuminanceBasedOutline() { return materialForLuminanceBasedOutline_.data; };
+    MaterialForDepthBasedOutline* GetMaterialForDepthBasedOutline(){ return  materialForDepthBasedOutline_.data; };
+    MaterialForRadialBlur* GetMaterialForRadialBlur(){ return materialForRadialBlur_.data; };
+    MaterialForDissolve* GetMaterialForDissolve(){ return materialForDissolve_.data; };
+    MaterialForThermography* GetMaterialThermography() { return materialForThermography_.data; };
+    MaterialForRandom* GetmaterialForRandom() { return materialForRandom_.data; };
+    D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress(const PSO::EffectType& type);
 private:
     Camera* camera_ = nullptr;   
     const Vector4 sepiaColor_ = { 1.0f,74.0f / 107.0f,43.0f / 107.0f,1.0f };
 
-    MaterialForRenderTexture* materialForGrayScale_ = nullptr;
-    MaterialForVignette* materialForVignette_ = nullptr;
-    MaterialForBoxFilter* materialForBoxFilter_ = nullptr;
-    MaterialForRenderTexture* materialForFullScreen_ = nullptr;
-    MaterialForGaussianFilter* materialForGaussianFilter_ = nullptr;
-    MaterialForLuminanceBasedOutline* materialForLuminanceBasedOutline_ = nullptr;
-    MaterialForDepthBasedOutline* materialForDepthBasedOutline_ = nullptr;
-    MaterialForRadialBlur* materialForRadialBlur_ = nullptr;
-    MaterialForDissolve* materialForDissolve_ = nullptr;
-    MaterialForThermography* materialForThermography_ = nullptr;
-    MaterialForRandom* materialForRandom_ = nullptr;
-
-    std::array<Microsoft::WRL::ComPtr <ID3D12Resource>, PSO::kCountOfEffect> materialResource_;
+    CResource <PostEffectMaterial::MaterialForRenderTexture> materialForGrayScale_;
+    CResource <PostEffectMaterial::MaterialForVignette> materialForVignette_;
+    CResource <PostEffectMaterial::MaterialForBoxFilter> materialForBoxFilter_;
+    CResource <PostEffectMaterial::MaterialForRenderTexture> materialForFullScreen_;
+    CResource <PostEffectMaterial::MaterialForGaussianFilter> materialForGaussianFilter_;
+    CResource <PostEffectMaterial::MaterialForLuminanceBasedOutline> materialForLuminanceBasedOutline_;
+    CResource <PostEffectMaterial::MaterialForDepthBasedOutline> materialForDepthBasedOutline_;
+    CResource <PostEffectMaterial::MaterialForRadialBlur> materialForRadialBlur_;
+    CResource <PostEffectMaterial::MaterialForDissolve> materialForDissolve_;
+    CResource <PostEffectMaterial::MaterialForThermography> materialForThermography_;
+    CResource <PostEffectMaterial::MaterialForRandom> materialForRandom_;
+    std::unordered_map<PSO::EffectType, ID3D12Resource*> resourceMap_;
 private:
     void CreateMaterialBufferForGrayScale();
     void CreateMaterialBufferForVignette();

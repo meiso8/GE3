@@ -14,7 +14,7 @@
 #include<unordered_map>
 #include"TextureFactory.h"
 #include<filesystem>
-
+#include"ResourceManager/ResourceManager.h"
 class CbvSrvUavDescriptorHeap;
 
 class Texture
@@ -25,12 +25,7 @@ public:
     static uint32_t kSRVIndexTop;
     //テクスチャデータの構造体
     struct TextureData {
-        DirectX::TexMetadata metadata;
-        Microsoft::WRL::ComPtr<ID3D12Resource> resource;
-        Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource;
-        uint32_t srvIndex = 0;
-        D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU{};
-        D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU{};
+        SRVTextureResource resource;
     };
 
 public:

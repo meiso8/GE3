@@ -14,6 +14,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineStatesForSkinning_ = nullptr;
 private:
     ComputeShaderPSO() = default;
+    ~ComputeShaderPSO() = default;
 public:
 
     static ComputeShaderPSO* GetInstance()
@@ -21,6 +22,10 @@ public:
         static ComputeShaderPSO instance;
         return &instance;
     }
+
+    ComputeShaderPSO(const ComputeShaderPSO&) = delete;
+    ComputeShaderPSO& operator=(const ComputeShaderPSO&) = delete;
+
     Microsoft::WRL::ComPtr<ID3D12PipelineState>& GetSkinningPSO() {
         return computePipelineStatesForSkinning_
             ;
@@ -28,8 +33,8 @@ public:
     void CreatePSO(
         DxcCompiler* dxCompiler,
         RootSignature* rootSignature);
+    void Finalize();
 
-    ~ComputeShaderPSO();
     Microsoft::WRL::ComPtr <ID3D12PipelineState> Create(
         const RootSignature::TYPE& rootSignatureType,
         const  DxcCompiler::CS_TYPE& csShaderType);

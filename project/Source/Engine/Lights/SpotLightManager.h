@@ -3,6 +3,7 @@
 #include<wrl.h>
 #include"Lights/Light.h"
 #include<stdint.h>
+#include"../ResourceManager/ResourceManager.h"
 class CommandList;
 class CbvSrvUavDescriptorHeap;
 class SpotLightManager
@@ -13,14 +14,11 @@ public:
     SpotLightManager(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     static void InitData(const uint32_t index);
     static void InitDatas();
-    static SpotLight& GetData(const uint32_t& index) { return spotLightData_[index]; }
-    static uint32_t GetSrvIndex() { return srvIndex_; }
+    static SpotLight& GetData(const uint32_t& index) { return resource_.data[index]; }
+    static uint32_t GetSrvIndex() { return resource_.srvIndex; }
 public:
     static const uint32_t kMaxData_ = 20;
 private:
-    static Microsoft::WRL::ComPtr <ID3D12Resource> spotLightResource_;
-    static SpotLight* spotLightData_;
-
-    static uint32_t srvIndex_;
+    static SRVResource<SpotLight> resource_;
 };
 

@@ -65,17 +65,15 @@ void SkinningModel::CreateInputVertexResource()
 {
 
     UINT vertexBufferSize = sizeof(VertexData) *UINT( modelData_->vertices.size());
-    skinningCSResorce_.inputVertexResources_.resource =
-        DirectXCommon::CreateBufferResource(vertexBufferSize);
-    skinningCSResorce_.inputVertexResources_.resource->SetName(L"inputVertexResource");
+    skinningCSResorce_.inputVertexResource_.CreateBufferResource(L"inputVertexResource", vertexBufferSize);
 
     //頂点リソースに頂点をマッピング
-    skinningCSResorce_.inputVertexResources_.resource->Map(0, nullptr, reinterpret_cast<void**>(&inputVertexData_));
-    std::memcpy(inputVertexData_, modelData_->vertices.data(), vertexBufferSize); // vectorの中身を一気にコピー！
-    skinningCSResorce_.inputVertexResources_.resource->Unmap(0, nullptr);
-    
-    skinningCSResorce_.inputVertexResources_.index = cbvSrvUavDescriptorHeap_->Allocate();
-    cbvSrvUavDescriptorHeap_->CreateSRVforStructuredBuffer(skinningCSResorce_.inputVertexResources_.index, skinningCSResorce_.inputVertexResources_.resource.Get(),UINT( modelData_->vertices.size()), sizeof(VertexData));
+    skinningCSResorce_.inputVertexResource_.Map();
+
+    std::memcpy(skinningCSResorce_.inputVertexResource_.data, modelData_->vertices.data(), vertexBufferSize); // vectorの中身を一気にコピー！
+    skinningCSResorce_.inputVertexResource_.UnMap();
+    skinningCSResorce_.inputVertexResource_.Allocate(cbvSrvUavDescriptorHeap_);
+    skinningCSResorce_.inputVertexResource_.CreateSRVforStructuredBuffer(cbvSrvUavDescriptorHeap_, UINT(modelData_->vertices.size()));
 
     LogFile::Log("Create InputVertexresource");
 }
@@ -85,22 +83,12 @@ void SkinningModel::CreateOutVertexResource()
 
     UINT vertexBufferSize = sizeof(VertexData) *UINT( modelData_->vertices.size());
     //UAVの作成をするよ
+    skinningCSResorce_.outputVertexResource_.CreateBufferResourceForUAV(L"outputVertexResource",vertexBufferSize);
+    skinningCSResorce_.outputVertexResource_.Allocate(cbvSrvUavDescriptorHeap_);
+    skinningCSResorce_.outputVertexResource_.CreateUAV(cbvSrvUavDescriptorHeap_,UINT(modelData_->vertices.size()));
 
-    skinningCSResorce_.outputVertexResources_.resource =
-        DirectXCommon::CreateBufferResourceForUAV(vertexBufferSize);
-    skinningCSResorce_.outputVertexResources_.resource->SetName(L"outputVertexResource");
-
-    skinningCSResorce_.outputVertexResources_.index = cbvSrvUavDescriptorHeap_->Allocate();
-    cbvSrvUavDescriptorHeap_->CreateUAV(
-        skinningCSResorce_.outputVertexResources_.index,
-        skinningCSResorce_.outputVertexResources_.resource.Get(),
-        UINT(modelData_->vertices.size()), 
-        sizeof(VertexData)
-    );
-    // 1. 頂点バッファの作成とデータ転送
-
-    // 3. 頂点バッファビューの作成 上書き
-    vertexBufferView_.BufferLocation = skinningCSResorce_.outputVertexResources_.resource->GetGPUVirtualAddress();
+    // 頂点バッファビューの作成 上書き
+    vertexBufferView_.BufferLocation = skinningCSResorce_.outputVertexResource_.GetGPUVirtualAddress();
     vertexBufferView_.SizeInBytes = vertexBufferSize;
     vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
@@ -108,10 +96,9 @@ void SkinningModel::CreateOutVertexResource()
 }
 void SkinningModel::CreateSkinningInformation()
 {
-    skinningCSResorce_.skinningInformationResource_ = DirectXCommon::CreateBufferResource(sizeof(SkinningInformation));
-    skinningCSResorce_.skinningInformationResource_->SetName(L"inputVertexResource");
+    skinningCSResorce_.skinningInformationResource_.CreateBufferResource(L"inputVertexResource");
     //書き込むためのアドレスを取得
-    skinningCSResorce_.skinningInformationResource_->Map(0, nullptr, reinterpret_cast<void**>(&skinningInformation_));
+    skinningCSResorce_.skinningInformationResource_.Map();
     LogFile::Log("Create SkinningInformation");
-    skinningInformation_->numVertices = static_cast<uint32_t>(modelData_->vertices.size());
+    skinningCSResorce_.skinningInformationResource_.data->numVertices = static_cast<uint32_t>(modelData_->vertices.size());
 }

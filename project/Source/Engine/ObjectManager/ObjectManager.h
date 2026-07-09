@@ -13,6 +13,10 @@ class ObjectManager
 public:
     //インスタンスの取得
     static ObjectManager* GetInstance();
+    
+    ObjectManager(const ObjectManager&) = delete;
+    ObjectManager& operator=(const ObjectManager&) = delete;
+
     // オブジェクトの登録（登録時に自動で一意のIDが割り当てられます）
     void RegisterObject(Object3d* gameObject);
     // オブジェクトの削除
@@ -32,6 +36,8 @@ public:
     void Update();
     //描画
     void Draw(Camera& camera);
+    //終了処理
+    void Finalize();
 private:      
     void Save();
     void SetName();
@@ -39,7 +45,7 @@ private:
     bool UpdateImGuizmo(Camera& camera);
 
     ObjectManager() = default;
-    ~ObjectManager();
+    ~ObjectManager() = default;
 private:
     RenderTexture* renderTexture_ = nullptr;
 

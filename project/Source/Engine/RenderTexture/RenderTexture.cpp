@@ -21,8 +21,8 @@ void RenderTexture::Create(RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& 
     //ObjectID用テクスチャ　
     CreateResource(kObjectID, rtvDescriptorHeap,DXGI_FORMAT_R32_UINT, false);
     //ObjectID用リソース
-    idReadbackResource_ = DirectXCommon::CreateReadbackBufferResource(sizeof(uint32_t));
-    idReadbackResource_->SetName(L"RenderTexture_Id_ReadBackResource");
+    idReadbackResource_.resource = ResourceFactory::CreateReadbackBufferResource(sizeof(uint32_t));
+    idReadbackResource_.resource->SetName(L"RenderTexture_Id_ReadBackResource");
 }
 
 void RenderTexture::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
@@ -40,8 +40,8 @@ void RenderTexture::CreateResource(
     DXGI_FORMAT format, bool createSRV)
 {
     //rtvの作成
-    renderTextureDatas_[index].resource =
-        DirectXCommon::CreateRenderTextureResource(
+    renderTextureDatas_[index].resource.resource =
+        ResourceFactory::CreateRenderTextureResource(
             Window::GetClientWidth(),
             Window::GetClientHeight(),
             format,
@@ -55,7 +55,11 @@ void RenderTexture::CreateResource(
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
     uint32_t rtvIndex = rtvDescriptorHeap->Allocate();
     renderTextureDatas_[index].rtvHandleCPU = rtvDescriptorHeap->GetCPUDescriptorHandle(rtvIndex);
-    DirectXCommon::GetDevice()->CreateRenderTargetView(renderTextureDatas_[index].resource.Get(), &rtvDesc, renderTextureDatas_[index].rtvHandleCPU);
+    DirectXCommon::GetDevice()->CreateRenderTargetView(
+        renderTextureDatas_[index].resource.Get(),
+        &rtvDesc,
+        renderTextureDatas_[index].rtvHandleCPU
+    );
 
     LogFile::Log("Rendertexture : CreateRTVDesc\n");
 
@@ -71,12 +75,10 @@ void RenderTexture::CreateResource(
         renderTextureSrvDesc.Texture2D.MipLevels = 1;
         LogFile::Log("Rendertexture : Create SRV\n");
 
-        renderTextureDatas_[index].srvIndex = srvDescriptorHeap_->Allocate();
-        renderTextureDatas_[index].srvHandleCPU = srvDescriptorHeap_->GetCPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
-        renderTextureDatas_[index].srvHandleGPU = srvDescriptorHeap_->GetGPUDescriptorHandle(renderTextureDatas_[index].srvIndex);
-        LogFile::Log("Rendertexture : GetSRVIndexAndGPUAndCPUHandle\n");
+        uint32_t& srvIndex = renderTextureDatas_[index].resource.srvIndex;
+        srvIndex = srvDescriptorHeap_->Allocate();
 
-        DirectXCommon::GetDevice()->CreateShaderResourceView(renderTextureDatas_[index].resource.Get(), &renderTextureSrvDesc, renderTextureDatas_[index].srvHandleCPU);
+        DirectXCommon::GetDevice()->CreateShaderResourceView(renderTextureDatas_[index].resource.Get(), &renderTextureSrvDesc, srvDescriptorHeap_->GetCPUDescriptorHandle(srvIndex));
         LogFile::Log("Rendertexture : CreateShaderResourceView\n");
     }
 
@@ -167,5 +169,10 @@ void RenderTexture::Clear()
 
     thermographyTextureData_.resource.Reset();
     idReadbackResource_.Reset();
+}
+
+RenderTexture::~RenderTexture()
+{
+    Clear();
 }
 

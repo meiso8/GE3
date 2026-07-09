@@ -2,9 +2,8 @@
 #include"Transform.h"
 #include"Vector2.h"
 #include"SphericalCoordinate.h"
-#include<wrl.h>
-#include<d3d12.h>
 #include"Matrix/CameraMatrix.h"
+#include"ResourceManager/ResourceManager.h"
 
 enum PROJECTION_TYPE {
     PERSPECTIVE,
@@ -46,8 +45,7 @@ protected:
     //カメラ行列
     CameraMatrix cameraMatrix_;
     //カメラのGPU用リソース
-    Microsoft::WRL::ComPtr<ID3D12Resource> cameraResource_;
-    CameraForGPU* cameraForGPU_ = nullptr;
+    Resource<CameraForGPU> cameraResource_;
 protected:
     void CreateResource();
     void UpdateData();
