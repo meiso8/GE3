@@ -16,6 +16,12 @@ UIManager::UIManager()
     pauseScreen_->SetCurPosPtr(curPos_->GetScreenPosPtr());
 }
 
+UIManager::~UIManager()
+{
+    hpGages_.clear();
+
+}
+
 void UIManager::Initialize()
 {
     for (const auto& [type, gage] : hpGages_) {
@@ -44,7 +50,7 @@ void UIManager::UpdatePauseScreen()
 
     buttonSprite_->Update();
 
-    if (pauseScreen_->isActive_) {
+    if (pauseScreen_->GetIsActive()) {
         curPos_->Update();
     } else {
         curPos_->Initialize();
@@ -75,7 +81,7 @@ void UIManager::DrawCurPos()
 
     buttonSprite_->Draw();
 
-    if (pauseScreen_->isActive_) {
+    if (pauseScreen_->GetIsActive()) {
         curPos_->Draw();
     }
 

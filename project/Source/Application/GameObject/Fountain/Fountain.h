@@ -8,6 +8,7 @@
 class Fountain :public Collider {
 public:
     Fountain();
+    ~Fountain();
     void Initialize();
     void Update();
     void Draw(Camera& camera);

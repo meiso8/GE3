@@ -11,7 +11,7 @@ public:
     static MeshData GetMeshData(const Primitive::MeshType& topologyType);
     void CreateAllPrimitive();
     static std::unordered_map<std::string, Primitive>GetPrimitives() { return primitives_; };
-    ~PrimitiveFactory();
+    void Finalize();
 private:
     void CreateAndSetMeshType(const Primitive::MeshType& topologyType);
     static std::unordered_map<std::string, Primitive>primitives_;

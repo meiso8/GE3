@@ -13,6 +13,7 @@ BeamManager::BeamManager()
 
 BeamManager::~BeamManager()
 {
+	beams_.clear();
 }
 
 void BeamManager::Initialize()

@@ -20,12 +20,6 @@ void SkyboxObject3d::Create()
     SetTextureHandle(TextureFactory::SKYBOX_TEX);
 }
 
-
-SkyboxObject3d::~SkyboxObject3d()
-{
-    Object3d::~Object3d();
-}
-
 void SkyboxObject3d::Initialize()
 {
     worldTransform_.Initialize();

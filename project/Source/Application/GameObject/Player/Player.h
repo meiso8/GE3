@@ -7,8 +7,8 @@
 #include"AABB.h"
 #include"Line.h"
 #include"Collider.h"
-#include"RaySprite.h"
 #include"EyeCollider.h"
+#include"RaySprite.h"
 
 class Model;
 class Camera;
@@ -17,12 +17,14 @@ class CircleMesh;
 class CubeMesh;
 class Sprite;
 
+
 class Player :public Collider
 {
 public:
 
 
     Player();
+    ~Player();
     void Init(const Vector3& pos);
     void Draw(Camera& camera);
     void DrawRaySprite();
@@ -39,10 +41,10 @@ public:
     }
 
     WorldTransform& GetBodyWorldTransform() {
-        return bodyPos_.GetWorldTransform();
+        return bodyPos_->GetWorldTransform();
     }
-    void SetBodyRotate(const Vector3& rotate){ bodyPos_.SetRotate(rotate); }
-    void SetBodyScale(const Vector3& scale) { bodyPos_.SetScale(scale); }
+    void SetBodyRotate(const Vector3& rotate){ bodyPos_->SetRotate(rotate); }
+    void SetBodyScale(const Vector3& scale) { bodyPos_->SetScale(scale); }
     HPs* GetHpsPtr() { return &characterState_.hps; }
 
     void OnCollision(Collider* collider)override;
@@ -102,7 +104,7 @@ private:
     float soundTimer_ = 0.0f;
     Model* model_;
 
-    Object3d bodyPos_;
+    std::unique_ptr<Object3d> bodyPos_  = nullptr;
     std::unique_ptr<EyeCollider>eyeCollider_ = nullptr;
     float cameraRotateY_ = 0.0f;
     float cameraRotateX_ = 0.0f;

@@ -2,7 +2,7 @@
 
 Model::~Model()
 {
-    Primitive::~Primitive();
+
 }
 
 void Model::CreateModel()

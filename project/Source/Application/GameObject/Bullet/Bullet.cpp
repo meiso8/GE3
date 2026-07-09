@@ -6,13 +6,13 @@
 #include"Model.h"
 Bullet::Bullet() {
     model_ = ModelManager::GetModel("people.obj");
-
-    body_.Create();
-    body_.SetMeshAndMaterial(model_);
-    body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
+    body_ = std::make_unique<Object3d>();
+    body_->Create();
+    body_->SetMeshAndMaterial(model_);
+    body_->SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     SetAABB({ {-1.0f,-1.0f,-1.0f} ,{1.0f,1.0f,1.0f} });
     SetBulletType(kEnemyCold);
-    SetWorldMatrix(body_.GetWorldTransform());
+    SetWorldMatrix(body_->GetWorldTransform());
 }
 
 Bullet::~Bullet() {
@@ -21,16 +21,16 @@ Bullet::~Bullet() {
 void Bullet::Initialize() {
     //最初は冷たい
     SetBulletType(kEnemyCold);
-    body_.Initialize();
-    body_.GetTransform().translate.y = -10.0f;
-    body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
+    body_->Initialize();
+    body_->GetTransform().translate.y = -10.0f;
+    body_->SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     moveDir_ = { 0.0f,0.0f,1.0f };
     moveSpeed_ = 0.2f;
     lifeTimer_ = 0.0f;
     lifeDuration_ = 2.0f;
     isActive_ = false;
     size_ = 3.0f;
-    body_.GetBalloonData().expansion = 0.0f;
+    body_->GetBalloonData().expansion = 0.0f;
 
 
 }
@@ -42,14 +42,14 @@ void Bullet::OnCollision(Collider* collider)
 
     isActive_ = false;
     lifeTimer_ = 0.0f;
-    body_.SetTranslate({ 0.0f,-10.0f,0.0f });
-    body_.Update();
+    body_->SetTranslate({ 0.0f,-10.0f,0.0f });
+    body_->Update();
     //デバック用
     OnCollisionCollider();
 }
 Vector3 Bullet::GetWorldPosition()
 {
-    return body_.GetWorldTransform().GetWorldPosition();
+    return body_->GetWorldTransform().GetWorldPosition();
 }
 void Bullet::Update() {
 
@@ -63,10 +63,10 @@ void Bullet::Update() {
     } else {
         lifeTimer_ -= 0.016f;
     }
-    auto& transform = body_.GetTransform();
+    auto& transform = body_->GetTransform();
     transform.rotate = moveDir_;
     transform.translate += moveDir_ * moveSpeed_;
-    body_.Update();
+    body_->Update();
 
 
     ColliderUpdate();
@@ -79,7 +79,7 @@ void Bullet::Draw(Camera& camera) {
         return;
     }
 
-    body_.Draw(camera, kBlendModeNormal);
+    body_->Draw(camera, kBlendModeNormal);
     ColliderDraw(camera);
 }
 
@@ -112,28 +112,28 @@ void Bullet::SetBulletType(const BulletType& type)
     }
 
     if (type == kEnemyCold || type == kPlayerCold) {
-        body_.SetTemperature(0.375f);
+        body_->SetTemperature(0.375f);
 
     } else if (type == kEnemyHot || type == kPlayerHot) {
-        body_.SetTemperature(1.0f);
+        body_->SetTemperature(1.0f);
     }
 }
 
 void Bullet::Shot(const Vector3& position, const Vector3& direction, const float speed, const float size, const Bullet::BulletType& type) {
 
     SetBulletType(type);
-    body_.SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
+    body_->SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
     type_ = type;
 
     moveDir_ = Normalize(direction);
     moveSpeed_ = speed;
     size_ = size;
 
-    auto& transform = body_.GetTransform();
+    auto& transform = body_->GetTransform();
     transform.translate = position;
     transform.rotate = moveDir_;
     transform.scale = { size_,size_,size_ };
-    body_.Update();
+    body_->Update();
     
     lifeTimer_ = lifeDuration_;
     isActive_ = true;
@@ -141,5 +141,5 @@ void Bullet::Shot(const Vector3& position, const Vector3& direction, const float
 
 void Bullet::SetColor(const Vector4& color)
 {
-    body_.SetColor(color);
+    body_->SetColor(color);
 }

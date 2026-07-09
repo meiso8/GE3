@@ -9,11 +9,12 @@ class MemoManager
 {
 private:
     std::map< TextureFactory::Handle, std::unique_ptr<Memo>>memos_;
-    std::unique_ptr<Sprite> sprite_;
+    std::unique_ptr<Sprite> sprite_ = nullptr;
     Vector2 spriteScale_ = { 1.0f,1.0f };
 public:
     static bool isLookItem_;
     MemoManager();
+    ~MemoManager();
     void Initialize();
     void Update();
     void Draw(Camera& camera);

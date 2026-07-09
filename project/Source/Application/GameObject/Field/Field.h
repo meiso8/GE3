@@ -10,7 +10,7 @@ class Camera;
 class Field
 {
 private:
-    std::unique_ptr <Object3d> object3d_;
+    std::unique_ptr <Object3d> object3d_ = nullptr;
     std::unique_ptr<Primitive> circleMesh_ = nullptr;
     Circle& GetCircle() {
         return circle_;

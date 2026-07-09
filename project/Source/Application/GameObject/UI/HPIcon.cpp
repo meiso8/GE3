@@ -20,6 +20,16 @@ HPIcon::HPIcon()
 
 }
 
+HPIcon::~HPIcon()
+{
+    for (auto& [type, spriteList] : sprites_) {
+        for (auto& sprite : spriteList) {
+            spriteList.clear();
+        }
+    }
+    sprites_.clear();
+}
+
 void HPIcon::Setting(const Vector2& size, const Vector2& pos)
 {
     for (auto& [type, spriteList] : sprites_) {

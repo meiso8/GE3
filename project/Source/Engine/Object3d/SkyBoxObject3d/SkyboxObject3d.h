@@ -21,7 +21,6 @@ private:
     //スカイボックスマテリアル
     MaterialForSkyBox* materialForSkyBox_ = nullptr;
 public:
-    ~SkyboxObject3d();
     /// @brief 色の取得　override
     /// @return 色
     Vector4& GetColor()override { return materialForSkyBox_->color; };

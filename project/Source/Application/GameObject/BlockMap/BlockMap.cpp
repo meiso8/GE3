@@ -64,7 +64,8 @@ BlockMap::~BlockMap()
             block.reset();
         }
     }
- 
+    //map_.clear();
+   
 }
 
 void BlockMap::Initialize() {

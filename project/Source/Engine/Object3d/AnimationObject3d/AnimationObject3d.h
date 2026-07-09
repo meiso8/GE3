@@ -3,18 +3,18 @@
 #include"Quaternion/Quaternion.h"
 #include"Animation/Animation.h"
 #include<memory>
+#include"Bone.h"
+#include"SkinningModel.h"
 
 
-class DebugBone;
 struct SkinCluster;
-class SkinningModel;
+
 struct ModelData;
 class CommandList;
 
 class AnimationObject3d :public Object3d
 {
 public:
-
     AnimationObject3d();
     ~AnimationObject3d();
     void Initialize()override;
@@ -47,9 +47,11 @@ private:
 
     Matrix4x4 worldMatrix_ = { 0.0f };
     bool isSkinning_ = true;
+    //ここで作成中
     std::unique_ptr<SkinningModel> skinningModel_ = nullptr;
 #ifdef _DEBUG
-    std::unique_ptr< DebugBone> debugBone_;
+    //ここで作成中
+    std::unique_ptr< DebugBone> debugBone_ = nullptr;
 #endif
 };
 

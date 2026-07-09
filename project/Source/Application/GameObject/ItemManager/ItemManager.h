@@ -8,6 +8,7 @@ public:
     /// @brief 太陽円盤取得フラグの取得静的関数
     /// @return 太陽円盤取得フラグ
     static bool IsGetSolarDisc() { return isGetSolarDisc_; }
+    ~ItemManager();
     /// @brief コンストラクタ
     ItemManager();
     /// @brief 初期化

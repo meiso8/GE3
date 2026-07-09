@@ -26,6 +26,7 @@ private:
     void Change(int x, int y);
 public:
     Puzzle(const int horizontal = 4, const int vertical = 4);
+    ~Puzzle();
     void Init();
     void Game(const Vector2& screenPos);
     void Draw();

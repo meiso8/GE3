@@ -16,6 +16,9 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStateSkyBox_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSO::kCountOfEffect> PSO::graphicsPipelineStateOffScreen_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateRandom_;
 
+
+
+
 std::unordered_map<PSO::PSOKey, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSO::PSOKeyHasher> PSO::psoCache_;
 
 Microsoft::WRL::ComPtr <ID3D12PipelineState> PSO::Create(
@@ -418,40 +421,6 @@ void PSO::CreateALLPSO()
 
 void PSO::Finalize()
 {
-    for (auto& pso : graphicsPipelineStateSprite_) {
-        if (pso) {
-            pso.Reset();
-        }
-    }
-
-    for (auto& pso : graphicsPipelineStateFont_) {
-        if (pso) {
-            pso.Reset();
-        }
-    }
-
-    if (graphicsPipelineStatesLine_) {
-        graphicsPipelineStatesLine_.Reset();
-    }
-
-    for (auto& pso : graphicsPipelineStatesParticle_) {
-        if (pso) {
-            pso.Reset();
-        }
-    }
-
-    for (auto& blendModes : graphicsPipelineStates_) {
-        for (auto& pso : blendModes) {
-            if (pso) {
-                pso.Reset(); // Release() と同じ効果
-            }
-        }
-    }
-
-    if (graphicsPipelineStateSkyBox_) {
-        graphicsPipelineStateSkyBox_.Reset();
-    }
-
 
     for (auto& [key, pso] : psoCache_) {
         if (pso) {
@@ -461,6 +430,61 @@ void PSO::Finalize()
 
     psoCache_.clear();
 
+    //乱数でノイズみたいなやつ
+    for (auto& pso : graphicsPipelineStateRandom_) {
+        if (pso) {
+            pso.Reset();
+        }
+    }
+
+    //OffScreen
+    for (auto& pso : graphicsPipelineStateOffScreen_) {
+        if (pso) {
+            pso.Reset();
+        }
+    }
+
+    //SkyBox
+    if (graphicsPipelineStateSkyBox_) {
+        graphicsPipelineStateSkyBox_.Reset();
+    }
+
+    //フォント
+    for (auto& pso : graphicsPipelineStateFont_) {
+        if (pso) {
+            pso.Reset();
+        }
+    }
+    //スプライト
+    for (auto& pso : graphicsPipelineStateSprite_) {
+        if (pso) {
+            pso.Reset();
+        }
+    }
+
+    //ライン
+    if (graphicsPipelineStatesLine_) {
+        graphicsPipelineStatesLine_.Reset();
+    }
+
+
+    //パーティクル
+    for (auto& pso : graphicsPipelineStatesParticle_) {
+        if (pso) {
+            pso.Reset();
+        }
+    }
+
+    //ノーマル
+    for (auto& psos : graphicsPipelineStates_) {
+        for (auto& pso : psos) {
+            if (pso) {
+                pso.Reset();
+            }
+        }
+    }
+
+    rootSignature->Finalize();
     rootSignature.reset();
 
 }

@@ -10,6 +10,8 @@ public:
         object_->SetObjectName(name_);
         object_->RegisterObject();
     }
+
+    ~SunMedal() { object_->UnRegisterObject(); }
     void Use() override {
         //TryOpenNearbyDoor();
     }

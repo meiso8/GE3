@@ -86,6 +86,21 @@ void Skin::UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton)
     }
 }
 
+void Skin::ReleaseSkinCluster(SkinCluster& slinCluster)
+{
+    if (slinCluster.influenceResource) {
+        slinCluster.influenceResource.Reset();
+    }
+
+    slinCluster.inverseBindPoseMatrices.clear();
+
+    if (slinCluster.paletteResource) {
+        slinCluster.paletteResource.Reset();
+    }
+
+
+}
+
 void Skin::SetSrvDescriptorHeap(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     srvDescriptorHeap_ = srvDescriptorHeap;

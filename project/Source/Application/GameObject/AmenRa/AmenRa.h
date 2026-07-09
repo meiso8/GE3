@@ -7,6 +7,7 @@
 class AmenRa : public Collider {
 public:
     AmenRa();
+    ~AmenRa();
     void Initialize();
     void Update();
     void Draw(Camera& camera);

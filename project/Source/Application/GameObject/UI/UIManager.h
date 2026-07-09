@@ -6,6 +6,7 @@
 #include"ButtonSprite/ButtonSprite.h"
 
 #include<unordered_map>
+class SlidePuzzleSystem;
 
 class UIManager
 {
@@ -15,6 +16,7 @@ class UIManager
     };
 public:
     UIManager();
+    ~UIManager();
     void Initialize();
     void UpdateGage();
     void UpdatePauseScreen();

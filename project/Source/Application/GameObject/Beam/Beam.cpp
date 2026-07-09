@@ -39,6 +39,10 @@ Beam::Beam()
     CreateParticle();
 }
 
+Beam::~Beam()
+{
+}
+
 void Beam::Initialize()
 {
     object3d_->Initialize();

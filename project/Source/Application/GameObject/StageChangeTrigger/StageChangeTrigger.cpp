@@ -10,7 +10,8 @@
 
 StageChangeTrigger::StageChangeTrigger()
 {
-    object_ = std::make_shared<Object3d>();
+  
+    object_ = std::make_unique<Object3d>();
     object_->Create();
 
     // 穴の大きさに合わせてAABBを設定 (例: 1m × 1m × 1m の立方体)
@@ -21,6 +22,11 @@ StageChangeTrigger::StageChangeTrigger()
     SetCollisionMask(CollisionTag::GetTag("Player"));
     //ワールド行列をセットする
     SetWorldMatrix(*object_);
+}
+
+StageChangeTrigger::~StageChangeTrigger()
+{
+    object_->UnRegisterObject();
 }
 
 void StageChangeTrigger::Create(

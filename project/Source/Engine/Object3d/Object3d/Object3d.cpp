@@ -31,14 +31,28 @@ void Object3d::UpdateUV() {
 }
 
 
-Object3d::~Object3d()
-{
-    transformationMatrixResource_.Reset();
-    materialResource_.Reset();
-    expansionResource_.Reset();
-    waveResource_.Reset();
-    idResource_.Reset();
-}
+//Object3d::~Object3d()
+//{
+//    Finalize();
+//}
+//
+//void Object3d::Finalize()
+//{
+//    transformationMatrixResource_.UnMap();
+//    transformationMatrixResource_.Reset();
+//
+//    materialResource_.UnMap();
+//    materialResource_.Reset();
+//
+//    expansionResource_.UnMap();
+//    expansionResource_.Reset();
+//
+//    waveResource_.UnMap();
+//    waveResource_.Reset();
+//
+//    idResource_.UnMap();
+//    idResource_.Reset();
+//}
 
 void Object3d::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
@@ -239,6 +253,11 @@ void Object3d::Initialize()
 void Object3d::RegisterObject()
 {
     ObjectManager::GetInstance()->RegisterObject(this);
+}
+
+void Object3d::UnRegisterObject()
+{
+    ObjectManager::GetInstance()->UnregisterObject(this);
 }
 
 void Object3d::Update()

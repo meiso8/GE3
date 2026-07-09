@@ -18,6 +18,7 @@ public:
     };
 public:
     ButtonSprite();
+    ~ButtonSprite();
     void Initialize();
     void Update();
     void Draw();

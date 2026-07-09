@@ -23,6 +23,11 @@ MemoManager::MemoManager()
 
 }
 
+MemoManager::~MemoManager()
+{
+    memos_.clear();
+}
+
 void MemoManager::Initialize()
 {
     isLookItem_ = false;

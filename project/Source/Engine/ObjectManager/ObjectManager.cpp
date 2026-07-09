@@ -197,12 +197,6 @@ void ObjectManager::Finalize()
     objects_.clear();
     idMap_.clear();
 
-    for (auto& obj : createObjects_) {
-        if (obj) {
-            obj.reset();
-        }
-    }
-
     createObjects_.clear();
 
 }

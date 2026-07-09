@@ -7,11 +7,14 @@
 class PuzzleObj : public Collider {
 public:
     PuzzleObj();
+    ~PuzzleObj();
+    
     void Initialize();
     void Update();
     void Draw(Camera& camera);
     void OnCollision(Collider* collider) override;
     void SetColor(const Vector4& color) { aniObj_->SetColor(color); };
+   
     Vector3 GetWorldPosition() {
       return  aniObj_->GetWorldTransform().GetWorldPosition();
     }

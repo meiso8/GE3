@@ -11,7 +11,13 @@ SkinningModel::SkinningModel()
 
 SkinningModel::~SkinningModel()
 {
-    Primitive::~Primitive();
+
+    //Skin::ReleaseSkinCluster(*skinCluster_);
+
+    //skinningCSResorce_.inputVertexResource_.Reset();
+    //skinningCSResorce_.outputVertexResource_.Reset();
+    //skinningCSResorce_.skinningInformationResource_.Reset();
+
 }
 
 void SkinningModel::SetDescriptorHeap(CbvSrvUavDescriptorHeap* cbvSrvUavDescriptorHeap)

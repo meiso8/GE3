@@ -24,6 +24,11 @@ AmenRa::AmenRa() {
     SetWorldMatrix(object_->GetWorldTransform().matWorld_);
 }
 
+AmenRa::~AmenRa()
+{
+    object_->UnRegisterObject();
+}
+
 void AmenRa::Initialize() {
 
     object_->Initialize();

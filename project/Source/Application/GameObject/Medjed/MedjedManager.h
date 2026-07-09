@@ -34,7 +34,7 @@ private:
 public:
     void SetRaySprite(RaySprite* raySprite) { raySprite_ = raySprite; };
     MedjedManager();
-
+    ~MedjedManager();
     void RayCastHit();
 
     void Initialize();

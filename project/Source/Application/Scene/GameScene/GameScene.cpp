@@ -32,8 +32,9 @@ GameScene::GameScene()
     player_ = std::make_unique<Player>();
     //ライトマネージャーのインスタンスを生成
     lightingManager_ = std::make_unique<LightingManager>();
-    lightingManager_->playerHandPos_.Parent(player_->GetEyeWorldTransform());
-    lightingManager_->direction_ = &player_->GetForward();
+
+    lightingManager_->GetPlayerHandPos().Parent(player_->GetEyeWorldTransform());
+    lightingManager_->SetDirection(&player_->GetForward());
 
     //衝突判定
     collisionManager_ = std::make_unique<CollisionManager>();
@@ -45,24 +46,25 @@ GameScene::GameScene()
     memoManager_ = std::make_unique<MemoManager>();
 
     //ステージマネージャーのインスタンスを取得する
-    stageManager_ = StageManager::GetInstance();
-    //プレイヤーをセットする
-    stageManager_->SetPlayer(player_.get());
-    //メモ管理セット
-    stageManager_->SetMemoManager(memoManager_.get());
-    //アイテム管理セット
-    stageManager_->SetItemManager(itemManager_.get());
-    //カーソルのポジションをセットする
-    stageManager_->SetUIManager(uIManager_.get());
-    //ライト管理をセットする
-    stageManager_->SetLightingManager(lightingManager_.get());
-    stageManager_->SetSceneChange(sceneChange_.get());
+    auto* stageManager = StageManager::GetInstance();
 
-    stageManager_->SetMap("AmenStage", std::move(std::make_unique<AmenStage>()));
-    stageManager_->SetMap("WaterStage", std::move(std::make_unique<WaterStage>()));
-    stageManager_->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
-    stageManager_->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
-    stageManager_->SetMap("AnubisStage", std::move(std::make_unique<AnubisStage>()));
+    //プレイヤーをセットする
+    stageManager->SetPlayer(player_.get());
+    //メモ管理セット
+    stageManager->SetMemoManager(memoManager_.get());
+    //アイテム管理セット
+    stageManager->SetItemManager(itemManager_.get());
+    //カーソルのポジションをセットする
+    stageManager->SetUIManager(uIManager_.get());
+    //ライト管理をセットする
+    stageManager->SetLightingManager(lightingManager_.get());
+    stageManager->SetSceneChange(sceneChange_.get());
+
+    stageManager->SetMap("AmenStage", std::move(std::make_unique<AmenStage>()));
+    stageManager->SetMap("WaterStage", std::move(std::make_unique<WaterStage>()));
+    stageManager->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
+    stageManager->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
+    stageManager->SetMap("AnubisStage", std::move(std::make_unique<AnubisStage>()));
 
     skyboxObject3d_ = std::make_unique<SkyboxObject3d>();
     skyboxObject3d_->Create();
@@ -76,20 +78,22 @@ void GameScene::Initialize() {
     lightingManager_->Initialize();
     //カメラを初期化する
     camera_->Initialize();
-    camera_->UpdateMatrix();
+    //camera_->UpdateMatrix();
     //UI管理の初期化
     uIManager_->Initialize();
     //アイテム管理の初期化
     itemManager_->Init();
     //メモマネージャー
     memoManager_->Initialize();
-    //アメンステージにする
-    stageManager_->SetNestStage("AmenStage");
+    ////アメンステージにする
+
+    auto* stageManager = StageManager::GetInstance();
+    stageManager->SetNestStage("AmenStage");
    
     //ステージ遷移の初期化
     sceneChange_->Initialize();
     //現在のステージの初期化
-    stageManager_->TransitionStage();
+    stageManager->TransitionStage();
 }
 
 void GameScene::Update() {
@@ -108,11 +112,15 @@ void GameScene::Update() {
         camera_->UpdateViewProjectionMatrix();
     }
 
-    if (PauseScreen::isBackToTitle) {
+    if (PauseScreen::GetIsBackToTitle()) {
         BackToTitle();
     }
 
-    if (!PauseScreen::isActive_ && !sceneChange_->IsStateTransition()) {
+
+
+    auto* stageManager = StageManager::GetInstance();
+
+    if (!PauseScreen::GetIsActive() && !sceneChange_->IsStateTransition()) {
         //最初は移動しない
 
         //アクティブなら更新しない
@@ -121,12 +129,12 @@ void GameScene::Update() {
         //プレイヤーが死んだら初期化する
         if (player_->IsDead()) {
             // ステージごとの初期化
-            stageManager_->Initialize();
+            stageManager->Initialize();
         }
     }
 
     //ステージの更新処理
-    stageManager_->Update();
+    stageManager->Update();
 
     itemManager_->Update();
     uIManager_->UpdatePauseScreen();
@@ -137,18 +145,19 @@ void GameScene::Update() {
 
 GameScene::~GameScene()
 {
-    camera_ = nullptr;
+    collisionManager_->Finalize();
+    StageManager::GetInstance()->Finalize();
 }
 
 void GameScene::CheckAllCollision()
 {
 
-    if (PauseScreen::isActive_) {
+    if (PauseScreen::GetIsActive()) {
         //ポーズ中はコライダーヒットしない
         return;
     }
 
-    // ========================//Ray================================
+    //// ========================//Ray================================
 
     //アイテムがヒットしているか
     auto hitItem = itemManager_->RaycastHitItem(*player_->GerRaySprite());
@@ -156,7 +165,7 @@ void GameScene::CheckAllCollision()
 
     //メモがヒットしているかどうか
     memoManager_->RayCastHit(*player_->GerRaySprite());
-    // ========================//Ray================================
+    //// ========================//Ray================================
 
     collisionManager_->ClearColliders();
 
@@ -169,7 +178,7 @@ void GameScene::CheckAllCollision()
     //プレイヤーのコライダーを追加する
     collisionManager_->AddCollider(player_.get());
 
-    stageManager_->CheckCollision(*collisionManager_);
+    StageManager::GetInstance()->CheckCollision(*collisionManager_);
 
     collisionManager_->CheckAllCollisions();
 
@@ -220,11 +229,11 @@ void GameScene::DrawModel() {
     itemManager_->Draw(*currentCamera_);
 
     //ステージごとの描画
-    stageManager_->DrawModel(currentCamera_);
+    StageManager::GetInstance()->DrawModel(currentCamera_);
 
     //プレイヤーの描画
     player_->Draw(*currentCamera_);
-    //アイテムを手前に描画する
+    ////アイテムを手前に描画する
     itemManager_->DrawGetItem();
 }
 
@@ -235,7 +244,7 @@ void GameScene::DrawSprite() {
     itemManager_->DrawUI();
     uIManager_->DrawPauseScreen();
     //ステージごとのスプライトを描画する
-    stageManager_->DrawSprite();
+    StageManager::GetInstance()->DrawSprite();
 
     memoManager_->DrawUI();
     uIManager_->DrawCurPos();

@@ -10,7 +10,7 @@ private:
     StageManager() = default;
     ~StageManager();
 public:
-
+    void Finalize();
     // 2. コピーと代入を禁止する（インスタンスが2つに増えるのを防ぐため）
     StageManager(const StageManager&) = delete;
     StageManager& operator=(const StageManager&) = delete;

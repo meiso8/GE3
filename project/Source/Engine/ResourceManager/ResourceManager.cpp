@@ -13,7 +13,9 @@ void IResource::Reset()
 
 void IResource::UnMap()
 {
-    resource->Unmap(0, nullptr);
+    if (resource) {
+        resource->Unmap(0, nullptr);
+    }
 }
 
 Microsoft::WRL::ComPtr<ID3D12Resource> ResourceFactory::CreateBufferResourceForUAV(size_t sizeInBytes) {

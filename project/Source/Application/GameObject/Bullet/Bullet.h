@@ -30,10 +30,12 @@ public:
     void SetBulletType(const BulletType& type);
     void Shot(const Vector3& position, const Vector3& direction, const float speed, const float size, const Bullet::BulletType& type);
     void SetColor(const Vector4& color);
-    bool isActive_ = false;
-    Object3d body_;
-    float size_;
+    bool GetIsActive() { return isActive_; };
+    void SetIsActive(const bool flag) { isActive_ = flag; };
 private:
+    bool isActive_ = false;
+    std::unique_ptr<Object3d> body_ = nullptr;
+    float size_;
     BulletType type_;
     Model* model_ = nullptr;
     Vector3 moveDir_;

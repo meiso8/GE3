@@ -84,7 +84,6 @@ protected:
 private:
 
 public:
-    ~Object3d();
     /// @brief コマンドリストのとsrvDescriptorHeapの借り物を入れる
     /// @param commandList コマンドリストクラス
     ///  @param srvDescriptorHeap srvDescriptorHeap
@@ -190,7 +189,8 @@ public:
     Primitive* GetPrimitive() { return primitive_; }
 
     // ==============重要==================
-
+    Object3d() =default;
+    ~Object3d() = default;
     /// @brief メッシュの情報を設定しその情報からマテリアルを設定する
     /// @param mesh メッシュ
     void SetMeshAndMaterial(Primitive* mesh);
@@ -200,6 +200,8 @@ public:
     virtual void Initialize();
     /// @brief オブジェクトの登録
     void RegisterObject();
+    //  @brief オブジェクトの除外
+    void UnRegisterObject();
     /// @brief 更新
     virtual void Update();
     /// @brief 描画関数

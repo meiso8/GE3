@@ -72,6 +72,11 @@ Medjed::Medjed() {
     SetWorldMatrix(aniObj_->GetWorldTransform());
 }
 
+Medjed::~Medjed()
+{
+    aniObj_->UnRegisterObject();
+}
+
 void Medjed::Look(const Vector3& target)
 {
     Vector3 direction = target - GetWorldPosition();

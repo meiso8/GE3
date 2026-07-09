@@ -37,6 +37,18 @@ ButtonSprite::ButtonSprite()
     }
 }
 
+ButtonSprite::~ButtonSprite()
+{
+    for (auto& sprite : sprites_) {
+        if (sprite) {
+            sprite.reset();
+        }
+     
+    }
+
+   
+}
+
 void ButtonSprite::Initialize()
 {
     isGetThermography_ = false;

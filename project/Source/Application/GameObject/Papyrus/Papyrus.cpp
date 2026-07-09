@@ -30,6 +30,11 @@ Papyrus::Papyrus() {
    
 }
 
+Papyrus::~Papyrus()
+{
+    object_->UnRegisterObject();
+}
+
 void Papyrus::Initialize() {
     object_->Initialize();
     object_->SetObjectName("Papyrus");

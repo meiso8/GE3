@@ -142,10 +142,9 @@ void Font::CreateVertex()
     //1頂点あたりのサイズ
     vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
-#pragma region //Sprite用の頂点データの設定
+#pragma region //Font用の頂点データの設定
 
     vertexResource_.Map();
-    //1枚目の三角形 四頂点でスプライト描画が完成
 
     vertexResource_.data[0].position = { 0.0f,1.0f,0.0f,1.0f };//左下
     vertexResource_.data[1].position = { 0.0f,0.0f,0.0f,1.0f };//左上

@@ -15,6 +15,8 @@ public:
     };
 
     HPIcon();
+    ~HPIcon();
+
     void SetHpPtr(HPs* hp) { hps_ = hp; };
     void Setting(const Vector2& size, const Vector2& pos);
     void Initialize();

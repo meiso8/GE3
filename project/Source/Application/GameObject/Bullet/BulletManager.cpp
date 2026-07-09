@@ -36,7 +36,7 @@ void BulletManager::Draw(Camera& camera) {
 
 void BulletManager::ShotBullet(const Vector3& position, const Vector3& direction, const float speed, const float size,const Bullet::BulletType& type) {
 	for (auto& bullet : bullets_) {
-		if (!bullet->isActive_) {
+		if (!bullet->GetIsActive()) {
 			bullet->Shot(position, direction, speed, size,type);
 			break;
 		}

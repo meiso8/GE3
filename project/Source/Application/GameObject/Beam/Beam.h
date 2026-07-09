@@ -18,6 +18,7 @@ public:
     BeamType& GetBeamType() { return  type_; };
 
     Beam();
+    ~Beam();
     void Initialize();
     void Update();
     void Draw(Camera* camera);

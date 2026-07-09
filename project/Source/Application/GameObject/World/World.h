@@ -9,8 +9,8 @@ class Model;
 class World
 {
 private:
-    std::unique_ptr <Primitive> sphereMesh_;
-    std::unique_ptr <Object3d> object3d_;
+    std::unique_ptr <Primitive> sphereMesh_ = nullptr;
+    std::unique_ptr <Object3d> object3d_ = nullptr;
     enum Tex {
         NORMAL,
     };

@@ -29,6 +29,11 @@ Fountain::Fountain()
     CreateParticle();
 }
 
+Fountain::~Fountain()
+{
+    object_->UnRegisterObject();
+}
+
 void Fountain::Initialize()
 {
     object_->Initialize();

@@ -483,7 +483,6 @@ void ParticleManager::Finalize()
     for (auto& [name, group] : particleGroups) {
         group->instancingResource.Reset();
         group->materialResource.Reset();
-        group.reset();
     }
 
     particleGroups.clear();

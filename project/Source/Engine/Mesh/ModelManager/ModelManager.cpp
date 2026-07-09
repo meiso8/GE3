@@ -34,6 +34,7 @@ Model* ModelManager::GetModel(const std::filesystem::path& tag)
 }
 void ModelManager::Finalize()
 {
+
     models_.clear();
 }
 
