@@ -5,7 +5,9 @@
 #include"RtvDescriptorHeap.h"
 
 void RenderTargetView::Create(
-   const std::array< Microsoft::WRL::ComPtr <ID3D12Resource>,2>swapChainResources, RtvDescriptorHeap* rtvDescriptorHeap) {
+   std::array<Microsoft::WRL::ComPtr <ID3D12Resource>,2>&swapChainResources,
+    RtvDescriptorHeap* rtvDescriptorHeap
+) {
 
     //Descriptorは必ずDescriptorHandleというポインタのようなものを介して扱う必要がある
     //Viewを作るときは、どこのDescriptorに情報を格納するかを明示的に指定する必要がる

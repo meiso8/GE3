@@ -7,8 +7,8 @@
 RootSignature* SpriteCommon::rootSignature_ = nullptr;
 
 D3D12_INDEX_BUFFER_VIEW SpriteCommon::indexBufferView_;
-Microsoft::WRL::ComPtr <ID3D12Resource> SpriteCommon::indexResource_ = nullptr;
-uint32_t* SpriteCommon::indexData_ = nullptr;
+
+ CResource<uint32_t> SpriteCommon::indexResource_;
 
 void SpriteCommon::Finalize()
 {
@@ -47,11 +47,13 @@ void SpriteCommon::DrawCall(ID3D12GraphicsCommandList* commandList)
 void SpriteCommon::CreateIndexResource() {
 
 #pragma region//IndexResourceを作成
-    indexResource_ = DirectXCommon::CreateBufferResource(sizeof(uint32_t) * 6);
+
+    indexResource_.CreateBufferResource(L"SpriteCommon_IndexResource", sizeof(uint32_t) * 6);
+
     //Viewを作成する IndexBufferView(IBV)
-    indexResource_->SetName(L"SpriteCommon_IndexResource");
+
     //リソースの先頭アドレスから使う
-    indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
+    indexBufferView_.BufferLocation = indexResource_.GetGPUVirtualAddress();
     //使用するリソースのサイズはインデックス6つ分のサイズ
     indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6;
     //インデックスはuint32_tとする
@@ -60,18 +62,18 @@ void SpriteCommon::CreateIndexResource() {
 
 #pragma region//IndexResourceにデータを書き込む
     //インデックスリーソースにデータを書き込む
-    indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+    indexResource_.Map();
 
     //頂点数を削減
-    indexData_[0] = 0;
-    indexData_[1] = 1;
-    indexData_[2] = 2;
+    indexResource_.data[0] = 0;
+    indexResource_.data[1] = 1;
+    indexResource_.data[2] = 2;
 
-    indexData_[3] = 1;
-    indexData_[4] = 3;
-    indexData_[5] = 2;
+    indexResource_.data[3] = 1;
+    indexResource_.data[4] = 3;
+    indexResource_.data[5] = 2;
 
-    indexResource_->Unmap(0, nullptr);
+    indexResource_.UnMap();
 
 
 #pragma endregion

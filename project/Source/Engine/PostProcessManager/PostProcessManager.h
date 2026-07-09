@@ -6,6 +6,7 @@
 class TransitionBarrier;
 class PostEffectMaterial;
 class Camera;
+class DepthTexture;
 
 class PostProcessManager {
 public:
@@ -16,8 +17,10 @@ public:
         kMaxLayer,
     };
 
-    struct RenderLayer{
+    struct RenderLayer {
+        //借り物なのでここで解放しない
         RenderTexture* renderTexture_ = nullptr;
+        //これは借り物ではないので解放する
         std::unique_ptr<PostEffectMaterial> postEffectMaterial_ = nullptr;
         std::vector<PSO::EffectType> activeEffects_; // 現在有効なエフェクトのリスト
     };
@@ -29,13 +32,13 @@ public:
     PostProcessManager(const PostProcessManager&) = delete;
     PostProcessManager& operator=(const PostProcessManager&) = delete;
 
-    void Create(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+    void Create(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap, DepthTexture* depthTexture);
     void Update();
 
     void SetPostEffectMaterialCamera(Camera* camera, const Layer& layer);
 
     void SetRenderTexture(RenderTexture* renderTexture, const Layer& layer);
-    
+
     // 適用したいエフェクトを動的に追加する
     void AddEffect(PSO::EffectType type, const Layer& layer) {
         renderLayer_[layer].activeEffects_.push_back(type);
@@ -47,19 +50,19 @@ public:
     /// @param layer レイヤー
     /// @param dstRtvHandle RTVハンドル
     /// @param barrier バリア
-    /// @param depthSrvIndex　SRVインデックス 
     /// @param randomBlendMode ランダム用ブレンドモード設定
     void Execute(const Layer& layer,
         const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle,
         TransitionBarrier* barrier,
-        const uint32_t depthSrvIndex,
         const BlendMode& randomBlendMode);
 
     PostEffectMaterial* GetPostEffectMaterial(const Layer& layer) {
         return renderLayer_[layer].postEffectMaterial_.get();
     }
+    void Finalize();
 private:
     PostProcessManager() = default;
+
     ~PostProcessManager() = default;
     void Draw(const Layer& layer, const PSO::EffectType& effectType, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index);
     void DrawOutLine(const Layer& layer, const D3D12_CPU_DESCRIPTOR_HANDLE dstRtvHandle, const uint32_t index, const uint32_t depthSrvIndex);
@@ -71,7 +74,9 @@ private:
 private:
 
     std::array<RenderLayer, Layer::kMaxLayer> renderLayer_;
+
+    //以下借り物
     static ID3D12GraphicsCommandList* commandList_;
     static CbvSrvUavDescriptorHeap* srvDescriptorHeap_;
-
+    static DepthTexture* depthTexture_;
 };

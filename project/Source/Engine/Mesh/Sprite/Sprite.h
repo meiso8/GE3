@@ -12,7 +12,7 @@
 #include"SpriteCommon.h"
 
 #include"Texture.h"
-
+#include"../ResourceManager/ResourceManager.h"
 class CommandList;
 
 class Sprite
@@ -58,14 +58,14 @@ public:
     Vector2& GetPosition() { return position_; };
     const Vector2& GetPosition() const { return position_; };
 
-    Material* GetMaterial() { return material_; };
+    Material* GetMaterial() { return materialResource_.data; };
     Vector3& GetUVScale() { return uvTransform_.scale; };
     Vector3& GetUVRotate() { return uvTransform_.rotate; };
     Vector3& GetUVTranslate() { return uvTransform_.translate; };
-    Vector4& GetColor() { return material_->color; }
-    const Vector4& GetColor() const { return material_->color; }
-    void SetTemperature(const float temperature)const {material_->temperature = temperature;  }
-    const float GetTemperature() { return material_->temperature; }
+    Vector4& GetColor() { return materialResource_.data->color; }
+    const Vector4& GetColor() const { return materialResource_.data->color; }
+    void SetTemperature(const float temperature)const { materialResource_.data->temperature = temperature;  }
+    const float GetTemperature() { return materialResource_.data->temperature; }
     Vector2& GetAnchorPoint() { return anchorPoint_; }
     /// @brief アンカーポイント
     /// @param anchorPoint 0.0f~1.0f
@@ -92,6 +92,14 @@ private:
     static ID3D12GraphicsCommandList* commandList_;
     /// @brief　SRV管理の借り物
     static  CbvSrvUavDescriptorHeap* srvDescriptorHeap_;
+    //頂点リソース
+    CResource<VertexData>vertexResource_;
+    //座標リソース
+    CResource<TransformationMatrixFor2D>transformationMatrixResource_;
+    //マテリアルリソース
+    CResource<Material>materialResource_;
+
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
     uint32_t textureHandle_ = 0;
     Vector2 anchorPoint_ = { 0.0f,0.0f };
@@ -100,25 +108,15 @@ private:
     Vector2 textureLeftTop = { 0.0f,0.0f };
     Vector2 textureSize = { 100.0f,100.0f };
 
-
-    Microsoft::WRL::ComPtr <ID3D12Resource> vertexResource_ = nullptr;
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
-    VertexData* vertexData_ = nullptr;
-
-    Microsoft::WRL::ComPtr <ID3D12Resource> transformationMatrixResource_ = nullptr;
     Vector2 position_ = { 0.0f,0.0f };
     float rotate_ = 0.0f;
     Vector2 size_ = { 0.0f,0.0f };
     Vector2 scale_ = { 1.0f,1.0f };
     EulerTransform transform_{};
     Matrix4x4 worldMatrix_{};
-    TransformationMatrixFor2D* transformationMatrixData_ = nullptr;
 
     EulerTransform uvTransform_ = { 0.0f };
     Matrix4x4 uvTransformMatrix_{};
-
-    Microsoft::WRL::ComPtr <ID3D12Resource> materialResource_ = nullptr;
-    Material* material_ = nullptr;
 };
 
 //Spriteとposとの当たり判定

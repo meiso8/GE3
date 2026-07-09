@@ -90,6 +90,8 @@ public:
         static PSO instance;
         return &instance;
     }
+    PSO(const PSO&) = delete;
+    PSO& operator=(const PSO&) = delete;
 
     static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineState(uint32_t blendMode,uint32_t cullMode ) {
         return graphicsPipelineStates_[blendMode][cullMode];
@@ -123,12 +125,14 @@ public:
     void CreateALLPSO();
 
     static RootSignature* GetRootSignature() { return rootSignature.get(); }
-    ~PSO();
-    
+    //終了処理
+    void Finalize();
     // この関数経由でPSOを取得する
     static Microsoft::WRL::ComPtr<ID3D12PipelineState> GetOrCreatePSO(const PSOKey& key);
 
 private:
+    PSO() = default;
+    ~PSO() = default;
     Microsoft::WRL::ComPtr <ID3D12PipelineState> Create(
         const BlendMode& blendMode,
         const CullMode& cullMode,

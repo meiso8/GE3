@@ -37,24 +37,9 @@ void Sprite::Create(const TextureFactory::Handle& textureHandle, const Vector2& 
 
 Sprite::~Sprite()
 {
-    if (transformationMatrixResource_) {
-        transformationMatrixResource_->Unmap(0, nullptr);
-        transformationMatrixResource_.Reset();
-        transformationMatrixResource_ = nullptr;
-    }
-
-
-    if (materialResource_) {
-        materialResource_->Unmap(0, nullptr);
-        materialResource_.Reset();
-        materialResource_ = nullptr;
-    }
-
-    if (vertexResource_) {
-        vertexResource_->Unmap(0, nullptr);
-        vertexResource_.Reset();
-        vertexResource_ = nullptr;
-    }
+    transformationMatrixResource_.Reset();
+    materialResource_.Reset();
+    vertexResource_.Reset();
 }
 
 void Sprite::Update()
@@ -81,11 +66,10 @@ void Sprite::UpdateAnchorPoint()
         bottom = -bottom;
     }
 
-
-    vertexData_[0].position = { left,bottom,0.0f,1.0f };//左下
-    vertexData_[1].position = { left,top,0.0f,1.0f };//左上
-    vertexData_[2].position = { right,bottom,0.0f,1.0f };//右下
-    vertexData_[3].position = { right,top,0.0f,1.0f };//右上
+    vertexResource_.data[0].position = { left,bottom,0.0f,1.0f };//左下
+    vertexResource_.data[1].position = { left,top,0.0f,1.0f };//左上
+    vertexResource_.data[2].position = { right,bottom,0.0f,1.0f };//右下
+    vertexResource_.data[3].position = { right,top,0.0f,1.0f };//右上
 
     const DirectX::TexMetadata& metadata = Texture::GetMetaData(textureHandle_);
 
@@ -98,15 +82,16 @@ void Sprite::UpdateAnchorPoint()
     float tex_bottom = (textureLeftTop.y + textureSize.y - offset) * texelHeight;
 
 
-    vertexData_[0].texcoord = { tex_left,tex_bottom };
-    vertexData_[1].texcoord = { tex_left,tex_top };
-    vertexData_[2].texcoord = { tex_right,tex_bottom };
-    vertexData_[3].texcoord = { tex_right,tex_top };
+    vertexResource_.data[0].texcoord = { tex_left,tex_bottom };
+    vertexResource_.data[1].texcoord = { tex_left,tex_top };
+    vertexResource_.data[2].texcoord = { tex_right,tex_bottom };
+    vertexResource_.data[3].texcoord = { tex_right,tex_top };
 
 }
 
 void Sprite::SetColor(const Vector4& color) {
-    material_->color = color;
+
+    materialResource_.data->color = color;
 }
 
 void Sprite::SetTexture(const TextureFactory::Handle& textureHandle)
@@ -117,7 +102,7 @@ void Sprite::SetTexture(const TextureFactory::Handle& textureHandle)
 
 
 void Sprite::PreDraw(uint32_t blendMode) {
-    SpriteCommon::PreDraw(blendMode,commandList_);
+    SpriteCommon::PreDraw(blendMode, commandList_);
 }
 
 void Sprite::Draw(
@@ -129,19 +114,19 @@ void Sprite::Draw(
 
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 
-    *transformationMatrixData_ = { Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix()),worldMatrix_ };
+    *transformationMatrixResource_.data = { Multiply(worldMatrix_, SpriteCamera::GetViewProjectionMatrix()),worldMatrix_ };
 
     //頂点バッファビューを設定
     commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
-    
+
     SpriteCommon::SetIndexBuffer(commandList_);
 
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.GetGPUVirtualAddress());
     //TransformationMatrixCBufferの場所を設定
-    commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_.GetGPUVirtualAddress());
     //SRVのDescriptorTableの先頭を設定。rootParameter[2]
-    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandle_,commandList_);
+    srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandle_, commandList_);
 
     SpriteCommon::DrawCall(commandList_);
 
@@ -153,11 +138,10 @@ void Sprite::Draw(
 void Sprite::CreateVertex()
 {
     //VertexResourceとVertexBufferViewを用意 矩形を表現するための三角形を二つ(頂点4つ)
-    vertexResource_ = DirectXCommon::CreateBufferResource(sizeof(VertexData) * 4);
-    vertexResource_->SetName(L"Sprite_VertexResource");
+    vertexResource_.CreateBufferResource(L"Sprite_VertexResource", sizeof(VertexData) * 4);
     //頂点バッファビューを作成する
     //リソースの先頭アドレスから使う
-    vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+    vertexBufferView_.BufferLocation = vertexResource_.GetGPUVirtualAddress();
     //使用するリソースのサイズ頂点4つ分のサイズ
     vertexBufferView_.SizeInBytes = sizeof(VertexData) * 4;
     //1頂点あたりのサイズ
@@ -165,28 +149,25 @@ void Sprite::CreateVertex()
 
 #pragma region //Sprite用の頂点データの設定
 
-    vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+    vertexResource_.Map();
     //1枚目の三角形 四頂点でスプライト描画が完成
 
-    vertexData_[0].position = { 0.0f,1.0f,0.0f,1.0f };//左下
-    vertexData_[1].position = { 0.0f,0.0f,0.0f,1.0f };//左上
-    vertexData_[2].position = { 1.0f,1.0f,0.0f,1.0f };//右下
-    vertexData_[3].position = { 1.0f,0.0f,0.0f,1.0f };//右上
+    vertexResource_.data[0].position = { 0.0f,1.0f,0.0f,1.0f };//左下
+    vertexResource_.data[1].position = { 0.0f,0.0f,0.0f,1.0f };//左上
+    vertexResource_.data[2].position = { 1.0f,1.0f,0.0f,1.0f };//右下
+    vertexResource_.data[3].position = { 1.0f,0.0f,0.0f,1.0f };//右上
 
+    vertexResource_.data[0].texcoord = { 0.0f,1.0f };
+    vertexResource_.data[0].normal = { 0.0f,0.0f,-1.0f };//法線
 
-    vertexData_[0].texcoord = { 0.0f,1.0f };
-    vertexData_[0].normal = { 0.0f,0.0f,-1.0f };//法線
+    vertexResource_.data[1].texcoord = { 0.0f,0.0f };
+    vertexResource_.data[1].normal = { 0.0f,0.0f,-1.0f };
 
-    vertexData_[1].texcoord = { 0.0f,0.0f };
-    vertexData_[1].normal = { 0.0f,0.0f,-1.0f };
+    vertexResource_.data[2].texcoord = { 1.0f,1.0f };
+    vertexResource_.data[2].normal = { 0.0f,0.0f,-1.0f };
 
-    vertexData_[2].texcoord = { 1.0f,1.0f };
-    vertexData_[2].normal = { 0.0f,0.0f,-1.0f };
-
-    vertexData_[3].texcoord = { 1.0f,0.0f };
-    vertexData_[3].normal = { 0.0f,0.0f,-1.0f };
-
-
+    vertexResource_.data[3].texcoord = { 1.0f,0.0f };
+    vertexResource_.data[3].normal = { 0.0f,0.0f,-1.0f };
 
 #pragma endregion
 
@@ -206,14 +187,12 @@ void Sprite::CreateUVTransformationMatrix()
 void Sprite::CreateTransformationMatrix() {
 
     //Matrix4x4　1つ分のサイズを用意
-    transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrixFor2D));
-    
-    transformationMatrixResource_->SetName(L"Sprite_transformation_Matrix_Resource");
-    
-    //データを書き込む
-    //書き込むためのアドレスを取得
-    transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
+    transformationMatrixResource_.CreateBufferResource(L"Sprite_transformation_Matrix_Resource");
 
+    //書き込むためのアドレスを取得
+    transformationMatrixResource_.Map();
+
+    //データを書き込む
     transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{ position_.x,position_.y,0.0f } };
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 
@@ -223,18 +202,17 @@ void Sprite::CreateTransformationMatrix() {
 void Sprite::CreateMaterial(const Vector4& color) {
 
     //Matrix4x4　1つ分のサイズを用意
-    materialResource_ = DirectXCommon::CreateBufferResource(sizeof(Material));
-    materialResource_->SetName(L"Sprite_MaterialResource");
-    materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&material_));
-
-    material_->color = color;
-    material_->temperature = 0.5f;
-    material_->uvTransform = MakeIdentity4x4();
+    materialResource_.CreateBufferResource(L"Sprite_MaterialResource");
+    materialResource_.Map();
+  
+    materialResource_.data->color = color;
+    materialResource_.data->temperature = 0.5f;
+    materialResource_.data->uvTransform = MakeIdentity4x4();
 }
 
 void Sprite::UpdateUV() {
     uvTransformMatrix_ = MakeAffineMatrix(uvTransform_.scale, uvTransform_.rotate, uvTransform_.translate);
-    material_->uvTransform = uvTransformMatrix_;
+    materialResource_.data->uvTransform = uvTransformMatrix_;
 }
 
 void Sprite::AdjustTextureSize()
@@ -262,5 +240,5 @@ bool IsCollision(const Vector2& pos, Sprite& sprite) {
 
 bool IsCollision(Sprite& sprite, const Vector2& pos)
 {
-    return IsCollision(pos,sprite);
+    return IsCollision(pos, sprite);
 }

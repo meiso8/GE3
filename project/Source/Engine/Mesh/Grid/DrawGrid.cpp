@@ -1,5 +1,6 @@
 #include"DrawGrid.h"
 #include"AABB.h"
+#include"Log.h"
 
 std::array <std::unique_ptr<Primitive>, 2> DrawGrid::cube_;
 std::array< std::unique_ptr<Object3d>, 2> DrawGrid::cubes_;
@@ -18,6 +19,8 @@ void DrawGrid::Finalize()
     for (auto& t : lineTransforms2_) {
         t.reset();
     }
+
+    LogFile::Log("Finaliz DrawGrid");
 }
 
 void DrawGrid::Create()
@@ -72,6 +75,7 @@ void DrawGrid::Create()
     cubes_[1]->SetMeshAndMaterial(cube_[1].get());
     cubes_[1]->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 
+    LogFile::Log("Create DrawGrid");
 }
 
 void DrawGrid::Draw(Camera& camera) {

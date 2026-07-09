@@ -41,7 +41,7 @@ void SkyboxObject3d::Draw(Camera& camera)
     viewMat.m[3][1] = 0.0f;
     viewMat.m[3][2] = 0.0f;
     viewMat = Multiply(viewMat, camera.GetProjectionMatrix());
-    transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, viewMat);
+    transformationMatrixResource_.data->WVP = Multiply(worldTransform_.matWorld_, viewMat);
 
     if (skyBox_) {
         //RootSignatureの設定
@@ -49,9 +49,9 @@ void SkyboxObject3d::Draw(Camera& camera)
         //PSOを設定
         commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateSkyBox().Get());
         //マテリアルCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_.GetGPUVirtualAddress());
         //拡散反射テクスチャ 
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE],commandList_);
         //メッシュの描画
@@ -63,10 +63,10 @@ void SkyboxObject3d::CreateMaterial(const Vector4& color)
 {
 
     //マテリアル用のリソースを作る。
-    materialResource_ = DirectXCommon::CreateBufferResource(sizeof(MaterialForSkyBox));
+    materialResource_.resource = ResourceFactory::CreateBufferResource(sizeof(MaterialForSkyBox));
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialForSkyBox_));
-    materialResource_->SetName(L"SkyBox_MaterialResource");
+    HRESULT result = materialResource_.resource->Map(0, nullptr, reinterpret_cast<void**>(&materialForSkyBox_));
+    materialResource_.resource->SetName(L"SkyBox_MaterialResource");
     assert(SUCCEEDED(result));
     //マテリアルにデータを書き込む
     materialForSkyBox_->color = color;

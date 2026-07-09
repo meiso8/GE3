@@ -416,9 +416,8 @@ void PSO::CreateALLPSO()
 
 };
 
-PSO::~PSO()
+void PSO::Finalize()
 {
-
     for (auto& pso : graphicsPipelineStateSprite_) {
         if (pso) {
             pso.Reset();
@@ -463,7 +462,6 @@ PSO::~PSO()
     psoCache_.clear();
 
     rootSignature.reset();
-
 
 }
 

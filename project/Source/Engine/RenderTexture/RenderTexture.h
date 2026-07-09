@@ -4,6 +4,9 @@
 #include"Vector4.h"
 #include<stdint.h>
 #include<array>
+#include"../ResourceManager/ResourceManager.h"
+
+
 class RtvDescriptorHeap;
 class CbvSrvUavDescriptorHeap;
 class CommandList;
@@ -12,7 +15,7 @@ class RenderTexture
 
 {
 public:
-    
+
     enum RenderTextureType {
         kNormal0,
         kNormal1,
@@ -21,11 +24,8 @@ public:
         kMaxRenderTexutre,
     };
     struct RenderTextureData {
-        Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-        uint32_t srvIndex = 0;
-        D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU = {};
-        D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU = {};
-        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandleCPU = {};
+        TextureResource resource;
+        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandleCPU;
     };
 
 private:
@@ -36,13 +36,12 @@ private:
     RenderTextureData thermographyTextureData_;
 
     //ID用リソース
-    Microsoft::WRL::ComPtr<ID3D12Resource> idReadbackResource_ = nullptr;
-
+    IResource idReadbackResource_;
     ID3D12GraphicsCommandList* commandList_ = nullptr;
     CbvSrvUavDescriptorHeap* srvDescriptorHeap_ = nullptr;
 public:
     void Create(RtvDescriptorHeap* rtvDescriptorHeap, const Vector4& value);
-  
+
     void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
 
     // 1. 描画コマンドの最後にコピー命令を積む関数 (PostDrawの直前に呼ぶ)
@@ -62,10 +61,10 @@ public:
     std::array< RenderTextureData, kMaxRenderTexutre>& GetRenderTextureDatas() { return renderTextureDatas_; };
 
     void Clear();
-
+    ~RenderTexture();
 private:
     void CreateResource(
-        const uint32_t index, 
+        const uint32_t index,
         RtvDescriptorHeap* rtvDescriptorHeap,
         DXGI_FORMAT format,
         bool createSRV

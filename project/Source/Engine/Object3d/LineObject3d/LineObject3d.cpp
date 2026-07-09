@@ -37,19 +37,19 @@ void LineObject3d::Draw(Camera& camera,
     //データを書き込む
 
     if (useWorldMatrix) {
-        transformationMatrixData_->World = worldTransform_.matWorld_;
+        transformationMatrixResource_.data->World = worldTransform_.matWorld_;
     } else {
-        transformationMatrixData_->World = MakeIdentity4x4();
+        transformationMatrixResource_.data->World = MakeIdentity4x4();
     }
-    transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
-    transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
+    transformationMatrixResource_.data->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
+    transformationMatrixResource_.data->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
   
     line_->SetRootSignatureAndGraphicsPipeline(commandList_,blendMode,cullMode,maskMode,usePSOKey,rootSignatureType,vsType,psType);
 
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
     //wvp用のCBufferの場所を設定
-    commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_.GetGPUVirtualAddress());
 
 #pragma region MeshDraw
 
@@ -70,10 +70,10 @@ LineObject3d::~LineObject3d()
 void LineObject3d::CreateMaterial(const Vector4& color)
 {   
     //マテリアル用のリソースを作る。
-    materialResource_ = DirectXCommon::CreateBufferResource(sizeof(MaterialForLine));
+    materialResource_.resource = ResourceFactory::CreateBufferResource(sizeof(MaterialForLine));
     //マテリアルにデータを書き込む
-    materialResource_->SetName(L"LineObject3d_materialResource");
+    materialResource_.resource->SetName(L"LineObject3d_materialResource");
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialForLine_));
+    HRESULT result = materialResource_.resource->Map(0, nullptr, reinterpret_cast<void**>(&materialForLine_));
     materialForLine_->color = color;
 }

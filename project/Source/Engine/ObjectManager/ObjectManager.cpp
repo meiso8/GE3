@@ -167,6 +167,8 @@ void ObjectManager::Clear() {
 void ObjectManager::Initialize()
 {
     objectCommandManager_.Initialize();
+
+    LogFile::Log("ObjectManager Initialize");
 }
 
 void ObjectManager::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
@@ -187,6 +189,22 @@ void ObjectManager::Draw(Camera& camera)
     for (auto& obj : createObjects_) {
         obj->Draw(camera);
     }
+}
+
+void ObjectManager::Finalize()
+{
+
+    objects_.clear();
+    idMap_.clear();
+
+    for (auto& obj : createObjects_) {
+        if (obj) {
+            obj.reset();
+        }
+    }
+
+    createObjects_.clear();
+
 }
 
 void ObjectManager::Save()
@@ -410,16 +428,4 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera)
     return isUsingPrev;
 
 #endif
-}
-
-ObjectManager::~ObjectManager()
-{
-    for (auto& obj : createObjects_) {
-        if (obj) {
-            obj.reset();
-        }
-    }
-
-    createObjects_.clear();
-
 }

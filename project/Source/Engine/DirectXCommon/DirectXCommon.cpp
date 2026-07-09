@@ -12,6 +12,8 @@
 
 #include"DebugUI.h"
 #include"Input.h"
+#include"ResourceManager/ResourceManager.h"
+#include"DepthTexture/DepthTexture.h"
 
 using namespace Microsoft::WRL;
 ComPtr<ID3D12Device> DirectXCommon::device = nullptr;
@@ -21,12 +23,7 @@ DirectXCommon::~DirectXCommon()
 {
 
     renderTexture_->Clear();
-
     renderTextureForSprite_->Clear();
-
-    if (depthTextureData_.depthStencilResource) {
-        depthTextureData_.depthStencilResource.Reset();
-    }
 
     dxcCompiler.reset();
 
@@ -52,7 +49,6 @@ void DirectXCommon::PreInitialize(Window& window)
     InitializeDevice();
     InitializeCommand();
     CreateSwapChain();
-    CreateDepthBuffer();
     //コマンドリストのセット
     barrier.SetCommandList(commandList_->Get());
 
@@ -65,29 +61,14 @@ void DirectXCommon::PostInitialize()
     CreateDXCCompiler();
 
 }
-void DirectXCommon::CreateDepthStencilResourceSRV(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
-{
-    D3D12_SHADER_RESOURCE_VIEW_DESC depthTextureSrvDesc{};
-    depthTextureSrvDesc.Format = DXGI_FORMAT_R32_FLOAT;
-    depthTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    depthTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    depthTextureSrvDesc.Texture2D.MipLevels = 1;
-    depthTextureData_.srvIndex = srvDescriptorHeap->Allocate();
-    depthTextureData_.srvHandleCPU = srvDescriptorHeap->GetCPUDescriptorHandle(depthTextureData_.srvIndex);
-    depthTextureData_.srvHandleGPU = srvDescriptorHeap->GetGPUDescriptorHandle(depthTextureData_.srvIndex);
-    DirectXCommon::GetDevice()->CreateShaderResourceView(depthTextureData_.depthStencilResource.Get(), &depthTextureSrvDesc, depthTextureData_.srvHandleCPU);
-    depthTextureData_.depthStencilResource->SetName(L"depthTextureData_depthStencilResource");
-    LogFile::Log("Rendertexture : DepthTextureResource : CreateShaderResourceView\n");
 
-}
-
-void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap)
+void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap, DepthTexture* depthTexture)
 {
 
     auto* commanList = commandList_->Get();
 
     barrier.SettingBarrier(
-        depthTextureData_.depthStencilResource.Get(),
+        depthTexture->GetResource(),
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
@@ -99,6 +80,7 @@ void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap)
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[3];
 
     // SV_TARGET0 用 (メインカラー)
+
     rtvHandles[0] = renderTextureDataNormal.rtvHandleCPU;
     // SV_TARGET1 用 (温度バッファ) 
     rtvHandles[1] = renderTextureDataThermography.rtvHandleCPU;
@@ -106,9 +88,9 @@ void DirectXCommon::RenderTexturePreDraw(DsvDescriptorHeap* dsvDescriptorHeap)
     rtvHandles[2] = renderTextureDataID.rtvHandleCPU;
 
     //TransitionBarrierの設定
-    barrier.SettingBarrierSRVforRTV(renderTextureDataNormal.resource);
-    barrier.SettingBarrierSRVforRTV(renderTextureDataThermography.resource);
-    barrier.SettingBarrierSRVforRTV(renderTextureDataID.resource);
+    barrier.SettingBarrierSRVforRTV(renderTextureDataNormal.resource.Get());
+    barrier.SettingBarrierSRVforRTV(renderTextureDataThermography.resource.Get());
+    barrier.SettingBarrierSRVforRTV(renderTextureDataID.resource.Get());
 
     //描画用のRTVとDSVを設定する 
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
@@ -174,7 +156,7 @@ void DirectXCommon::DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap)
 
     auto backBufferRTV = rtvDescriptorHeap->GetCPUDescriptorHandle(backBufferIndex);
 
-    ppm->Execute(modelLayer, backBufferRTV, &barrier, depthTextureData_.srvIndex, kBlendModeMultiply);
+    ppm->Execute(modelLayer, backBufferRTV, &barrier, kBlendModeMultiply);
 
 
 }
@@ -189,11 +171,11 @@ void DirectXCommon::DrawRenderTextureForSprite(RtvDescriptorHeap* rtvDescriptorH
     auto backBufferRTV = rtvDescriptorHeap->GetCPUDescriptorHandle(backBufferIndex);
     PostProcessManager::Layer spriteLayer = PostProcessManager::kSprite;
     // ② スプライトのエフェクトをバックバッファに「上書き（アルファブレンド）」出力
-    ppm->Execute(spriteLayer, backBufferRTV, &barrier, depthTextureData_.srvIndex, kBlendModeNormal);
+    ppm->Execute(spriteLayer, backBufferRTV, &barrier, kBlendModeNormal);
 
 }
 
-void DirectXCommon::RenderTexturePostDraw()
+void DirectXCommon::RenderTexturePostDraw(DepthTexture* depthTexture)
 {
 
     auto* commanList = commandList_->Get();
@@ -204,19 +186,19 @@ void DirectXCommon::RenderTexturePostDraw()
     }
 
     barrier.SettingBarrier(
-        depthTextureData_.depthStencilResource.Get(),
+        depthTexture->GetResource(),
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     auto& renderTextureData = renderTexture_->GetRenderTextureData(RenderTexture::kNormal0);
-    barrier.SettingBarrierRTVforSRV(renderTextureData.resource);
+    barrier.SettingBarrierRTVforSRV(renderTextureData.resource.Get());
 
     auto& renderTextureDataThermography = renderTexture_->GetRenderTextureData(RenderTexture::kThermography);
-    barrier.SettingBarrierRTVforSRV(renderTextureDataThermography.resource);
+    barrier.SettingBarrierRTVforSRV(renderTextureDataThermography.resource.Get());
 
     // ★追加: ID用テクスチャのバリアを元に戻す
     auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
-    barrier.SettingBarrierRTVforSRV(renderTextureDataID.resource);
+    barrier.SettingBarrierRTVforSRV(renderTextureDataID.resource.Get());
 }
 
 
@@ -226,7 +208,7 @@ void DirectXCommon::SettingIdTextureBarrierPost()
     auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
 
     barrier.SettingBarrier(
-        renderTextureDataID.resource,
+        renderTextureDataID.resource.Get(),
         D3D12_RESOURCE_STATE_COPY_SOURCE,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
@@ -236,7 +218,7 @@ void DirectXCommon::SettingIdTextureBarrierPre()
 {
     auto& renderTextureDataID = renderTexture_->GetRenderTextureData(RenderTexture::kObjectID);
     barrier.SettingBarrier(
-        renderTextureDataID.resource,
+        renderTextureDataID.resource.Get(),
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         D3D12_RESOURCE_STATE_COPY_SOURCE);
 }
@@ -316,8 +298,8 @@ void DirectXCommon::RenderTextureForSpritePreDraw()
     rtvHandles[1] = renderTextureDataThermography.rtvHandleCPU;
 
     // SRVからRTVへバリア遷移
-    barrier.SettingBarrierSRVforRTV(renderTextureDataNormal.resource);
-    barrier.SettingBarrierSRVforRTV(renderTextureDataThermography.resource);
+    barrier.SettingBarrierSRVforRTV(renderTextureDataNormal.resource.Get());
+    barrier.SettingBarrierSRVforRTV(renderTextureDataThermography.resource.Get());
 
     // スプライト描画用のRTVをセット (深度バッファは不要なら nullptr)
     commanList->OMSetRenderTargets(2, rtvHandles, false, nullptr);
@@ -334,8 +316,8 @@ void DirectXCommon::RenderTextureForSpritePostDraw()
     auto& renderTextureDataNormal = renderTextureForSprite_->GetRenderTextureData(RenderTexture::kNormal0);
     auto& renderTextureDataThermography = renderTextureForSprite_->GetRenderTextureData(RenderTexture::kThermography);
 
-    barrier.SettingBarrierRTVforSRV(renderTextureDataNormal.resource);
-    barrier.SettingBarrierRTVforSRV(renderTextureDataThermography.resource); 
+    barrier.SettingBarrierRTVforSRV(renderTextureDataNormal.resource.Get());
+    barrier.SettingBarrierRTVforSRV(renderTextureDataThermography.resource.Get()); 
 }
 
 // =============================================================================================
@@ -405,39 +387,16 @@ void DirectXCommon::CreateSwapChain()
 
 }
 
-void DirectXCommon::CreateDepthBuffer()
-{
-    //stencileTextureResourceの作成 
-
-    depthTextureData_.depthStencilResource = CreateDepthStencileTextureResource(window_->GetClientWidth(), window_->GetClientHeight());
-
-    LogFile::Log("CreateDepthBuffer\n");
-
-}
-
 void DirectXCommon::InitializeRenderTargetView(RtvDescriptorHeap* rtvDescriptorHeap)
 {
     //RTVを作る
     rtvClass.Create(swapChainResources, rtvDescriptorHeap);
     LogFile::Log("CreateRTV\n");
-
-}
-
-void DirectXCommon::InitializeDepthStencilView(DsvDescriptorHeap* dsvDescriptorHeap)
-{
-    //DSVの設定 DepthStencilView
-    dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;//基本的にはResourceに合わせる。
-    dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;//2dTexture
-    // DSVHeapの先頭にDSVを作る
-    device->CreateDepthStencilView(depthTextureData_.depthStencilResource.Get(), &dsvDesc, dsvDescriptorHeap->GetDescriptorHeap()->GetCPUDescriptorHandleForHeapStart());
-
-    LogFile::Log("Initialize DepthStencilView\n");
 }
 
 void DirectXCommon::UpdateGameScreen(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {    //一旦ここでゲーム画面の描画
-    DebugUI::ShowMainViewPort(srvDescriptorHeap, renderTexture_->GetRenderTextureData(RenderTexture::kNormal1).srvIndex);
-
+    DebugUI::ShowMainViewPort(srvDescriptorHeap, renderTexture_->GetRenderTextureData(RenderTexture::kNormal1).resource.srvIndex);
 }
 
 void DirectXCommon::InitializeFence()
@@ -468,9 +427,7 @@ void DirectXCommon::CreateDXCCompiler()
     dxcCompiler->Initialize();
     dxcCompiler->ShaderSetting();
     LogFile::Log("Init DxcCompiler\n");
-
 }
-
 
 void DirectXCommon::InitializeRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
@@ -492,12 +449,11 @@ void DirectXCommon::UpdateRenderTexture(CbvSrvUavDescriptorHeap* srvDescriptorHe
     ImGui::Begin("PostEffect Viewer");
 
     // 例：表示したいSRVのインデックス番号
-    DebugUI::CheckSRVTexture(depthTextureData_.srvIndex, srvDescriptorHeap);
     for (auto& textureData : renderTexture_->GetRenderTextureDatas()) {
-        DebugUI::CheckSRVTexture(textureData.srvIndex, srvDescriptorHeap);
+        DebugUI::CheckSRVTexture(textureData.resource.srvIndex, srvDescriptorHeap);
     }
     for (auto& textureData : renderTextureForSprite_->GetRenderTextureDatas()) {
-        DebugUI::CheckSRVTexture(textureData.srvIndex, srvDescriptorHeap);
+        DebugUI::CheckSRVTexture(textureData.resource.srvIndex, srvDescriptorHeap);
     }
     ImGui::End();
 
@@ -505,118 +461,6 @@ void DirectXCommon::UpdateRenderTexture(CbvSrvUavDescriptorHeap* srvDescriptorHe
 }
 
 // =============================================================================================
-
-
-
-ComPtr<ID3D12Resource> DirectXCommon::CreateBufferResourceForUAV(
-    size_t sizeInBytes) {
-
-    Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-
-    //ヒープの設定
-    D3D12_HEAP_PROPERTIES heapProperties{};
-    //GPUに近く置くためHeapをDefaultで作成する
-    heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-   
-    //頂点リソースの設定
-    D3D12_RESOURCE_DESC resourceDesc{};
-
-
-    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-    resourceDesc.Width = sizeInBytes;//リソースサイズ。
-    //バッファの場合はこれらは1にする決まり
-    resourceDesc.Height = 1;
-    resourceDesc.DepthOrArraySize = 1;
-    resourceDesc.MipLevels = 1;
-    resourceDesc.SampleDesc.Count = 1;
-    //バッファの場合はこれにする決まり
-    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-    //UAVの設定
-    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-   
-
-    if (SUCCEEDED(device->CreateCommittedResource(
-        &heapProperties,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc, 
-        D3D12_RESOURCE_STATE_COMMON,
-        nullptr,
-        IID_PPV_ARGS(&resource)))) {
-        return resource;
-    }
-
-    resource->SetName(L"DirectXCommon_UAV_BufferResource");
-
-    return resource;
-
-
-};
-
-
-ComPtr<ID3D12Resource> DirectXCommon::CreateBufferResource(
-    size_t sizeInBytes) {
-
-    Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-
-    //ヒープの設定
-    D3D12_HEAP_PROPERTIES uploadHeapProperties{};
-    uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;//UploadHeapを使う
-    //頂点リソースの設定
-    D3D12_RESOURCE_DESC resourceDesc{};
-    //バッファリソース。テクスチャの場合はまた別の設定をする
-    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-    resourceDesc.Width = sizeInBytes;//リソースサイズ。
-    //バッファの場合はこれらは1にする決まり
-    resourceDesc.Height = 1;
-    resourceDesc.DepthOrArraySize = 1;
-    resourceDesc.MipLevels = 1;
-    resourceDesc.SampleDesc.Count = 1;
-    //バッファの場合はこれにする決まり
-    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-    if (SUCCEEDED(device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
-        &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-        IID_PPV_ARGS(&resource)))) {
-        return resource;
-    }
-
-    resource->SetName(L"DirectXCommon_BufferResource");
-
-    return resource;
-
-
-};
-
-
-ComPtr<ID3D12Resource> DirectXCommon::CreateReadbackBufferResource(size_t sizeInBytes) {
-    ComPtr<ID3D12Resource> resource = nullptr;
-
-    // 1. ヒープの設定をREADBACKに変更
-    D3D12_HEAP_PROPERTIES heapProperties{};
-    heapProperties.Type = D3D12_HEAP_TYPE_READBACK; // ここが重要
-
-    D3D12_RESOURCE_DESC resourceDesc{};
-    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-    resourceDesc.Width = sizeInBytes; // 1ピクセル分(UINTなら4バイト)
-    resourceDesc.Height = 1;
-    resourceDesc.DepthOrArraySize = 1;
-    resourceDesc.MipLevels = 1;
-    resourceDesc.SampleDesc.Count = 1;
-    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-    // 2. 初期状態を COPY_DEST にする
-    if (SUCCEEDED(device->CreateCommittedResource(
-        &heapProperties,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_COPY_DEST, // ここが重要
-        nullptr,
-        IID_PPV_ARGS(&resource)))) {
-        return resource;
-    }
-    resource->SetName(L"DirectXCommon_ReadbackBufferResource");
-    return resource;
-}
 
 ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible)
 {
@@ -631,139 +475,3 @@ ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeap(D3D12_DESCRIPTO
     assert(SUCCEEDED(hr));
     return descriptorHeap;
 }
-
-Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateTextureResource(const DirectX::TexMetadata& metadata)
-{
-    //1. metadataを基にResourceの設定
-    D3D12_RESOURCE_DESC resourceDesc{};
-    resourceDesc.Width = UINT(metadata.width);//Textureの値
-    resourceDesc.Height = UINT(metadata.height);//Textureの高さ
-    resourceDesc.MipLevels = UINT16(metadata.mipLevels);//mipmapの数
-    resourceDesc.DepthOrArraySize = UINT16(metadata.arraySize);//奥行き　or 配列Textureの配列数
-    resourceDesc.Format = metadata.format;//TextureのFormat
-    resourceDesc.SampleDesc.Count = 1;//サンプリングカウント。1固定。
-    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);//Textureの次元数。
-
-    //2.利用するHeapの設定
-    D3D12_HEAP_PROPERTIES heapProperties{};
-    heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;//GPUで処理するために書き換え
-
-    //3.Resourceを生成する
-    Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-    HRESULT hr = device->CreateCommittedResource(
-        &heapProperties,//Heapの設定
-        D3D12_HEAP_FLAG_NONE,//Heapの特殊な設定。特になし
-        &resourceDesc,//Resourceの設定
-        D3D12_RESOURCE_STATE_COPY_DEST,// データ転送される設定
-        nullptr,//Clear最適地。使わない
-        IID_PPV_ARGS(&resource));//ポインタのポインタ
-
-    resource->SetName(L"DirectXCommon_TextureResource");
-    assert(SUCCEEDED(hr));
-
-    return resource;
-}
-
-Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateRenderTextureResource(uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor)
-{
-
-    //1. metadataを基にResourceの設定
-    D3D12_RESOURCE_DESC resourceDesc{};
-    resourceDesc.Width = width;//Textureの値
-    resourceDesc.Height = height;//Textureの高さ
-    resourceDesc.MipLevels = 1;//mipmapの数
-    resourceDesc.DepthOrArraySize = 1;//奥行き　or 配列Textureの配列数
-    resourceDesc.Format = format;//TextureのFormat
-    resourceDesc.SampleDesc.Count = 1;//サンプリングカウント。1固定。
-    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;//2次元
-    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;//RenderTarget
-
-    //2.利用するHeapの設定
-    D3D12_HEAP_PROPERTIES heapProperties{};
-    heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;//GPUで処理するために書き換え
-
-    D3D12_CLEAR_VALUE clearValue;
-    clearValue.Format = format;
-    clearValue.Color[0] = clearColor.x;
-    clearValue.Color[1] = clearColor.y;
-    clearValue.Color[2] = clearColor.z;
-    clearValue.Color[3] = clearColor.w;
-
-    //3.Resourceを生成する
-    Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-    HRESULT hr = device->CreateCommittedResource(
-        &heapProperties,//Heapの設定
-        D3D12_HEAP_FLAG_NONE,//Heapの特殊な設定。特になし
-        &resourceDesc,//Resourceの設定
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,// SRVとする
-        &clearValue,//Clear最適地。
-        IID_PPV_ARGS(&resource));//ポインタのポインタ
-
-    assert(SUCCEEDED(hr));
-
-    return resource;
-}
-
-
-Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateDepthStencileTextureResource(
-    int32_t width,
-    int32_t height) {
-    //生成するResourceの設定
-    D3D12_RESOURCE_DESC resourceDesc{};
-    resourceDesc.Width = width;//Textureの幅
-    resourceDesc.Height = height;//高さ
-    resourceDesc.MipLevels = 1;//mipmapの数
-    resourceDesc.DepthOrArraySize = 1;//奥行き　or 配列Textureの配列数
-    resourceDesc.Format = DXGI_FORMAT_R32_TYPELESS;//DepthStencilとして利用可能なフォーマット
-    resourceDesc.SampleDesc.Count = 1;//サンプリングカウント
-    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;//2次元
-    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;//DepthStencilとして使う通知
-
-    //利用するHeapの設定
-    D3D12_HEAP_PROPERTIES heapProperties{};
-    heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;//VRAM上
-
-    //深度値クリア設定
-    D3D12_CLEAR_VALUE depthClearValue{};
-    depthClearValue.DepthStencil.Depth = 1.0f;//1.0f(最大値)でクリア
-    depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;//フォーマット。Resourceと合わせる
-
-    //Resourceの生成
-    Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-    HRESULT hr = device->CreateCommittedResource(
-        &heapProperties,//Heapの設定
-        D3D12_HEAP_FLAG_NONE,//Heapの特殊な設定。特になし。
-        &resourceDesc,//Resourceの設定
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,//深度値を最初は使う状態にする
-        &depthClearValue,//Clear最適地
-        IID_PPV_ARGS(&resource));
-    assert(SUCCEEDED(hr));
-    resource->SetName(L"DirectXCommon_DepthStencile_TextureResource");
-    return resource;
-}
-
-[[nodiscard]]
-Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::UploadTextureData(
-    ID3D12GraphicsCommandList* commandList,
-    const Microsoft::WRL::ComPtr<ID3D12Resource>& texture,
-    const DirectX::ScratchImage& mipImages
-)
-{
-    std::vector<D3D12_SUBRESOURCE_DATA>subresources;
-    DirectX::PrepareUpload(device.Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
-    uint64_t intermediateSize = GetRequiredIntermediateSize(texture.Get(), 0, UINT(subresources.size()));
-    Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = CreateBufferResource(intermediateSize);//中間リソース
-    intermediateResource->SetName(L"texture:intermediateResource");
-    UpdateSubresources(commandList, texture.Get(), intermediateResource.Get(), 0, 0, UINT(subresources.size()), subresources.data());
-    //Textureへの転送後は利用できるよう,D3D12_RESOURCE_STATE_COPY_DESTからRESOURCE_STATE_GENERIC_READへResourceStateを変更する
-    D3D12_RESOURCE_BARRIER barrier{};
-    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrier.Transition.pResource = texture.Get();
-    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;//これに変更
-    commandList->ResourceBarrier(1, &barrier);
-    return intermediateResource;
-}
-

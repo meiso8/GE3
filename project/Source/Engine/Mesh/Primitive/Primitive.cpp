@@ -862,54 +862,42 @@ void Primitive::Create(const MeshData& meshData)
 
     // 1. 頂点バッファの作成とデータ転送
     UINT vertexBufferSize = sizeof(VertexData) * vertexCount_;
-    vertexResource_ = DirectXCommon::CreateBufferResource(vertexBufferSize);
-    vertexResource_->SetName(L"Primitive_VertexResource");
+    vertexResource_.CreateBufferResource(L"Primitive_VertexResource",vertexBufferSize);
+
     //頂点バッファビューを作成する
-    vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+    vertexBufferView_.BufferLocation = vertexResource_.GetGPUVirtualAddress();
     vertexBufferView_.SizeInBytes = vertexBufferSize;
     vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
-    VertexData* vertexMap = nullptr;
-
     //頂点リソースにマッピング
-    vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexMap));
-    std::memcpy(vertexMap, meshData.vertices.data(), vertexBufferSize); // vectorの中身を一気にコピー！
-    vertexResource_->Unmap(0, nullptr);
+    vertexResource_.Map();
+
+    std::memcpy(vertexResource_.data, meshData.vertices.data(), vertexBufferSize); // vectorの中身を一気にコピー！
+    vertexResource_.UnMap();
 
     if (indexCount_ > 0) {
         //インデックスがある場合
-
         UINT indexBufferSize = sizeof(uint32_t) * indexCount_;
-        indexResource_ = DirectXCommon::CreateBufferResource(indexBufferSize);
+        indexResource_.CreateBufferResource(L"Primitive_IndexResource", indexBufferSize);
         //Viewを作成する IndexBufferView(IBV)
-        indexResource_->SetName(L"Primitive_IndexResource");
         //リソースの先頭アドレスから使う
-        indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
+        indexBufferView_.BufferLocation = indexResource_.GetGPUVirtualAddress();
         //使用するリソースのサイズ
         indexBufferView_.SizeInBytes = indexBufferSize;
         //インデックスはuint32_tとする
         indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
         //インデックスリーソースにデータを書き込む
-        uint32_t* indexMap = nullptr;
-        indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexMap));
-        std::memcpy(indexMap, meshData.indices.data(), indexBufferSize);
-        indexResource_->Unmap(0, nullptr);
+        indexResource_.Map();
+        std::memcpy(indexResource_.data, meshData.indices.data(), indexBufferSize);
+        indexResource_.UnMap();
     }
 }
 
 Primitive::~Primitive()
 {
-  
-    if (vertexResource_) {
-        vertexResource_.Reset();
-        vertexResource_ = nullptr;
-    }
-
-    if (indexResource_) {
-        indexResource_.Reset();
-        indexResource_ = nullptr;
-    }
+    vertexResource_.Reset();
+    indexResource_.Reset();
 }
 
 

@@ -168,9 +168,9 @@ void AnimationObject3d::SetModelAndLoadAnimation(Model* model)
 
 void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode,const bool usePSOKey,const TextureFactory::Handle skyBoxTexture)
 {
-    transformationMatrixData_->World = worldMatrix_;
-    transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
-    transformationMatrixData_->WVP = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
+    transformationMatrixResource_.data->World = worldMatrix_;
+    transformationMatrixResource_.data->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
+    transformationMatrixResource_.data->WVP = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
 
     //スキンクラスター
     auto* skinCluster = skinningModel_->GetSkinCluster();
@@ -179,7 +179,7 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
     D3D12_RESOURCE_BARRIER barrier = {};
     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
     barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrier.Transition.pResource = csResource->outputVertexResources_.resource.Get();
+    barrier.Transition.pResource = csResource->outputVertexResource_.resource.Get();
     // 前回の描画終わり（または初期状態）のステート
     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
     // CSで書き込むためのステート
@@ -190,10 +190,10 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
     commandList_->SetComputeRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::CS_SKINNING));
     commandList_->SetPipelineState(ComputeShaderPSO::GetInstance()->GetSkinningPSO().Get());
      cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(0, skinCluster->paletteSrvIndex, commandList_);
-     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(1, csResource->inputVertexResources_.index, commandList_);
+     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(1, csResource->inputVertexResource_.srvIndex, commandList_);
      cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(2, skinCluster->influenceSrvIndex, commandList_);
-     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(3, csResource->outputVertexResources_.index, commandList_);
-     commandList_->SetComputeRootConstantBufferView(4, csResource->skinningInformationResource_->GetGPUVirtualAddress());
+     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(3, csResource->outputVertexResource_.uavIndex, commandList_);
+     commandList_->SetComputeRootConstantBufferView(4, csResource->skinningInformationResource_.GetGPUVirtualAddress());
 
      //ComputeShaderの実行
      commandList_->Dispatch(UINT(skinningModel_->GetModelData()->vertices.size() + 1023) / 1024, 1, 1);
@@ -209,20 +209,20 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
         skinningModel_->SetRootSignatureAndGraphicsPipeline(commandList_, blendMode, cullMode,maskMode,usePSOKey);
        
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_.GetGPUVirtualAddress());
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE], commandList_);
         //cameraのCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(3, camera.GetResource()->GetGPUVirtualAddress());
         //ID
-        commandList_->SetGraphicsRootConstantBufferView(4, idResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(4, idResource_.GetGPUVirtualAddress());
         //ライト
         DirectionalLightManager::SetGraphicsRootConstantBufferView(5, commandList_);
         //expansionのCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(6, expansionResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(6, expansionResource_.GetGPUVirtualAddress());
         //WaveのSRVの場所を設定
-        commandList_->SetGraphicsRootShaderResourceView(7, waveResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootShaderResourceView(7, waveResource_.GetGPUVirtualAddress());
         //ライトのCBufferの場所を設定
           //PointLightのDescriptorTableの設定をする
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(8, PointLightManager::GetSrvIndex(), commandList_);

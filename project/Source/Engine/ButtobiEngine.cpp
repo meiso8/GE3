@@ -65,13 +65,17 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
 
     directXCommon_->InitializeRenderTargetView(rtvDescriptorHeap_.get());
     LogFile::Log("DirectXCommon Initialize Render Target View\n");
-    directXCommon_->InitializeDepthStencilView(dsvDescriptorHeap_.get());
-    LogFile::Log("DirectXCommon Initialize dsv Descriptor Heap\n");
+
     directXCommon_->PostInitialize();
     LogFile::Log("DirectXCommon PostInitialize\n");
 
     //SRV管理
     srvDescriptorHeap_ = std::make_unique<CbvSrvUavDescriptorHeap>();
+
+    //深度テクスチャの作成
+    depthTexture_ = std::make_unique<DepthTexture>();
+    depthTexture_->CreateResource(srvDescriptorHeap_.get(), wc->GetClientWidth(), wc->GetClientHeight());
+    depthTexture_->InitializeDepthStencilView(dsvDescriptorHeap_.get());
 
 #ifdef USE_IMGUI
     //ImGuiの初期化。
@@ -90,10 +94,8 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     directXCommon_->InitializeRenderTexture(rtvDescriptorHeap_.get(), srvDescriptorHeap_.get());
     //ポストプロセス管理の生成
     auto* ppm = PostProcessManager::GetInstance();
-    ppm->Create(commandList, srvDescriptorHeap_.get());
+    ppm->Create(commandList, srvDescriptorHeap_.get(), depthTexture_.get());
     LogFile::Log("Create PostProcessManager");
-
-    directXCommon_->CreateDepthStencilResourceSRV(srvDescriptorHeap_.get());
 
     auto* pso = PSO::GetInstance();
     pso->CreateALLPSO();
@@ -112,6 +114,13 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     spotLightManager_ = ::std::make_unique<SpotLightManager>(srvDescriptorHeap_.get());
 #pragma endregion
 
+#pragma region//テクスチャやスプライト
+
+    //テクスチャ管理
+    texture_ = std::make_unique<Texture>();
+    texture_->Initialize();
+    texture_->SetCommandListAndSrvDescriptorHeap(commandList, srvDescriptorHeap_.get());
+
     //共通のスプライト
     spriteCommon_ = std::make_unique<SpriteCommon>();
     //PSOの設定と初期化
@@ -125,17 +134,18 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     //スプライト用カメラ
     SpriteCamera::Initialize(static_cast<float>(wc->GetClientWidth()), static_cast<float>(wc->GetClientHeight()));
     LogFile::Log("Initialize　SpriteCamera");
-    //サウンド管理
-    Sound::Initialize();
-    LogFile::Log("Initialize Sound");
 
-    //テクスチャ管理
-    texture_ = std::make_unique<Texture>();
-    texture_->Initialize();
-    texture_->SetCommandListAndSrvDescriptorHeap(commandList, srvDescriptorHeap_.get());
+#pragma endregion
+
+
     //テキストの初期化
     freeTypeManager_ = std::make_unique<FreeTypeManager>();
     freeTypeManager_->SetCommandListAndSrvDescriptorHeap(commandList, srvDescriptorHeap_.get());
+
+#pragma region //LoaderやFactory
+    //サウンド管理
+    Sound::Initialize();
+    LogFile::Log("Initialize Sound");
 
     //テスクチャ読み込み
     TextureFactory::Load();
@@ -158,26 +168,28 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     primitiveFactory_->CreateAllPrimitive();
     LogFile::Log("CreatePrimitive");
 
-    Skin::SetSrvDescriptorHeap(srvDescriptorHeap_.get());
-
     tagFactory_ = std::unique_ptr<TagFactory>();
     //タグの作成
     tagFactory_->SetTag();
     LogFile::Log("Create Tag");
 
+#pragma endregion
+
+    //スキンの設定
+    Skin::SetSrvDescriptorHeap(srvDescriptorHeap_.get());
+
     //オブジェクト管理の初期化
     ObjectManager::GetInstance()->SetRenderTextureForModel(directXCommon_->GetRenderTexture());
-    ObjectManager::GetInstance()->Initialize();
     ObjectManager::GetInstance()->SetCommandListAndSrvDescriptorHeap(
         commandList,
         srvDescriptorHeap_.get()
     );
-    LogFile::Log("ObjectManager Initialize");
+    ObjectManager::GetInstance()->Initialize();
+
 
 #ifdef _DEVELOP
     //グリット描画
     DrawGrid::Create();
-    LogFile::Log("CreateDrawGrid");
 #endif
 
     //パーティクル管理
@@ -194,15 +206,15 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
 
 #ifdef _DEVELOP
     // デバッグカメラの初期化
-    DebugCamera::GetInstance();
-    LogFile::Log("Create DebugCamera");
+    DebugCamera::GetInstance()->Create();
+
 #endif //_DEVELOP
 
     // =============================================
     // シーンの生成
     // =============================================
     SceneFactory::Create();
-    LogFile::Log("CreateScene");
+
 
     //ポストプロセス管理にカメラを設定する
     auto* camera = SceneManager::GetCurrentCamera();
@@ -283,10 +295,13 @@ void ButtobiEngine::Debug()
     DebugUI::CheckJsonFile();
     DebugUI::CheckParticle(particleManager_.get());
     DebugUI::CheckPostEffect();
+
     ImGui::End();
 
     //Loaderをここで
     imGuiClass.DrawModelLoaderWindow(srvDescriptorHeap_.get());
+    //深度テクスチャのでばっく
+    depthTexture_->DebugViewer(srvDescriptorHeap_.get());
 
 #endif // USE_IMGUI
 
@@ -330,7 +345,7 @@ void ButtobiEngine::PreCommandSet() {
     imGuiClass.Render();
 #endif
     //ポストエフェクトの前設定
-    directXCommon_->RenderTexturePreDraw(dsvDescriptorHeap_.get());
+    directXCommon_->RenderTexturePreDraw(dsvDescriptorHeap_.get(), depthTexture_.get());
 
     auto* commandList = directXCommon_->GetCommandListClass()->Get();
     //SRV管理の描画前処理
@@ -359,7 +374,7 @@ void ButtobiEngine::PreCommandSet() {
     //パーティクルの描画
     particleManager_->Draw();
     //ポストエフェクトのあと設定
-    directXCommon_->RenderTexturePostDraw();
+    directXCommon_->RenderTexturePostDraw(depthTexture_.get());
     //描画前処理
     directXCommon_->PreDraw();
     //SRV管理の描画前処理
@@ -378,7 +393,7 @@ void ButtobiEngine::PostCommandSet() {
     // スプライトの描画
     SceneManager::DrawSprite();
     //directXCommon_->RenderTextureForSpritePostDraw();
-    
+
     //directXCommon_->DrawRenderTextureForSprite(rtvDescriptorHeap_.get());
 
 #ifdef USE_IMGUI
@@ -399,29 +414,41 @@ void ButtobiEngine::Finalize() {
 
     //シーンマネージャーの終了処理
     SceneManager::Finalize();
+    //デバックカメラの終了処理
+    DebugCamera::GetInstance()->Finalize();
     //パーティクルの終了処理
     particleManager_->Finalize();
     particleManager_.reset();
 
     //モデルの終了処理
     ModelManager::Finalize();
+    //オブジェクトの開放
+    ObjectManager::GetInstance()->Finalize();
+    //タグ生成工場を解放
+    tagFactory_.reset();
 
 #ifdef _DEVELOP
     //グリットを解放
     DrawGrid::Finalize();
 #endif
+
+    //プリミティブ生成工場を解放
+    primitiveFactory_.release();
+
     //テキストの終了処理
     freeTypeManager_->Finalize();
     freeTypeManager_.reset();
-    //テクスチャの終了処理
-    texture_->Finalize();
-    texture_.reset();
 
     //音の終了処理
     Sound::Finalize();
     //スプライトの終了処理
     spriteCommon_->Finalize();
     spriteCommon_.reset();
+
+    //テクスチャの終了処理
+    texture_->Finalize();
+    texture_.reset();
+
 
 #pragma region//LightManagerの終了処理
 
@@ -436,16 +463,26 @@ void ButtobiEngine::Finalize() {
     directionalLightManager_.reset();
 
 #pragma endregion
+    //ComputeShader用PSO
+    ComputeShaderPSO::GetInstance()->Finalize();
+    //PSOの解放
+    PSO::GetInstance()->Finalize();
+    //ポストプロセスマネージャーの終了処理
+    PostProcessManager::GetInstance()->Finalize();
 
 #ifdef USE_IMGUI
     //ImGuiの終了処理 ゲームループが終わったら行う
     imGuiClass.ShutDown();
 #endif
+
+    //深度テクスチャのリセット
+    depthTexture_.reset();
+    //DSVのリセット
     dsvDescriptorHeap_.reset();
-    //RTVManagerのリセット
-    rtvDescriptorHeap_.reset();
     //SRVManagerのリセット
     srvDescriptorHeap_.reset();
+    //RTVManagerのリセット
+    rtvDescriptorHeap_.reset();
 
     //DirecectXCommonのリセット
     directXCommon_->Finalize();
@@ -453,12 +490,16 @@ void ButtobiEngine::Finalize() {
 
     //バイブレーションの終了処理
     VibrateManager::Finalize();
+    //時間
+    time_.reset();
+
     //入力クラスの終了処理
     input.reset();
     //ウィンドウクラスの終了処理
     wc->Finalize();
     wc.reset();
     //ログファイルのリセット
+
     logFile.reset();
 
 }

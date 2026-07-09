@@ -186,24 +186,24 @@ void ParticleManager::CreateParticleGroup(const std::string name, const TextureF
     newParticleGroup->primitive->Create(meshData);
 
     //Instancing用のTransformationMatrixリソースを作成
-    newParticleGroup->instancingResource = DirectXCommon::CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
-    newParticleGroup->instancingResource->SetName(L"Particle_InstancingResource");
+    newParticleGroup->instancingResource.CreateBufferResource(L"Particle_InstancingResource", sizeof(ParticleForGPU) * kNumMaxInstance);
     //書き込むためのアドレスを取得
-    newParticleGroup->instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&newParticleGroup->instancingData));
-
-    assert(newParticleGroup->instancingResource != nullptr);
+    newParticleGroup->instancingResource.Map();
+    assert(newParticleGroup->instancingResource.Get());
 
     for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
-        newParticleGroup->instancingData[index].WVP = MakeIdentity4x4();
-        newParticleGroup->instancingData[index].World = MakeIdentity4x4();
-        newParticleGroup->instancingData[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
+        newParticleGroup->instancingResource.data[index].WVP = MakeIdentity4x4();
+        newParticleGroup->instancingResource.data[index].World = MakeIdentity4x4();
+        newParticleGroup->instancingResource.data[index].color = Vector4{ 1.0f,1.0f,1.0f,1.0f };
     }
 
-    newParticleGroup->instancingResource->Unmap(0, nullptr);
-    newParticleGroup->instanceSrvIndex = srvDescriptorHeap_->Allocate();
+    newParticleGroup->instancingResource.UnMap();
+    newParticleGroup->instancingResource.Allocate(srvDescriptorHeap_);
+    newParticleGroup->instancingResource.CreateSRVforStructuredBuffer(
+        srvDescriptorHeap_,
+        kNumMaxInstance
+    );
 
-    srvDescriptorHeap_->CreateSRVforStructuredBuffer(newParticleGroup->instanceSrvIndex, newParticleGroup->instancingResource.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
-    //名前とパーティクルをセットにする
     particleGroups.insert(std::make_pair(name, std::move(newParticleGroup)));
 
     LogFile::Log("Create Particle Group\n");
@@ -438,9 +438,9 @@ void ParticleManager::Draw()
             //形状を設定。
 
             //マテリアルの設定
-            commandList_->SetGraphicsRootConstantBufferView(0, group->materialResource->GetGPUVirtualAddress());
+            commandList_->SetGraphicsRootConstantBufferView(0, group->materialResource.GetGPUVirtualAddress());
             //粒ごとのトランスフォーム
-            srvDescriptorHeap_->SetGraphicsRootDescriptorTable(1, group->instanceSrvIndex, commandList_);
+            srvDescriptorHeap_->SetGraphicsRootDescriptorTable(1, group->instancingResource.srvIndex, commandList_);
             //テスクチャ
             srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, group->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex,commandList_);
             //描画!（DrawCall/ドローコール）6個のインデックスを使用しインスタンスを描画。
@@ -481,13 +481,8 @@ void ParticleManager::Finalize()
 {
 
     for (auto& [name, group] : particleGroups) {
-        if (group->instancingResource) {
-            group->instancingResource.Reset();
-        }
-
-        if (group->materialResource) {
-            group->materialResource.Reset();
-        }
+        group->instancingResource.Reset();
+        group->materialResource.Reset();
         group.reset();
     }
 
@@ -502,16 +497,16 @@ void ParticleManager::Finalize()
 void ParticleManager::UpdateInstancingData(ParticleGroup& group, Particle& particleItr)
 {
 
-    group.instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&group.instancingData));
+    group.instancingResource.Map();
 
     //データにそれぞれ追加
-    group.instancingData[group.numInstance].WVP = worldViewProjectionMatrix;
-    group.instancingData[group.numInstance].World = worldMatrix;
-    group.instancingData[group.numInstance].color = (particleItr).color;
+    group.instancingResource.data[group.numInstance].WVP = worldViewProjectionMatrix;
+    group.instancingResource.data[group.numInstance].World = worldMatrix;
+    group.instancingResource.data[group.numInstance].color = (particleItr).color;
     float time = ((particleItr).currentTime / (particleItr).lifeTime);
-    group.instancingData[group.numInstance].color.w = Lerp(group.startAlpha_, group.endAlpha_, time);
-
-    group.instancingResource->Unmap(0, nullptr);
+    group.instancingResource.data[group.numInstance].color.w = Lerp(group.startAlpha_, group.endAlpha_, time);
+   
+    group.instancingResource.UnMap();
 
     ++group.numInstance;
 
@@ -520,18 +515,17 @@ void ParticleManager::UpdateInstancingData(ParticleGroup& group, Particle& parti
 void ParticleManager::CreateMaterial(ParticleGroup& group,const float temperature)
 {
     //マテリアル用のリソースを作る。
-    group.materialResource = DirectXCommon::CreateBufferResource(sizeof(Object3d::Material));
-    //マテリアルにデータを書き込む
-    group.materialResource->SetName(L"ParticleGroup_MaterialResource");
+    group.materialResource.CreateBufferResource(L"ParticleGroup_MaterialResource");
+
     //書き込むためのアドレスを取得
-    HRESULT result = group.materialResource->Map(0, nullptr, reinterpret_cast<void**>(&group.material));
-    group.material->color = { 1.0f,1.0f,1.0f,1.0f };
-    group.material->lightMode = Object3d::LightMode::kLightModeNone;
-    group.material->uvTransform = MakeIdentity4x4();
-    group.material->shininess = 50.0f;
-    group.material->environmentCoefficient = 0.0f;
-    //体温
-    group.material->temperature = temperature;
+    HRESULT result = group.materialResource.Map();
+    group.materialResource.data->color = { 1.0f,1.0f,1.0f,1.0f };
+    group.materialResource.data->lightMode = Object3d::LightMode::kLightModeNone;
+    group.materialResource.data->uvTransform = MakeIdentity4x4();
+    group.materialResource.data->shininess = 50.0f;
+    group.materialResource.data->environmentCoefficient = 0.0f;
+    //体温 
+    group.materialResource.data->temperature = temperature;
 
 }
 
@@ -543,13 +537,16 @@ void ParticleManager::Reset(const std::string& name)
         group->particles.clear();
         group->sphericalCoordinates.clear();
         group->numInstance = 0;
-        group->instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&group->instancingData));
+
+        group->instancingResource.Map();
+
         for (uint32_t i = 0; i < kNumMaxInstance; ++i) {
-            group->instancingData[i].WVP = MakeIdentity4x4();
-            group->instancingData[i].World = MakeIdentity4x4();
-            group->instancingData[i].color = Vector4{ 1.0f, 1.0f, 1.0f, 0.0f }; // アルファ0で非表示に
+            group->instancingResource.data[i].WVP = MakeIdentity4x4();
+            group->instancingResource.data[i].World = MakeIdentity4x4();
+            group->instancingResource.data[i].color = Vector4{ 1.0f, 1.0f, 1.0f, 0.0f }; // アルファ0で非表示に
         }
-        group->instancingResource->Unmap(0, nullptr);
+
+        group->instancingResource.UnMap();
     }
 }
 

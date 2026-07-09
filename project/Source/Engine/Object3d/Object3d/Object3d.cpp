@@ -33,35 +33,11 @@ void Object3d::UpdateUV() {
 
 Object3d::~Object3d()
 {
-    if (transformationMatrixResource_) {
-        transformationMatrixResource_->Unmap(0, nullptr);
-        transformationMatrixResource_.Reset();
-        transformationMatrixResource_ = nullptr;
-    }
-
-    if (materialResource_) {
-        materialResource_->Unmap(0, nullptr);
-        materialResource_.Reset();
-        materialResource_ = nullptr;
-    }
-
-    if (expansionResource_) {
-        expansionResource_->Unmap(0, nullptr);
-        expansionResource_.Reset();
-        expansionResource_ = nullptr;
-    }
-
-    if (waveResource_) {
-        waveResource_->Unmap(0, nullptr);
-        waveResource_.Reset();
-        waveResource_ = nullptr;
-    }
-
-    if (idResource_) {
-        idResource_->Unmap(0, nullptr);
-        idResource_.Reset();
-        idResource_ = nullptr;
-    }
+    transformationMatrixResource_.Reset();
+    materialResource_.Reset();
+    expansionResource_.Reset();
+    waveResource_.Reset();
+    idResource_.Reset();
 }
 
 void Object3d::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
@@ -76,10 +52,12 @@ void Object3d::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* com
 void Object3d::InitBalloonData()
 {
     //データを書き込む
-    balloonData_->expansion = 0.0f;
-    balloonData_->sphere = 0.0f;
-    balloonData_->cube = 0.0f;
-    balloonData_->isSphere = false;
+    if (expansionResource_.data) {
+        expansionResource_.data->expansion = 0.0f;
+        expansionResource_.data->sphere = 0.0f;
+        expansionResource_.data->cube = 0.0f;
+        expansionResource_.data->isSphere = false;
+    }
 }
 
 void Object3d::InitWaveData()
@@ -94,38 +72,42 @@ void Object3d::InitWaveDataIndex(const uint32_t& index)
         return;
     }
 
-    waveData_[index].direction = { 1.0f,0.0f,0.0f };
-    waveData_[index].time = 0.0f;
-    waveData_[index].amplitude = 0.0f;
-    waveData_[index].frequency = 4;
+    if (waveResource_.data) {
+      waveResource_.data[index].direction = { 1.0f,0.0f,0.0f };
+      waveResource_.data[index].time = 0.0f;
+      waveResource_.data[index].amplitude = 0.0f;
+      waveResource_.data[index].frequency = 4;
+    }
+
 }
 
 void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, const TextureFactory::Handle skyBoxTexture)
 {
     //データを書き込む
-    transformationMatrixData_->World = worldTransform_.matWorld_;
-    transformationMatrixData_->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
-    transformationMatrixData_->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
+
+    transformationMatrixResource_.data->World = worldTransform_.matWorld_;
+    transformationMatrixResource_.data->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
+    transformationMatrixResource_.data->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
 
     if (primitive_) {
 
         primitive_->SetRootSignatureAndGraphicsPipeline(commandList_, blendMode, cullMode, maskMode, usePSOKey);
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
-        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.resource->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_.GetGPUVirtualAddress());
         //SrvDescriptorHeapクラスでテクスチャを設定する
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE], commandList_);
         //cameraのCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(3, camera.GetResource()->GetGPUVirtualAddress());
         //ID
-        commandList_->SetGraphicsRootConstantBufferView(4, idResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(4, idResource_.GetGPUVirtualAddress());
         //ライト
         DirectionalLightManager::SetGraphicsRootConstantBufferView(5, commandList_);
         //expansionのCBufferの場所を設定
-        commandList_->SetGraphicsRootConstantBufferView(6, expansionResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootConstantBufferView(6, expansionResource_.GetGPUVirtualAddress());
         //timeのSRVの場所を設定
-        commandList_->SetGraphicsRootShaderResourceView(7, waveResource_->GetGPUVirtualAddress());
+        commandList_->SetGraphicsRootShaderResourceView(7, waveResource_.GetGPUVirtualAddress());
         //ライトのCBufferの場所を設定
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(8, PointLightManager::GetSrvIndex(), commandList_);
         //SpotLightのDescriptorTableの設定をする
@@ -217,14 +199,14 @@ void Object3d::SetMeshAndMaterial(Primitive* mesh)
         //一旦マテリアル0
 
         //マテリアルリソースが無かったらアサート
-        assert(materialResource_);
+        assert(materialResource_.Get());
 
         for (auto& [name, material] : model->GetModelData()->materials) {
             for (int i = 0; i < material.textureData_.size(); ++i) {
                 textureHandles_[i] = material.textureData_[i].textureSrvIndex;
             }
 
-            material_->shininess = material.shininess;
+           material_->shininess = material.shininess;
 
             if (textureHandles_[TEXTURE_USAGE_DIFFUSE] == -1) {
                 textureHandles_[TEXTURE_USAGE_DIFFUSE] = Texture::GetSRVHandle(TextureFactory::WHITE_1X1);
@@ -269,14 +251,15 @@ void Object3d::Update()
 void Object3d::CreateTransformationMatrix() {
 
     //Matrix4x4　1つ分のサイズを用意
-    transformationMatrixResource_ = DirectXCommon::CreateBufferResource(sizeof(TransformationMatrixFor3D));
-    transformationMatrixResource_->SetName(L"Object3d_Transformation_Matrix_Resource");
+    transformationMatrixResource_.CreateBufferResource(L"Object3d_Transformation_Matrix_Resource");
+
     //データを書き込む
     //書き込むためのアドレスを取得
-    transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
-    transformationMatrixData_->WVP = MakeIdentity4x4();
-    transformationMatrixData_->World = MakeIdentity4x4();
-    transformationMatrixData_->WorldInverseTranspose = MakeIdentity4x4();
+    transformationMatrixResource_.Map();
+
+    transformationMatrixResource_.data->WVP = MakeIdentity4x4();
+    transformationMatrixResource_.data->World = MakeIdentity4x4();
+    transformationMatrixResource_.data->WorldInverseTranspose = MakeIdentity4x4();
 
 }
 
@@ -284,20 +267,20 @@ void Object3d::CreateWaveData()
 {
     int waveCount = 2;
     size_t bufferSize = (sizeof(Wave) * waveCount + 255) & ~255;
-    waveResource_ = DirectXCommon::CreateBufferResource(bufferSize);
-    waveResource_->SetName(L"Object3d_WaveDataResoource");
+    waveResource_.CreateBufferResource(L"Object3d_WaveDataResoource",bufferSize);
+
     //書き込むためのアドレスを取得
-    waveResource_->Map(0, nullptr, reinterpret_cast<void**>(&waveData_));
+    waveResource_.Map();
 
     InitWaveData();
 }
 
 void Object3d::CreateBalloonData()
 {
-    expansionResource_ = DirectXCommon::CreateBufferResource(sizeof(Balloon));
-    expansionResource_->SetName(L"Object3d_Expansion_Resource");
+    expansionResource_.CreateBufferResource(L"Object3d_Expansion_Resource");
     //書き込むためのアドレスを取得
-    expansionResource_->Map(0, nullptr, reinterpret_cast<void**>(&balloonData_));
+    expansionResource_.Map();
+
     //データを初期化する
     InitBalloonData();
 
@@ -305,11 +288,12 @@ void Object3d::CreateBalloonData()
 
 void Object3d::CreateID()
 {
-    idResource_ = DirectXCommon::CreateBufferResource(sizeof(int));
-    idResource_->SetName(L"Object3d_Id_Resource");
+
+    idResource_.CreateBufferResource(L"Object3d_Id_Resource");
     //書き込むためのアドレスを取得
-    idResource_->Map(0, nullptr, reinterpret_cast<void**>(&idData_));
-    idData_->id = 0;
+    idResource_.Map();
+
+    idResource_.data->id = 0;
 }
 
 void Object3d::CreateMaterial(
@@ -325,11 +309,11 @@ void Object3d::CreateMaterial(
     }
 
     //マテリアル用のリソースを作る。
-    materialResource_ = DirectXCommon::CreateBufferResource(sizeof(Material));
+    materialResource_.resource = ResourceFactory::CreateBufferResource(sizeof(Material));
     //マテリアルにデータを書き込む
 
     //書き込むためのアドレスを取得
-    HRESULT result = materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&material_));
+    HRESULT result = materialResource_.resource->Map(0, nullptr, reinterpret_cast<void**>(&material_));
     material_->color = color;
     material_->lightMode = lightType;
     material_->uvTransform = MakeIdentity4x4();

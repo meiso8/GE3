@@ -173,12 +173,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.cpp" />
     <ClCompile Include="Source\Application\Stage\MeltStage\MeltStage.cpp" />
     <ClCompile Include="Source\Application\GameObject\UI\ButtonSprite\ButtonSprite.cpp" />
+    <ClCompile Include="Source\Engine\DepthTexture\DepthTexture.cpp" />
     <ClCompile Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.cpp" />
     <ClCompile Include="Source\Application\GameObject\AnubisBlockMap\AnubisBlockMap.cpp" />
     <ClCompile Include="Source\Application\GameObject\BlockMap\BlockMap.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\Item.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\SolarDisc\SolarDisc.cpp" />
     <ClCompile Include="Source\Application\GameObject\StageChangeTrigger\StageChangeTrigger.cpp" />
+    <ClCompile Include="Source\Engine\RenderTexture\RenderTexture.cpp" />
+    <ClCompile Include="Source\Engine\ResourceManager\ResourceManager.cpp" />
     <ClCompile Include="Source\Engine\SceneManager\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Source\Application\System\CollisionConfig.cpp" />
     <ClCompile Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.cpp">
@@ -209,7 +212,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\Mesh\LineMesh\LineMesh.cpp" />
     <ClCompile Include="Source\Engine\Math\Structs\AABB.cpp" />
     <ClCompile Include="Source\Engine\LevelEditor\LevelEditor.cpp" />
-    <ClCompile Include="Source\Engine\RenderTexture\RenderTexture.cpp" />
     <ClCompile Include="Source\Engine\Object3d\SkyBoxObject3d\SkyboxObject3d.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Font\Font.cpp" />
     <ClCompile Include="Source\Application\Scene\FreeTypeScene\FreeTypeScene.cpp" />
@@ -385,6 +387,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
     <ClInclude Include="Source\Application\Stage\MeltStage\MeltStage.h" />
     <ClInclude Include="Source\Application\GameObject\UI\ButtonSprite\ButtonSprite.h" />
+    <ClInclude Include="Source\Engine\DepthTexture\DepthTexture.h" />
     <ClInclude Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.h" />
     <ClInclude Include="Source\Application\GameObject\AnubisBlockMap\AnubisBlockMap.h" />
     <ClInclude Include="Source\Application\GameObject\BlockMap\BlockMap.h" />
@@ -392,6 +395,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\Item\SolarDisc\SolarDisc.h" />
     <ClInclude Include="Source\Application\GameObject\StageChangeTrigger\StageChangeTrigger.h" />
     <ClInclude Include="Source\Engine\LevelData\LevelData.h" />
+    <ClInclude Include="Source\Engine\ResourceManager\ResourceManager.h" />
     <ClInclude Include="Source\Engine\SceneManager\BaseScene\BaseScene.h" />
     <ClInclude Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.h" />
     <ClInclude Include="Source\Engine\DescriptorHeap\RtvDescriptorHeap\RtvDescriptorHeap.h" />

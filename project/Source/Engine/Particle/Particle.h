@@ -18,6 +18,7 @@
 #include<memory>
 #include"Primitive.h"
 #include"Object3d.h"
+#include"../ResourceManager/ResourceManager.h"
 
 class Camera;
 class ShaderResourceView;
@@ -61,15 +62,15 @@ enum ParticleMovements {
 
 struct ParticleGroup {
     MaterialData materialData;
-    Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
-    Object3d::Material* material = nullptr;
+
+    CResource<Object3d::Material>materialResource;
+    SRVResource<ParticleForGPU>instancingResource;
 
     std::list<Particle>particles;
     std::list<SphericalMove>sphericalCoordinates;
-    uint32_t instanceSrvIndex;
-    Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
+
     uint32_t numInstance;//インスタンス数
-    ParticleForGPU* instancingData;
+
     Vector3 textureSize;
     bool useModel = false;
     bool useBillboard = true;

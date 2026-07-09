@@ -1,15 +1,13 @@
 #include "DebugCamera.h"
 #include"MakeMatrix.h"
 #include"CoordinateTransform.h"
-#include"Lerp.h"
-#include<numbers>
-#include<cmath>
 #include"Input.h"
 #include"TimeManager.h"
 #ifdef USE_IMGUI
 #include"DebugUI.h"
 #include"ImGuizmo.h"
 #endif
+#include"Log.h"
 void DebugCamera::Initialize(const PROJECTION_TYPE& type)
 {
    cameraData_. projectionType = type;
@@ -43,16 +41,17 @@ void DebugCamera::Initialize(const PROJECTION_TYPE& type)
     cameraData_.sphericalCoordinate.polar = 0.0f;
 }
 
-DebugCamera::DebugCamera()
+void DebugCamera::Finalize()
+{
+    Camera::~Camera();
+}
+
+void DebugCamera::Create()
 {
     SetScreenSize(static_cast<float>(Window::GetClientWidth()), static_cast<float>(Window::GetClientHeight()));
     Initialize(PERSPECTIVE);
     CreateResource();
-}
-
-DebugCamera::~DebugCamera()
-{
-    Camera::~Camera();
+    LogFile::Log("Create DebugCamera");
 }
 
 void DebugCamera::UpdateMatrix() {

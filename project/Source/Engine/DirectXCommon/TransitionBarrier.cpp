@@ -9,7 +9,7 @@ void TransitionBarrier::SetCommandList(ID3D12GraphicsCommandList* commandList)
 
 //TransitionBarrierの設定
 void TransitionBarrier::SettingBarrier(
-    const Microsoft::WRL::ComPtr <ID3D12Resource>& swapChainResources,
+    const Microsoft::WRL::ComPtr <ID3D12Resource>& resource,
     D3D12_RESOURCE_STATES stateBefore,
     D3D12_RESOURCE_STATES stateAfter) {
 
@@ -18,7 +18,7 @@ void TransitionBarrier::SettingBarrier(
     //Noneにしておく
     barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
     //バリアを張る対象のリソース。現在のバックバッファに対して行う
-    barrier_.Transition.pResource = swapChainResources.Get();
+    barrier_.Transition.pResource = resource.Get();
     //遷移前（現在）のResourceState
     barrier_.Transition.StateBefore = stateBefore;
     //遷移後のResourceState
@@ -29,14 +29,14 @@ void TransitionBarrier::SettingBarrier(
     commandList_->ResourceBarrier(1, &barrier_);
 }
 
-void TransitionBarrier::SettingBarrierRTVforSRV( const Microsoft::WRL::ComPtr<ID3D12Resource>& swapChainResources)
+void TransitionBarrier::SettingBarrierRTVforSRV( const Microsoft::WRL::ComPtr<ID3D12Resource>& resource)
 {
-    SettingBarrier(swapChainResources, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    SettingBarrier(resource, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
-void TransitionBarrier::SettingBarrierSRVforRTV(const Microsoft::WRL::ComPtr<ID3D12Resource>& swapChainResources)
+void TransitionBarrier::SettingBarrierSRVforRTV(const Microsoft::WRL::ComPtr<ID3D12Resource>& resource)
 {
-    SettingBarrier(swapChainResources, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    SettingBarrier(resource, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
 
