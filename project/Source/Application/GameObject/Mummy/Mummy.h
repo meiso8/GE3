@@ -25,10 +25,10 @@ public:
         return object_->GetWorldTransform();
     }
 private:
-    std::unique_ptr<Object3d> object_;
-    std::unique_ptr<AnimationObject3d> aniObj_;
+    std::unique_ptr<Object3d> object_  = nullptr;
+    std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
     Model* coffinModel_ = nullptr;
-    std::unique_ptr<Platform> platform_; // 台のコライダーを追加
+    std::unique_ptr<Platform> platform_ = nullptr; // 台のコライダーを追加
     bool isOpen_ = false;
     bool isOpenEnd_ = false;
 };

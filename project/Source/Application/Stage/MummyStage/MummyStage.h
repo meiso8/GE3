@@ -22,6 +22,7 @@ public:
     void TimerUpdate();
 
     MummyStage();
+    ~MummyStage();
     void Initialize()override;
     void Update()override;
     void Draw(Camera& camera)override;

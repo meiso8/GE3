@@ -12,7 +12,6 @@ public:
     static const int kMaxSlots_ = 8;
 public:
     ItemSlot();
-
     void Init();
     void OnTriggerItemPickup(const std::shared_ptr<Item>& item);
     void Update();

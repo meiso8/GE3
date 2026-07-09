@@ -25,14 +25,18 @@ DirectXCommon::~DirectXCommon()
     renderTexture_->Clear();
     renderTextureForSprite_->Clear();
 
-    dxcCompiler.reset();
-
+    if (dxcCompiler) {
+        dxcCompiler.reset();
+    }
+  
     for (auto& resource : swapChainResources) {
         resource.Reset();
     }
 
-    commandList_.reset();
-    device.Reset();
+    if (device) {
+        device.Reset();
+  }
+  
 }
 
 void DirectXCommon::Finalize()

@@ -21,6 +21,7 @@ private:
 
 public:
     Medjed();
+    ~Medjed();
     void Look(const Vector3& target)override;
     void Init()override;
     void Update()override;

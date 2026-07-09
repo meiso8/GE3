@@ -17,6 +17,7 @@ public:
     };
 
     HPGage();
+    ~HPGage();
     void SetHpPtr(HPs* hp) { hps_ = hp; };
     void Setting(const Vector2& size, const Vector2& pos, const Vector2& anchorPoint);
     void Initialize();

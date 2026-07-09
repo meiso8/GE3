@@ -27,8 +27,14 @@ AnimationObject3d::AnimationObject3d() {
 
 AnimationObject3d::~AnimationObject3d()
 {
-    Object3d::~Object3d();
+#ifdef _DEBUG
+    if (debugBone_) {
+        debugBone_->Finalize();
+    }
+    
+#endif
 }
+
 
 void AnimationObject3d::Initialize()
 {

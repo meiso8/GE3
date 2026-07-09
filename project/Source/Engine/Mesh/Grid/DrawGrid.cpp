@@ -9,15 +9,22 @@ std::array< std::unique_ptr<LineObject3d>, 102>DrawGrid::lineTransforms2_;
 void DrawGrid::Finalize()
 {
     for (auto& c : cubes_) {   
-        c.reset();
+        if (c) {
+            c.reset();
+        }
+     
     }
 
     for (auto& c : cube_) {
-        c.reset();
+        if (c) {
+            c.reset();
+        }
     }
 
     for (auto& t : lineTransforms2_) {
-        t.reset();
+        if (t) {
+            t.reset();
+        }
     }
 
     LogFile::Log("Finaliz DrawGrid");

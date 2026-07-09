@@ -20,8 +20,8 @@ public:
     void SetTexture(const TextureFactory::Handle& handle) { object_->SetTextureHandle(handle); }
     void SetTemperature(const float temp) { object_->SetTemperature(temp); }
 private:
-    std::unique_ptr <Object3d> object_;
-    std::unique_ptr < Primitive > cube_;
+    std::unique_ptr <Object3d> object_ = nullptr;
+    std::unique_ptr < Primitive > cube_ = nullptr;
 };
 
 class Building
@@ -35,12 +35,13 @@ public:
         Floor,
     };
 protected:
-    std::unique_ptr <Object3d> buildingPos_;
+    std::unique_ptr <Object3d> buildingPos_ = nullptr;
     Model* model_ = nullptr;
     std::unordered_map<AABBType, AABB>aabbs_;
     std::unordered_map<AABBType, std::unique_ptr <FieldCollider>>fieldPoses_;
 public:
     Building();
+    ~Building();
     virtual void Init();
     virtual void SetWallAABB();
     virtual void SetWallPos();

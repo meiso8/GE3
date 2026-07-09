@@ -3,13 +3,16 @@
 
 void DebugError::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device)
 {
+
+    bool useWarning = false;
+
     if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue_)))) {
         //ヤバいエラー時に止まる
         infoQueue_->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
         //エラー時に止まる
         infoQueue_->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
         //警告時に止まる
-        infoQueue_->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+        infoQueue_->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, useWarning);
 
         //解放を忘れたことが判明した場合、警告で停止する設定を外すことで、詳細な情報をログに出力することが出来る。
         //上記をコメントアウトし、情報を得て修正が終わったら必ず元に戻し停止しないことを確認する。

@@ -35,12 +35,12 @@ ItemSlot::ItemSlot()
     }
 }
 
+
 void ItemSlot::Init()
 {
 
     for (auto& slot : slots_) {
         slot.reset();
-        slot = nullptr;
     }
 }
 

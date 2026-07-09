@@ -33,6 +33,11 @@ Building::Building() {
     }
 }
 
+Building::~Building()
+{
+    fieldPoses_.clear();
+}
+
 void Building::Init()
 {
     buildingPos_->Initialize();

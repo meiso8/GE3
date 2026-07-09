@@ -23,7 +23,13 @@ PuzzleObj::PuzzleObj() {
     aniObj_->SetTemperature(0.75f);
 
     SetWorldMatrix(aniObj_->GetWorldTransform().matWorld_);
+}
 
+PuzzleObj::~PuzzleObj()
+{
+    if (aniObj_) {
+        aniObj_.reset();
+    }
 }
 
 void PuzzleObj::Initialize() {

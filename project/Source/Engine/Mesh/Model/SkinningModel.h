@@ -10,7 +10,7 @@
 
 class Model;
 class CbvSrvUavDescriptorHeap;
-class SkinningModel :public Primitive
+class SkinningModel : public Primitive
 {
 public:
     struct SkinningInformation

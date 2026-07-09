@@ -12,7 +12,10 @@ public:
         object_->SetObjectName(name_);
         object_->RegisterObject();
     }
-
+    ~Crowbar() {
+    
+        object_->UnRegisterObject();
+    };
     std::shared_ptr<Item> CombineWith(const std::shared_ptr<Item>& other) override;
 
     void Use() override {

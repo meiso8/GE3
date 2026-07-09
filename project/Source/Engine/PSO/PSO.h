@@ -159,8 +159,6 @@ private:
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfEffect> graphicsPipelineStateOffScreen_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateRandom_;
     
-    static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStatesForEffectObject_;
-
     static std::unordered_map<PSOKey, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSOKeyHasher> psoCache_;
 
     std::unique_ptr<InputLayout>inputLayout = nullptr;

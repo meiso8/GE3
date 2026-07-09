@@ -14,6 +14,16 @@ HPGage::HPGage()
     sprites_[MaxHp]->Create(TextureFactory::WHITE_1X1, { 640.0,64.0f }, { 0.0f,0.0f,0.0f,0.5f });
 }
 
+HPGage::~HPGage()
+{
+    for (auto& [tag,sprite] : sprites_) {
+        if (sprite) {
+            sprite.reset();
+        }
+
+    }
+}
+
 void HPGage::Setting(const Vector2& size, const Vector2& pos, const Vector2& anchorPoint)
 {
     for (const auto& [type, sprite] : sprites_) {

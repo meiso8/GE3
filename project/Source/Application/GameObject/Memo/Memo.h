@@ -9,7 +9,7 @@ class Memo : public Collider {
 
 private:
     std::unique_ptr<Primitive>cubeMesh_ = nullptr;
-    std::unique_ptr<Object3d> object_;
+    std::unique_ptr<Object3d> object_ = nullptr;
 public:
     Memo();
     void Initialize();

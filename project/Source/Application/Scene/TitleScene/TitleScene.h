@@ -15,9 +15,9 @@ public:
     void DrawSprite()override;
    void SceneChangeUpdate()override;
 private:
-    std::unique_ptr<Sprite> titleSprite_;
-    std::unique_ptr<Sprite> startButton_;
-    std::unique_ptr<Sprite> exitButton_;
+    std::unique_ptr<Sprite> titleSprite_ = nullptr;
+    std::unique_ptr<Sprite> startButton_ = nullptr;
+    std::unique_ptr<Sprite> exitButton_ = nullptr;
     std::array<std::unique_ptr<Sprite> ,2>test3Sprites_;
     bool isHoverStartButton_ = false;
     bool isHoverExitButton_ = false;

@@ -6,11 +6,15 @@
 
 StageManager::~StageManager()
 {
+    LogFile::Log("Destory StageManager");
+}
+
+void StageManager::Finalize()
+{
+    stageNames_.clear();
     stages_.clear();
     currentStage_ = nullptr;
     nextStage_ = nullptr;
-    LogFile::Log("Destory StageManager");
-
 }
 
 void StageManager::Initialize()

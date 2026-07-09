@@ -463,3 +463,13 @@ void RootSignature::Create() {
 
 }
 
+void RootSignature::Finalize()
+{
+    for (auto& signature : rootSignatures_) {
+        if (signature) {
+            signature.Reset();
+        }
+  
+    }
+}
+

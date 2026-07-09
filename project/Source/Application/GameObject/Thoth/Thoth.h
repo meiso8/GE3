@@ -8,6 +8,7 @@ class Thoth: public Collider
 {
 public:
     Thoth();
+    ~Thoth();
     void Initialize();
     void Update();
     void Draw(Camera& camera);

@@ -16,6 +16,11 @@
 
 bool ItemManager::isGetSolarDisc_ = false;
 
+ItemManager::~ItemManager()
+{
+    items_.clear();
+}
+
 ItemManager::ItemManager()
 {
 

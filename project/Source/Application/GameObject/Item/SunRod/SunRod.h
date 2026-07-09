@@ -10,7 +10,7 @@ public:
         object_->SetObjectName(name_);
         object_->RegisterObject();
     }
-
+    ~SunRod() { object_->UnRegisterObject(); }
     void Use() override {
         //ActivateSunSeal();
     }

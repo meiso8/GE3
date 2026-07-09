@@ -22,15 +22,15 @@ public:
         return isOpen_;
     };
     static void SetTargetPosPtr(Vector3* pos) { targetPos_ = pos; };
-    void SetPosition(const Vector3& pos) { object_->SetTranslate(pos); };
-    void SetRotateY(const float& rotate) { object_->GetTransform().rotate.y = rotate; };
+    void SetPosition(const Vector3& pos) { aniObj_->SetTranslate(pos); };
+    void SetRotateY(const float& rotate) { aniObj_->GetTransform().rotate.y = rotate; };
     const bool& GetIsHitCollision() {
         return isHitCollision_;
     };
 private:
     Vector3 GetWorldPos();
     static Vector3* targetPos_;
-    std::unique_ptr<AnimationObject3d> object_;
+    std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
     bool isOpen_ = false;
     static Model* model_;
     void Look(const Vector3& target);

@@ -6,7 +6,7 @@ LineMesh::LineMesh()
 
 LineMesh::~LineMesh()
 {
-    Primitive::~Primitive();
+  
 }
 
 void LineMesh::Create(const Vector3& startPos, const Vector3& endPos)

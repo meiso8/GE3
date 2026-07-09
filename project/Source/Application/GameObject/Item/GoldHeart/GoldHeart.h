@@ -12,6 +12,7 @@ public:
         object_->SetObjectName(name_);
         object_->RegisterObject();
     }
+    ~GoldHeart(){ object_->UnRegisterObject(); }
     void Update()override;
     void Use() override;
 };

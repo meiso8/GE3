@@ -16,7 +16,7 @@
 
 bool PauseScreen::isActive_ = false;
 bool PauseScreen::isPause_ = false;
-bool PauseScreen::isBackToTitle = false;
+bool PauseScreen::isBackToTitle_ = false;
 
 PauseScreen::PauseScreen()
 {
@@ -43,6 +43,18 @@ PauseScreen::PauseScreen()
     }
 
 }
+PauseScreen::~PauseScreen()
+{
+    for (auto& sprite : sprites_) {
+
+        if (sprite) {
+            sprite.reset();
+        }
+
+    }
+
+    
+}
 void PauseScreen::Initialize()
 {
     isPause_ = false;
@@ -50,7 +62,7 @@ void PauseScreen::Initialize()
     isShowMenu_ = false;
     isLookGameItem_ = false;
 
-    isBackToTitle = false;
+    isBackToTitle_ = false;
     isActive_ = false;
     pauseTimer_ = 0.0f;
     scaleTheta_ = 0.0f;
@@ -186,7 +198,7 @@ void PauseScreen::SelectButton()
                     MemoManager::isLookItem_ = false;
                     break;
                 case kBackToTitle:
-                    isBackToTitle = true;
+                    isBackToTitle_ = true;
                     break;
                 }
 

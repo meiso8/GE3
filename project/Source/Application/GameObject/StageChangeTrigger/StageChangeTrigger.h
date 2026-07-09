@@ -6,7 +6,7 @@
 class StageChangeTrigger : public Collider {
 public:
     StageChangeTrigger();
-    ~StageChangeTrigger() = default;
+    ~StageChangeTrigger();
     void Create(const LevelData::StageChangeTriggerData& data
     );
     void Update();
@@ -14,7 +14,7 @@ public:
     // コライダーが何かに当たった時に呼ばれる
     void OnCollision(Collider* collider) override;
 private:
-    std::shared_ptr<Object3d> object_; 
+    std::unique_ptr<Object3d> object_ = nullptr; 
     static std::unordered_map<uint32_t, StageChangeTrigger*> triggerMap_;
 };
 

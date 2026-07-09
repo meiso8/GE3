@@ -22,5 +22,5 @@ public:
         cubeMesh_->Create(PrimitiveGenerator::CreateCube(aabb));
     };
 protected:
-    std::unique_ptr<Object3d> object_;
+    std::unique_ptr<Object3d> object_ = nullptr;
 };

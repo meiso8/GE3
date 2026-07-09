@@ -135,6 +135,7 @@ void FreeTypeManager::Finalize()
 
     //一旦明示的にglyphTextures_を解放しておく
     for (auto& glyphTexture : glyphTextures_) {
+        
         ReleaseResource(glyphTexture.second);
     }
 
@@ -147,6 +148,7 @@ void FreeTypeManager::Finalize()
                 font.reset();
                 font = nullptr;
             }
+          
         }
         fonts.clear();
     }

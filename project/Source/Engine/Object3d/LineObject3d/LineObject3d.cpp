@@ -62,9 +62,12 @@ void LineObject3d::Draw(Camera& camera,
     
 }
 
+LineObject3d::LineObject3d()
+{
+}
+
 LineObject3d::~LineObject3d()
 {
-    Object3d::~Object3d();
 }
 
 void LineObject3d::CreateMaterial(const Vector4& color)

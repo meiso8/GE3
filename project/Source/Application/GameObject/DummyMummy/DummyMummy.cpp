@@ -11,14 +11,14 @@ DummyMummy::DummyMummy()
 {
     model_ = ModelManager::GetModel("dummyMummy.gltf");
 
-    object_ = std::make_unique<AnimationObject3d>();
+    aniObj_ = std::make_unique<AnimationObject3d>();
 
-    object_->Create();
-    object_->SetMeshAndMaterial(model_);
-    object_->SetTemperature(1.0f);
-    object_->SetModelAndLoadAnimation(model_);
+    aniObj_->Create();
+    aniObj_->SetMeshAndMaterial(model_);
+    aniObj_->SetTemperature(1.0f);
+    aniObj_->SetModelAndLoadAnimation(model_);
     
-    SetWorldMatrix(object_->GetWorldTransform().matWorld_);
+    SetWorldMatrix(aniObj_->GetWorldTransform().matWorld_);
     // ミイラのサイズに合わせてAABBを設定（仮のサイズ）
     SetAABB({ {-0.75f, 0.0f, -0.75f}, {0.75f, 2.0f, 0.75f} });
 }
@@ -27,9 +27,9 @@ void DummyMummy::Initialize()
 {
     isHitCollision_ = false;
     isOpen_ = false;
-    object_->Initialize();
+    aniObj_->Initialize();
     Look(*targetPos_);
-    object_->SetSkinning(false);
+    aniObj_->SetSkinning(false);
 
     SetCollisionAttribute(CollisionTag::GetTag("Wall"));
     SetCollisionMask(
@@ -47,38 +47,38 @@ void DummyMummy::Update()
 
         if (distance > 10.0f) {
             //アニメーションも移動もスキップ 
-            object_->SetSkinning(false);
+            aniObj_->SetSkinning(false);
             return;
         } else {
-            object_->SetSkinning(true);
+            aniObj_->SetSkinning(true);
             if (!isHitCollision_) {
                 Sound::PlayOriginSE(SoundFactory::WOO);
             }
         }
 
         //ループアニメーション
-        object_->UpdateAniTimer();
-        auto& transform = object_->GetTransform();
+        aniObj_->UpdateAniTimer();
+        auto& transform = aniObj_->GetTransform();
         if (isHitCollision_) {
             //倒れる
             transform.rotate.x = Lerp(transform.rotate.x, 1.57f, 0.075f);
             transform.translate.y = Lerp(transform.translate.y, 0.25f, 0.075f);
         } else {
             Look(*targetPos_);
-            velocity_ = *targetPos_ - object_->GetWorldTransform().GetWorldPosition();
+            velocity_ = *targetPos_ - aniObj_->GetWorldTransform().GetWorldPosition();
             velocity_ = Normalize(Vector3{ velocity_.x, 0.0f, velocity_.z });
            transform.translate += velocity_ * TimeManager::DeltaTime();
         }
 
     }
 
-    object_->Update();
+    aniObj_->Update();
 
 }
 
 void DummyMummy::Draw(Camera& camera)
 {
-    object_->Draw(camera);
+    aniObj_->Draw(camera);
 
 }
 
@@ -92,7 +92,7 @@ void DummyMummy::OnCollision(Collider* collider)
     if (collider == this) { return; }
 
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Wall")) {
-        ResolveCollision(object_->GetTransform().translate, velocity_, GetCollisionInfo());
+        ResolveCollision(aniObj_->GetTransform().translate, velocity_, GetCollisionInfo());
     }
 
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Mummy")) {
@@ -115,14 +115,14 @@ void DummyMummy::SetCollisionType()
 
 Vector3 DummyMummy::GetWorldPos()
 {
-    return object_->GetWorldTransform().GetWorldPosition();
+    return aniObj_->GetWorldTransform().GetWorldPosition();
 }
 
 void DummyMummy::Look(const Vector3& target)
 {
     Vector3 direction = target - GetWorldPos();
     if (Length(direction) > 0.0f) {
-        object_->GetTransform().rotate.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
+        aniObj_->GetTransform().rotate.y = std::atan2(direction.x, direction.z); // Y軸回転（ラジアン）
     }
 
 

@@ -27,12 +27,8 @@ void PrimitiveFactory::CreateAllPrimitive()
     CreateAndSetMeshType(Primitive::kCylinder);
 }
 
-PrimitiveFactory::~PrimitiveFactory()
+void PrimitiveFactory::Finalize()
 {
-    for (auto& [name, primitive] : primitives_) {
-        primitive.~Primitive();
-    }
-
     primitives_.clear();
 }
 

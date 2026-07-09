@@ -896,8 +896,7 @@ void Primitive::Create(const MeshData& meshData)
 
 Primitive::~Primitive()
 {
-    vertexResource_.Reset();
-    indexResource_.Reset();
+
 }
 
 

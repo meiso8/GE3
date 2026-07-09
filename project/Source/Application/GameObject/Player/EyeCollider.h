@@ -4,13 +4,13 @@
 
 class EyeCollider
 {
-private:
-    std::unique_ptr <Object3d> object_;
-    float walkingTheta_ = 0.0f;
-
 public:
     const float   kEyeDefaultPosY_ = 1.5f;
     const float   kEyeDefaultPosZ_ = 0.0f;
+private:
+    std::unique_ptr <Object3d> object_ = nullptr;
+    float walkingTheta_ = 0.0f;
+
 public:
     EyeCollider();
     void Initialize();

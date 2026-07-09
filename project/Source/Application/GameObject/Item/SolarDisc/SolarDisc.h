@@ -11,6 +11,8 @@ public:
         object_->SetObjectName(name_);
         object_->RegisterObject();
     }
+
+    ~SolarDisc() { object_->UnRegisterObject(); }
    void Init()override;
     void Use() override;
 };

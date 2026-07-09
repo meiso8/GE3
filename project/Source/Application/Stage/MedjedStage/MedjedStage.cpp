@@ -168,7 +168,7 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager)
 
             //巨大メジェド出現し、弾を打ってくる
             for (auto& bullet : rhythmBullet_->GetBulletManager()->GetBullets()) {
-                if (bullet->isActive_) {
+                if (bullet->GetIsActive()) {
                     collisionManager.AddCollider(bullet.get());
                 }
             }

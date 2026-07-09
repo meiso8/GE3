@@ -32,6 +32,11 @@ Water::Water() {
     SetAABB(aabb);
 }
 
+Water::~Water()
+{
+    object_->UnRegisterObject();
+}
+
 void Water::Initialize() {
     isDrain_ = false;
     isPrePlayerHit_ = false;

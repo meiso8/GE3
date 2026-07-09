@@ -11,10 +11,11 @@ void Collider::InitCalcuatedTisFrameFlag()
 Collider::Collider()
 {
 #ifdef _DEBUG
-    object3d_.Create();
+    object3d_ = std::make_unique<Object3d>();
+    object3d_->Create();
     debugMesh_ = std::make_unique<Primitive>();
     debugMesh_->Create(PrimitiveGenerator::CreateSphere({ .center = {0.0f,0.0f,0.0f}, .radius = 0.5f }));
-    object3d_.SetMeshAndMaterial(debugMesh_.get());
+    object3d_->SetMeshAndMaterial(debugMesh_.get());
 #endif // _DEBUG
 
     collisionInfo_.collided = false;
@@ -42,7 +43,7 @@ const Vector3& Collider::CalculateWorldPos()
     tempWorldTransform_ = Math::GetWorldTransformByMatrix(child);
 
 #ifdef _DEBUG
-    object3d_.SetTranslate(tempWorldTransform_);
+    object3d_->SetTranslate(tempWorldTransform_);
 #endif // _DEBUG
 
     //計算終了
@@ -54,23 +55,23 @@ const Vector3& Collider::CalculateWorldPos()
 void Collider::ColliderUpdate()
 {
 #ifdef _DEBUG
-    object3d_.SetColor({ 1.0f,1.0f,0.0f,0.5f });
-    object3d_.Update();
+    object3d_->SetColor({ 1.0f,1.0f,0.0f,0.5f });
+    object3d_->Update();
 #endif // _DEBUG
 }
 
 void Collider::ColliderDraw(Camera& camera)
 {
 #ifdef _DEBUG
-    object3d_.SetLightMode(Object3d::kLightModeNone);
-    object3d_.Draw(camera);
+    object3d_->SetLightMode(Object3d::kLightModeNone);
+    object3d_->Draw(camera);
 #endif // _DEBUG
 }
 
 void Collider::OnCollisionCollider()
 {
 #ifdef _DEBUG
-    object3d_.SetColor({ 1.0f,0.0f,0.0f,0.5f });
+    object3d_->SetColor({ 1.0f,0.0f,0.0f,0.5f });
 #endif // _DEBUG
 
 }

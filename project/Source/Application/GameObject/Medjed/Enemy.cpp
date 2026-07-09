@@ -47,15 +47,16 @@ Enemy::Enemy()
 
     model_ = ModelManager::GetModel("medjed.gltf");
 
-    bodyPos_.SetModelAndLoadAnimation(model_);
-    bodyPos_.Create();
-    bodyPos_.SetMeshAndMaterial(model_);
+    bodyPos_ = std::make_unique<AnimationObject3d>();
+    bodyPos_->SetModelAndLoadAnimation(model_);
+    bodyPos_->Create();
+    bodyPos_->SetMeshAndMaterial(model_);
 
-    bodyPos_.SetTemperature(1.0f);
+    bodyPos_->SetTemperature(1.0f);
     float halfScale = kScale_ * 0.25f;
     Init();
     SetAABB({ { -halfScale - halfScale * 1.5f ,-halfScale }, { halfScale ,halfScale * 1.5f ,halfScale } });
-    SetWorldMatrix(bodyPos_.GetWorldTransform());
+    SetWorldMatrix(bodyPos_->GetWorldTransform());
     SetCenter({ 0.0f,0.0f, 0.0f });
 
     SetCollisionAttribute(CollisionTag::GetTag("Enemy"));
@@ -93,6 +94,11 @@ Enemy::Enemy()
     }
 }
 
+Enemy::~Enemy()
+{
+    bodyPos_->UnRegisterObject();
+}
+
 void Enemy::Init()
 {
     Json file = JsonFile::GetJsonFiles("Boss");
@@ -111,11 +117,11 @@ void Enemy::Init()
 
     phase_ = APPEAR;
 
-    bodyPos_.Initialize();
-    bodyPos_.SetScale({ 0.0f,0.0f,0.0f });
-    bodyPos_.SetObjectName("GiantEnemy");
-    bodyPos_.RegisterObject();
-    bodyPos_.SetAnimation("Nod");
+    bodyPos_->Initialize();
+    bodyPos_->SetScale({ 0.0f,0.0f,0.0f });
+    bodyPos_->SetObjectName("GiantEnemy");
+    bodyPos_->RegisterObject();
+    bodyPos_->SetAnimation("Nod");
 
     phaseTimer_ = 0.0f;
     poyoAnimTimer_ = 0.0f;
@@ -126,8 +132,8 @@ void Enemy::Draw(Camera& camera, const Object3d::LightMode& lightMode)
 {
     if (!isAppear_) { return; }
 
-    bodyPos_.SetLightMode(lightMode);
-    bodyPos_.Draw(camera);
+    bodyPos_->SetLightMode(lightMode);
+    bodyPos_->Draw(camera);
     //ColliderDraw(camera);
 
     for (auto& [name, group] : colliders_) {
@@ -189,18 +195,18 @@ void Enemy::Update()
     // 呼び出す  
     UpdateActions_[phase_]();
     HitUpdate();
-    bodyPos_.UpdateAniTimer();
-    bodyPos_.Update();
+    bodyPos_->UpdateAniTimer();
+    bodyPos_->Update();
 
 
 
     ColliderUpdate();
 
     //マトリックスの更新
-    colliders_["EnemyFoot_L"].matrix_ = bodyPos_.GetWorldJointMatrix("foot_L");
-    colliders_["EnemyFoot_R"].matrix_ = bodyPos_.GetWorldJointMatrix("foot_R");
+    colliders_["EnemyFoot_L"].matrix_ = bodyPos_->GetWorldJointMatrix("foot_L");
+    colliders_["EnemyFoot_R"].matrix_ = bodyPos_->GetWorldJointMatrix("foot_R");
     //頭の位置を仮入れ
-    colliders_["EnemyHead"].matrix_ = bodyPos_.GetWorldJointMatrix("head");
+    colliders_["EnemyHead"].matrix_ = bodyPos_->GetWorldJointMatrix("head");
 
     for (auto& [name, collider] : colliders_) {
         /*   collider.collider_->SetWorldMatrix(collider.matrix_);*/
@@ -209,7 +215,7 @@ void Enemy::Update()
 
 
     for (auto& [name, mat] : eyeMats_) {
-        mat = bodyPos_.GetWorldJointMatrix(name);
+        mat = bodyPos_->GetWorldJointMatrix(name);
     }
 
 }
@@ -239,7 +245,7 @@ void Enemy::SoundFootStep(const SoundFactory::TAG tag)
         if (soundTimer_ <= 0.0f) {
 
             //距離によって変化させる
-            float distance = Distance(*target_, bodyPos_.GetTranslate());
+            float distance = Distance(*target_, bodyPos_->GetTranslate());
             distance /= 100.0f;
             distance = std::clamp(distance, 0.0f, 1.0f);
             Sound::PlaySE(tag, distance);
@@ -283,7 +289,7 @@ void Enemy::OnCollision(Collider* collider)
 Vector3 Enemy::GetToTarget()
 {
     if (target_) {
-        return ToTargetVector(*target_, bodyPos_.GetWorldTransform().GetWorldPosition());
+        return ToTargetVector(*target_, bodyPos_->GetWorldTransform().GetWorldPosition());
     }
 
     return { 0.0f };
@@ -296,34 +302,34 @@ void Enemy::SetPhase(const PHASE phase)
     phase_ = phase;
     poyoAnimTimer_ = 0.0f;
     isShotStart_ = false;
-    bodyPos_.InitTime();
+    bodyPos_->InitTime();
 
 
     if (phase_ == ROUND || phase_ == APPEAR) {
         //ここを変更する
-        bodyPos_.SetAnimation("Round");
+        bodyPos_->SetAnimation("Round");
     }
 
     if (phase_ == ALPHA_WALK) {
         //透明移動する
-        bodyPos_.SetAnimation("Walk");
+        bodyPos_->SetAnimation("Walk");
     }
 
     if (phase_ == FIREBALL) {
-        auto& transform = bodyPos_.GetTransform();
+        auto& transform = bodyPos_->GetTransform();
         startRotateY_ = transform.rotate.y;
         endRotateY_ = startRotateY_ + std::numbers::pi_v<float>*2.0f;
 
         //ここを変更する
         int randNum = rand() % 4;
         if (randNum == 0) {
-            bodyPos_.SetAnimation("Swing");
+            bodyPos_->SetAnimation("Swing");
         } else if (randNum == 1) {
-            bodyPos_.SetAnimation("Nod");
+            bodyPos_->SetAnimation("Nod");
         } else if (randNum == 2) {
-            bodyPos_.SetAnimation("Step");
+            bodyPos_->SetAnimation("Step");
         } else if (randNum == 3) {
-            bodyPos_.SetAnimation("Jump");
+            bodyPos_->SetAnimation("Jump");
         }
 
     }
@@ -334,7 +340,7 @@ void Enemy::Appear()
     float time = phaseTimer_ / kApperTime_;
     time = std::clamp(time, 0.0f, 1.0f);
     Look();
-    auto& transform = bodyPos_.GetTransform();
+    auto& transform = bodyPos_->GetTransform();
     transform.scale = Easing::EaseInBounce(startScale_, { kScale_,kScale_,kScale_ }, time);
 
     if (phaseTimer_ >= kApperEndTime_) {
@@ -346,8 +352,8 @@ void Enemy::Appear()
 
 void Enemy::Round()
 {
-    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInBounce(0.0f,1.0f,fmod(phaseTimer_,1.0f)) });
-    auto& transform = bodyPos_.GetTransform();
+    bodyPos_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInBounce(0.0f,1.0f,fmod(phaseTimer_,1.0f)) });
+    auto& transform = bodyPos_->GetTransform();
    transform.translate = Lerp(transform.translate, { 0.0f,0.0f,0.0f }, 0.5f);
     Look();
     if (phaseTimer_ >= actionTime_) {
@@ -358,7 +364,7 @@ void Enemy::Round()
 void Enemy::Fireball()
 {
     float theta = phaseTimer_ * std::numbers::phi_v<float>*2.0f;
-    bodyPos_.SetColor({ 1.0f,1.0f,1.0f,sinf(phaseTimer_) * 0.5f + 1.0f });
+    bodyPos_->SetColor({ 1.0f,1.0f,1.0f,sinf(phaseTimer_) * 0.5f + 1.0f });
 
     if (phaseTimer_ <= 1.0f) {
         RotateY(phaseTimer_);
@@ -376,7 +382,7 @@ void Enemy::Fireball()
         SetPhase(ALPHA_WALK);
     }
 
-    if (bodyPos_.GetCurrentAnimation() == "Jump" || bodyPos_.GetCurrentAnimation() == "Step") {
+    if (bodyPos_->GetCurrentAnimation() == "Jump" || bodyPos_->GetCurrentAnimation() == "Step") {
         //足音の更新処理をここで呼び出す
         SoundFootStep(SoundFactory::MEDJED_JUMP);
     }
@@ -399,17 +405,17 @@ void Enemy::AlphaWalk()
 
         if (phaseTimer_ <= 1.0f) {
             //スーッとαが下がるよ
-            bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOutBack(1.0f,0.0f,phaseTimer_) });
+            bodyPos_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOutBack(1.0f,0.0f,phaseTimer_) });
         }
 
     } else if (phaseTimer_ < kAlphaWalkEndTime_) {
 
         float time = kAlphaWalkTime_ - phaseTimer_ / (kAlphaWalkEndTime_ - kAlphaWalkTime_);
         time = std::clamp(time, 0.0f, 1.0f);
-        bodyPos_.SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOutBack(0.0f,1.0f,time) });
+        bodyPos_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOutBack(0.0f,1.0f,time) });
 
     } else {
-        bodyPos_.SetColor({ 1.0f,1.0f,1.0f,1.0f });
+        bodyPos_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
         SetPhase(BEAM);
     }
@@ -422,7 +428,7 @@ void Enemy::AlphaWalk()
         velocity_ *= deltaTime * kMoveSpeed_;
 
         //Y軸方向には移動しない
-        auto& transform =bodyPos_.GetTransform();
+        auto& transform =bodyPos_->GetTransform();
         transform.translate.x += velocity_.x;
         transform.translate.z += velocity_.z;
 
@@ -444,21 +450,21 @@ void Enemy::Beam()
         if (PoyoPoyoUpdateAndGetEnd(1.0f)) {
 
             //ぽよぽよ終わったら
-            bodyPos_.SetAnimation("Swing");
+            bodyPos_->SetAnimation("Swing");
             if (!isShotStart_) {
                 //打つ
                 isShotStart_ = true;
             }
         } else {
             //ぽよぽよしている時はコレ
-            bodyPos_.SetAnimation("Idle");
+            bodyPos_->SetAnimation("Idle");
         }
 
     } else if (phaseTimer_ < kBeamEndTime_) {
         //うなずく
         //ショットを中止する
         isShotStart_ = false;
-        bodyPos_.SetAnimation("Nod");
+        bodyPos_->SetAnimation("Nod");
     } else {
         SetPhase(ROUND);
     }
@@ -472,14 +478,14 @@ void Enemy::UpdateTimer()
 
 void Enemy::Look()
 {
-    TransformAni::LookTarget(bodyPos_.GetWorldTransform(), *target_);
+    TransformAni::LookTarget(bodyPos_->GetWorldTransform(), *target_);
 }
 
 bool Enemy::PoyoPoyoUpdateAndGetEnd(const float& endTimer)
 {
     poyoAnimTimer_ += TimeManager::DeltaTime();
     poyoAnimTimer_ = std::clamp(poyoAnimTimer_, 0.0f, endTimer);
-    TransformAni::PoyoPoyo(bodyPos_.GetWorldTransform(), poyoAnimTimer_, kScale_);
+    TransformAni::PoyoPoyo(bodyPos_->GetWorldTransform(), poyoAnimTimer_, kScale_);
 
     return (poyoAnimTimer_ == endTimer);
 
@@ -515,12 +521,12 @@ void Enemy::HitUpdate()
 
 void Enemy::LerpScale()
 {
-    auto& transform = bodyPos_.GetTransform();
+    auto& transform = bodyPos_->GetTransform();
    transform.scale = Lerp(Vector3{ transform.scale }, { kScale_,kScale_,kScale_ }, 0.5f);
 }
 
 void Enemy::RotateY(const float& timer)
 {
-    auto& transform = bodyPos_.GetTransform();
+    auto& transform = bodyPos_->GetTransform();
     transform.rotate.y = Easing::EaseInBack(startRotateY_, endRotateY_, timer);
 }

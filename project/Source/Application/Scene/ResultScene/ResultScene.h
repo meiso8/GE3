@@ -17,10 +17,10 @@ public:
 private:
     bool isSkipDraw_ = false;
     float timer_ = 0.0f;
-    std::unique_ptr<Sprite> creditSprite_;
+    std::unique_ptr<Sprite> creditSprite_ = nullptr;
     float scrollSpeed_ = 0.001f; // スクロール速度
-    std::unique_ptr<Sprite> skipSprite_;
-    std::unique_ptr<Sprite> symbolSprite_; 
+    std::unique_ptr<Sprite> skipSprite_ = nullptr;
+    std::unique_ptr<Sprite> symbolSprite_ = nullptr; 
     std::vector<TextureFactory::Handle> textureSequence_;
     size_t currentIndex_ = 0;
     float switchInterval_ = 5.0f; // 1秒ごとに切り替え

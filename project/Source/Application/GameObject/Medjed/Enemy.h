@@ -8,7 +8,7 @@
 #include<memory>
 
 #include"AnimationObject3d.h"
-#include"Model/SkinningModel.h"
+
 #include"Sound.h"
 
 class Model;
@@ -37,12 +37,12 @@ public:
 
 public:
     //体の位置
-    AnimationObject3d bodyPos_;
-
+    std::unique_ptr<AnimationObject3d>bodyPos_ = nullptr;
 public:
 
     //コンストラクタ
     Enemy();
+    ~Enemy();
     //初期化
     void Init();
     //描画
@@ -58,8 +58,8 @@ public:
     bool GetIsShotStart() { return isShotStart_; }
     void SetIsShotStart(const bool flag) { isShotStart_ = flag; }
 
-    Vector3 GetWorldPos() { return  bodyPos_.GetWorldTransform().GetWorldPosition(); }
-    WorldTransform& GetWorldTransform() { return bodyPos_.GetWorldTransform(); }
+    Vector3 GetWorldPos() { return  bodyPos_->GetWorldTransform().GetWorldPosition(); }
+    WorldTransform& GetWorldTransform() { return bodyPos_->GetWorldTransform(); }
     void OnCollision(Collider* collder)override;
 
     std::unordered_map <std::string, ColliderGroup>& GetColliderGroup() { return colliders_; };

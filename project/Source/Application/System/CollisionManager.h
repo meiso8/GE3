@@ -9,7 +9,6 @@ class Camera;
 Sphere GetSphereWorldPos(Collider* sphere);
 AABB GetAABBWorldPos(Collider* aabb);
 
-
 /// @brief 衝突マネージャ
 class CollisionManager {
 public:
@@ -31,6 +30,7 @@ public:
     void CheckAllCollisions();
     void DrawAllCollider(Camera* camera);
     void UpdateAllCollider();
+    void Finalize() { ClearColliders(); }
 private:
     std::list<Collider*> colliders_; // コライダーのリスト
 

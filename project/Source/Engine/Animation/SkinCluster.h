@@ -34,8 +34,8 @@ struct SkinCluster {
     Microsoft::WRL::ComPtr<ID3D12Resource> paletteResource;
     std::span <WellForGPU> mappedPalette;
     std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> paletteSrvHandle;
+    
     uint32_t paletteSrvIndex;
-
     uint32_t influenceSrvIndex;
 };
 
@@ -46,5 +46,6 @@ public:
     static void SetSrvDescriptorHeap(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     static SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData);
     static void UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton);
+    static void ReleaseSkinCluster(SkinCluster& slinCluster);
 };
 

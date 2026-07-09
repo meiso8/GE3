@@ -60,7 +60,7 @@ protected:
     bool isGetAnimEnd_ = false;
 
     // 3Dオブジェクトの参照（描画や当たり判定用）
-    std::shared_ptr<Object3d> object_;
+    std::shared_ptr<Object3d> object_ = nullptr;
     // アイテムの名前や説明 
     std::string name_;
     std::string description_;

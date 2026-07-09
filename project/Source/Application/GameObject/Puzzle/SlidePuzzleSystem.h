@@ -10,6 +10,7 @@ class SlidePuzzleSystem {
 public:
     SlidePuzzleSystem();
     void Initialize();
+    static void Finalize();
     void Update(const Vector2& screenPos);
     void Draw(Camera& camera);
     void DrawUI();
@@ -22,7 +23,7 @@ public:
     PuzzleObj* GetPuzzleObj() {
         return puzzleObj_.get();
     };
-    static Puzzle* GetPuzzle() { return puzzle_.get(); };
+     static Puzzle* GetPuzzle() { return puzzle_.get(); };
 
 private:
     static std::unique_ptr<Puzzle>puzzle_;

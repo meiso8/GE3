@@ -30,6 +30,11 @@ Thoth::Thoth()
     SetWorldMatrix(object_->GetWorldTransform().matWorld_);
 }
 
+Thoth::~Thoth()
+{
+    object_->UnRegisterObject();
+}
+
 void Thoth::Initialize()
 {
     object_->Initialize();

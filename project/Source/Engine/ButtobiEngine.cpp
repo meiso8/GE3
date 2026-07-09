@@ -34,6 +34,8 @@
 #include"DebugCamera.h"
 #include"Animation/SkinCluster.h"
 
+#include"../Application/GameObject/Puzzle/SlidePuzzleSystem.h"
+
 void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth, const int32_t clientHeight) {
 
 
@@ -412,55 +414,56 @@ void ButtobiEngine::PostCommandSet() {
 
 void ButtobiEngine::Finalize() {
 
+  
+    SlidePuzzleSystem::Finalize();
     //シーンマネージャーの終了処理
     SceneManager::Finalize();
     //デバックカメラの終了処理
     DebugCamera::GetInstance()->Finalize();
     //パーティクルの終了処理
     particleManager_->Finalize();
-    particleManager_.reset();
 
     //モデルの終了処理
     ModelManager::Finalize();
+
+    ObjectManager::GetInstance()->Clear();
     //オブジェクトの開放
     ObjectManager::GetInstance()->Finalize();
-    //タグ生成工場を解放
-    tagFactory_.reset();
+
 
 #ifdef _DEVELOP
     //グリットを解放
     DrawGrid::Finalize();
 #endif
-
-    //プリミティブ生成工場を解放
-    primitiveFactory_.release();
+    //プリミティブ生成工場の終了処理
+    primitiveFactory_->Finalize();
 
     //テキストの終了処理
     freeTypeManager_->Finalize();
-    freeTypeManager_.reset();
+ 
 
     //音の終了処理
     Sound::Finalize();
     //スプライトの終了処理
     spriteCommon_->Finalize();
-    spriteCommon_.reset();
+
 
     //テクスチャの終了処理
     texture_->Finalize();
-    texture_.reset();
+
 
 
 #pragma region//LightManagerの終了処理
 
     //スポットライトの終了処理
     spotLightManager_->Finalize();
-    spotLightManager_.reset();
+
     //ポイントライトの終了処理
     pointLightManager_->Finalize();
-    pointLightManager_.reset();
+    
     //方向ライトの終了処理
     directionalLightManager_->Finalize();
-    directionalLightManager_.reset();
+
 
 #pragma endregion
     //ComputeShader用PSO

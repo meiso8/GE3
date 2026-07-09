@@ -48,9 +48,9 @@ private:
 	bool isCalculatedThisFrame_ = false; // 今フレーム計算済みかどうかのフラグ
 #ifdef _DEBUG
 	//デバック用
-	std::unique_ptr<Primitive>debugMesh_;
+	std::unique_ptr<Primitive>debugMesh_ = nullptr;
 	//位置
-	Object3d object3d_;
+	std::unique_ptr<Object3d> object3d_ = nullptr;
 #endif // DEBUG
 public:
 	Collider();
@@ -100,7 +100,7 @@ public:
 
 		if (debugMesh_) {
 			debugMesh_->Create(PrimitiveGenerator::CreateSphere({ .center = {0.0f,0.0f,0.0f}, .radius = radius }));
-			object3d_.SetMeshAndMaterial(debugMesh_.get());
+			object3d_->SetMeshAndMaterial(debugMesh_.get());
 		}
 
 #endif // DEBUG
@@ -114,7 +114,7 @@ public:
 #ifdef _DEBUG
 		if (debugMesh_) {
 			debugMesh_->Create(PrimitiveGenerator::CreateCube(aabb));
-			object3d_.SetMeshAndMaterial(debugMesh_.get());
+			object3d_->SetMeshAndMaterial(debugMesh_.get());
 		}
 #endif // DEBUG
 
