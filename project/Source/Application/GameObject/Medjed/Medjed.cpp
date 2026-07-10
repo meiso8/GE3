@@ -74,7 +74,6 @@ Medjed::Medjed() {
 
 Medjed::~Medjed()
 {
-    aniObj_->UnRegisterObject();
 }
 
 void Medjed::Look(const Vector3& target)

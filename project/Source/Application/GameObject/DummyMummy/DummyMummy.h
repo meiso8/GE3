@@ -29,11 +29,13 @@ public:
     };
 private:
     Vector3 GetWorldPos();
-    static Vector3* targetPos_;
-    std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
-    bool isOpen_ = false;
-    static Model* model_;
     void Look(const Vector3& target);
+private:
+    static Vector3* targetPos_;
+    static Model* model_;
+
+    std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
     Vector3 velocity_ = {0.0f};
     bool isHitCollision_ = false;
+    bool isOpen_ = false;
 };

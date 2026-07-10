@@ -24,7 +24,6 @@ private:
     std::unique_ptr<BackGround>backGround_ = nullptr;
     std::array<std::unique_ptr<ParticleEmitter>, kMaxParticles>particleEmitters_;
 
-
 public:
     const bool IsClear();
     MedjedStage();

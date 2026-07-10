@@ -39,13 +39,6 @@ ButtonSprite::ButtonSprite()
 
 ButtonSprite::~ButtonSprite()
 {
-    for (auto& sprite : sprites_) {
-        if (sprite) {
-            sprite.reset();
-        }
-     
-    }
-
    
 }
 

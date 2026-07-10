@@ -31,7 +31,7 @@ Fountain::Fountain()
 
 Fountain::~Fountain()
 {
-    object_->UnRegisterObject();
+
 }
 
 void Fountain::Initialize()

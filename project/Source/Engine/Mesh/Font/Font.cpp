@@ -125,7 +125,20 @@ void Font::Draw(
     srvDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandle_, commandList_);
     SpriteCommon::DrawCall(commandList_);
 
-};
+}
+Font::~Font()
+{
+    //頂点リソース
+    vertexResource_.UnMap();
+    vertexResource_.Reset();
+    //座標リソース
+    transformationMatrixResource_.UnMap();
+    transformationMatrixResource_.Reset();
+    //マテリアルリソース
+    materialResource_.UnMap();
+    materialResource_.Reset();
+}
+;
 
 // ===================================//Private関数//===================================
 

@@ -23,8 +23,6 @@ private:
 	Enemy* enemy_ = nullptr;
 	BeamManager* beamManager_ = nullptr;
 	std::array<std::unique_ptr < ParticleEmitter>,2> beamParticleEmitters_;
-
-
-	std::unique_ptr < ParticleEmitter> shockEmitter_;
+	std::unique_ptr<ParticleEmitter> shockEmitter_ = nullptr;
 };
 

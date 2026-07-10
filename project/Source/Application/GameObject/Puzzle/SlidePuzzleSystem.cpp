@@ -16,13 +16,12 @@ SlidePuzzleSystem::SlidePuzzleSystem()
     puzzleObj_ = std::make_unique<PuzzleObj>();
 }
 
-void SlidePuzzleSystem::Finalize()
+SlidePuzzleSystem::~SlidePuzzleSystem()
 {
-    if (puzzle_) {
-        puzzle_.reset();
-    }
- 
+    puzzle_.reset();
+    puzzleObj_.reset();
 }
+
 
 void SlidePuzzleSystem::Initialize()
 {

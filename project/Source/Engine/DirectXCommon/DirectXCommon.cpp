@@ -24,10 +24,6 @@ DirectXCommon::~DirectXCommon()
 
     renderTexture_->Clear();
     renderTextureForSprite_->Clear();
-
-    if (dxcCompiler) {
-        dxcCompiler.reset();
-    }
   
     for (auto& resource : swapChainResources) {
         resource.Reset();
@@ -334,6 +330,8 @@ void DirectXCommon::InitializeDevice()
         debugController->EnableDebugLayer();
         //さらにGPU側でもチェックを行うようにする
         debugController->SetEnableGPUBasedValidation(TRUE);
+
+  
     }
 #endif
 

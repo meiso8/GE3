@@ -12,11 +12,13 @@ SkinningModel::SkinningModel()
 SkinningModel::~SkinningModel()
 {
 
-    //Skin::ReleaseSkinCluster(*skinCluster_);
+    Skin::ReleaseSkinCluster(*skinCluster_);
 
-    //skinningCSResorce_.inputVertexResource_.Reset();
-    //skinningCSResorce_.outputVertexResource_.Reset();
-    //skinningCSResorce_.skinningInformationResource_.Reset();
+    skinningCSResorce_.inputVertexResource_.Reset();
+  
+    skinningCSResorce_.outputVertexResource_.Reset();
+
+    skinningCSResorce_.skinningInformationResource_.Reset();
 
 }
 

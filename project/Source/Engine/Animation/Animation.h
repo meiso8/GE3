@@ -48,8 +48,8 @@ void ApplyAnimation(Skeleton& skeleton, const Animation& animation, const float 
 
 class AnimationManager {
 public:
-    static  std::map<std::string, Animation>& LoadAnimation(const std::filesystem::path& filePath);
-    ~AnimationManager();
+    static std::map<std::string, Animation>& LoadAnimation(const std::filesystem::path& filePath);
+    static void Finalize();
 private:
     //ファイルpathとアニメーション名を指定するよ
     static std::unordered_map <std::filesystem::path, std::map<std::string, Animation>> animations_;

@@ -462,14 +462,3 @@ void RootSignature::Create() {
 #pragma endregion
 
 }
-
-void RootSignature::Finalize()
-{
-    for (auto& signature : rootSignatures_) {
-        if (signature) {
-            signature.Reset();
-        }
-  
-    }
-}
-

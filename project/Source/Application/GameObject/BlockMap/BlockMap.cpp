@@ -59,12 +59,6 @@ BlockMap::BlockMap()
 
 BlockMap::~BlockMap()
 {
-    for (auto& blocks : map_) {
-        for (auto& block : blocks) {
-            block.reset();
-        }
-    }
-    //map_.clear();
    
 }
 

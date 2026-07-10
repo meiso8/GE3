@@ -45,14 +45,6 @@ PauseScreen::PauseScreen()
 }
 PauseScreen::~PauseScreen()
 {
-    for (auto& sprite : sprites_) {
-
-        if (sprite) {
-            sprite.reset();
-        }
-
-    }
-
     
 }
 void PauseScreen::Initialize()
@@ -82,7 +74,7 @@ void PauseScreen::Update()
 
 
     //タイトル
-    isLookGameItem_ = SlidePuzzleSystem::IsActive() || MemoManager::isLookItem_;
+    isLookGameItem_ = SlidePuzzleSystem::IsActive() || MemoManager::IsLookItem();
 
     auto* gaussianFilter = PostProcessManager::GetInstance()->
         GetPostEffectMaterial(PostProcessManager::kModel)->
@@ -195,7 +187,7 @@ void PauseScreen::SelectButton()
                     isShowMenu_ = false;
                     pauseTimer_ = 0.0f;
                     SlidePuzzleSystem::SetActive(false);
-                    MemoManager::isLookItem_ = false;
+                    MemoManager::SetLookItem(false);
                     break;
                 case kBackToTitle:
                     isBackToTitle_ = true;

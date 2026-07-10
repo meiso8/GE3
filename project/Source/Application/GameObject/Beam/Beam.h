@@ -14,9 +14,8 @@ public:
         kEnemy,
         kPlayer,
     };
-
-    BeamType& GetBeamType() { return  type_; };
-
+public:
+    BeamType& GetBeamType() { return type_; };
     Beam();
     ~Beam();
     void Initialize();
@@ -31,7 +30,6 @@ private:
     void UpdateObject();
     void CreateParticle();
 private:
-
     struct Point
     {
         Vector3 startPos;

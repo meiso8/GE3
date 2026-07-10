@@ -37,8 +37,11 @@ void Sprite::Create(const TextureFactory::Handle& textureHandle, const Vector2& 
 
 Sprite::~Sprite()
 {
+    transformationMatrixResource_.UnMap();
     transformationMatrixResource_.Reset();
+    materialResource_.UnMap();
     materialResource_.Reset();
+    vertexResource_.UnMap();
     vertexResource_.Reset();
 }
 

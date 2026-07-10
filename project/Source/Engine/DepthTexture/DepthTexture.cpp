@@ -5,10 +5,7 @@
 #include"DsvDescriptorHeap.h"
 #include"SrvDescriptorHeap.h"
 
-DepthTexture::~DepthTexture()
-{
-    depthTextureData_.Reset();
-}
+
 
 void DepthTexture::CreateResource(CbvSrvUavDescriptorHeap* srvDescriptorHeap,int32_t width,int32_t height)
 {

@@ -15,6 +15,5 @@ public:
     void OnCollision(Collider* collider) override;
 private:
     std::unique_ptr<Object3d> object_ = nullptr; 
-    static std::unordered_map<uint32_t, StageChangeTrigger*> triggerMap_;
 };
 

@@ -19,11 +19,6 @@ MummyStage::MummyStage()
 
 MummyStage::~MummyStage()
 {
-    for (auto& mummy : dummyMummies_) {
-        if (mummy) {
-            mummy.reset();
-        }
-    }
 }
 
 void MummyStage::TimerUpdate()

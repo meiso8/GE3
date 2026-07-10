@@ -7,7 +7,6 @@ class DsvDescriptorHeap;
 class DepthTexture
 {
 public:
-    ~DepthTexture();
     void CreateResource(CbvSrvUavDescriptorHeap* srvDescriptorHeap,int32_t width, int32_t height);
    void  InitializeDepthStencilView(DsvDescriptorHeap* dsvDescriptorHeap);
    void DebugViewer(CbvSrvUavDescriptorHeap* srvDescriptorHeap);

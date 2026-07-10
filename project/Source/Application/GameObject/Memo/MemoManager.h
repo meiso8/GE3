@@ -11,8 +11,10 @@ private:
     std::map< TextureFactory::Handle, std::unique_ptr<Memo>>memos_;
     std::unique_ptr<Sprite> sprite_ = nullptr;
     Vector2 spriteScale_ = { 1.0f,1.0f };
-public:
     static bool isLookItem_;
+public:
+    static bool IsLookItem() { return isLookItem_; };
+    static void SetLookItem(const bool flag) { isLookItem_ = flag; }
     MemoManager();
     ~MemoManager();
     void Initialize();

@@ -54,6 +54,8 @@ private:
 #endif // DEBUG
 public:
 	Collider();
+	virtual ~Collider();
+
 	void InitCalcuatedTisFrameFlag();
 	const std::string GetColliderName() { return colliderName_; };
 	void SetColliderName(const std::string& colliderName) { colliderName_ = colliderName; }

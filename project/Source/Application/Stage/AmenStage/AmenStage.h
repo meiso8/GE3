@@ -19,6 +19,7 @@ private:
     bool isGenerateItem_ = false;
 public:
     AmenStage();
+    ~AmenStage();
     void Initialize()override;
     void Update()override;
     void Draw(Camera& camera)override;

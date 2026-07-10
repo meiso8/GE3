@@ -35,16 +35,37 @@ void PostEffectMaterial::Create()
 
 void PostEffectMaterial::Clear()
 {
+    materialForGrayScale_.UnMap();
     materialForGrayScale_.Reset();
+
+    materialForVignette_.UnMap();
     materialForVignette_.Reset();
+
+    materialForBoxFilter_.UnMap();
     materialForBoxFilter_.Reset();
+
+    materialForFullScreen_.UnMap();
     materialForFullScreen_.Reset();
+
+    materialForGaussianFilter_.UnMap();
     materialForGaussianFilter_.Reset();
+
+    materialForLuminanceBasedOutline_.UnMap();
     materialForLuminanceBasedOutline_.Reset();
+
+    materialForDepthBasedOutline_.UnMap();
     materialForDepthBasedOutline_.Reset();
+
+    materialForRadialBlur_.UnMap();
     materialForRadialBlur_.Reset();
+
+    materialForDissolve_.UnMap();
     materialForDissolve_.Reset();
+
+    materialForThermography_.UnMap();
     materialForThermography_.Reset();
+
+    materialForRandom_.UnMap();
     materialForRandom_.Reset();
 }
 

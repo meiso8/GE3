@@ -8,10 +8,6 @@
 
 std::unordered_map < std::filesystem::path,std::map<std::string, Animation>> AnimationManager::animations_;
 
-AnimationManager::~AnimationManager()
-{
-    animations_.clear();
-};
 
 std::map<std::string, Animation>& AnimationManager::LoadAnimation(const std::filesystem::path& filePath)
 {
@@ -82,6 +78,11 @@ std::map<std::string, Animation>& AnimationManager::LoadAnimation(const std::fil
     animations_.insert(std::make_pair(filePath, modelAnimations));
 
     return animations_.at(filePath);
+}
+
+void AnimationManager::Finalize()
+{
+    animations_.clear();
 }
 
 

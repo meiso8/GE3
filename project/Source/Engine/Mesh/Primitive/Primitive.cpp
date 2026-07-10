@@ -845,6 +845,17 @@ void Primitive::SetRootSignatureAndGraphicsPipeline(
 
 }
 
+Primitive::~Primitive()
+{
+    Finalize();
+}
+
+void Primitive::Finalize()
+{
+    indexResource_.Reset();
+    vertexResource_.Reset();
+}
+
 void Primitive::Create(const MeshData& meshData)
 {
     //メッシュの名前登録
@@ -892,11 +903,6 @@ void Primitive::Create(const MeshData& meshData)
         std::memcpy(indexResource_.data, meshData.indices.data(), indexBufferSize);
         indexResource_.UnMap();
     }
-}
-
-Primitive::~Primitive()
-{
-
 }
 
 

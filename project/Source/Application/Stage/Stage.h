@@ -29,6 +29,7 @@ protected:
     void AddObjectCollision(CollisionManager& collisionManager);
 public:
     Stage();
+   virtual ~Stage();
     static void SetMemoManager(MemoManager* memoManager) { memoManager_ = memoManager; };
     static void SetItemManager(ItemManager* itemManager) { itemManager_ = itemManager;};
     static void SetPlayer(Player* player) { player_ = player; };

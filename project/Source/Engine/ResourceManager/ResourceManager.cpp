@@ -11,10 +11,18 @@ void IResource::Reset()
     }
 }
 
+
 void IResource::UnMap()
 {
     if (resource) {
         resource->Unmap(0, nullptr);
+    }
+}
+
+void IResource::SetName(const LPCWSTR& label)
+{
+    if (resource) {
+        resource->SetName(label);
     }
 }
 

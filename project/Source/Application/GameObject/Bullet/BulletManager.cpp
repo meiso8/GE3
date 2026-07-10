@@ -12,6 +12,7 @@ BulletManager::BulletManager() {
 }
 
 BulletManager::~BulletManager() {
+
 }
 
 void BulletManager::Initialize() {

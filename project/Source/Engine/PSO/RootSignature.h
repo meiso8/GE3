@@ -44,7 +44,6 @@ public:
             rootSignatures_[index].Get();
     };
 
-    void Finalize();
 private:
     std::array<Microsoft::WRL::ComPtr <ID3D12RootSignature>, TYPES> rootSignatures_ = { nullptr };
 };

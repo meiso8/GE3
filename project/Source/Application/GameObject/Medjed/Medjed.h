@@ -13,11 +13,10 @@ class Medjed :public DummyMedjed
 {
 private:
     std::unique_ptr<AnimationObject3d> aniObj_ = nullptr;
+    Vector3 velocity_ = { 0.0f };
+
     bool isFind_ = false;
     bool isHit_ = false;
-    Vector3 velocity_ = { 0.0f};
-
-private:
 
 public:
     Medjed();

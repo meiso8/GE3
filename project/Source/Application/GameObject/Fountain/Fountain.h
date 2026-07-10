@@ -16,8 +16,8 @@ public:
 private:
     void CreateParticle();
 private:
-    std::unique_ptr<Object3d> object_;
-    std::unique_ptr<Object3d> waterObject_;
+    std::unique_ptr<Object3d> object_ = nullptr;
+    std::unique_ptr<Object3d> waterObject_ = nullptr;
     std::array<std::unique_ptr<ParticleEmitter>,2>particleEmitter_;
     float splashTimer_ = 0.0f;
 

@@ -193,10 +193,6 @@ void ObjectManager::Draw(Camera& camera)
 
 void ObjectManager::Finalize()
 {
-
-    objects_.clear();
-    idMap_.clear();
-
     createObjects_.clear();
 
 }

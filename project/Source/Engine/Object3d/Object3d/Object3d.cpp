@@ -30,30 +30,6 @@ void Object3d::UpdateUV() {
     material_->uvTransform = uvTransformMatrix_;
 }
 
-
-//Object3d::~Object3d()
-//{
-//    Finalize();
-//}
-//
-//void Object3d::Finalize()
-//{
-//    transformationMatrixResource_.UnMap();
-//    transformationMatrixResource_.Reset();
-//
-//    materialResource_.UnMap();
-//    materialResource_.Reset();
-//
-//    expansionResource_.UnMap();
-//    expansionResource_.Reset();
-//
-//    waveResource_.UnMap();
-//    waveResource_.Reset();
-//
-//    idResource_.UnMap();
-//    idResource_.Reset();
-//}
-
 void Object3d::SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {
     commandList_ = commandList;
@@ -87,10 +63,10 @@ void Object3d::InitWaveDataIndex(const uint32_t& index)
     }
 
     if (waveResource_.data) {
-      waveResource_.data[index].direction = { 1.0f,0.0f,0.0f };
-      waveResource_.data[index].time = 0.0f;
-      waveResource_.data[index].amplitude = 0.0f;
-      waveResource_.data[index].frequency = 4;
+        waveResource_.data[index].direction = { 1.0f,0.0f,0.0f };
+        waveResource_.data[index].time = 0.0f;
+        waveResource_.data[index].amplitude = 0.0f;
+        waveResource_.data[index].frequency = 4;
     }
 
 }
@@ -202,6 +178,27 @@ TextureFactory::Handle Object3d::GetTextureHandle(const TEXTURE_USAGE& textureUs
     return Texture::GetTextureHandle(textureHandles_[textureUsage]);
 }
 
+
+
+Object3d::~Object3d()
+{
+    Finalize();
+}
+
+void Object3d::Finalize()
+{
+    transformationMatrixResource_.UnMap();
+    transformationMatrixResource_.Reset();
+    materialResource_.UnMap();
+    materialResource_.Reset();
+    expansionResource_.UnMap();
+    expansionResource_.Reset();
+    waveResource_.UnMap();
+    waveResource_.Reset();
+    idResource_.UnMap();
+    idResource_.Reset();
+}
+
 void Object3d::SetMeshAndMaterial(Primitive* mesh)
 {
     //メッシュをセットする
@@ -220,7 +217,7 @@ void Object3d::SetMeshAndMaterial(Primitive* mesh)
                 textureHandles_[i] = material.textureData_[i].textureSrvIndex;
             }
 
-           material_->shininess = material.shininess;
+            material_->shininess = material.shininess;
 
             if (textureHandles_[TEXTURE_USAGE_DIFFUSE] == -1) {
                 textureHandles_[TEXTURE_USAGE_DIFFUSE] = Texture::GetSRVHandle(TextureFactory::WHITE_1X1);
@@ -286,7 +283,7 @@ void Object3d::CreateWaveData()
 {
     int waveCount = 2;
     size_t bufferSize = (sizeof(Wave) * waveCount + 255) & ~255;
-    waveResource_.CreateBufferResource(L"Object3d_WaveDataResoource",bufferSize);
+    waveResource_.CreateBufferResource(L"Object3d_WaveDataResoource", bufferSize);
 
     //書き込むためのアドレスを取得
     waveResource_.Map();

@@ -2,7 +2,6 @@
 
 #include "Collider.h"
 #include <memory>
-
 #include"Texture.h"
 
 class Memo : public Collider {

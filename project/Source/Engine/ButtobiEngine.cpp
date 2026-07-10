@@ -414,10 +414,6 @@ void ButtobiEngine::PostCommandSet() {
 
 void ButtobiEngine::Finalize() {
 
-  
-    SlidePuzzleSystem::Finalize();
-    //シーンマネージャーの終了処理
-    SceneManager::Finalize();
     //デバックカメラの終了処理
     DebugCamera::GetInstance()->Finalize();
     //パーティクルの終了処理
@@ -425,10 +421,13 @@ void ButtobiEngine::Finalize() {
 
     //モデルの終了処理
     ModelManager::Finalize();
+    
+    AnimationManager::Finalize();
 
     ObjectManager::GetInstance()->Clear();
     //オブジェクトの開放
     ObjectManager::GetInstance()->Finalize();
+
 
 
 #ifdef _DEVELOP
@@ -442,6 +441,8 @@ void ButtobiEngine::Finalize() {
     freeTypeManager_->Finalize();
  
 
+
+
     //音の終了処理
     Sound::Finalize();
     //スプライトの終了処理
@@ -451,7 +452,8 @@ void ButtobiEngine::Finalize() {
     //テクスチャの終了処理
     texture_->Finalize();
 
-
+    //シーンマネージャーの終了処理
+    SceneManager::Finalize();
 
 #pragma region//LightManagerの終了処理
 

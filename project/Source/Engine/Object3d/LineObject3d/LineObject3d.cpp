@@ -68,6 +68,7 @@ LineObject3d::LineObject3d()
 
 LineObject3d::~LineObject3d()
 {
+    
 }
 
 void LineObject3d::CreateMaterial(const Vector4& color)
