@@ -190,7 +190,8 @@ public:
 
     // ==============重要==================
     Object3d() =default;
-    ~Object3d() = default;
+   virtual ~Object3d();
+    void Finalize();
     /// @brief メッシュの情報を設定しその情報からマテリアルを設定する
     /// @param mesh メッシュ
     void SetMeshAndMaterial(Primitive* mesh);

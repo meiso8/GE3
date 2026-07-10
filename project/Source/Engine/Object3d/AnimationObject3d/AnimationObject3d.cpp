@@ -31,7 +31,6 @@ AnimationObject3d::~AnimationObject3d()
     if (debugBone_) {
         debugBone_->Finalize();
     }
-    
 #endif
 }
 

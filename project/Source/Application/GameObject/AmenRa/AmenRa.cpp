@@ -26,7 +26,7 @@ AmenRa::AmenRa() {
 
 AmenRa::~AmenRa()
 {
-    object_->UnRegisterObject();
+    object_.reset();
 }
 
 void AmenRa::Initialize() {

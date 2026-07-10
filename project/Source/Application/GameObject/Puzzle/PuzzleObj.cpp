@@ -27,9 +27,6 @@ PuzzleObj::PuzzleObj() {
 
 PuzzleObj::~PuzzleObj()
 {
-    if (aniObj_) {
-        aniObj_.reset();
-    }
 }
 
 void PuzzleObj::Initialize() {

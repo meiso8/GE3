@@ -9,8 +9,8 @@
 class SlidePuzzleSystem {
 public:
     SlidePuzzleSystem();
+    ~SlidePuzzleSystem();
     void Initialize();
-    static void Finalize();
     void Update(const Vector2& screenPos);
     void Draw(Camera& camera);
     void DrawUI();

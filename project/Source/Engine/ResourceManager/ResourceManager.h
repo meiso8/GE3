@@ -62,6 +62,7 @@ struct IResource {
     ID3D12Resource* Get() { return resource.Get(); }
     void Reset();
     void UnMap();
+    void SetName(const LPCWSTR& label);
 };
 
 struct TextureResource :public IResource {

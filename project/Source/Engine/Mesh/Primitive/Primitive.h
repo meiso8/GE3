@@ -51,7 +51,8 @@ public:
         const RootSignature::TYPE rootSignatureType = RootSignature::TYPE::NORMAL,
         const DxcCompiler::VS_TYPE vsType = DxcCompiler::VS_TYPE::VS_Normal,
         const DxcCompiler::PS_TYPE psType = DxcCompiler::PS_TYPE::PS_Normal);
-    ~Primitive();
+    virtual ~Primitive();
+    void Finalize();
     D3D12_VERTEX_BUFFER_VIEW& GetVertexBufferView() { return vertexBufferView_; };
     D3D12_INDEX_BUFFER_VIEW& GetIndexBufferView() { return  indexBufferView_; };
     UINT GetIndexCount() { return indexCount_; };

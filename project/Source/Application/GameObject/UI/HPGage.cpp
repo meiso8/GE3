@@ -16,12 +16,7 @@ HPGage::HPGage()
 
 HPGage::~HPGage()
 {
-    for (auto& [tag,sprite] : sprites_) {
-        if (sprite) {
-            sprite.reset();
-        }
 
-    }
 }
 
 void HPGage::Setting(const Vector2& size, const Vector2& pos, const Vector2& anchorPoint)

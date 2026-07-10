@@ -28,6 +28,7 @@ void PointLightManager::InitDatas()
 
 void PointLightManager::Finalize()
 {
+    resource_.UnMap();
     resource_.Reset();
 
     LogFile::Log("Finalize PointLightManager");

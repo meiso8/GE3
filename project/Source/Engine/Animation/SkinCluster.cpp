@@ -89,12 +89,14 @@ void Skin::UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton)
 void Skin::ReleaseSkinCluster(SkinCluster& slinCluster)
 {
     if (slinCluster.influenceResource) {
+        slinCluster.influenceResource->Unmap(0,nullptr);
         slinCluster.influenceResource.Reset();
     }
 
     slinCluster.inverseBindPoseMatrices.clear();
 
     if (slinCluster.paletteResource) {
+        slinCluster.paletteResource->Unmap(0, nullptr);
         slinCluster.paletteResource.Reset();
     }
 

@@ -7,7 +7,6 @@
 #include"DebugUI.h"
 #include"ObjectManager/ObjectManager.h"
 
-
 StageChangeTrigger::StageChangeTrigger()
 {
   
@@ -26,7 +25,7 @@ StageChangeTrigger::StageChangeTrigger()
 
 StageChangeTrigger::~StageChangeTrigger()
 {
-    object_->UnRegisterObject();
+
 }
 
 void StageChangeTrigger::Create(

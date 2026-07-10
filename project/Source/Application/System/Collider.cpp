@@ -29,6 +29,14 @@ Collider::Collider()
     isCalculatedThisFrame_ = false;
 }
 
+Collider::~Collider()
+{
+#ifdef _DEBUG
+    object3d_.reset();
+    debugMesh_.reset();
+#endif // _DEBUG
+}
+
 const Vector3& Collider::CalculateWorldPos()
 {
     if (isCalculatedThisFrame_) {

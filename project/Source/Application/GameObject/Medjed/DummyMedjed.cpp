@@ -8,7 +8,6 @@
 #include<algorithm>
 void DummyMedjed::Look(const Vector3& target)
 {
-
     aniTimer_ += TimeManager::DeltaTime() * 0.25f;
     aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
     Vector3 direction = target - object3d_->GetWorldTransform().GetWorldPosition();
@@ -27,11 +26,8 @@ void DummyMedjed::GoToTarget(const Vector3& target)
 
 void DummyMedjed::Hide()
 {
-
     hideTimer_ += TimeManager::DeltaTime()*1.2f;
     hideTimer_ = std::clamp(hideTimer_, 0.0f, 1.0f);
-    /*  object3d_->worldTransform_.translate_.y = Easing::EaseInCubic(startPosY_, -2.0f, hideTimer_);*/
-
 }
 
 DummyMedjed::DummyMedjed()

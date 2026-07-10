@@ -18,6 +18,7 @@ public:
 private:
     bool isPrePlayerHit_ = false;
     bool isPlayerHit_ = false;
-    std::unique_ptr<Object3d> object_ = nullptr;
     bool isDrain_ = false;
+    std::unique_ptr<Object3d> object_ = nullptr;
+  
 };

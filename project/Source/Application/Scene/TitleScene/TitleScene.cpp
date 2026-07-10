@@ -44,11 +44,7 @@ TitleScene::TitleScene()
 
 TitleScene::~TitleScene()
 {
-    for (auto& sprite : test3Sprites_) {
-        if (sprite) {
-            sprite.reset();
-      }
-    }
+
 }
 
 void TitleScene::Initialize()

@@ -36,7 +36,7 @@ public:
     );
     static void PreDraw(uint32_t blendMode = BlendMode::kBlendModeNormal);
     void Draw();
-
+    ~Font();
     void Create(
         const TextureFactory::Handle& textureHandle,
         const Vector2& position, 

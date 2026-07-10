@@ -53,3 +53,8 @@ void Stage::AddObjectCollision(CollisionManager& collisionManager)
 Stage::Stage()
 {
 }
+
+Stage::~Stage()
+{
+
+}

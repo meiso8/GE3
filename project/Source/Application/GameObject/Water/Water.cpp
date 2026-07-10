@@ -34,7 +34,7 @@ Water::Water() {
 
 Water::~Water()
 {
-    object_->UnRegisterObject();
+
 }
 
 void Water::Initialize() {

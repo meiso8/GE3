@@ -32,7 +32,6 @@ Thoth::Thoth()
 
 Thoth::~Thoth()
 {
-    object_->UnRegisterObject();
 }
 
 void Thoth::Initialize()

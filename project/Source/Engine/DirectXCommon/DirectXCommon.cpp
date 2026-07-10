@@ -24,10 +24,6 @@ DirectXCommon::~DirectXCommon()
 
     renderTexture_->Clear();
     renderTextureForSprite_->Clear();
-
-    if (dxcCompiler) {
-        dxcCompiler.reset();
-    }
   
     for (auto& resource : swapChainResources) {
         resource.Reset();
@@ -271,6 +267,8 @@ void DirectXCommon::PostDraw()
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT);
 
+
+
     //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     commanList->Close();
 
@@ -334,6 +332,8 @@ void DirectXCommon::InitializeDevice()
         debugController->EnableDebugLayer();
         //さらにGPU側でもチェックを行うようにする
         debugController->SetEnableGPUBasedValidation(TRUE);
+
+  
     }
 #endif
 

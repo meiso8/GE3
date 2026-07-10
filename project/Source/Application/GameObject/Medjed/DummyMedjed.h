@@ -9,7 +9,7 @@ class Model;
 class DummyMedjed :public Collider {
 
 private:
-    std::unique_ptr < Object3d> object3d_;
+    std::unique_ptr < Object3d> object3d_ = nullptr;
     float rotateRange_ = 6.28f;
     float startRotateY_ = 0.0f;
     float startPosY_ = 0.0f;

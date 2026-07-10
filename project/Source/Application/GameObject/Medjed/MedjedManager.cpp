@@ -32,11 +32,7 @@ MedjedManager::MedjedManager()
 
 MedjedManager::~MedjedManager()
 {
-    for (auto& medjed : dummyMedjeds_) {
-        if (medjed) {
-            medjed.reset();
-        }
-    }
+
 }
 
 void MedjedManager::RayCastHit() {

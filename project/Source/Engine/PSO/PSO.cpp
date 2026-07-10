@@ -484,7 +484,6 @@ void PSO::Finalize()
         }
     }
 
-    rootSignature->Finalize();
     rootSignature.reset();
 
 }

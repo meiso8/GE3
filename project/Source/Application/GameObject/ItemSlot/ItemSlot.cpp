@@ -35,12 +35,18 @@ ItemSlot::ItemSlot()
     }
 }
 
+ItemSlot::~ItemSlot()
+{
+   
+}
+
 
 void ItemSlot::Init()
 {
-
     for (auto& slot : slots_) {
-        slot.reset();
+        if (slot) {
+            slot.reset();
+        }   
     }
 }
 

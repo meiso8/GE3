@@ -8,6 +8,7 @@ SRVResource<SpotLight> SpotLightManager::resource_;
 
 void SpotLightManager::Finalize()
 {
+    resource_.UnMap();
     resource_.Reset();
 
     LogFile::Log("Finalize  SpotLightManager");

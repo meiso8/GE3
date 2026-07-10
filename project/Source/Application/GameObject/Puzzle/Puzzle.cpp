@@ -64,11 +64,6 @@ Puzzle::Puzzle(const int horizontal, const int vertical)
 
 Puzzle::~Puzzle()
 {
-    for (auto& sprite : sprites_) {
-        if (sprite) {
-            sprite.reset();
-       }
-    }
 }
 
 void Puzzle::Init()

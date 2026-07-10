@@ -33,13 +33,18 @@ public:
     bool GetIsActive() { return isActive_; };
     void SetIsActive(const bool flag) { isActive_ = flag; };
 private:
-    bool isActive_ = false;
     std::unique_ptr<Object3d> body_ = nullptr;
-    float size_;
-    BulletType type_;
     Model* model_ = nullptr;
-    Vector3 moveDir_;
-    float moveSpeed_;
-    float lifeTimer_;
-    float lifeDuration_;
+    //敵つめたで初期化
+    BulletType type_ = kEnemyCold;
+    
+    bool isActive_ = false;
+    
+    float size_ = 1.0f;
+
+    Vector3 moveDir_ = {0.0f};
+    float moveSpeed_ = {0.0f};
+    float lifeTimer_ = {0.0f};
+    float lifeDuration_ = {0.0f};
+
 };

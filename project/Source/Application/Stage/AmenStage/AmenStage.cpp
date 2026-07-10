@@ -11,6 +11,12 @@ AmenStage::AmenStage()
     backGround_ = std::make_unique<BackGround>();
 }
 
+AmenStage::~AmenStage()
+{
+    amenRa_.reset();
+    slidePuzzleSystem_.reset();
+}
+
 void AmenStage::Initialize()
 {
     //アイテムの生成を初期化する
