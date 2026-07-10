@@ -267,6 +267,8 @@ void DirectXCommon::PostDraw()
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT);
 
+
+
     //4.コマンドリストの内容を確定させる。全てのコマンドを詰んでから　Closesすること。
     commanList->Close();
 
