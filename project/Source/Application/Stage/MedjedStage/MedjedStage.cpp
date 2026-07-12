@@ -34,8 +34,7 @@ void MedjedStage::Initialize()
     //ステージのロード
     LoadAndCreateObject("MedjedStage_objectEditor");
 
-    //ライトの初期化？
-    lightingManager_->Initialize();
+
     //パーティクルの初期化
     particleEmitters_[kMedjed_Particle]->GetEmitter().transform.Parent(GetMedjed()->GetWorldTransform());
 

@@ -58,7 +58,7 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/beam.png", BEAM);
 
     Texture::LoadAndMapHandle("Resource/Textures/waterTexture.png", WATER_TEXTURE);
-    Texture::LoadAndMapHandle("Resource/Textures/glyph.png", GLYPH_NBT_SMT_HT);
+    Texture::LoadAndMapHandle("Resource/Textures/fire.png", FIRE);
     Texture::LoadAndMapHandle("Resource/Textures/nb.png", GLYPH_NB);
     Texture::LoadAndMapHandle("Resource/Textures/sm.png", GLYPH_SM);
     Texture::LoadAndMapHandle("Resource/Textures/h.png", GLYPH_H);
@@ -72,5 +72,10 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/UI/UI_RB.png", UI_RB);
     Texture::LoadAndMapHandle("Resource/Textures/UI/UI_X.png", UI_X);
 
-    Texture::LoadAndMapHandle("Resource/Textures/fire.png", FIRE);
+
+    Texture::LoadAndMapHandle("Resource/Textures/arrow.png", ARROW);
+    Texture::LoadAndMapHandle("Resource/Textures/footprints.png", FOOTS_PRINTS);
+    Texture::LoadAndMapHandle("Resource/Textures/meltGlass.png", MELT_GLASS);
+    Texture::LoadAndMapHandle("Resource/Textures/normalGlass.png", NORMAL_GLASS);
+
 }

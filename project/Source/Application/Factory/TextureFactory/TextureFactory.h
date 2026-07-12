@@ -62,8 +62,8 @@ public:
         SKYBOX_TEX,
         BEAM,
         WATER_TEXTURE,
-        //ネベト・シャムート・ケト
-        GLYPH_NBT_SMT_HT,
+
+        FIRE,
         //一旦この順序出ないとバグになるね
         BOOK5,
         //N　波
@@ -76,8 +76,11 @@ public:
         UI_RB,
         UI_X,
 
-        FIRE,
-
+    
+        ARROW,
+        FOOTS_PRINTS,
+        MELT_GLASS,
+        NORMAL_GLASS,
         // ======================
         TEXTURES,
     };
