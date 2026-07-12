@@ -10,7 +10,6 @@ public:
         NOIZE0,
         NOIZE1,
     
-
         NUMBERS,
         
         PUZZLE1,
@@ -76,6 +75,8 @@ public:
         UI_R,
         UI_RB,
         UI_X,
+
+        FIRE,
 
         // ======================
         TEXTURES,

@@ -122,7 +122,7 @@ void DebugUI::CheckEmitter(Emitter& emitter, const char* label)
     if (ImGui::TreeNode(label)) {
 
         int movement = static_cast<int>(emitter.movement);
-        ImGui::SliderInt("movement", &movement, 0, 2);
+        ImGui::SliderInt("movement", &movement, 0, 3);
         emitter.movement = static_cast<ParticleMovements>(movement);
         ImGui::Separator();
         int count = emitter.count;
@@ -174,9 +174,8 @@ void DebugUI::CheckEmitter(Emitter& emitter, const char* label)
         ImGui::Separator();
 
         CheckBlendMode(emitter.blendMode);
-        CheckColor(emitter.color, "color");
-        ImGui::SliderFloat("startAlpha", &emitter.startAlpha_, 0.0f, 1.0f);
-        ImGui::SliderFloat("endAlpha", &emitter.endAlpha_, 0.0f, 1.0f);
+        CheckColor(emitter.startColor, "startColor");
+        CheckColor(emitter.endColor, "endColor");
 
         ImGui::TreePop();
     }
@@ -1153,7 +1152,7 @@ void DebugUI::CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translat
 };
 void DebugUI::CheckColor(Vector4& color, const char* label) {
 #ifdef USE_IMGUI
-    ImGui::ColorEdit4("color", (float*)&color);
+    ImGui::ColorEdit4(label, (float*)&color);
 #endif
 }
 

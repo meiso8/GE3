@@ -33,6 +33,7 @@ struct Particle {
 
     float lifeTime;
     float currentTime;
+    float theta;
 };
 
 struct MinMax {
@@ -57,7 +58,8 @@ struct ParticleForGPU
 enum ParticleMovements {
     kParticleNormal,
     kParticleSphere,
-    kParticleShock
+    kParticleShock,
+    kParticleWave,
 };
 
 struct ParticleGroup {
@@ -82,8 +84,8 @@ struct ParticleGroup {
     ParticleMovements movement = kParticleNormal;
     AccelerationField accelerationField;
     BlendMode blendMode = BlendMode::kBlendModeAdd;
-    float startAlpha_ = 1.0f;
-    float endAlpha_ = 0.0f;
+    Vector4 startColor = {1.0f,1.0f,1.0f,1.0f};
+    Vector4 endColor = {1.0f,1.0f,1.0f,0.0f};
 };
 
 std::list<SphericalMove> EmitCoordinate(uint32_t count, const float& radius, const float& radiusSpeed, const float& polarSpeed, const MinMax& polarSpeedMinMax, const MinMax& radiusSpeedMinMax);
@@ -162,6 +164,7 @@ private:
     void Normal(ParticleGroup& group);
     void Sphere(ParticleGroup& group);
     void Shock(ParticleGroup& group);
+    void Wave(ParticleGroup& group);
 
     void IsCollisionFieldArea(Particle& particleItr, ParticleGroup& group);
     Matrix4x4 UpdateWorldMatrixForBillBord(Particle& particleItr, ParticleGroup& group);

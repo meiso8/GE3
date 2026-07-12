@@ -138,7 +138,8 @@ void FreeTypeScene::CreateParticle()
     auto& emitter0 = particleEmitters_[0]->GetEmitter();
 
     emitter0.count = 8;
-    emitter0.color = { 1.0f,1.0f,1.0f,1.0f };
+    emitter0.startColor = { 1.0f,1.0f,1.0f,1.0f };
+    emitter0.endColor = { 1.0f,1.0f,1.0f,0.0f };
     emitter0.transform.eTransform_.scale = { 0.05f,1.0f,1.0f };
     emitter0.transform.eTransform_.rotate = { 0.0f,0.0f,0.0f };
     emitter0.transform.eTransform_.translate = { 0.5f,0.5f,-0.5f };
@@ -162,7 +163,8 @@ void FreeTypeScene::CreateParticle()
     auto& emitter1 = particleEmitters_[1]->GetEmitter();
 
     emitter1.count = 1;
-    emitter1.color = { 1.0f,1.0f,1.0f,1.0f };
+    emitter1.startColor = { 1.0f,1.0f,1.0f,1.0f };
+    emitter1.endColor = { 1.0f,1.0f,1.0f,0.0f };
     emitter1.transform.eTransform_.scale = { 0.5f,0.5f,0.5f };
     emitter1.transform.eTransform_.rotate = { 0.0f,0.0f,0.0f };
     emitter1.transform.eTransform_.translate = { 0.5f,0.5f,0.0f };

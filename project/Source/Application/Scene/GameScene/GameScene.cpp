@@ -22,7 +22,7 @@
 #include"../Stage/MedjedStage/MedjedStage.h"
 #include"../Stage/AmenStage/AmenStage.h"
 #include"../Stage/AnubisStage/AnubisStage.h"
-
+#include"../Stage/MeltStage/MeltStage.h"
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -65,7 +65,7 @@ GameScene::GameScene()
 stageManager->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
  stageManager->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
     stageManager->SetMap("AnubisStage", std::move(std::make_unique<AnubisStage>()));
-
+    stageManager->SetMap("MeltStage", std::move(std::make_unique<MeltStage>()));
     skyboxObject3d_ = std::make_unique<SkyboxObject3d>();
     skyboxObject3d_->Create();
 }

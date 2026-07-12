@@ -147,7 +147,8 @@ void ShotBeamManager::CreateParticleEmitter()
     auto& emitter0 = beamParticleEmitters_[0]->GetEmitter();
 
     emitter0.count = 8;
-    emitter0.color = { 1.0f,1.0f,1.0f,1.0f };
+    emitter0.startColor = { 1.0f,1.0f,1.0f,1.0f };
+    emitter0.endColor = { 1.0f,1.0f,1.0f,0.0f };
     emitter0.transform.eTransform_.scale = { 0.025f,0.5f,0.5f };
     emitter0.transform.eTransform_.rotate = { 0.0f,0.0f,0.0f };
     emitter0.transform.eTransform_.translate = { 0.0f,0.0f,0.0f };

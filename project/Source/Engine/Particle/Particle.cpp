@@ -35,6 +35,10 @@ void ParticleManager::CreateAll()
     CreateParticleGroup("fountain", TextureFactory::WATER_TEXTURE, Primitive::kPlane,false,0.0f);
     CreateParticleGroup("fountain2", TextureFactory::WATER_TEXTURE, Primitive::kPlane, false,0.0f);
     CreateParticleGroup("shockParticle", TextureFactory::CIRCLE, Primitive::kPlane, false);
+
+    CreateParticleGroup("fireBase", TextureFactory::FIRE, Primitive::kPlane, false);
+    CreateParticleGroup("fireLight", TextureFactory::FIRE, Primitive::kPlane, false);
+    CreateParticleGroup("firePoint", TextureFactory::CIRCLE, Primitive::kPlane, false);
 }
 
 // ==========================================================================================================
@@ -49,6 +53,7 @@ void ParticleManager::Create(RootSignature* rootSignature)
         {kParticleNormal, [this](ParticleGroup& group) { Normal(group); }},
         {kParticleSphere, [this](ParticleGroup& group) { Sphere(group); }},
         {kParticleShock, [this](ParticleGroup& group) { Shock(group); }},
+        {kParticleWave, [this](ParticleGroup& group) { Wave(group); }},
     };
 }
 
@@ -252,7 +257,7 @@ void ParticleManager::Emit(Emitter& emitter)
     
     assert(particleGroups.contains(emitter.name));
 
-    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityAABB, emitter.transform, emitter.useRadialEmission_, emitter.count, emitter.color, emitter.lifeTime, emitter.translateAABB_, emitter.rotateAABB_, emitter.scaleAABB_));
+    particleGroups[emitter.name]->particles.splice(particleGroups[emitter.name]->particles.end(), EmitParticles(emitter.velocityAABB, emitter.transform, emitter.useRadialEmission_, emitter.count, emitter.startColor, emitter.lifeTime, emitter.translateAABB_, emitter.rotateAABB_, emitter.scaleAABB_));
     //どのように動くかの設定
     particleGroups[emitter.name]->movement = emitter.movement;
     //放射線にするかどうか
@@ -265,9 +270,8 @@ void ParticleManager::Emit(Emitter& emitter)
     //ブレンドモードの設定
     particleGroups[emitter.name]->blendMode = emitter.blendMode;
     //カラーの設定
-    particleGroups[emitter.name]->startAlpha_ = emitter.startAlpha_;
-    particleGroups[emitter.name]->endAlpha_ = emitter.endAlpha_;
-
+    particleGroups[emitter.name]->startColor = emitter.startColor;
+    particleGroups[emitter.name]->endColor = emitter.endColor;
 
     //加速場の設定
     particleGroups[emitter.name]->accelerationField = emitter.accelerationField_;
@@ -414,6 +418,56 @@ void ParticleManager::Shock(ParticleGroup& group)
 
 }
 
+void ParticleManager::Wave(ParticleGroup& group)
+{
+
+    group.numInstance = 0;
+
+    for (std::list <Particle>::iterator particleIterator = group.particles.begin(); particleIterator != group.particles.end();) {
+
+        if (group.numInstance < kNumMaxInstance) {
+
+            //寿命に達していたらグループから外す
+            if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+                particleIterator = group.particles.erase(particleIterator);
+                continue;
+            }
+
+            //場の処理
+            IsCollisionFieldArea(*particleIterator, group);
+
+            const float deltaTime = TimeManager::DeltaTime();
+  
+
+
+            //移動処理
+            (*particleIterator).transform.translate += (*particleIterator).velocity * deltaTime;
+
+            //経過時間を加算
+            (*particleIterator).currentTime += deltaTime;
+
+            (*particleIterator).theta += Math::kPi * deltaTime * 2.0f;
+
+
+            float sinf = std::sinf((*particleIterator).theta);
+            Vector3 wavePos = { sinf ,0.0f,sinf };
+            Matrix4x4 waveMoveMat = MakeTranslateMatrix(wavePos);
+
+            worldMatrix =UpdateMatrix(*particleIterator, group)* waveMoveMat;
+
+
+            //ビュープロジェクション行列
+            UpdateWVPMatrix(*camera_, group);
+
+            //データの更新
+            UpdateInstancingData(group, *particleIterator);
+
+        }
+        ++particleIterator;
+    }
+
+}
+
 
 // ==========================================================================================================
 
@@ -503,7 +557,7 @@ void ParticleManager::UpdateInstancingData(ParticleGroup& group, Particle& parti
     group.instancingResource.data[group.numInstance].World = worldMatrix;
     group.instancingResource.data[group.numInstance].color = (particleItr).color;
     float time = ((particleItr).currentTime / (particleItr).lifeTime);
-    group.instancingResource.data[group.numInstance].color.w = Lerp(group.startAlpha_, group.endAlpha_, time);
+    group.instancingResource.data[group.numInstance].color = Lerp(group.startColor, group.endColor, time);
    
     group.instancingResource.UnMap();
 
@@ -591,7 +645,7 @@ Matrix4x4 ParticleManager::UpdateMatrix(Particle& particleItr, ParticleGroup& gr
 
 Matrix4x4  ParticleManager::UpdateSphereMatrix(Particle& particleItr, SphericalMove& sphericalMove, ParticleGroup& group) {
 
-    Vector3 spherePos = group.parentPos_->GetWorldPosition() + TransformCoordinate(sphericalMove.coordinate);
+    Vector3 spherePos =/* group.parentPos_->GetWorldPosition() + */TransformCoordinate(sphericalMove.coordinate);
     Matrix4x4 sphereMoveMat = MakeTranslateMatrix(spherePos);
     Matrix4x4 child = UpdateMatrix(particleItr, group);
     return child * sphereMoveMat;

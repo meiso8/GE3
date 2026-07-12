@@ -121,7 +121,8 @@ void Fountain::CreateParticle()
     auto& emitter0 = particleEmitter_[0]->GetEmitter();
     emitter0.isLoop_ = true;
     emitter0.count = 5;
-    emitter0.color = { 1.0f,1.0f,1.0f,1.0f };
+    emitter0.startColor = { 1.0f,1.0f,1.0f,1.0f };
+    emitter0.endColor = { 1.0f,1.0f,1.0f,0.0f };
     emitter0.frequency = 0.01f; 
     emitter0.lifeTime = 1.5f;
     emitter0.blendMode = kBlendModeAdd;
@@ -134,7 +135,8 @@ void Fountain::CreateParticle()
 
     auto& emitter1 = particleEmitter_[1]->GetEmitter();
     emitter1.isLoop_ = true;
-    emitter1.color = { 0.5f,1.0f,1.0f,1.0f };
+    emitter1.startColor = { 0.5f,1.0f,1.0f,1.0f };
+    emitter1.endColor = { 0.5f,1.0f,1.0f,0.0f };
     emitter1.movement = ParticleMovements::kParticleSphere;
     emitter1.transform.eTransform_.scale = { 0.1f,0.1f,0.1f };
     emitter1.frequency = 0.001f;
