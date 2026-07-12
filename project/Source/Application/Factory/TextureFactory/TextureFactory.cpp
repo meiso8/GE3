@@ -71,4 +71,6 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/UI/UI_R.png", UI_R);
     Texture::LoadAndMapHandle("Resource/Textures/UI/UI_RB.png", UI_RB);
     Texture::LoadAndMapHandle("Resource/Textures/UI/UI_X.png", UI_X);
+
+    Texture::LoadAndMapHandle("Resource/Textures/fire.png", FIRE);
 }

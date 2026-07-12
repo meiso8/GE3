@@ -208,7 +208,8 @@ void MedjedStage::CreateParticle()
 
     auto& emitter0 = particleEmitters_[kMedjed_Particle]->GetEmitter();
     emitter0.count = 8;
-    emitter0.color = { 1.0f,0.75f,0.75f,1.0f };
+    emitter0.startColor = { 1.0f,0.75f,0.75f,1.0f };
+    emitter0.endColor = { 1.0f,0.75f,0.75f,0.0f };
     emitter0.frequencyTime = 0.25f;
     emitter0.lifeTime = 6.0f;
     emitter0.blendMode = kBlendModeMultiply;
@@ -224,7 +225,8 @@ void MedjedStage::CreateParticle()
     emitter1.transform.eTransform_.translate.y = 30.0f;
     emitter1.transform.eTransform_.scale = { 10.0f,10.0f,10.0f };
     emitter1.count = 4;
-    emitter1.color = { 1.0f,0.75f,0.75f,1.0f };
+    emitter1.startColor = { 1.0f,0.75f,0.75f,1.0f };
+    emitter1.endColor = { 1.0f,0.75f,0.75f,0.0f };
     emitter1.frequencyTime = 0.1f;
     emitter1.lifeTime = 10.0f;
     emitter1.blendMode = kBlendModeScreen;

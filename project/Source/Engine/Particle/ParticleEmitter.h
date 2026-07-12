@@ -18,15 +18,16 @@ struct Emitter
 
     WorldTransform transform;//エミッタのTransfrom
     AABB translateAABB_ = { 0.0f };
-    AABB velocityAABB = {0.0f};
-    AABB rotateAABB_ = { 0.0f};
-    AABB scaleAABB_ = { 0.0f};
+    AABB velocityAABB = { 0.0f };
+    AABB rotateAABB_ = { 0.0f };
+    AABB scaleAABB_ = { 0.0f };
     uint32_t count = 3;//発生数
     float frequency = 0.5f;//発生頻度
     float frequencyTime = 0.0f;//頻度用時刻
-    Vector4 color = {1.0f,1.0f,1.0f,1.0f};//色
-    float startAlpha_ = 1.0f;
-    float endAlpha_ = 0.0f;
+
+    Vector4 startColor = { 1.0f,1.0f,1.0f,1.0f };//色
+    Vector4 endColor = { 1.0f,1.0f,1.0f,0.0f };
+
     BlendMode blendMode = BlendMode::kBlendModeAdd;//ブレンドモード
     ParticleMovements movement = ParticleMovements::kParticleNormal;//動き
     float lifeTime = -1.0f;//生存時間
@@ -34,11 +35,12 @@ struct Emitter
     float radius = 1.0f;
     //半径の移動速度
     float radiusSpeed = 0.0f;
-    MinMax radiusSpeedMinMax = {0.0f,0.0f};
+    MinMax radiusSpeedMinMax = { 0.0f,0.0f };
     //経度の移動速度
     float polarSpeed = 0.0f;
     MinMax polarSpeedMinMax = { 0.0f,0.0f };
     AccelerationField accelerationField_;
+
 };
 
 class ParticleManager;
@@ -46,8 +48,8 @@ class ParticleManager;
 class ParticleEmitter
 {
 private:
-   Emitter emitter_{};
-   static ParticleManager* particleManager_;
+    Emitter emitter_{};
+    static ParticleManager* particleManager_;
 public:
     ParticleEmitter();
     ~ParticleEmitter() = default;
