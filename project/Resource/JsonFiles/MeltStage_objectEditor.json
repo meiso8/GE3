@@ -3,53 +3,19 @@
     "objects": [
         {
             "color": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             },
             "disabled": false,
             "environmentCoefficient": 0.0,
-            "file_name": "Plane",
-            "name": "Object61",
+            "file_name": "Cube",
+            "name": "Object11",
             "nextStageName": "",
-            "shininess": 0.0,
-            "temperature": 0.5,
-            "textureHandle": 23,
-            "transform": {
-                "rotate": {
-                    "x": 1.5699999332427979,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.00418660044670105,
-                    "y": 0.0007003554492257535,
-                    "z": -4.8414106369018555
-                }
-            },
-            "type": "MESH"
-        },
-        {
-            "color": {
-                "w": 0.007843137718737125,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "Plane",
-            "name": "Object2",
-            "nextStageName": "AnubisStage",
-            "shininess": 0.0,
-            "temperature": 0.5,
-            "textureHandle": 0,
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureHandle": 29,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -57,17 +23,17 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 1.0,
-                    "y": 1.3017481565475464,
-                    "z": 1.0
+                    "x": 11.551431655883789,
+                    "y": 4.736213207244873,
+                    "z": 0.30705326795578003
                 },
                 "translate": {
-                    "x": 13.768769264221191,
-                    "y": 1.2806496620178223,
-                    "z": 25.495498657226563
+                    "x": -5.960464477539063e-08,
+                    "y": 2.2542881965637207,
+                    "z": 9.356305122375488
                 }
             },
-            "type": "StageChangeTrigger"
+            "type": "MESH"
         },
         {
             "color": {
@@ -76,36 +42,36 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\DownStaris",
             "disabled": false,
             "environmentCoefficient": 0.0,
-            "file_name": "DownStairs.obj",
-            "name": "Object3",
-            "nextStageName": "WaterStage",
+            "file_name": "Plane",
+            "name": "Object22",
+            "nextStageName": "",
             "shininess": 250.0,
-            "temperature": 0.0,
+            "temperature": 0.20000000298023224,
+            "textureHandle": 54,
             "transform": {
                 "rotate": {
-                    "x": -3.1415908336639404,
-                    "y": 0.0015925478655844927,
-                    "z": -3.1415908336639404
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
                 },
                 "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "x": 2.0275847911834717,
+                    "y": 0.42982247471809387,
+                    "z": 2.2648000717163086
                 },
                 "translate": {
-                    "x": 0.026001866906881332,
-                    "y": -0.586564302444458,
-                    "z": 19.555145263671875
+                    "x": 0.0,
+                    "y": 0.9061993360519409,
+                    "z": 9.128437995910645
                 }
             },
-            "type": "StageChangeTrigger"
+            "type": "MESH"
         },
         {
             "color": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
@@ -113,26 +79,162 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object4",
-            "nextStageName": "MeltStage",
+            "name": "Object33",
+            "nextStageName": "",
             "shininess": 250.0,
-            "temperature": 0.5,
-            "textureHandle": 0,
+            "temperature": 0.20000000298023224,
+            "textureHandle": 57,
             "transform": {
                 "rotate": {
-                    "x": -3.1415908336639404,
-                    "y": 0.0015925478655844927,
-                    "z": -3.1415908336639404
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
                 },
                 "scale": {
                     "x": 1.0,
-                    "y": 1.2245358228683472,
+                    "y": 1.0,
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -17.933629989624023,
-                    "y": 1.306300401687622,
-                    "z": -24.168039321899414
+                    "x": -3.2555899620056152,
+                    "y": 2.5809874534606934,
+                    "z": 9.190132141113281
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "name": "Object44",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureHandle": 22,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 3.4763097763061523,
+                    "y": 1.0994948148727417,
+                    "z": 9.165742874145508
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "name": "Object55",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 1.0,
+            "textureHandle": 56,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 3.389704704284668,
+                    "y": 2.7047016620635986,
+                    "z": 9.0580415725708
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Fountain",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Fountain.obj",
+            "name": "Object66",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -10.02487850189209,
+                    "y": 0.29288169741630554,
+                    "z": 0.0
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "UpStairs.obj",
+            "name": "Object7",
+            "nextStageName": "AmenStage",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 3.140000104904175,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": -23.88736343383789
                 }
             },
             "type": "StageChangeTrigger"
@@ -148,14 +250,14 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "player.obj",
-            "name": "Player5",
+            "name": "Player4",
             "nextStageName": "",
             "shininess": 491.148193359375,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 1.5625569820404053,
+                    "y": 4.160955429077148,
                     "z": 0.0
                 },
                 "scale": {
@@ -164,77 +266,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -17.211883544921875,
+                    "x": 0.37932640314102173,
                     "y": -0.5,
-                    "z": -20.160476684570313
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/Puzzle",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "Puzzle.gltf",
-            "name": "PuzzleObj6",
-            "nextStageName": "",
-            "shininess": 250.0,
-            "temperature": 0.75,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": -24.0,
-                    "y": 0.25,
-                    "z": -24.0
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/AmenRa",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "AmenRa.obj",
-            "name": "AmenRa7",
-            "nextStageName": "",
-            "shininess": 250.0,
-            "temperature": 0.10000000149011612,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 3.1415927410125732,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
+                    "z": -18.93587303161621
                 }
             },
             "type": "EMPTY"

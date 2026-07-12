@@ -10,6 +10,14 @@ MeltStage::MeltStage()
 
 void MeltStage::Initialize()
 {
+
+    //ステージのロード
+    LoadAndCreateObject("MeltStage_objectEditor");
+    //ライトの初期化
+    lightingManager_->Initialize();
+    //パーティクルのリセット
+    ParticleManager::ResetAll();
+
     backGround_->Initialize();
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -5.0f });
