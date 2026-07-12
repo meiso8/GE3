@@ -1,12 +1,15 @@
 #pragma once
 #include"../Stage.h"
 #include"BackGround/BackGround.h"
+#include"MeltBlockMap/MeltBlockMap.h"
+
 class ParticleEmitter;
 
 class MeltStage :public Stage
 {
 private:
     std::unique_ptr<BackGround>backGround_ = nullptr;
+    std::unique_ptr<MeltBlockMap>meltBlockMap_ = nullptr;
     std::array<std::unique_ptr<ParticleEmitter>, 3>particleEmitters_;
 public:
     MeltStage();

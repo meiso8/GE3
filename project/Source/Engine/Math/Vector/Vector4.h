@@ -13,6 +13,9 @@ namespace COLOR{
     const Vector4 GREEN = { 0.0f,1.0f,0.0f,1.0f };
     const Vector4 BLUE = { 0.0f,0.0f,1.0f,1.0f };
     const Vector4 CYAN = { 0.0f,1.0f,1.0f,1.0f };
+
+    Vector4 ToShadowColor(const Vector4 color);
+
 }
 
 Vector4 Add(const Vector4& v1, const Vector4& v2);
