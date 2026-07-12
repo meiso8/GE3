@@ -5,6 +5,7 @@
 MeltStage::MeltStage()
 {
     backGround_ = std::make_unique<BackGround>();
+    meltBlockMap_ = std::make_unique<MeltBlockMap>();
     CreateParticle();
 }
 
@@ -19,6 +20,10 @@ void MeltStage::Initialize()
     ParticleManager::ResetAll();
 
     backGround_->Initialize();
+
+    //メルトブロック
+    meltBlockMap_->Initialize();
+
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -5.0f });
 }
@@ -30,7 +35,14 @@ void MeltStage::Update()
     }
 
     backGround_->Update();
+    meltBlockMap_->Update();
 
+    if (meltBlockMap_->IsClear()) {
+        //なぞ解きをクリアしたら
+   
+
+
+    }
     //オブジェクトの更新
     UpdateObject();
 
@@ -45,6 +57,7 @@ void MeltStage::Update()
 void MeltStage::Draw(Camera& camera)
 {
     backGround_->Draw(camera);
+    meltBlockMap_->Draw(camera);
     //オブジェクトの描画
     DrawObject(camera);
 }
@@ -52,9 +65,17 @@ void MeltStage::Draw(Camera& camera)
 void MeltStage::CheckCollision(CollisionManager& collisionManager)
 {
 
+    meltBlockMap_->RayCastHit(*player_->GerRaySprite());
+
+
     // 壁との当たり判定
     for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());
+    }
+
+    //マップ
+    for (auto& block : meltBlockMap_->GetMap()) {
+        collisionManager.AddCollider(block.get());
     }
 
 
@@ -67,14 +88,14 @@ void MeltStage::CreateParticle()
     for (int i = 0; i < particleEmitters_.size(); ++i) {
         particleEmitters_[i] = std::make_unique<ParticleEmitter>();
         particleEmitters_[i]->Initialize();
-     
+
     }
 
 
     auto& emitter0 = particleEmitters_[0]->GetEmitter();
     emitter0.count = 8;
-    emitter0.transform.eTransform_.translate= {-10.0f, 0.5f,0.0f };
-    emitter0.startColor = { 1.0f,45.0f/256.0f,0.0f,1.0f };
+    emitter0.transform.eTransform_.translate = { -10.0f, 0.5f,0.0f };
+    emitter0.startColor = { 1.0f,45.0f / 256.0f,0.0f,1.0f };
     emitter0.endColor = { 1.0f,0.0f,0.0f,0.0f };
     emitter0.frequency = 0.25f;
     emitter0.frequencyTime = 0.25f;
@@ -96,7 +117,7 @@ void MeltStage::CreateParticle()
     emitter0.frequencyTime = 0.0f;
 
     emitter1.startColor = { 1.0f,0.0f,0.0f,1.0f };
-    emitter1.endColor = { 1.0f,120.0f/256.0f,0.0f,0.0f };
+    emitter1.endColor = { 1.0f,120.0f / 256.0f,0.0f,0.0f };
 
     particleEmitters_[0]->SetName("fireBase");
     particleEmitters_[1]->SetName("fireLight");
@@ -124,8 +145,8 @@ void MeltStage::CreateParticle()
     emitter2.accelerationField_.acceleration.y = 5.0f;
     emitter2.accelerationField_.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
 
-  /*  for (int i = 2; i < particleEmitters_.size(); ++i) {
-        auto& emitter = particleEmitters_[i]->GetEmitter();
-        emitter = particleEmitters_[i % 2 == 0]->GetEmitter();
-    }*/
+    /*  for (int i = 2; i < particleEmitters_.size(); ++i) {
+          auto& emitter = particleEmitters_[i]->GetEmitter();
+          emitter = particleEmitters_[i % 2 == 0]->GetEmitter();
+      }*/
 }

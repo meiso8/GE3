@@ -171,6 +171,7 @@
     <ClCompile Include="Source\Engine\RenderTexture\RenderTexture.cpp" />
     <ClCompile Include="Source\Engine\ResourceManager\ResourceManager.cpp" />
     <ClCompile Include="Source\Engine\DepthTexture\DepthTexture.cpp" />
+    <ClCompile Include="Source\Application\GameObject\MeltBlockMap\MeltBlockMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -370,6 +371,7 @@
     <ClInclude Include="Source\Application\GameObject\Thoth\Thoth.h" />
     <ClInclude Include="Source\Engine\ResourceManager\ResourceManager.h" />
     <ClInclude Include="Source\Engine\DepthTexture\DepthTexture.h" />
+    <ClInclude Include="Source\Application\GameObject\MeltBlockMap\MeltBlockMap.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />
