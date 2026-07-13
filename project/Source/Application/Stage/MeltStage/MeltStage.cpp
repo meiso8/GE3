@@ -6,6 +6,7 @@ MeltStage::MeltStage()
 {
     backGround_ = std::make_unique<BackGround>();
     meltBlockMap_ = std::make_unique<MeltBlockMap>();
+    bastet_ = std::make_unique<Bastet>();
     CreateParticle();
 }
 
@@ -26,6 +27,8 @@ void MeltStage::Initialize()
 
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -5.0f });
+
+    bastet_->Initialize();
 }
 
 void MeltStage::Update()
@@ -37,12 +40,16 @@ void MeltStage::Update()
     backGround_->Update();
     meltBlockMap_->Update();
 
+
     if (meltBlockMap_->IsClear()) {
         //なぞ解きをクリアしたら
    
-
+        bastet_->Update();
 
     }
+
+
+
     //オブジェクトの更新
     UpdateObject();
 
@@ -58,8 +65,17 @@ void MeltStage::Draw(Camera& camera)
 {
     backGround_->Draw(camera);
     meltBlockMap_->Draw(camera);
+
+
     //オブジェクトの描画
     DrawObject(camera);
+
+    if (meltBlockMap_->IsClear()) {
+        //なぞ解きをクリアしたら
+
+        bastet_->Draw(camera);
+    }
+
 }
 
 void MeltStage::CheckCollision(CollisionManager& collisionManager)
@@ -78,6 +94,13 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager)
         collisionManager.AddCollider(block.get());
     }
 
+
+    if (meltBlockMap_->IsClear()) {
+        //なぞ解きをクリアしたら
+        collisionManager.AddCollider(bastet_.get());
+    }
+
+ 
 
     //コライダーを追加する
     AddObjectCollision(collisionManager);
