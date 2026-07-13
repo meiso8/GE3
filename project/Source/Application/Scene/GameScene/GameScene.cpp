@@ -92,7 +92,7 @@ void GameScene::Initialize() {
     ////アメンステージにする
 
     auto* stageManager = StageManager::GetInstance();
-    stageManager->SetNestStage("BastetStage");
+    stageManager->SetNestStage("AmenStage");
    
     //ステージ遷移の初期化
     sceneChange_->Initialize();
