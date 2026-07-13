@@ -89,7 +89,7 @@ void GameScene::Initialize() {
     itemManager_->Init();
     //メモマネージャー
     memoManager_->Initialize();
-    ////アメンステージにする
+    //アメンステージにする
 
     auto* stageManager = StageManager::GetInstance();
     stageManager->SetNestStage("AmenStage");

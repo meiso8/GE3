@@ -181,7 +181,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
     </ClCompile>
-    <ClCompile Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Model\Model.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Application\GameObject\AnubisBlockMap\AnubisBlockMap.cpp" />
     <ClCompile Include="Source\Application\GameObject\BlockMap\BlockMap.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\Item.cpp" />
@@ -191,7 +198,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
     </ClCompile>
-    <ClCompile Include="Source\Engine\ResourceManager\ResourceManager.cpp" />
+    <ClCompile Include="Source\Engine\ResourceManager\ResourceManager.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\SceneManager\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Source\Application\System\CollisionConfig.cpp" />
     <ClCompile Include="Source\Engine\DescriptorHeap\DescriptorHandle\DescriptorHandle.cpp">
@@ -207,17 +217,35 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\Primitive\Primitive.cpp" />
-    <ClCompile Include="Source\Engine\ObjectManager\ObjectCommandManager.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\PrimitiveFactory\PrimitiveFactory.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Mesh\Primitive\Primitive.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\ObjectManager\ObjectCommandManager.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Fountain\Fountain.cpp" />
     <ClCompile Include="Source\Application\Stage\AnubisStage\AnubisStage.cpp" />
-    <ClCompile Include="Source\Engine\Object3d\LineObject3d\LineObject3d.cpp" />
+    <ClCompile Include="Source\Engine\Object3d\LineObject3d\LineObject3d.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Beam\ShotBeamManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Beam\BeamManager.cpp" />
-    <ClCompile Include="Source\Engine\Object3d\BeamObject3d\BeamObject3d.cpp" />
+    <ClCompile Include="Source\Engine\Object3d\BeamObject3d\BeamObject3d.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Beam\Beam.cpp" />
-    <ClCompile Include="Source\Engine\ObjectManager\ObjectManager.cpp" />
+    <ClCompile Include="Source\Engine\ObjectManager\ObjectManager.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\PostProcessManager\PostProcessManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh\LineMesh\LineMesh.cpp" />
     <ClCompile Include="Source\Engine\Math\Structs\AABB.cpp" />
@@ -258,10 +286,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\FreeTypeManager\FreeTypeManager.cpp" />
     <ClCompile Include="Source\Engine\Math\Structs\Line.cpp" />
     <ClCompile Include="Source\Application\Factory\ModelFactory\ModelFactory.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\Model\SkinningModel.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Model\SkinningModel.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Animation\Bone.cpp" />
     <ClCompile Include="Source\Engine\Animation\SkinCluster.cpp" />
-    <ClCompile Include="Source\Engine\Object3d\AnimationObject3d\AnimationObject3d.cpp" />
+    <ClCompile Include="Source\Engine\Object3d\AnimationObject3d\AnimationObject3d.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Animation\Animation.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MaxSpeed</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MaxSpeed</Optimization>
@@ -295,40 +329,66 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\System\Collider.cpp" />
     <ClCompile Include="Source\Engine\JsonFile\JsonFile.cpp" />
     <ClCompile Include="Source\Engine\Particle\ParticleEmitter.cpp" />
-    <ClCompile Include="Source\Engine\Object3d\Object3d\Object3d.cpp" />
-    <ClCompile Include="Source\Engine\SceneManager\SceneChange.cpp" />
+    <ClCompile Include="Source\Engine\Object3d\Object3d\Object3d.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\SceneManager\SceneChange.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Application\System\CollisionManager.cpp" />
     <ClCompile Include="Source\Engine\Math\Matrix\Matrix3x3.cpp" />
     <ClCompile Include="Source\Engine\SceneManager\SceneManager.cpp" />
     <ClCompile Include="Source\Application\Scene\GameScene\GameScene.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\ModelManager\ModelManager.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\ModelManager\ModelManager.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\DirectXCommon.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
     </ClCompile>
     <ClCompile Include="Source\Engine\Particle\Particle.cpp" />
     <ClCompile Include="Source\Engine\ButtobiEngine.cpp" />
-    <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp" />
+    <ClCompile Include="Source\Engine\ImGui\DebugUI.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Mesh\Grid\DrawGrid.cpp" />
     <ClCompile Include="Source\Engine\Math\Collision\Collision.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector\Vector2.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector\Vector4.cpp" />
-    <ClCompile Include="Source\Engine\PSO\RootSignature.cpp" />
-    <ClCompile Include="Source\Engine\PSO\InputLayout.cpp" />
+    <ClCompile Include="Source\Engine\PSO\RootSignature.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\PSO\InputLayout.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\GPU.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
     </ClCompile>
-    <ClCompile Include="Source\Engine\ImGui\ImGuiClass.cpp" />
+    <ClCompile Include="Source\Engine\ImGui\ImGuiClass.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Math\Easing\Easing.cpp" />
     <ClCompile Include="Source\Engine\Math\Lerp\Lerp.cpp" />
     <ClCompile Include="Source\Engine\Math\Matrix\Matrix4x4.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector\Vector3.cpp" />
     <ClCompile Include="Source\Engine\Math\WorldTransform\WorldTransform.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\Model\Model.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\ScissorRect.cpp" />
-    <ClCompile Include="Source\Engine\PSO\BlendState.cpp" />
-    <ClCompile Include="Source\Engine\PSO\CompileShader.cpp" />
+    <ClCompile Include="Source\Engine\PSO\BlendState.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\PSO\CompileShader.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\Log.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
@@ -341,8 +401,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
     </ClCompile>
-    <ClCompile Include="Source\Engine\PSO\PSO.cpp" />
-    <ClCompile Include="Source\Engine\PSO\RasterizerState.cpp" />
+    <ClCompile Include="Source\Engine\PSO\PSO.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\PSO\RasterizerState.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\RenderTargetView.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
     </ClCompile>
@@ -365,7 +431,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</WholeProgramOptimization>
     </ClCompile>
     <ClCompile Include="Source\Engine\Math\Cotangent\cotangent.cpp" />
-    <ClCompile Include="Source\Engine\PSO\Depth.cpp" />
+    <ClCompile Include="Source\Engine\PSO\Depth.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Input\Input.cpp" />
     <ClCompile Include="Source\Engine\Math\Matrix\MakeMatrix.cpp" />
     <ClCompile Include="Source\Engine\Surface\MaterialData.cpp">
@@ -382,9 +451,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Engine\DirectXCommon\SwapChain.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\TransitionBarrier.cpp" />
     <ClCompile Include="Source\Engine\DirectXCommon\Viewport.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\Sprite\Sprite.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Sprite\Sprite.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\DirectXCommon\StringUtility.cpp" />
-    <ClCompile Include="Source\Engine\Mesh\Sprite\SpriteCommon.cpp" />
+    <ClCompile Include="Source\Engine\Mesh\Sprite\SpriteCommon.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Surface\Texture.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>

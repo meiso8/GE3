@@ -34,6 +34,7 @@ public:
     void ClearSet();
     std::array< std::unique_ptr<Block>, kMaxHz>& GetMap() { return blocks_; }
 private:
+    std::array<bool, kMaxHz>isPushs_;
     std::map<BlockHz, Vector4>colorMap_;
     std::array< std::unique_ptr<Block>, kMaxHz>blocks_;
     std::vector<int> correctOrder_ = { kC, kD, kD_S, kF_S,kG,kG_S,kB,kC_H };

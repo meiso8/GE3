@@ -1,6 +1,7 @@
 #include "BastetBlockMap.h"
 #include"SoundManager/SoundManager.h"
 #include"CollisionManager.h"
+#include"Sound.h"
 
 BastetBlockMap::BastetBlockMap()
 {
@@ -30,6 +31,11 @@ void BastetBlockMap::Initialize()
 {
 
     isClear_ = false;
+
+    for (auto& isPush : isPushs_) {
+        isPush = false;
+    }
+
 
     AABB aabb = blocks_[0]->GetAABB();
     float blockSize = aabb.max.x - aabb.min.x;
@@ -81,6 +87,14 @@ void BastetBlockMap::Update()
     for (int i = 0; i < kMaxHz; ++i)
         if (blocks_[i]->GetIsPush()) {
 
+            if (!isPushs_[i]) {
+                isPushs_[i] = true;
+                //どの音からピッチを変化させてみる
+                Sound::PlaySE(SoundFactory::Sound_C, 1.0f);
+                Sound::SetFrequencyRatio(SoundFactory::Sound_C, i);
+         
+            }
+
             // すでに踏んだ順番に追加（重複防止）
             if (std::find(steppedOrder_.begin(), steppedOrder_.end(), i) == steppedOrder_.end()) {
                 steppedOrder_.push_back(i);
@@ -103,6 +117,10 @@ void BastetBlockMap::Update()
         }
 
     if (isReset) {
+
+        for (auto& isPush : isPushs_) {
+            isPush = false;
+        }
         steppedOrder_.clear();
         SoundManager::PlayCancelSE();
         ResetPushMap();
@@ -139,6 +157,7 @@ void BastetBlockMap::RayCastHit(RaySprite& raySprite)
                 //ブロックテクスチャによって判定しない
                 blocks_[i]->RayCastHit(false);
 
+      
             }
         }
     }

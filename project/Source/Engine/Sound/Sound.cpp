@@ -14,6 +14,10 @@
 #include"Log.h"
 
 using namespace Microsoft::WRL;
+namespace {
+    const float GetRatio(int x) { return std::pow(2.0f, x / 12.0f); };
+}
+
 
 ComPtr<IXAudio2> Sound::xAudio2_ = nullptr; // ComオブジェクトなのでComPtrで管理する。  
 
@@ -113,6 +117,17 @@ bool Sound::IsPlaying(const std::filesystem::path& path)
 }
 
 
+void Sound::SetFrequencyRatio(const std::filesystem::path& path,const int ratioNum )
+{
+    auto it = voices_.find(path);
+    if (it != voices_.end() && it->second != nullptr) {
+        // XAudio2のソースボイスに比率を設定
+        it->second->SetFrequencyRatio(GetRatio(ratioNum));
+    }
+
+}
+
+
 void Sound::StopAllSound()
 {
     for (auto& pair : voices_) {
@@ -171,6 +186,11 @@ UINT64 Sound::GetSamplesPlayed(const std::filesystem::path& path)
     }
 
     return state.SamplesPlayed;
+}
+
+void Sound::SetFrequencyRatio(const SoundFactory::TAG& tag, const int ratioNum)
+{
+    SetFrequencyRatio(handleToPath_[tag],ratioNum);
 }
 
 void Sound::Unload(SoundData& soundData) {
