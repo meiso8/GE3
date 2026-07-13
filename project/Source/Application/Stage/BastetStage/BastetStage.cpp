@@ -11,7 +11,7 @@ void BastetStage::Initialize()
 {
 
     //ステージのロード
-    LoadAndCreateObject("MeltStage_objectEditor");
+    LoadAndCreateObject("BastetStage_objectEditor");
     //ライトの初期化
     lightingManager_->Initialize();
     //パーティクルのリセット

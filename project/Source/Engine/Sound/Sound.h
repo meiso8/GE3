@@ -72,6 +72,10 @@ public:
     /// @return 判定結果
     static bool IsPlaying(const SoundFactory::TAG& tag);
     static bool IsPlaying(const std::filesystem::path& path);
+    /// @brief 音階の設定
+    /// @param tag タグ
+    /// @param ratioNum　音階の数字 
+    static void SetFrequencyRatio(const SoundFactory::TAG& tag, const int ratioNum);
     /// @brief 音声データの解放関数  
 /// @param soundData 音声データ  
     static void Unload(SoundData& soundData);
@@ -101,8 +105,8 @@ private:
     ~Sound() = default;
     Sound(Sound&) = delete;
     Sound& operator=(Sound&) = delete;
-
-
+    //音階調整
+    static void SetFrequencyRatio(const std::filesystem::path& path, const int ratioNum);
     static bool IsPlayingAll();
     static bool LoadFile(const std::filesystem::path& path);
     static XAUDIO2_BUFFER GetBuffer(const std::filesystem::path& path);

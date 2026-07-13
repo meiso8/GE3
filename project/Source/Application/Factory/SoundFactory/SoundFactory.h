@@ -49,6 +49,8 @@ public:
         MEDJED_FOOT_STEP_SMALL,
         BEAM,
         MEDJED_JUMP,
+        //ドの音
+        Sound_C,
     };
 
    static void Load();
