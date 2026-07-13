@@ -19,15 +19,16 @@ void MeltStage::Initialize()
     lightingManager_->Initialize();
     //パーティクルのリセット
     ParticleManager::ResetAll();
-
+   
     backGround_->Initialize();
 
     //メルトブロック
+
     meltBlockMap_->Initialize();
 
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -5.0f });
-
+    bastet_->LoadMap("MeltStage_BastetStep");
     bastet_->Initialize();
 }
 

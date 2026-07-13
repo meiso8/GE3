@@ -1,62 +1,66 @@
-#include "MeltBlockMap.h"
+#include "BastetBlockMap.h"
 #include"SoundManager/SoundManager.h"
 #include"CollisionManager.h"
-MeltBlockMap::MeltBlockMap()
+
+BastetBlockMap::BastetBlockMap()
 {
-    AABB aabb = { .min = {-0.5f, -0.5f, -0.5f}, .max = {0.5f, 0.5f, 0.5f} };
+    AABB aabb = { .min = {-0.5f, -0.5f, -1.5f}, .max = {0.5f, 0.5f, 1.5f} };
 
     for (auto& block : blocks_) {
         block = std::make_unique<Block>();
         block->SetCubeAABB(aabb);
-
         block->SetTextureHandle(TextureFactory::NONE);
     }
-    colorMap_[0] = COLOR::CYAN;
-    colorMap_[1] = COLOR::BLUE;
-    colorMap_[2] = COLOR::GREEN;
-    colorMap_[3] = COLOR::RED;
 
+    for (int i = 0; i < kMaxHz; ++i) {
 
-    temparetureMap_[kHigh] = 1.0f;
-    temparetureMap_[kMiddle_High] = 0.75f;
-    temparetureMap_[kMiddle_Low] = 0.25f;
-    temparetureMap_[kLow] = 0.0f;
+        if (i <= 4 && i % 2 == 1 || i <= 10 && i >= 6 && i % 2 == 0) {
+            colorMap_[static_cast<BlockHz>(i)] = COLOR::BLACK;
+        } else {
+            colorMap_[static_cast<BlockHz>(i)] = COLOR::WHITE;
+        }
+    }
 
-    for (int i = 0; i < kMaxBolckTempareture; ++i)
-    {
-        blocks_[i]->SetColor(colorMap_[i]);
-        blocks_[i]->SetTemperature(temparetureMap_[static_cast<BlockTempareture>(i)]);
+    for (int i = 0; i < kMaxHz; ++i) {
+        blocks_[i]->SetColor(colorMap_[static_cast<BlockHz>(i)]);
     }
 }
 
-
-void MeltBlockMap::Initialize()
+void BastetBlockMap::Initialize()
 {
+
     isClear_ = false;
 
     AABB aabb = blocks_[0]->GetAABB();
     float blockSize = aabb.max.x - aabb.min.x;
-    float offsetX = -kMaxBolckTempareture * blockSize + blockSize;
+    float offsetX = -kMaxHz * blockSize + blockSize;
 
-    for (int i = 0; i < kMaxBolckTempareture; ++i) {
+    for (int i = 0; i < kMaxHz; ++i) {
+
         blocks_[i]->Initialize();
+
+        float posY = -0.25f;
+        float posZ = 6.0f;
+        if (colorMap_[static_cast<BlockHz>(i)] == COLOR::BLACK) {
+            posY = 0.0f;
+            posZ = 7.0f;
+        }
 
         Vector3 pos = {
             static_cast<float>(i) * blockSize * 2.0f + offsetX,
-            -0.25f,
-            7.0f
+            posY,
+            posZ
         };
 
         blocks_[i]->SetPos(pos);
     }
 }
 
-void MeltBlockMap::Update()
+void BastetBlockMap::Update()
 {
-
-    for (int i = 0; i < kMaxBolckTempareture; ++i) {
+    for (int i = 0; i < kMaxHz; ++i) {
         blocks_[i]->Update();
-        Vector4 color = colorMap_[i];
+        Vector4 color = colorMap_[static_cast<BlockHz>(i)];
         blocks_[i]->SetColor(color);
     }
 
@@ -74,7 +78,7 @@ void MeltBlockMap::Update()
 
     bool isReset = false;
 
-    for (int i = 0; i < kMaxBolckTempareture; ++i)
+    for (int i = 0; i < kMaxHz; ++i)
         if (blocks_[i]->GetIsPush()) {
 
             // すでに踏んだ順番に追加（重複防止）
@@ -103,20 +107,17 @@ void MeltBlockMap::Update()
         SoundManager::PlayCancelSE();
         ResetPushMap();
     }
-
 }
 
-
-void MeltBlockMap::Draw(Camera& camera)
+void BastetBlockMap::Draw(Camera& camera)
 {
     for (auto& block : blocks_) {
         block->Draw(camera);
     }
 }
 
-void MeltBlockMap::ResetPushMap()
+void BastetBlockMap::ResetPushMap()
 {
-
     for (auto& block : blocks_) {
         if (block->GetIsPush()) {
             block->Reset(false);
@@ -124,17 +125,16 @@ void MeltBlockMap::ResetPushMap()
             block->SetEndPos();
         }
     }
-
 }
 
-void MeltBlockMap::RayCastHit(RaySprite& raySprite)
+void BastetBlockMap::RayCastHit(RaySprite& raySprite)
 {
-    for (int i = 0; i < kMaxBolckTempareture; ++i) {
+    for (int i = 0; i < kMaxHz; ++i) {
 
         if (!blocks_[i]->GetIsPush()) {
             AABB aabb = GetAABBWorldPos(blocks_[i].get());
             if (raySprite.IntersectsAABB(aabb, blocks_[i]->GetWorldTransform().GetWorldPosition())) {
-                Vector4 color = COLOR::ToShadowColor(colorMap_[i]);
+                Vector4 color = COLOR::ToShadowColor(colorMap_[static_cast<BlockHz>(i)]);
                 blocks_[i]->SetColor(color);
                 //ブロックテクスチャによって判定しない
                 blocks_[i]->RayCastHit(false);
@@ -144,10 +144,9 @@ void MeltBlockMap::RayCastHit(RaySprite& raySprite)
     }
 }
 
-void MeltBlockMap::ClearSet()
+void BastetBlockMap::ClearSet()
 {
     isClear_ = true;
     SoundManager::PlayCorrectSE();
     SoundManager::PlayGOGOGOSE();
-
 }

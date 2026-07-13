@@ -23,6 +23,8 @@
 #include"../Stage/AmenStage/AmenStage.h"
 #include"../Stage/AnubisStage/AnubisStage.h"
 #include"../Stage/MeltStage/MeltStage.h"
+#include"../Stage/BastetStage/BastetStage.h"
+
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -61,11 +63,13 @@ GameScene::GameScene()
     stageManager->SetSceneChange(sceneChange_.get());
 
     stageManager->SetMap("AmenStage", std::move(std::make_unique<AmenStage>()));
-  stageManager->SetMap("WaterStage", std::move(std::make_unique<WaterStage>()));
-stageManager->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
- stageManager->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
+    stageManager->SetMap("WaterStage", std::move(std::make_unique<WaterStage>()));
+    stageManager->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
+    stageManager->SetMap("MummyStage", std::move(std::make_unique<MummyStage>()));
     stageManager->SetMap("AnubisStage", std::move(std::make_unique<AnubisStage>()));
     stageManager->SetMap("MeltStage", std::move(std::make_unique<MeltStage>()));
+    stageManager->SetMap("BastetStage", std::move(std::make_unique<BastetStage>()));
+
     skyboxObject3d_ = std::make_unique<SkyboxObject3d>();
     skyboxObject3d_->Create();
 }

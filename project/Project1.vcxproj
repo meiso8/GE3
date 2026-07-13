@@ -170,6 +170,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bastet\Bastet.cpp" />
     <ClCompile Include="Source\Application\Stage\BastetStage\BastetStage.cpp" />
     <ClCompile Include="Source\Application\GameObject\MeltBlockMap\MeltBlockMap.cpp" />
@@ -405,6 +406,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Thoth\Thoth.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.h" />
     <ClInclude Include="Source\Application\GameObject\Bastet\Bastet.h" />
     <ClInclude Include="Source\Application\Stage\BastetStage\BastetStage.h" />
     <ClInclude Include="Source\Application\GameObject\MeltBlockMap\MeltBlockMap.h" />
