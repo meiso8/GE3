@@ -8,12 +8,13 @@ struct Vector4 {
     }
 };
 
-namespace COLOR{
+namespace COLOR {
     const Vector4 RED = { 1.0f,0.0f,0.0f,1.0f };
     const Vector4 GREEN = { 0.0f,1.0f,0.0f,1.0f };
     const Vector4 BLUE = { 0.0f,0.0f,1.0f,1.0f };
     const Vector4 CYAN = { 0.0f,1.0f,1.0f,1.0f };
-
+    const Vector4 WHITE = { 1.0f,1.0f,1.0f,1.0f };
+    const Vector4 BLACK = { 0.0f,0.0f,0.0f,1.0f };
     Vector4 ToShadowColor(const Vector4 color);
 
 }

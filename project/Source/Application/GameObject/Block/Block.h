@@ -28,6 +28,7 @@ public:
     //void Draw(Camera& camera);
     void OnCollision(Collider* collider)override;
     void SetPos(const Vector3& pos, const float& endOffset = -0.5f);
+    const Vector3& GetPos() { return object_->GetTranslate(); }
     void SetEndPos(const float& endOffset = -0.5f);
     void InitAnitimer();
     void Reset(const bool isCheckPushBlock = true);

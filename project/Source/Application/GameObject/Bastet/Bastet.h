@@ -11,6 +11,7 @@ public:
     void Update();
     void  Draw(Camera& camera);
     void Initialize();
+    void LoadMap(const std::string& tagName = "MeltStage_BastetStep");
     void OnCollision(Collider* collider) override;
 private:
     void CreateParticle();
@@ -21,6 +22,7 @@ private:
     bool isApper_ = false;
     float footStepTimer_  = 0.0f;
     uint32_t step_ = 0;
+    std::string jsonFileName_ = "MeltStage_BastetStep";
 
 };
 

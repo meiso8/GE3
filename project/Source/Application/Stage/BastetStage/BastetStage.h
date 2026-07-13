@@ -2,6 +2,7 @@
 #include"../Stage.h"
 #include"BackGround/BackGround.h"
 #include"Bastet/Bastet.h"
+#include"BastetBlockMap/BastetBlockMap.h"
 
 class ParticleEmitter;
 
@@ -10,6 +11,7 @@ class BastetStage :public Stage
 private:
     std::unique_ptr<BackGround>backGround_ = nullptr;
     std::unique_ptr<Bastet>bastet_ = nullptr;
+    std::unique_ptr<BastetBlockMap>bastetBlockMap_ = nullptr;
     /* std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;*/
 public:
     BastetStage();

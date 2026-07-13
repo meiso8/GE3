@@ -10,7 +10,7 @@
 namespace {
     const float kAlphaSpeed_ = 0.5f;
     const float kfootStepTime_ = 1.0f;
-    const std::string jsonFileName_ = "MeltStage_BastetStep";
+
 }
 Bastet::Bastet()
 {
@@ -18,7 +18,7 @@ Bastet::Bastet()
     obj_->Create();
     obj_->SetMeshAndMaterial(ModelManager::GetModel("AmenRa.obj"));
     obj_->SetLightMode(Object3d::kLightModeLReflectance);
-    obj_->SetTemperature(0.0f);
+    obj_->SetTemperature(0.2f);
 
     AABB aabb = { .min = {-0.5f,0.0f,-0.5f},.max = {0.5f,1.0f,0.5f} };
 
@@ -35,6 +35,20 @@ Bastet::Bastet()
 
 void Bastet::Initialize() {
 
+    footStepTimer_ = 0.0f;
+    step_ = 0;
+    isApper_ = false;
+    obj_->Initialize();
+    obj_->SetObjectName("Bastet");
+    obj_->RegisterObject();
+    obj_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
+    obj_->SetTemperature(0.2f);
+}
+
+void Bastet::LoadMap(const std::string& tagName)
+{
+    //タグ名
+    jsonFileName_ = tagName;
 #ifdef _DEVELOP
     DebugUI::CreateJsonFile(jsonFileName_.c_str());
 #endif
@@ -52,123 +66,113 @@ void Bastet::Initialize() {
             footSteps_.push_back(JsonFile::JsonToEulerTransform(stepJson));
         }
     }
-
-    footStepTimer_ = 0.0f;
-    step_ = 0;
-    isApper_ = false;
-    obj_->Initialize();
-    obj_->SetObjectName("Bastet");
-    obj_->RegisterObject();
-    obj_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
-    obj_->SetTemperature(0.0f);
 }
 
 void Bastet::Update() {
 
 
-    //最後のステップだったら
-    if (step_ == footSteps_.size() - 1) {
-        //当たり判定を追加する
-        SetCollisionAttribute(CollisionTag::GetTag("Wall"));
-    } else {
-        SetCollisionAttribute(0);
-    }
-
-    if (isApper_) {
-        float alpha = Lerp(0.0f, 1.0f, kAlphaSpeed_);
-        obj_->SetColor({ 1.0f,1.0f,1.0f,alpha });
-        obj_->SetTemperature(alpha*0.5f);
-    }
-
-    footStepTimer_ -= TimeManager::DeltaTime();
-    footStepTimer_ = std::clamp(footStepTimer_, 0.0f, kfootStepTime_);
-
-    if (footStepTimer_ <= 0.0f) {
-        //秒数を初期化
-        footStepTimer_ = kfootStepTime_;
-
-        //ステップを足す
-        step_++;
-        step_ %= footSteps_.size();
-
-        //エミッターをゲットする
-        auto& emitter0 = particleEmitter_->GetEmitter();
-        //更新する
-        emitter0.transform.eTransform_ = footSteps_[step_];
-        //エミっとする
-        particleEmitter_->Emit();
-    }
-
-    obj_->SetTransform(footSteps_[step_]);
-
-    obj_->Update();
-
-    particleEmitter_->Update();
-
     if (!footSteps_.empty()) {
+
+        //最後のステップだったら
+        if (step_ == footSteps_.size() - 1) {
+            //当たり判定を追加する
+            SetCollisionAttribute(CollisionTag::GetTag("Wall"));
+        } else {
+            SetCollisionAttribute(0);
+        }
+
+        if (isApper_) {
+            float alpha = Lerp(0.0f, 1.0f, kAlphaSpeed_);
+            obj_->SetColor({ 1.0f,1.0f,1.0f,alpha });
+
+        }
+
+        footStepTimer_ -= TimeManager::DeltaTime();
+        footStepTimer_ = std::clamp(footStepTimer_, 0.0f, kfootStepTime_);
+
+        if (footStepTimer_ <= 0.0f) {
+            //秒数を初期化
+            footStepTimer_ = kfootStepTime_;
+
+            //ステップを足す
+            step_++;
+            step_ %= footSteps_.size();
+
+            //エミッターをゲットする
+            auto& emitter0 = particleEmitter_->GetEmitter();
+            //更新する
+            emitter0.transform.eTransform_ = footSteps_[step_];
+            //エミっとする
+            particleEmitter_->Emit();
+        }
+
+
+        obj_->SetTranslate(footSteps_[footSteps_.size() - 1].translate);
+
+        obj_->Update();
+
+        particleEmitter_->Update();
+    }
+
 #ifdef USE_IMGUI
-        // ImGuiの描画処理だけここに書くか、Updateの末尾に移動する
+    // ImGuiの描画処理だけここに書くか、Updateの末尾に移動する
 
 
-        ImGui::Begin("BastetFoot");
+    ImGui::Begin("BastetFoot");
 
-        DebugUI::CheckTransform(obj_->GetTransform(), "ObjStep");
+    DebugUI::CheckTransform(obj_->GetTransform(), "ObjStep");
 
-        if (ImGui::Button("AddStep")) {
-            footSteps_.push_back(obj_->GetTransform());
+    if (ImGui::Button("AddStep")) {
+        footSteps_.push_back(obj_->GetTransform());
+    }
+
+    if (ImGui::Button("DeleteStep")) {
+        // 配列が空でない場合のみ削除する（空のときに呼ぶとエラーになります）
+        if (!footSteps_.empty()) {
+            footSteps_.pop_back();
+        }
+    }
+
+    // 現在登録されているステップの一覧を表示
+    for (size_t i = 0; i < footSteps_.size(); ++i) {
+        // 各ステップごとに一意のID（"##Delete_0" など）を持つボタンを作成
+        std::string buttonLabel = "Delete ##" + std::to_string(i);
+
+        ImGui::Text("Step %d", static_cast<int>(i));
+        ImGui::SameLine(); // 横並びにする
+
+        if (ImGui::Button(buttonLabel.c_str())) {
+            // 指定したインデックス（i番目）の要素を配列から削除
+            footSteps_.erase(footSteps_.begin() + i);
+
+            // 要素を削除するとループのインデックスがズレるため、
+            // 1回分のループを終了して抜けるか、ImGuiの描画をリセットします
+            break;
+        }
+    }
+
+    if (ImGui::Button("Save ## FootStep")) {
+
+
+
+        nlohmann::json& json = JsonFile::GetJsonFiles(jsonFileName_);
+
+        nlohmann::json footStepsJson = nlohmann::json::array(); // JSONの配列を作成
+
+        for (const auto& step : footSteps_) {
+            footStepsJson.push_back(JsonFile::EulerTransformToJson(step));
         }
 
-        if (ImGui::Button("DeleteStep")) {
-            // 配列が空でない場合のみ削除する（空のときに呼ぶとエラーになります）
-            if (!footSteps_.empty()) {
-                footSteps_.pop_back();
-            }
-        }
+        json["transform"] = footStepsJson;
+        JsonFile::SetJson(jsonFileName_, json);
+        // ファイル保存
+/*        JsonFile::SaveJson(jsonFileName_);*/
+        JsonFile::MarkModified(jsonFileName_);
+    }
 
-        // 現在登録されているステップの一覧を表示
-        for (size_t i = 0; i < footSteps_.size(); ++i) {
-            // 各ステップごとに一意のID（"##Delete_0" など）を持つボタンを作成
-            std::string buttonLabel = "Delete ##" + std::to_string(i);
-
-            ImGui::Text("Step %d", static_cast<int>(i));
-            ImGui::SameLine(); // 横並びにする
-
-            if (ImGui::Button(buttonLabel.c_str())) {
-                // 指定したインデックス（i番目）の要素を配列から削除
-                footSteps_.erase(footSteps_.begin() + i);
-
-                // 要素を削除するとループのインデックスがズレるため、
-                // 1回分のループを終了して抜けるか、ImGuiの描画をリセットします
-                break;
-            }
-        }
-
-        if (ImGui::Button("Save ## FootStep")) {
-
-
-
-            nlohmann::json& json = JsonFile::GetJsonFiles(jsonFileName_);
-
-            nlohmann::json footStepsJson = nlohmann::json::array(); // JSONの配列を作成
-
-            for (const auto& step : footSteps_) {
-                footStepsJson.push_back(JsonFile::EulerTransformToJson(step));
-            }
-
-            json["transform"] = footStepsJson;
-            JsonFile::SetJson(jsonFileName_, json);
-            // ファイル保存
-    /*        JsonFile::SaveJson(jsonFileName_);*/
-            JsonFile::MarkModified(jsonFileName_);
-        }
-
-        ImGui::End();
+    ImGui::End();
 
 #endif
-        return;
-    }
-
-
 
 
 }
