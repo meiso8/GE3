@@ -92,3 +92,21 @@ nlohmann::json JsonFile::EulerTransformToJson(const EulerTransform& eTransform)
         {"scale",     Vector3ToJson(eTransform.scale)    },
     };
 }
+
+EulerTransform JsonFile::JsonToEulerTransform(const nlohmann::json& obj)
+{
+    EulerTransform result = { 0.0f };
+    result.translate = JsonToVector3(obj["translate"]);
+    result.rotate = JsonToVector3(obj["rotate"]);
+    result.scale = JsonToVector3(obj["scale"]);
+    return result;
+}
+
+Vector3 JsonFile::JsonToVector3(const nlohmann::json& obj)
+{
+    Vector3 result = { 0.0f };
+    result.x = obj["x"].get<float>();
+    result.y = obj["y"].get<float>();
+    result.z = obj["z"].get<float>();
+    return result;
+}

@@ -40,6 +40,8 @@ public:
     static   nlohmann::json Vector4ToJson(const Vector4& vector);
 
     static  nlohmann::json EulerTransformToJson(const EulerTransform& eTransform);
+    static  EulerTransform JsonToEulerTransform(const nlohmann::json& obj);
+    static Vector3 JsonToVector3(const nlohmann::json& obj);
 private:
     static std::unordered_map <std::string, JsonData > jsonFiles_;
 
