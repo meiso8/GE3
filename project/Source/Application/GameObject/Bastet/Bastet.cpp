@@ -6,6 +6,7 @@
 #include"Lerp.h"
 #include"TimeManager.h"
 #include"JsonFile.h"
+#include"PrimitiveFactory/PrimitiveFactory.h"
 
 namespace {
     const float kAlphaSpeed_ = 0.5f;
@@ -43,6 +44,14 @@ void Bastet::Initialize() {
     obj_->RegisterObject();
     obj_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
     obj_->SetTemperature(0.2f);
+
+#ifdef _DEVELOP
+    obj_->SetMeshAndMaterial(PrimitiveFactory::GetPrimitive(Primitive::kPlane));
+    obj_->SetScale({ 0.5f,0.5f,0.5f });
+    obj_->SetRotate({ 1.57f,0.0f,0.0f });
+    obj_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+#endif
+
 }
 
 void Bastet::LoadMap(const std::string& tagName)
