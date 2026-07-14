@@ -11,7 +11,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
-            "name": "Object111",
+            "name": "Object11111",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -23,13 +23,13 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 11.551431655883789,
-                    "y": 4.736213207244873,
+                    "x": 12.542581558227539,
+                    "y": 4.704832553863525,
                     "z": 0.30705326795578003
                 },
                 "translate": {
                     "x": -5.960464477539063e-08,
-                    "y": 2.2542881965637207,
+                    "y": 2.1356048583984375,
                     "z": 9.356305122375488
                 }
             },
@@ -45,11 +45,11 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object555",
+            "name": "Object55522",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 1.0,
-            "textureHandle": 56,
+            "textureHandle": 58,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -57,13 +57,13 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
+                    "x": 5.297429084777832,
+                    "y": 1.2158900499343872,
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 3.389704704284668,
-                    "y": 2.7047016620635986,
+                    "x": -0.2543872594833374,
+                    "y": 2.139336347579956,
                     "z": 9.0580415725708
                 }
             },
@@ -80,7 +80,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
-            "name": "Object7",
+            "name": "Object3",
             "nextStageName": "AmenStage",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -114,7 +114,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "AmenRa.obj",
-            "name": "Bastet8",
+            "name": "Bastet4",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.20000000298023224,
@@ -133,6 +133,40 @@
                     "x": 12.118858337402344,
                     "y": 0.03529096022248268,
                     "z": 3.863213300704956
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/player",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "player.obj",
+            "name": "Player5",
+            "nextStageName": "",
+            "shininess": 491.148193359375,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 3.0863945484161377,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -1.4316565990447998,
+                    "y": -0.5,
+                    "z": -5.5525336265563965
                 }
             },
             "type": "EMPTY"

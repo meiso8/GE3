@@ -78,4 +78,5 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/meltGlass.png", MELT_GLASS);
     Texture::LoadAndMapHandle("Resource/Textures/normalGlass.png", NORMAL_GLASS);
 
+    Texture::LoadAndMapHandle("Resource/Textures/music.png", MUSIC);
 }

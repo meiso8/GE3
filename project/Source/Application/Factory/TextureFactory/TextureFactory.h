@@ -81,6 +81,7 @@ public:
         FOOTS_PRINTS,
         MELT_GLASS,
         NORMAL_GLASS,
+        MUSIC,
         // ======================
         TEXTURES,
     };
