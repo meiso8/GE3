@@ -6,10 +6,11 @@
 BastetBlockMap::BastetBlockMap()
 {
     AABB aabb = { .min = {-0.5f, -0.5f, -1.5f}, .max = {0.5f, 0.5f, 1.5f} };
-
+    AABB collisionAABB = { .min = {-0.25f,-0.25f,-0.75f},.max = {0.25f,0.25f,0.75f} };
     for (auto& block : blocks_) {
         block = std::make_unique<Block>();
-        block->SetCubeAABB(aabb);
+        block->SetCubeSize(aabb);
+        block->SetAABB(collisionAABB);
         block->SetTextureHandle(TextureFactory::NONE);
     }
 
@@ -37,8 +38,8 @@ void BastetBlockMap::Initialize()
     }
 
 
-    AABB aabb = blocks_[0]->GetAABB();
-    float blockSize = aabb.max.x - aabb.min.x;
+    AABB collisionAABB = blocks_[0]->GetAABB();
+    float blockSize = collisionAABB.max.x - collisionAABB.min.x;
     float offsetX = -kMaxHz * blockSize + blockSize;
 
     for (int i = 0; i < kMaxHz; ++i) {

@@ -21,6 +21,10 @@ public:
         SetAABB(aabb);
         cubeMesh_->Create(PrimitiveGenerator::CreateCube(aabb));
     };
+    void SetCubeSize(const AABB& aabb) {
+        cubeMesh_->Create(PrimitiveGenerator::CreateCube(aabb));
+    
+    };
 protected:
     std::unique_ptr<Object3d> object_ = nullptr;
 };
