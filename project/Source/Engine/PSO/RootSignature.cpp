@@ -93,7 +93,22 @@ void RootSignature::Create() {
     descriptorRangeForOutputVertices[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
     descriptorRangeForOutputVertices[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
+    //================================GPUParticle用=================================================
+   //UAV
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForGPUParticleUAV[1] = {};
+    descriptorRangeForGPUParticleUAV[0].BaseShaderRegister = 0;// RWStructuredBuffer<Vertex> gOutputVertices : register(u0);
+    descriptorRangeForGPUParticleUAV[0].NumDescriptors = 1;
+    descriptorRangeForGPUParticleUAV[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+    descriptorRangeForGPUParticleUAV[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+    //SRV
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForGPUParticleSRV[1] = {};
+    descriptorRangeForGPUParticleSRV[0].BaseShaderRegister = 11;
+    descriptorRangeForGPUParticleSRV[0].NumDescriptors = 1;//1つ
+    descriptorRangeForGPUParticleSRV[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRV
+    descriptorRangeForGPUParticleSRV[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//オフセット自動計算
+
     // ===================ComputeShader用RootSignature=============================
+
 
 
 #pragma endregion
@@ -234,6 +249,42 @@ void RootSignature::Create() {
     rootParametersForInstancing[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
 #pragma endregion
 
+
+#pragma region//ParticleForGPURootParameters
+
+    // ===============================ComputeShader========================
+    D3D12_ROOT_PARAMETER rootParametersCSForParticleForGPU[1] = {};
+    //UAV
+    rootParametersCSForParticleForGPU[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersCSForParticleForGPU[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersCSForParticleForGPU[0].DescriptorTable.pDescriptorRanges = descriptorRangeForGPUParticleUAV;//Tableの中身の配列を指定
+    rootParametersCSForParticleForGPU[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForGPUParticleUAV);//Tableで利用する数
+
+    // ===============================VS PS Shader =======================================
+    D3D12_ROOT_PARAMETER rootParametersForParticleForGPU[4] = {};
+
+    //Material b0
+    rootParametersForParticleForGPU[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForParticleForGPU[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForParticleForGPU[0].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+    //Texture? t2 Texture2D<float4> gTexture : register(t2);
+    rootParametersForParticleForGPU[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForParticleForGPU[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParametersForParticleForGPU[1].DescriptorTable.pDescriptorRanges = descriptorRange;//Tableの中身の配列を指定
+    rootParametersForParticleForGPU[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
+
+    //Transform用  StructuredBuffer<Particle> gParticles : register(t11);
+    rootParametersForParticleForGPU[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table 使用時UAVから変換する
+    rootParametersForParticleForGPU[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParametersForParticleForGPU[2].DescriptorTable.pDescriptorRanges = descriptorRangeForGPUParticleSRV;//Tableの中身の配列を指定
+    rootParametersForParticleForGPU[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForGPUParticleSRV);//Tableで利用する数
+
+    // ConstantBuffer<ParView> gParView : register(b0);
+    rootParametersForParticleForGPU[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForParticleForGPU[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParametersForParticleForGPU[3].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+
+#pragma endregion
 
 #pragma region//SpriteParameters
     //CBufferを利用することになったので、RootParameterに設定を追加する
@@ -385,6 +436,9 @@ void RootSignature::Create() {
 
     descriptionRootSignature[PARTICLE].pParameters = rootParametersForInstancing;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[PARTICLE].NumParameters = _countof(rootParametersForInstancing);//配列の長さ
+    //GPUParticle用で作成
+    descriptionRootSignature[PARTICLE_GPU].pParameters = rootParametersForParticleForGPU;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[PARTICLE_GPU].NumParameters = _countof(rootParametersForParticleForGPU);//配列の長さ
 
     descriptionRootSignature[SPRITE].pParameters = rootParametersForSprite;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[SPRITE].NumParameters = _countof(rootParametersForSprite);//配列の長さ
@@ -433,6 +487,9 @@ void RootSignature::Create() {
     //ComputeShader用Skinning
     descriptionRootSignature[CS_SKINNING].pParameters = rootParametersForCsSkinning;
     descriptionRootSignature[CS_SKINNING].NumParameters = _countof(rootParametersForCsSkinning);//配列の長さ
+
+    descriptionRootSignature[CS_PARTICLE_GPU].pParameters = rootParametersCSForParticleForGPU;
+    descriptionRootSignature[CS_PARTICLE_GPU].NumParameters = _countof(rootParametersCSForParticleForGPU);//配列の長さ
 
 
     //シリアライズしてバイナリにする

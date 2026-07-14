@@ -185,6 +185,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Particle\GPUParticle.cpp" />
     <ClCompile Include="Source\Engine\PostEffectMaterial\PostEffectMaterial.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MinSpace</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MinSpace</Optimization>
@@ -481,6 +482,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Thoth\Thoth.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Particle\GPUParticle.h" />
     <ClInclude Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.h" />
     <ClInclude Include="Source\Application\GameObject\Bastet\Bastet.h" />
     <ClInclude Include="Source\Application\Stage\BastetStage\BastetStage.h" />
@@ -704,6 +706,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <Font Include="Resource\Fonts\NotoSansEgyptianHieroglyphs-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resource\shader\VertexShader\GPUParticle.VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Development|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

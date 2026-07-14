@@ -9,12 +9,17 @@ void ComputeShaderPSO::CreatePSO(DxcCompiler* dxCompiler,
     rootSignature_ = rootSignature;
 
     computePipelineStatesForSkinning_ =  Create(RootSignature::TYPE::CS_SKINNING, DxcCompiler::CS_Skinning);
+    computePipelineStatesForInitializeParticle_ = Create(RootSignature::TYPE::CS_PARTICLE_GPU, DxcCompiler::CS_Particle_GPU);
 }
 
 void ComputeShaderPSO::Finalize()
 {
     if (computePipelineStatesForSkinning_) {
         computePipelineStatesForSkinning_.Reset();
+    }
+
+    if (computePipelineStatesForInitializeParticle_) {
+        computePipelineStatesForInitializeParticle_.Reset();
     }
 }
 

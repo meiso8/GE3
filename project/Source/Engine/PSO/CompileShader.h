@@ -12,6 +12,9 @@ public:
     enum VS_TYPE {
         VS_Normal,
         VS_Particle,
+        //GPU Particle
+        VS_Particle_GPU,
+
         VS_Sprite,
         //VS_Skinning,
         VS_SkyBox,
@@ -46,6 +49,7 @@ public:
 
     enum CS_TYPE {
         CS_Skinning,
+        CS_Particle_GPU,
         CS_Shaders,
     };
 

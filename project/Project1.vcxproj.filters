@@ -175,6 +175,7 @@
     <ClCompile Include="Source\Application\GameObject\Bastet\Bastet.cpp" />
     <ClCompile Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Model\Model.cpp" />
+    <ClCompile Include="Source\Engine\Particle\GPUParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -378,6 +379,7 @@
     <ClInclude Include="Source\Application\Stage\BastetStage\BastetStage.h" />
     <ClInclude Include="Source\Application\GameObject\Bastet\Bastet.h" />
     <ClInclude Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.h" />
+    <ClInclude Include="Source\Engine\Particle\GPUParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />
@@ -395,5 +397,8 @@
     <None Include="Resource\JsonFiles\notes.json" />
     <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resource\shader\VertexShader\GPUParticle.VS.hlsl" />
   </ItemGroup>
 </Project>

@@ -121,7 +121,7 @@ public:
     static Microsoft::WRL::ComPtr <ID3D12PipelineState>& GetGraphicsPipelineStateRandom(uint32_t blendMode) {
         return graphicsPipelineStateRandom_[blendMode];
     }
-
+    static Microsoft::WRL::ComPtr<ID3D12PipelineState>& graphicsPipelineStatesGPUParticle() { return graphicsPipelineStatesGPUParticle_; };
     void CreateALLPSO();
 
     static RootSignature* GetRootSignature() { return rootSignature.get(); }
@@ -151,6 +151,10 @@ public:
 private: 
     static std::array<std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfCullMode>, kCountOfBlendMode> graphicsPipelineStates_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState> ,kCountOfBlendMode> graphicsPipelineStatesParticle_;
+    static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStatesGPUParticle_;
+
+
+
     static Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStatesLine_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateSprite_;
     static std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> graphicsPipelineStateFont_;

@@ -16,8 +16,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStateSkyBox_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSO::kCountOfEffect> PSO::graphicsPipelineStateOffScreen_;
 std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kCountOfBlendMode> PSO::graphicsPipelineStateRandom_;
 
-
-
+ Microsoft::WRL::ComPtr<ID3D12PipelineState> PSO::graphicsPipelineStatesGPUParticle_= nullptr;
 
 std::unordered_map<PSO::PSOKey, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSO::PSOKeyHasher> PSO::psoCache_;
 
@@ -204,6 +203,20 @@ void PSO::CreateALLPSO()
             rtvFormatsForTermo
         );
     }
+
+    //GPUパーティクル
+    graphicsPipelineStatesGPUParticle_ = Create(
+        kBlendModeAdd,
+        kCullModeNone,
+        kZero,
+        true,
+        RootSignature::PARTICLE_GPU,
+        DxcCompiler::VS_Particle_GPU,
+        DxcCompiler::PS_Particle,
+        kTriangle,
+        InputLayout::kInputLayoutTypeNormal,
+        rtvFormatsForTermo
+    );
 
     //SkyBoxはサーモアリ
     graphicsPipelineStateSkyBox_ =
@@ -422,6 +435,8 @@ void PSO::CreateALLPSO()
 void PSO::Finalize()
 {
 
+
+
     for (auto& [key, pso] : psoCache_) {
         if (pso) {
             pso.Reset();
@@ -467,6 +482,11 @@ void PSO::Finalize()
         graphicsPipelineStatesLine_.Reset();
     }
 
+    //GPUパーティクル用
+    if (graphicsPipelineStatesGPUParticle_) {
+        graphicsPipelineStatesGPUParticle_.Reset();
+
+    }
 
     //パーティクル
     for (auto& pso : graphicsPipelineStatesParticle_) {

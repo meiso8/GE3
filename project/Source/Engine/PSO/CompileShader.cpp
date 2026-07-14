@@ -32,14 +32,18 @@ void DxcCompiler::ShaderSetting() {
     //NormalShader
     vertexShaderBlobs_[VS_Normal] = CompileShader(L"Resource/shader/VertexShader/Object3d.VS.hlsl", L"vs_6_0");
     pixelShaderBlobs_[PS_Normal] = CompileShader(L"Resource/shader/PixelShader/Object3d.PS.hlsl", L"ps_6_0");
+
     //ParticleShader
     vertexShaderBlobs_[VS_Particle] = CompileShader(L"Resource/shader/VertexShader/Particle.VS.hlsl", L"vs_6_0");
     pixelShaderBlobs_[PS_Particle] = CompileShader(L"Resource/shader/PixelShader/Particle.PS.hlsl", L"ps_6_0");
+
+    //GPUParticle
+    vertexShaderBlobs_[VS_Particle_GPU] = CompileShader(L"Resource/shader/VertexShader/GPUParticle.VS.hlsl", L"vs_6_0");
+
     //Sprite
     vertexShaderBlobs_[VS_Sprite] = CompileShader(L"Resource/shader/VertexShader/Sprite.VS.hlsl", L"vs_6_0");
     pixelShaderBlobs_[PS_Sprite] = CompileShader(L"Resource/shader/PixelShader/Sprite.PS.hlsl", L"ps_6_0");
-    //SkinninigはVSのみ　PixelShaderはNormalと同じにする
-    //vertexShaderBlobs_[VS_Skinning] = CompileShader(L"Resource/shader/VertexShader/SkinningObject3d.VS.hlsl", L"vs_6_0");
+
     //FontのVSはSpriteと同じにする
     pixelShaderBlobs_[PS_Font] = CompileShader(L"Resource/shader/PixelShader/Font.PS.hlsl", L"ps_6_0");
     //skybox
@@ -83,7 +87,7 @@ void DxcCompiler::ShaderSetting() {
     
     //ComputeShader
     computeShaderBlobs_[CS_Skinning] = CompileShader(L"Resource/shader/ComputeShader/Skinning.CS.hlsl", L"cs_6_0");
-
+    computeShaderBlobs_[CS_Particle_GPU] = CompileShader(L"Resource/shader/ComputeShader/InitializeParticle.CS.hlsl", L"cs_6_0");
 }
 
 //CompileShader関数

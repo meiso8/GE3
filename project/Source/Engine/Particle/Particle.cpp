@@ -491,8 +491,7 @@ void ParticleManager::Draw()
             //rootSignatureの設定
             commandList_->SetGraphicsRootSignature(rootSignature_->GetRootSignature(RootSignature::PARTICLE));
             commandList_->SetPipelineState(PSO::GetGraphicsPipelineStateParticle(group->blendMode).Get());
-            //形状を設定。
-
+   
             //マテリアルの設定
             commandList_->SetGraphicsRootConstantBufferView(0, group->materialResource.GetGPUVirtualAddress());
             //粒ごとのトランスフォーム
@@ -570,7 +569,7 @@ void ParticleManager::UpdateInstancingData(ParticleGroup& group, Particle& parti
 void ParticleManager::CreateMaterial(ParticleGroup& group,const float temperature)
 {
     //マテリアル用のリソースを作る。
-    group.materialResource.CreateBufferResource(L"ParticleGroup_MaterialResource");
+    group.materialResource.CreateBufferResource(L"ParticleGroup_MaterialResource\n");
 
     //書き込むためのアドレスを取得
     HRESULT result = group.materialResource.Map();
