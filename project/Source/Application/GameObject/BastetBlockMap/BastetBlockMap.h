@@ -36,6 +36,8 @@ public:
 private:
     std::array<bool, kMaxHz>isPushs_;
     std::map<BlockHz, Vector4>colorMap_;
+    std::array< Block*,8>whiteMap_;
+    std::array<Block*,5>blackMap_;
     std::array< std::unique_ptr<Block>, kMaxHz>blocks_;
     std::vector<int> correctOrder_ = { kC, kD, kD_S, kF_S,kG,kG_S,kB,kC_H };
     std::vector<int> steppedOrder_;

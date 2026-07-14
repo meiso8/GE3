@@ -32,6 +32,7 @@ ButtonSprite::ButtonSprite()
 
     sprites_[kButton_UI_RB]->SetAnchorPoint({ 0.5f,0.5f });
 
+
     for (auto& sprite : sprites_) {
         sprite->AdjustTextureSize();
     }
@@ -57,14 +58,13 @@ void ButtonSprite::Update()
 
             scaleTimerDuration_ = 0.0f;
             timer_ = 0.0f;
-
-            sprites_[kButton_UI_RB]->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
+        
+            sprites_[kButton_UI_RB]->SetColor({ 1.0f,1.0f,1.0f,1.0f });
             size_ = Lerp(size_, { 1.0f,1.0f }, kScaleSpeed_);
             sprites_[kButton_UI_RB]->SetScale(size_);
         } else {
-            sprites_[kButton_UI_RB]->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-
+     
+            sprites_[kButton_UI_RB]->SetColor({ 0.0f,1.0f,1.0f,1.0f });
             scaleTimerDuration_ += TimeManager::DeltaTime();
             scaleTimerDuration_ = std::fmod(scaleTimerDuration_, kTimer_);
 
@@ -91,11 +91,17 @@ void ButtonSprite::Draw()
 {
     for (int i = 0; i < kButtonMaxCount; ++i) {
 
-        if (i == kButton_UI_RB && !isGetThermography_) {
+        if (i == kButton_UI_RB) {
             continue;
         }
 
         sprites_[i]->Draw();
+    }
+
+    if (isGetThermography_) {
+        Sprite::PreDraw(kBlendModeScreen);
+        sprites_[kButton_UI_RB]->Draw();
+  
     }
 
 }

@@ -6,11 +6,15 @@
 BastetBlockMap::BastetBlockMap()
 {
     AABB aabb = { .min = {-0.5f, -0.5f, -1.5f}, .max = {0.5f, 0.5f, 1.5f} };
-    AABB collisionAABB = { .min = {-0.25f,-0.25f,-0.75f},.max = {0.25f,0.25f,0.75f} };
+
+    AABB blackAABB = aabb;
+    blackAABB.min.x *= 0.5f;
+    blackAABB.max.x *= 0.5f;
+    AABB collisionAABB = { aabb.min * 0.5f,aabb.max * 0.5f };
+    AABB collisionBlackAABB = { blackAABB.min * 0.5f,blackAABB.max * 0.5f };
+
     for (auto& block : blocks_) {
         block = std::make_unique<Block>();
-        block->SetCubeSize(aabb);
-        block->SetAABB(collisionAABB);
         block->SetTextureHandle(TextureFactory::NONE);
     }
 
@@ -18,14 +22,50 @@ BastetBlockMap::BastetBlockMap()
 
         if (i <= 4 && i % 2 == 1 || i <= 10 && i >= 6 && i % 2 == 0) {
             colorMap_[static_cast<BlockHz>(i)] = COLOR::BLACK;
+            blocks_[i]->SetCubeSize(blackAABB);
+            blocks_[i]->SetAABB(collisionBlackAABB);
         } else {
             colorMap_[static_cast<BlockHz>(i)] = COLOR::WHITE;
+            blocks_[i]->SetCubeSize(aabb);
+            blocks_[i]->SetAABB(collisionAABB);
         }
     }
 
     for (int i = 0; i < kMaxHz; ++i) {
         blocks_[i]->SetColor(colorMap_[static_cast<BlockHz>(i)]);
     }
+
+    enum BlockHz {
+        kC,
+        kC_S,
+        kD,
+        kD_S,
+        kE,
+        kF,
+        kF_S,
+        kG,
+        kG_S,
+        kA,
+        kA_S,
+        kB,
+        kC_H,
+        kMaxHz,
+    };
+
+    whiteMap_[0] = blocks_[kC].get();
+    whiteMap_[1] = blocks_[kD].get();
+    whiteMap_[2] = blocks_[kE].get();
+    whiteMap_[3] = blocks_[kF].get();
+    whiteMap_[4] = blocks_[kG].get();
+    whiteMap_[5] = blocks_[kA].get();
+    whiteMap_[6] = blocks_[kB].get();
+    whiteMap_[7] = blocks_[kC_H].get();
+
+    blackMap_[0] = blocks_[kC_S].get();
+    blackMap_[1] = blocks_[kD_S].get();
+    blackMap_[2] = blocks_[kF_S].get();
+    blackMap_[3] = blocks_[kG_S].get();
+    blackMap_[4] = blocks_[kA_S].get();
 }
 
 void BastetBlockMap::Initialize()
@@ -38,29 +78,56 @@ void BastetBlockMap::Initialize()
     }
 
 
-    AABB collisionAABB = blocks_[0]->GetAABB();
+
+    bool isPreBlack = false;
+    bool isBlack = false;
+
+
+    for (auto& block : blocks_) {
+        block->Initialize();
+    }
+
+    AABB collisionAABB = whiteMap_[0]->GetAABB();
     float blockSize = collisionAABB.max.x - collisionAABB.min.x;
-    float offsetX = -kMaxHz * blockSize + blockSize;
 
-    for (int i = 0; i < kMaxHz; ++i) {
+    float offset = -blockSize * 2.0f * 4.0f + blockSize;
 
-        blocks_[i]->Initialize();
-
-        float posY = -0.25f;
-        float posZ = 6.0f;
-        if (colorMap_[static_cast<BlockHz>(i)] == COLOR::BLACK) {
-            posY = 0.0f;
-            posZ = 7.0f;
-        }
-
+    for (int i = 0; i < whiteMap_.size(); ++i) {
         Vector3 pos = {
-            static_cast<float>(i) * blockSize * 2.0f + offsetX,
-            posY,
-            posZ
+            static_cast<float>(i) * blockSize * 2.0f+ offset,
+            0.0f,
+            6.0f
         };
 
-        blocks_[i]->SetPos(pos);
+        isPreBlack = isBlack;
+        whiteMap_[i]->SetPos(pos);
     }
+
+    AABB collisionBlackAABB = blackMap_[0]->GetAABB();
+
+    float blockSizeBlack = collisionBlackAABB.max.x - collisionBlackAABB.min.x;
+
+    for (int i = 0; i < blackMap_.size(); ++i) {
+
+        float posX = 0.0f;
+        if (i >= 3) {
+            posX = whiteMap_[i + 1]->GetPos().x;
+
+        } else {
+            posX = whiteMap_[i]->GetPos().x;
+        }
+
+        posX += blockSizeBlack * 2.0f;
+
+        Vector3 pos = {
+          posX,
+           0.75f,
+           7.0f
+        };
+
+        blackMap_[i]->SetPos(pos);
+    }
+
 }
 
 void BastetBlockMap::Update()
@@ -93,7 +160,7 @@ void BastetBlockMap::Update()
                 //どの音からピッチを変化させてみる
                 Sound::PlaySE(SoundFactory::Sound_C, 1.0f);
                 Sound::SetFrequencyRatio(SoundFactory::Sound_C, i);
-         
+
             }
 
             // すでに踏んだ順番に追加（重複防止）
@@ -158,7 +225,7 @@ void BastetBlockMap::RayCastHit(RaySprite& raySprite)
                 //ブロックテクスチャによって判定しない
                 blocks_[i]->RayCastHit(false);
 
-      
+
             }
         }
     }
