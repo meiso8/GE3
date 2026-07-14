@@ -11,7 +11,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
-            "name": "Object52211111",
+            "name": "Object5221111111",
             "nextStageName": "",
             "shininess": 0.0,
             "temperature": 0.0,
@@ -45,7 +45,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object62222",
+            "name": "Object6222222",
             "nextStageName": "",
             "shininess": 0.0,
             "temperature": 0.5,
@@ -80,7 +80,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "nbt_smt_ht.obj",
-            "name": "Object3333",
+            "name": "Object333333",
             "nextStageName": "",
             "shininess": 0.0,
             "temperature": 0.5,
@@ -113,7 +113,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object7444",
+            "name": "Object744444",
             "nextStageName": "",
             "shininess": 0.0,
             "temperature": 0.0,
@@ -147,7 +147,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object8555",
+            "name": "Object855555",
             "nextStageName": "",
             "shininess": 0.0,
             "temperature": 0.5,
@@ -182,7 +182,7 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object86",
+            "name": "Object8666",
             "nextStageName": "",
             "shininess": 100.0,
             "temperature": 0.0,
@@ -216,7 +216,7 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object97",
+            "name": "Object9777",
             "nextStageName": "",
             "shininess": 100.0,
             "temperature": 0.0,
@@ -250,7 +250,7 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object108",
+            "name": "Object10888",
             "nextStageName": "",
             "shininess": 100.0,
             "temperature": 0.0,
@@ -284,7 +284,7 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object119",
+            "name": "Object11999",
             "nextStageName": "",
             "shininess": 100.0,
             "temperature": 0.0,
@@ -318,7 +318,7 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object1210",
+            "name": "Object12101010",
             "nextStageName": "",
             "shininess": 100.0,
             "temperature": 0.0,
@@ -352,7 +352,7 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object1311",
+            "name": "Object13111111",
             "nextStageName": "",
             "shininess": 100.0,
             "temperature": 0.0,
@@ -386,7 +386,7 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object1412",
+            "name": "Object14121212",
             "nextStageName": "",
             "shininess": 100.0,
             "temperature": 0.0,
@@ -420,7 +420,7 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object1513",
+            "name": "Object15131313",
             "nextStageName": "",
             "shininess": 100.0,
             "temperature": 0.0,
@@ -454,7 +454,7 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object1614",
+            "name": "Object16141414",
             "nextStageName": "",
             "shininess": 100.0,
             "temperature": 0.0,
@@ -488,7 +488,7 @@
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
-            "name": "Object1715",
+            "name": "Object17151515",
             "nextStageName": "",
             "shininess": 100.0,
             "temperature": 0.0,
@@ -513,6 +513,40 @@
         },
         {
             "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "name": "Object1816",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.5,
+            "textureHandle": 54,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 3.140000104904175
+                },
+                "scale": {
+                    "x": 2.200000047683716,
+                    "y": 0.20000000298023224,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.07476806640625,
+                    "y": 1.183916449546814,
+                    "z": 14.255821228027344
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
                 "w": 1.0,
                 "x": 1.0,
                 "y": 1.0,
@@ -522,7 +556,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
-            "name": "Object16",
+            "name": "Object17",
             "nextStageName": "AmenStage",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -556,7 +590,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
-            "name": "Object17",
+            "name": "Object18",
             "nextStageName": "AmenStage",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -590,14 +624,14 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "player.obj",
-            "name": "Player4",
+            "name": "Player5",
             "nextStageName": "",
             "shininess": 491.148193359375,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 6.652068138122559,
+                    "y": 2.462508201599121,
                     "z": 0.0
                 },
                 "scale": {
@@ -606,9 +640,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -4.910693168640137,
+                    "x": -1.1580764055252075,
                     "y": -0.5,
-                    "z": -7.9842305183410645
+                    "z": 6.242253303527832
                 }
             },
             "type": "EMPTY"
@@ -643,6 +677,40 @@
                     "x": 0.0,
                     "y": 0.25,
                     "z": 0.0
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Thoth",
+            "disabled": false,
+            "environmentCoefficient": 1.0,
+            "file_name": "thoth.obj",
+            "name": "thoth19",
+            "nextStageName": "",
+            "shininess": 50.0,
+            "temperature": 0.10000000149011612,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 3.1415927410125732,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": -3.0999999046325684,
+                    "z": 11.0
                 }
             },
             "type": "EMPTY"
