@@ -19,8 +19,8 @@ MeltBlockMap::MeltBlockMap()
 
     temparetureMap_[kHigh] = 1.0f;
     temparetureMap_[kMiddle_High] = 0.75f;
-    temparetureMap_[kMiddle_Low] = 0.25f;
-    temparetureMap_[kLow] = 0.0f;
+    temparetureMap_[kMiddle_Low] = 0.5f;
+    temparetureMap_[kLow] = 0.25f;
 
     for (int i = 0; i < kMaxBolckTempareture; ++i)
     {

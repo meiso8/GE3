@@ -168,9 +168,4 @@ void MeltStage::CreateParticle()
     emitter2.isLoop_ = true;
     emitter2.accelerationField_.acceleration.y = 5.0f;
     emitter2.accelerationField_.area = { .min = {-25.0f,0.0f,-25.0f},.max = {25.0f,40.0f,25.0f} };
-
-    /*  for (int i = 2; i < particleEmitters_.size(); ++i) {
-          auto& emitter = particleEmitters_[i]->GetEmitter();
-          emitter = particleEmitters_[i % 2 == 0]->GetEmitter();
-      }*/
 }

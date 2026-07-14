@@ -6,11 +6,11 @@
 BastetBlockMap::BastetBlockMap()
 {
     AABB aabb = { .min = {-0.5f, -0.5f, -1.5f}, .max = {0.5f, 0.5f, 1.5f} };
-    AABB collisionAABB = { .min = {-0.25f,-0.25f,-0.75f},.max = {0.25f,0.25f,0.75f} };
+    //AABB collisionAABB = { .min = {-0.25f,-0.25f,-0.75f},.max = {0.25f,0.25f,0.75f} };
     for (auto& block : blocks_) {
         block = std::make_unique<Block>();
         block->SetCubeSize(aabb);
-        block->SetAABB(collisionAABB);
+        block->SetAABB(aabb);
         block->SetTextureHandle(TextureFactory::NONE);
     }
 
