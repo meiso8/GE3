@@ -110,7 +110,7 @@ void BastetBlockMap::Initialize()
     for (int i = 0; i < blackMap_.size(); ++i) {
 
         float posX = 0.0f;
-        if (i >= 3) {
+        if (i >= 2) {
             posX = whiteMap_[i + 1]->GetPos().x;
 
         } else {
@@ -171,7 +171,8 @@ void BastetBlockMap::Update()
             // 正しい順番と一致したらクリア
             if (steppedOrder_ == correctOrder_) {
                 if (!isClear_) {
-                    ClearSet();
+                    ClearSet(); 
+                    ResetPushMap();
                     return;
                 }
             }

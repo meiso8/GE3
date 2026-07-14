@@ -116,7 +116,7 @@ void Bastet::Update() {
         }
 
 
-        obj_->SetTranslate(footSteps_[footSteps_.size() - 1].translate);
+        //obj_->SetTranslate(footSteps_[footSteps_.size() - 1].translate);
 
         obj_->Update();
 
