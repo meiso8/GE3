@@ -87,7 +87,8 @@ void DxcCompiler::ShaderSetting() {
     
     //ComputeShader
     computeShaderBlobs_[CS_Skinning] = CompileShader(L"Resource/shader/ComputeShader/Skinning.CS.hlsl", L"cs_6_0");
-    computeShaderBlobs_[CS_Particle_GPU] = CompileShader(L"Resource/shader/ComputeShader/InitializeParticle.CS.hlsl", L"cs_6_0");
+    computeShaderBlobs_[CS_Initialize_Particle] = CompileShader(L"Resource/shader/ComputeShader/InitializeParticle.CS.hlsl", L"cs_6_0");
+    computeShaderBlobs_[CS_Emit_Particle] = CompileShader(L"Resource/shader/ComputeShader/EmitParticle.CS.hlsl", L"cs_6_0");
 }
 
 //CompileShader関数

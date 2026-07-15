@@ -9,7 +9,7 @@
 #include"SkinningModel.h"
 #include"Bone.h"
 #include<algorithm>
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"DirectXCommon.h"
 #include"Log.h"
 #include "ComputeShaderPSO/ComputeShaderPSO.h"

@@ -49,7 +49,8 @@ public:
 
     enum CS_TYPE {
         CS_Skinning,
-        CS_Particle_GPU,
+        CS_Initialize_Particle,
+        CS_Emit_Particle,
         CS_Shaders,
     };
 

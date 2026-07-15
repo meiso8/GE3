@@ -36,3 +36,23 @@ struct Particle
     float32_t padding;
     float32_t4 color;
 };
+
+
+struct EmitterSphere
+{
+    float3 translate; 
+    float radius;
+    uint32_t count;
+    float frequency; 
+    float frequencyTime;
+    uint32_t emit;
+};
+
+struct PerFrame
+{
+    float time;
+    float deltaTime;
+    float2 padding;
+};
+
+static const uint kMaxParticles = 1024;

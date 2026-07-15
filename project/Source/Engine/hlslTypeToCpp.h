@@ -4,7 +4,7 @@
 #include"Vector3.h"
 #include"Vector2.h"
 #include"Matrix4x4.h"
-
+#include<cstdint>
 #ifdef __cplusplus
 using float4 = Vector4;
 using float3 = Vector3;

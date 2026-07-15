@@ -2,7 +2,7 @@
 #include"ModelData.h"
 #include"Bone.h"
 #include"DirectXCommon.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include<dxgi1_6.h>
 #include <algorithm>
 #include"MakeMatrix.h"

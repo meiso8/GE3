@@ -4,7 +4,7 @@
 #include"PostEffectMaterial/PostEffectMaterial.h"
 #include"Texture.h"
 #include"TransitionBarrier.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"Camera.h"
 #include"DepthTexture/DepthTexture.h"
 

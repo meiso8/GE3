@@ -3,7 +3,7 @@
 #include"TransformationMatrix.h"
 #include"MakeMatrix.h"
 #include"PSO.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"SpriteCamera.h"  
 #include"Log.h"
 

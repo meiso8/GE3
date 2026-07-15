@@ -7,7 +7,7 @@
 
 #include"TimeManager.h"
 
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"RtvDescriptorHeap.h"
 #include"DsvDescriptorHeap.h"
 
@@ -24,6 +24,8 @@
 #include"CollisionConfig.h"
 #include"DepthTexture/DepthTexture.h"
 #include"Particle/GPUParticle.h"
+#include"Particle/GPUParticleEmitter/GPUParticleEmitter.h"
+
 
 class DirectXCommon;
 
@@ -80,7 +82,9 @@ private:
     std::unique_ptr<ParticleManager> particleManager_ = nullptr;
     /// @brief GPUパーティクル管理
     std::unique_ptr<GPUParticleManager>gpuParticleManager_ = nullptr;
-  
+    /// @brief GPUパーティクルエミッター
+    std::unique_ptr<GPUParticleEmitter>gpuParticleEmitter_ = nullptr;
+
 protected:
     
     //継承するもの

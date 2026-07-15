@@ -3,9 +3,7 @@
 #include"Log.h"
 #include"DebugUI.h"
 #include"DsvDescriptorHeap.h"
-#include"SrvDescriptorHeap.h"
-
-
+#include"CbvSrvUavDescriptorHeap.h"
 
 void DepthTexture::CreateResource(CbvSrvUavDescriptorHeap* srvDescriptorHeap,int32_t width,int32_t height)
 {

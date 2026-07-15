@@ -1,6 +1,6 @@
 #include "BeamObject3d.h"
 #include"MakeMatrix.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"Log.h"
 
 BeamObject3d::~BeamObject3d()

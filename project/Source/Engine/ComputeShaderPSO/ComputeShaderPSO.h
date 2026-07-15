@@ -13,6 +13,7 @@ private:
     RootSignature* rootSignature_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineStatesForSkinning_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineStatesForInitializeParticle_ = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineStatesForEmitParticle_ = nullptr;
 private:
     ComputeShaderPSO() = default;
     ~ComputeShaderPSO() = default;
@@ -28,8 +29,11 @@ public:
     ComputeShaderPSO& operator=(const ComputeShaderPSO&) = delete;
 
     Microsoft::WRL::ComPtr<ID3D12PipelineState>& GetSkinningPSO() {
-        return computePipelineStatesForSkinning_
-            ;
+        return computePipelineStatesForSkinning_ ;
+    };
+
+    Microsoft::WRL::ComPtr<ID3D12PipelineState>& GetComputePipelineStatesForEmitParticle() {
+        return computePipelineStatesForEmitParticle_;
     };
 
     Microsoft::WRL::ComPtr<ID3D12PipelineState>& GetInitializeParticlePSO() {

@@ -1,6 +1,6 @@
 #include "PointLightManager.h"
 #include"DirectXCommon.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"CommandList.h"
 #include"Log.h"
 

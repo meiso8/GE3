@@ -100,6 +100,13 @@ void RootSignature::Create() {
     descriptorRangeForGPUParticleUAV[0].NumDescriptors = 1;
     descriptorRangeForGPUParticleUAV[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
     descriptorRangeForGPUParticleUAV[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+    D3D12_DESCRIPTOR_RANGE descriptorRangeForGPUParticleGFreeCounterUAV[1] = {};
+    descriptorRangeForGPUParticleGFreeCounterUAV[0].BaseShaderRegister = 1; //RWStructuredBuffer<int> gFreeCounter : register(u1);
+    descriptorRangeForGPUParticleGFreeCounterUAV[0].NumDescriptors = 1;
+    descriptorRangeForGPUParticleGFreeCounterUAV[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+    descriptorRangeForGPUParticleGFreeCounterUAV[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
     //SRV
     D3D12_DESCRIPTOR_RANGE descriptorRangeForGPUParticleSRV[1] = {};
     descriptorRangeForGPUParticleSRV[0].BaseShaderRegister = 11;
@@ -253,12 +260,17 @@ void RootSignature::Create() {
 #pragma region//ParticleForGPURootParameters
 
     // ===============================ComputeShader========================
-    D3D12_ROOT_PARAMETER rootParametersCSForParticleForGPU[1] = {};
+    D3D12_ROOT_PARAMETER rootParametersCSForParticleForGPU[2] = {};
     //UAV
     rootParametersCSForParticleForGPU[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
     rootParametersCSForParticleForGPU[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
     rootParametersCSForParticleForGPU[0].DescriptorTable.pDescriptorRanges = descriptorRangeForGPUParticleUAV;//Tableの中身の配列を指定
     rootParametersCSForParticleForGPU[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForGPUParticleUAV);//Tableで利用する数
+
+    rootParametersCSForParticleForGPU[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersCSForParticleForGPU[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersCSForParticleForGPU[1].DescriptorTable.pDescriptorRanges = descriptorRangeForGPUParticleGFreeCounterUAV;//Tableの中身の配列を指定
+    rootParametersCSForParticleForGPU[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForGPUParticleGFreeCounterUAV);//Tableで利用する数
 
     // ===============================VS PS Shader =======================================
     D3D12_ROOT_PARAMETER rootParametersForParticleForGPU[4] = {};
@@ -283,6 +295,29 @@ void RootSignature::Create() {
     rootParametersForParticleForGPU[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParametersForParticleForGPU[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
     rootParametersForParticleForGPU[3].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+    
+    //===============================//EmitParticle=================================================
+
+    D3D12_ROOT_PARAMETER rootParametersForEmitParticleCS[4] = {};
+
+    rootParametersForEmitParticleCS[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForEmitParticleCS[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForEmitParticleCS[0].DescriptorTable.pDescriptorRanges = descriptorRangeForGPUParticleUAV;//Tableの中身の配列を指定
+    rootParametersForEmitParticleCS[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForGPUParticleUAV);//Tableで利用する数
+
+    rootParametersForEmitParticleCS[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForEmitParticleCS[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForEmitParticleCS[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+
+    rootParametersForEmitParticleCS[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForEmitParticleCS[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForEmitParticleCS[2].Descriptor.ShaderRegister = 1;//レジスタ番号0を使う
+
+    rootParametersForEmitParticleCS[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForEmitParticleCS[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForEmitParticleCS[3].DescriptorTable.pDescriptorRanges = descriptorRangeForGPUParticleGFreeCounterUAV;//Tableの中身の配列を指定
+    rootParametersForEmitParticleCS[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForGPUParticleGFreeCounterUAV);//Tableで利用する数
+    
 
 #pragma endregion
 
@@ -487,10 +522,12 @@ void RootSignature::Create() {
     //ComputeShader用Skinning
     descriptionRootSignature[CS_SKINNING].pParameters = rootParametersForCsSkinning;
     descriptionRootSignature[CS_SKINNING].NumParameters = _countof(rootParametersForCsSkinning);//配列の長さ
-
-    descriptionRootSignature[CS_PARTICLE_GPU].pParameters = rootParametersCSForParticleForGPU;
-    descriptionRootSignature[CS_PARTICLE_GPU].NumParameters = _countof(rootParametersCSForParticleForGPU);//配列の長さ
-
+    //CS　initializeParticle
+    descriptionRootSignature[CS_INITIALIZE_PARTICLE].pParameters = rootParametersCSForParticleForGPU;
+    descriptionRootSignature[CS_INITIALIZE_PARTICLE].NumParameters = _countof(rootParametersCSForParticleForGPU);//配列の長さ
+    //CS　EmitParticle
+    descriptionRootSignature[CS_EMIT_PARTICLE].pParameters = rootParametersForEmitParticleCS;
+    descriptionRootSignature[CS_EMIT_PARTICLE].NumParameters = _countof(rootParametersForEmitParticleCS);//配列の長さ
 
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;

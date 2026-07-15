@@ -1,7 +1,7 @@
 #define NOMINMAX
 #include "DebugUI.h"
 #include"CharacterState.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"PrimitiveFactory/PrimitiveFactory.h"
 
 #include"Input.h"

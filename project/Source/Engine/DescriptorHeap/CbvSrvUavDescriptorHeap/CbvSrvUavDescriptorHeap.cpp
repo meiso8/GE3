@@ -1,4 +1,4 @@
-#include "SrvDescriptorHeap.h"
+#include "CbvSrvUavDescriptorHeap.h"
 #include"DirectXCommon.h"
 #include"Log.h"
 

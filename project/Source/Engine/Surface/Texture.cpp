@@ -1,7 +1,7 @@
 #include "Texture.h"
 #include"DirectXCommon.h"
 #include<cassert>
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"Log.h"
 
 std::vector<uint32_t> Texture::srvIndexes_;

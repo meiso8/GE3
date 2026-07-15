@@ -1,7 +1,7 @@
 #include "SkyboxObject3d.h"
 #include"DirectXCommon.h"
 #include"AABB.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 
 void SkyboxObject3d::Create()
 {

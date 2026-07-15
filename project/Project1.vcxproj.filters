@@ -165,7 +165,7 @@
     <ClCompile Include="Source\Application\Factory\TextureFactory\TextureFactory.cpp" />
     <ClCompile Include="Source\Engine\FreeTypeManager\Text.cpp" />
     <ClCompile Include="Source\Application\StageManager\StageManager.cpp" />
-    <ClCompile Include="Source\Engine\DescriptorHeap\SrvDescriptorHeap\SrvDescriptorHeap.cpp" />
+    <ClCompile Include="Source\Engine\DescriptorHeap\CbvSrvUavDescriptorHeap\CbvSrvUavDescriptorHeap.cpp" />
     <ClCompile Include="Source\Application\GameObject\Thoth\Thoth.cpp" />
     <ClCompile Include="Source\Engine\RenderTexture\RenderTexture.cpp" />
     <ClCompile Include="Source\Engine\ResourceManager\ResourceManager.cpp" />
@@ -176,6 +176,7 @@
     <ClCompile Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.cpp" />
     <ClCompile Include="Source\Engine\Mesh\Model\Model.cpp" />
     <ClCompile Include="Source\Engine\Particle\GPUParticle.cpp" />
+    <ClCompile Include="Source\Engine\Particle\GPUParticleEmitter\GPUParticleEmitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -371,7 +372,7 @@
     <ClInclude Include="Source\Application\Factory\TextureFactory\TextureFactory.h" />
     <ClInclude Include="Source\Engine\FreeTypeManager\Text.h" />
     <ClInclude Include="Source\Application\StageManager\StageManager.h" />
-    <ClInclude Include="Source\Engine\DescriptorHeap\SrvDescriptorHeap\SrvDescriptorHeap.h" />
+    <ClInclude Include="Source\Engine\DescriptorHeap\CbvSrvUavDescriptorHeap\CbvSrvUavDescriptorHeap.h" />
     <ClInclude Include="Source\Application\GameObject\Thoth\Thoth.h" />
     <ClInclude Include="Source\Engine\ResourceManager\ResourceManager.h" />
     <ClInclude Include="Source\Engine\DepthTexture\DepthTexture.h" />
@@ -380,6 +381,8 @@
     <ClInclude Include="Source\Application\GameObject\Bastet\Bastet.h" />
     <ClInclude Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.h" />
     <ClInclude Include="Source\Engine\Particle\GPUParticle.h" />
+    <ClInclude Include="Source\Engine\Particle\GPUParticleEmitter\GPUParticleEmitter.h" />
+    <ClInclude Include="Source\Engine\Particle\ParticleStruct.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />
@@ -397,5 +400,6 @@
     <None Include="Resource\JsonFiles\notes.json" />
     <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
+    <None Include="Resource\shader\Hlsli\Random.hlsli" />
   </ItemGroup>
 </Project>
