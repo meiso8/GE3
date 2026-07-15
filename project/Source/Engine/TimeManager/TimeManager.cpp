@@ -3,7 +3,7 @@
 #include <thread>
 
 float TimeManager::deltaTime_ = 1.0f / 60.0f;
-
+float TimeManager::gameTime_ = 0.0f;
 TimeManager::TimeManager()
 {
     reference_ = std::chrono::steady_clock::now();
@@ -39,10 +39,18 @@ void TimeManager::Update()
 
     //現在の時間を記録する
     reference_ = frame_end;
+
+    gameTime_ += deltaTime_;
 }
 
 float TimeManager::DeltaTime()
 {
     return deltaTime_;
 }
+
+float TimeManager::GameTime()
+{
+    return gameTime_;
+}
+
 

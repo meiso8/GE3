@@ -12,6 +12,13 @@ struct EmitterSphere {
     uint32_t emit;//射出許可
 };
 
+struct PerFrame
+{
+    float time;
+    float deltaTime;
+    float2 padding;
+};
+
 class CbvSrvUavDescriptorHeap;
 
 class GPUParticleEmitter {
@@ -31,4 +38,5 @@ private:
 
     //エミッターリソース
     CResource<EmitterSphere>emitterResource_;
+    CResource<PerFrame>perFrameResource_;
 };

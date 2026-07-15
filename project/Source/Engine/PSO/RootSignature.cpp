@@ -286,7 +286,7 @@ void RootSignature::Create() {
     
     //===============================//EmitParticle=================================================
 
-    D3D12_ROOT_PARAMETER rootParametersForEmitParticleCS[2] = {};
+    D3D12_ROOT_PARAMETER rootParametersForEmitParticleCS[3] = {};
 
     rootParametersForEmitParticleCS[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
     rootParametersForEmitParticleCS[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
@@ -296,6 +296,10 @@ void RootSignature::Create() {
     rootParametersForEmitParticleCS[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParametersForEmitParticleCS[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
     rootParametersForEmitParticleCS[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+
+    rootParametersForEmitParticleCS[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForEmitParticleCS[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForEmitParticleCS[2].Descriptor.ShaderRegister = 1;//レジスタ番号0を使う
 
 #pragma endregion
 

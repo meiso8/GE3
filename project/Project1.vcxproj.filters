@@ -400,5 +400,6 @@
     <None Include="Resource\JsonFiles\notes.json" />
     <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
+    <None Include="Resource\shader\Hlsli\Random.hlsli" />
   </ItemGroup>
 </Project>

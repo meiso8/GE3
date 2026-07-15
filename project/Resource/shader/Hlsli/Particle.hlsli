@@ -47,3 +47,10 @@ struct EmitterSphere
     float frequencyTime;
     uint32_t emit;
 };
+
+struct PerFrame
+{
+    float time;
+    float deltaTime;
+    float2 padding;
+};
