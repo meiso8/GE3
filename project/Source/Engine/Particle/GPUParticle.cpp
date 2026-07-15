@@ -26,19 +26,29 @@ void GPUParticleManager::Create(
 
 void GPUParticleManager::Initialize()
 {
-    TransitionBarrier tbarrir;
-    tbarrir.SetCommandList(commandList_);
+    // ====================================================================
+        // 1. Compute Shader実行前：UAVステートへ遷移（まとめてバリアを張る）
+        // ====================================================================
+    D3D12_RESOURCE_BARRIER barrier = {};
 
-    tbarrir.SettingBarrier(
-        particleGroup_->particleUAVResource_.Get(),
-        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
-        D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+    // 1つ目のバリア設定
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier.Transition.pResource = particleGroup_->particleUAVResource_.Get();
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+
+    // 2つのバリアを「1回のAPI呼び出し」でまとめてGPUに送る
+    commandList_->ResourceBarrier(1, &barrier);
 
     cbvSrvUavDescriptorHeap_->PreDraw(commandList_);
 
     commandList_->SetComputeRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::CS_INITIALIZE_PARTICLE));
     commandList_->SetPipelineState(ComputeShaderPSO::GetInstance()->GetInitializeParticlePSO().Get());
     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(0, particleGroup_->particleUAVResource_.uavIndex, commandList_);
+    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(1, particleGroup_->particleGFreeCounterUAVResource_.uavIndex, commandList_);
 
     //ComputeShaderの実行
     commandList_->Dispatch(1, 1, 1);
@@ -47,7 +57,10 @@ void GPUParticleManager::Initialize()
    // 2. Compute Shader実行後：UAVステート -> Vertex_ConstantBufferへ戻す
    // ====================================================================
 
-    tbarrir.SettingBarrier(D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+
+    commandList_->ResourceBarrier(1, &barrier);
 }
 
 void GPUParticleManager::CreateGroup()
@@ -68,6 +81,12 @@ void GPUParticleManager::CreateGroup()
     //SRVの作成をするよ
     particleGroup_->particleUAVResource_.AllocateSRV(cbvSrvUavDescriptorHeap_);
     particleGroup_->particleUAVResource_.CreateSRVforStructuredBuffer(cbvSrvUavDescriptorHeap_, kMaxInstance_);
+
+    // =================//FreeCounterUAVの作成================================================
+    particleGroup_->particleGFreeCounterUAVResource_.CreateBufferResourceForUAV(L"GPU_UAV_FreeCounter_ParticleResource", particleBufferSize);
+    //UAVの作成をするよ
+    particleGroup_->particleGFreeCounterUAVResource_.AllocateUAV(cbvSrvUavDescriptorHeap_);
+    particleGroup_->particleGFreeCounterUAVResource_.CreateUAV(cbvSrvUavDescriptorHeap_, kMaxInstance_);
 
     //マテリアル用のリソースを作る。
     particleGroup_->materialResource.CreateBufferResource(L"GPU ParticleGroup_MaterialResource\n");

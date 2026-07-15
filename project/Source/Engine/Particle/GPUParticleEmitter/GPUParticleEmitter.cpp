@@ -44,6 +44,7 @@ void GPUParticleEmitter::Initialize()
 void GPUParticleEmitter::Update()
 {
 
+    emitterResource_.Map();
     auto& emitterSphere = emitterResource_.data;
     emitterSphere->frequencyTime += TimeManager::DeltaTime();
 
@@ -52,7 +53,9 @@ void GPUParticleEmitter::Update()
         emitterSphere->emit = 1;
     } else {
         emitterSphere->emit = 0;
-    }
+    }    
+    
+    emitterResource_.UnMap();
 
     perFrameResource_.Map();
     perFrameResource_.data->deltaTime = TimeManager::DeltaTime();
@@ -61,6 +64,7 @@ void GPUParticleEmitter::Update()
 
     TransitionBarrier tbarrir;
     tbarrir.SetCommandList(commandList_);
+
 
     if (commandList_ == nullptr) {
         return;
@@ -71,12 +75,11 @@ void GPUParticleEmitter::Update()
         return;
     }
 
-
-
     tbarrir.SettingBarrier(
         particleGroup_->particleUAVResource_.Get(),
         D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
         D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+
 
     cbvSrvUavDescriptorHeap_->PreDraw(commandList_);
 
@@ -85,11 +88,13 @@ void GPUParticleEmitter::Update()
     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(0, particleGroup_->particleUAVResource_.uavIndex, commandList_);
     commandList_->SetComputeRootConstantBufferView(1, emitterResource_.GetGPUVirtualAddress());
     commandList_->SetComputeRootConstantBufferView(2, perFrameResource_.GetGPUVirtualAddress());
-   
+    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(3, particleGroup_->particleGFreeCounterUAVResource_.uavIndex, commandList_);
+
     //ComputeShaderの実行
     commandList_->Dispatch(1, 1, 1);
 
     tbarrir.SettingBarrier(D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
 }
 
 void GPUParticleEmitter::SetParticleGroup(ParticleGroupGPU* particleGroup)

@@ -54,3 +54,5 @@ struct PerFrame
     float deltaTime;
     float2 padding;
 };
+
+static const uint kMaxParticles = 1024;

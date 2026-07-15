@@ -26,11 +26,8 @@ struct ParticleGroupGPU {
 
     MaterialData materialData;
     std::unique_ptr<Primitive> primitive = nullptr;
-    std::list<ParticleCS>particles;
-    Vector4 startColor = { 1.0f,1.0f,1.0f,1.0f };
-    Vector4 endColor = { 1.0f,1.0f,1.0f,0.0f };
-
     CResource<Object3d::Material>materialResource;
     CResource<ParView>parViewResource;
     UAVResource<ParticleCS>particleUAVResource_;
+    UAVResource<int>particleGFreeCounterUAVResource_;
 };
