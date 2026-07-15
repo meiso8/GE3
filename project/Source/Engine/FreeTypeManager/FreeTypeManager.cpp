@@ -4,7 +4,7 @@
 #include<fstream>
 #include<cassert>
 #include"DirectXCommon.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"Mesh/Font/Font.h"
 #include"Log.h"
 

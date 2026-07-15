@@ -5,7 +5,7 @@
 #include"Lights/DirectionalLightManager.h"
 #include"Lights/SpotLightManager.h"
 #include"Model.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"ObjectManager/ObjectManager.h"
 #include"Log.h"
 

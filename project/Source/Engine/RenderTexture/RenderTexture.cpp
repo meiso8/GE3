@@ -1,7 +1,7 @@
 #include "RenderTexture.h"
 #include"DirectXCommon.h"
 
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"RtvDescriptorHeap.h"
 
 #include"PSO.h"

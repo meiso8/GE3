@@ -283,6 +283,19 @@ void RootSignature::Create() {
     rootParametersForParticleForGPU[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParametersForParticleForGPU[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
     rootParametersForParticleForGPU[3].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
+    
+    //===============================//EmitParticle=================================================
+
+    D3D12_ROOT_PARAMETER rootParametersForEmitParticleCS[2] = {};
+
+    rootParametersForEmitParticleCS[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForEmitParticleCS[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForEmitParticleCS[0].DescriptorTable.pDescriptorRanges = descriptorRangeForGPUParticleUAV;//Tableの中身の配列を指定
+    rootParametersForEmitParticleCS[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForGPUParticleUAV);//Tableで利用する数
+
+    rootParametersForEmitParticleCS[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForEmitParticleCS[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForEmitParticleCS[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
 
 #pragma endregion
 
@@ -487,10 +500,12 @@ void RootSignature::Create() {
     //ComputeShader用Skinning
     descriptionRootSignature[CS_SKINNING].pParameters = rootParametersForCsSkinning;
     descriptionRootSignature[CS_SKINNING].NumParameters = _countof(rootParametersForCsSkinning);//配列の長さ
-
-    descriptionRootSignature[CS_PARTICLE_GPU].pParameters = rootParametersCSForParticleForGPU;
-    descriptionRootSignature[CS_PARTICLE_GPU].NumParameters = _countof(rootParametersCSForParticleForGPU);//配列の長さ
-
+    //CS　initializeParticle
+    descriptionRootSignature[CS_INITIALIZE_PARTICLE].pParameters = rootParametersCSForParticleForGPU;
+    descriptionRootSignature[CS_INITIALIZE_PARTICLE].NumParameters = _countof(rootParametersCSForParticleForGPU);//配列の長さ
+    //CS　EmitParticle
+    descriptionRootSignature[CS_EMIT_PARTICLE].pParameters = rootParametersForEmitParticleCS;
+    descriptionRootSignature[CS_EMIT_PARTICLE].NumParameters = _countof(rootParametersForEmitParticleCS);//配列の長さ
 
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;

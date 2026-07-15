@@ -34,7 +34,8 @@ public:
         LINE,
         //ComputeShader用Skinning
         CS_SKINNING,
-        CS_PARTICLE_GPU,
+        CS_INITIALIZE_PARTICLE,
+        CS_EMIT_PARTICLE,
         TYPES,
     };
 

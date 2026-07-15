@@ -1,52 +1,21 @@
 
-#include"hlslTypeToCpp.h"
-#include"ResourceManager/ResourceManager.h"
-#include"MaterialData.h"
-#include"Primitive.h"
-#include"Object3d.h"
+#include"ParticleStruct.h"
 
 class CbvSrvUavDescriptorHeap;
 
 class GPUParticleManager {
-private:
-    struct ParticleCS {
-        float32_t3 translate;
-        float32_t lifeTime;
-        float32_t3 scale;
-        float32_t currentTime;
-        float32_t3 velocity;
-        float32_t padding;
-        float32_t4 color;
-    };
-
-    struct ParView
-    {
-        float32_t4x4 viewProjection;
-        float32_t4x4 billboardMatrix;
-    };
-
-    struct ParticleGroup {
- 
-        MaterialData materialData;
-        std::unique_ptr<Primitive> primitive = nullptr;
-        std::list<ParticleCS>particles;
-        Vector4 startColor = { 1.0f,1.0f,1.0f,1.0f };
-        Vector4 endColor = { 1.0f,1.0f,1.0f,0.0f };
-        
-        CResource<Object3d::Material>materialResource;
-        CResource<ParView>parViewResource;
-        UAVResource<ParticleCS>particleUAVResource_;
-    };
-
+public:
+  
+  
 private:
     RootSignature* rootSignature_ = nullptr;
     ID3D12GraphicsCommandList* commandList_ = nullptr;
     CbvSrvUavDescriptorHeap* cbvSrvUavDescriptorHeap_ = nullptr;
-    std::unique_ptr<ParticleGroup> particleGroup_ = nullptr;
+    std::unique_ptr<ParticleGroupGPU> particleGroup_ = nullptr;
 private:
     void CreateGroup();
 public:
-
+    ParticleGroupGPU* GetGroup() { return particleGroup_.get(); };
     void Create(
         RootSignature* rootSignature,
         CbvSrvUavDescriptorHeap* cbvSrvUavDescriptorHeap,

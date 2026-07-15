@@ -39,4 +39,13 @@ void TransitionBarrier::SettingBarrierSRVforRTV(const Microsoft::WRL::ComPtr<ID3
     SettingBarrier(resource, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
+void TransitionBarrier::SettingBarrier(D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter)
+{
+
+    barrier_.Transition.StateBefore = stateBefore;
+    barrier_.Transition.StateAfter = stateAfter;
+    //TransitionBarrierを張る
+    commandList_->ResourceBarrier(1, &barrier_);
+}
+
 

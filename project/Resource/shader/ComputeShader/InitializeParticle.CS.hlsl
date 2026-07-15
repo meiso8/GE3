@@ -12,15 +12,11 @@ void main(uint3 DTid : SV_DispatchThreadID)
     
     uint particleIndex = DTid.x;
     
-      //InitializeParticle
+    //InitializeParticle
     if (particleIndex < kMaxParticles)
     {
         //All 0 Clear
-        gParticles[particleIndex] = (Particle) 0;
-        
-        gParticles[particleIndex].scale = float32_t3(0.5f, 0.5f, 0.5f);
-        gParticles[particleIndex].color = float32_t4(1.0f, 1.0f, 1.0f, 1.0f);
+        gParticles[particleIndex] = (Particle) 0;      
     }
-    
-    
+   
 }

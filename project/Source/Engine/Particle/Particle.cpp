@@ -7,7 +7,7 @@
 #include"Log.h"
 
 #include"Collision.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 #include"Model.h"
 #include"SpriteCamera.h"
 #include"ParticleEmitter.h"

@@ -3,7 +3,7 @@
 #include<wrl.h>
 #include<string>
 #include"Vector4.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap/CbvSrvUavDescriptorHeap.h"
 #include<stdint.h>
 
 

@@ -3,8 +3,7 @@
 #include"ImGuizmo.h"
 #endif
 #include"CommandList.h"
-#include"SrvDescriptorHeap.h"
-
+#include"CbvSrvUavDescriptorHeap.h"
 #include"Camera.h"
 #include"Object3d.h"
 #include"MakeMatrix.h"

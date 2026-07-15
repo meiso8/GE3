@@ -9,18 +9,25 @@ void ComputeShaderPSO::CreatePSO(DxcCompiler* dxCompiler,
     rootSignature_ = rootSignature;
 
     computePipelineStatesForSkinning_ =  Create(RootSignature::TYPE::CS_SKINNING, DxcCompiler::CS_Skinning);
-    computePipelineStatesForInitializeParticle_ = Create(RootSignature::TYPE::CS_PARTICLE_GPU, DxcCompiler::CS_Particle_GPU);
+    computePipelineStatesForInitializeParticle_ = Create(RootSignature::TYPE::CS_INITIALIZE_PARTICLE, DxcCompiler::CS_Initialize_Particle);
+    computePipelineStatesForEmitParticle_ = Create(RootSignature::TYPE::CS_EMIT_PARTICLE, DxcCompiler::CS_Emit_Particle);
 }
 
 void ComputeShaderPSO::Finalize()
 {
-    if (computePipelineStatesForSkinning_) {
-        computePipelineStatesForSkinning_.Reset();
+
+    if (computePipelineStatesForEmitParticle_) {
+        computePipelineStatesForEmitParticle_.Reset();
     }
 
     if (computePipelineStatesForInitializeParticle_) {
         computePipelineStatesForInitializeParticle_.Reset();
     }
+
+    if (computePipelineStatesForSkinning_) {
+        computePipelineStatesForSkinning_.Reset();
+    }
+
 }
 
 Microsoft::WRL::ComPtr<ID3D12PipelineState> ComputeShaderPSO::Create(

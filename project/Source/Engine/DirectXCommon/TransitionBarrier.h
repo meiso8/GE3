@@ -12,7 +12,10 @@ public:
         D3D12_RESOURCE_STATES stateAfter);
     void SettingBarrierRTVforSRV( const Microsoft::WRL::ComPtr <ID3D12Resource>& resource);
     void SettingBarrierSRVforRTV( const Microsoft::WRL::ComPtr <ID3D12Resource>& resource);
-private:
+    void SettingBarrier(
+        D3D12_RESOURCE_STATES stateBefore,
+        D3D12_RESOURCE_STATES stateAfter);
+private:                
     ID3D12GraphicsCommandList* commandList_ = nullptr;
     D3D12_RESOURCE_BARRIER barrier_{};
 };

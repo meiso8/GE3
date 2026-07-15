@@ -2,7 +2,7 @@
 #include"Model.h"
 #include"DirectXCommon.h"
 #include"Log.h"
-#include"SrvDescriptorHeap.h"
+#include"CbvSrvUavDescriptorHeap.h"
 SkinningModel::SkinningModel()
 {
     skeleton_ = std::make_unique<Skeleton>();

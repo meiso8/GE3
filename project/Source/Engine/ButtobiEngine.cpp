@@ -210,6 +210,11 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     gpuParticleManager_->Create(PSO::GetRootSignature(),srvDescriptorHeap_.get(),directXCommon_->GetCommandList());
     gpuParticleManager_->Initialize();
 
+    /// @brief GPUパーティクルエミッター
+    gpuParticleEmitter_ = std::make_unique<GPUParticleEmitter>();
+    GPUParticleEmitter::SetCommandListAndCbvSrvUavDescriptorHeap(directXCommon_->GetCommandList(), srvDescriptorHeap_.get());
+    gpuParticleEmitter_->Create();
+    gpuParticleEmitter_->SetParticleGroup(gpuParticleManager_->GetGroup());
 #ifdef _DEVELOP
     // デバッグカメラの初期化
     DebugCamera::GetInstance()->Create();
@@ -274,6 +279,8 @@ void ButtobiEngine::Update() {
         // パーティクル管理の更新
         particleManager_->Update(*camera);
     }
+
+    gpuParticleEmitter_->Update();
 
     auto* ppm = PostProcessManager::GetInstance();
 
