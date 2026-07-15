@@ -9,19 +9,18 @@ void ComputeShaderPSO::CreatePSO(DxcCompiler* dxCompiler,
     rootSignature_ = rootSignature;
 
     computePipelineStatesForSkinning_ =  Create(RootSignature::TYPE::CS_SKINNING, DxcCompiler::CS_Skinning);
-    computePipelineStatesForInitializeParticle_ = Create(RootSignature::TYPE::CS_INITIALIZE_PARTICLE, DxcCompiler::CS_Initialize_Particle);
-    computePipelineStatesForEmitParticle_ = Create(RootSignature::TYPE::CS_EMIT_PARTICLE, DxcCompiler::CS_Emit_Particle);
+    particlePSOs_[kParticleInitializePSO] = Create(RootSignature::TYPE::CS_INITIALIZE_PARTICLE, DxcCompiler::CS_Initialize_Particle);
+    particlePSOs_[kParticleEmitPSO] = Create(RootSignature::TYPE::CS_EMIT_PARTICLE, DxcCompiler::CS_Emit_Particle);
+    particlePSOs_[kParticleUpdatePSO] = Create(RootSignature::TYPE::CS_UPDATE_PARTICLE, DxcCompiler::CS_Update_Particle);
+
 }
 
 void ComputeShaderPSO::Finalize()
 {
-
-    if (computePipelineStatesForEmitParticle_) {
-        computePipelineStatesForEmitParticle_.Reset();
-    }
-
-    if (computePipelineStatesForInitializeParticle_) {
-        computePipelineStatesForInitializeParticle_.Reset();
+    for (auto& pso : particlePSOs_) {
+        if (pso) {
+            pso.Reset();
+        }
     }
 
     if (computePipelineStatesForSkinning_) {

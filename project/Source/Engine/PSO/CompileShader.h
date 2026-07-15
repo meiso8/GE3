@@ -51,6 +51,7 @@ public:
         CS_Skinning,
         CS_Initialize_Particle,
         CS_Emit_Particle,
+        CS_Update_Particle,
         CS_Shaders,
     };
 
