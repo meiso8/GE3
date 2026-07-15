@@ -29,5 +29,6 @@ struct ParticleGroupGPU {
     CResource<Object3d::Material>materialResource;
     CResource<ParView>parViewResource;
     UAVResource<ParticleCS>particleUAVResource_;
-    UAVResource<int>particleGFreeCounterUAVResource_;
+    UAVResource<int>particleFreeListIndexResource_;
+    UAVResource<uint32_t>particleFreeListResource_;
 };
