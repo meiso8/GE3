@@ -80,21 +80,37 @@ void GPUParticleEmitter::Update()
     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(0, particleGroup_->particleUAVResource_.uavIndex, commandList_);
     commandList_->SetComputeRootConstantBufferView(1, emitterResource_.GetGPUVirtualAddress());
     commandList_->SetComputeRootConstantBufferView(2, perFrameResource_.GetGPUVirtualAddress());
-    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(3, particleGroup_->particleGFreeCounterUAVResource_.uavIndex, commandList_);
+    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(3, particleGroup_->particleFreeListIndexResource_.uavIndex, commandList_);
+    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(4, particleGroup_->particleFreeListResource_.uavIndex, commandList_);
 
     //ComputeShaderの実行
     commandList_->Dispatch(1, 1, 1);
 
-    D3D12_RESOURCE_BARRIER barrier;
-    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
-    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrier.UAV.pResource = particleGroup_->particleUAVResource_.Get();
-    commandList_->ResourceBarrier(1, &barrier);
+    // ====================================================================
+  // バリアを張る
+  // ====================================================================
+    D3D12_RESOURCE_BARRIER barrier[3];
+    barrier[0].Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+    barrier[0].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier[0].UAV.pResource = particleGroup_->particleUAVResource_.Get();
+
+    barrier[1].Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+    barrier[1].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier[1].UAV.pResource = particleGroup_->particleFreeListIndexResource_.Get();
+
+    barrier[2].Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+    barrier[2].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier[2].UAV.pResource = particleGroup_->particleFreeListResource_.Get();
+    commandList_->ResourceBarrier(3, barrier);
+
 
     commandList_->SetComputeRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::CS_UPDATE_PARTICLE));
     commandList_->SetPipelineState(ComputeShaderPSO::GetInstance()->GetParticlePSO(ComputeShaderPSO::kParticleUpdatePSO).Get());
     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(0, particleGroup_->particleUAVResource_.uavIndex, commandList_);
     commandList_->SetComputeRootConstantBufferView(1, perFrameResource_.GetGPUVirtualAddress());
+    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(2, particleGroup_->particleFreeListIndexResource_.uavIndex, commandList_);
+    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(3, particleGroup_->particleFreeListResource_.uavIndex, commandList_);
+
 
     //ComputeShaderの実行
     commandList_->Dispatch(1, 1, 1);
