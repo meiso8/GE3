@@ -29,7 +29,7 @@ void GPUParticleManager::Initialize()
     D3D12_RESOURCE_BARRIER barrier = {};
     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
     barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrier.Transition.pResource = particleGroup_->particleResource_.Get();
+    barrier.Transition.pResource = particleGroup_->particleUAVResource_.Get();
 
     // 前回の描画終わり（または初期状態）のステート
     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
@@ -39,9 +39,11 @@ void GPUParticleManager::Initialize()
     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
     commandList_->ResourceBarrier(1, &barrier);
 
+    cbvSrvUavDescriptorHeap_->PreDraw(commandList_);
+
     commandList_->SetComputeRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::CS_PARTICLE_GPU));
     commandList_->SetPipelineState(ComputeShaderPSO::GetInstance()->GetInitializeParticlePSO().Get());
-    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(0, particleGroup_->particleResource_.uavIndex, commandList_);
+    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(0, particleGroup_->particleUAVResource_.uavIndex, commandList_);
 
     //ComputeShaderの実行
     commandList_->Dispatch(1, 1, 1);
@@ -63,12 +65,17 @@ void GPUParticleManager::CreateGroup()
     UINT particleBufferSize = sizeof(ParticleCS) * kMaxInstance_;
     //===================//UAVResourceの作成//=======================
 
+    particleGroup_->particleUAVResource_.CreateBufferResourceForUAV(L"GPU_UAV_ParticleResource", particleBufferSize);
+    
     //UAVの作成をするよ
-    particleGroup_->particleResource_.CreateBufferResourceForUAV(L"GPUParticleResource", particleBufferSize);
-    particleGroup_->particleResource_.Allocate(cbvSrvUavDescriptorHeap_);
-    particleGroup_->particleResource_.CreateUAV(cbvSrvUavDescriptorHeap_, kMaxInstance_);
+    particleGroup_->particleUAVResource_.AllocateUAV(cbvSrvUavDescriptorHeap_);
+    particleGroup_->particleUAVResource_.CreateUAV(cbvSrvUavDescriptorHeap_, kMaxInstance_);
 
     //===================//SRVResourceの作成//=======================
+
+    //SRVの作成をするよ
+    particleGroup_->particleUAVResource_.AllocateSRV(cbvSrvUavDescriptorHeap_);
+    particleGroup_->particleUAVResource_.CreateSRVforStructuredBuffer(cbvSrvUavDescriptorHeap_, kMaxInstance_);
 
     //マテリアル用のリソースを作る。
     particleGroup_->materialResource.CreateBufferResource(L"GPU ParticleGroup_MaterialResource\n");
@@ -123,8 +130,8 @@ void GPUParticleManager::Draw(Camera& camera)
     //テスクチャ Texture2D<float4> gTexture : register(t2);
     cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(1, particleGroup_->materialData.textureData_[TEXTURE_USAGE_DIFFUSE].textureSrvIndex, commandList_);
 
-    // StructuredBuffer<Particle> gParticles : register(t);
-    cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(2, particleGroup_->particleResource_.uavIndex, commandList_);
+    // StructuredBuffer<Particle> gParticles : register(t11);
+    cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(2, particleGroup_->particleUAVResource_.srvIndex, commandList_);
     // ConstantBuffer<ParView> gParView : register(b0);
     commandList_->SetGraphicsRootConstantBufferView(3, particleGroup_->parViewResource.GetGPUVirtualAddress());
    

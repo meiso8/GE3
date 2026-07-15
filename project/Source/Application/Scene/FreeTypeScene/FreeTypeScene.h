@@ -8,6 +8,7 @@
 #include"BaseScene.h"
 #include"LevelEditor/LevelEditor.h"
 #include <vector>
+
 class FreeTypeScene : public BaseScene
 {
 public:
@@ -30,5 +31,7 @@ private:
     std::vector<std::unique_ptr<LevelEditor::ObjectSet>> objects_;
 
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
+
+
 };
 

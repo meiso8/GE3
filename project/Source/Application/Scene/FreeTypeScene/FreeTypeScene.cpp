@@ -46,6 +46,8 @@ void FreeTypeScene::Initialize()
     LevelEditor::GetInstance()->Load("FreeTypeScene_objectEditor", true);
     LevelEditor::GetInstance()->CreateObject(objects_);
 
+
+
     camera_->Initialize();
 
     currentCamera_ = camera_.get();

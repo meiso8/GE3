@@ -398,7 +398,4 @@
     <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Resource\shader\VertexShader\GPUParticle.VS.hlsl" />
-  </ItemGroup>
 </Project>

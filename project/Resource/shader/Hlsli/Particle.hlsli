@@ -15,24 +15,24 @@ struct VertexShaderInput
 
 struct ParticleForGPU
 {
-    float32_t4x4 WVP;
-    float32_t4x4 World;
+    float4x4 WVP;
+    float4x4 World;
     float4 color;
 };
 
 //GPUParticle
 struct ParView
 {
-    float32_t4x4 viewProjection;
-    float32_t4x4 billboardMatrix;
+    float4x4 viewProjection;
+    float4x4 billboardMatrix;
 };
-
 struct Particle
 {
     float32_t3 translate;
-    float32_t3 scale;
     float32_t lifeTime;
-    float32_t3 velocity;
+    float32_t3 scale;
     float32_t currentTime;
+    float32_t3 velocity;
+    float32_t padding;
     float32_t4 color;
 };

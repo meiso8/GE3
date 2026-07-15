@@ -23,6 +23,7 @@
 #include"SpriteCommon.h"
 #include"CollisionConfig.h"
 #include"DepthTexture/DepthTexture.h"
+#include"Particle/GPUParticle.h"
 
 class DirectXCommon;
 
@@ -77,8 +78,9 @@ private:
     std::unique_ptr<TagFactory> tagFactory_ = nullptr;
     /// @brief　パーティクル管理
     std::unique_ptr<ParticleManager> particleManager_ = nullptr;
-
-
+    /// @brief GPUパーティクル管理
+    std::unique_ptr<GPUParticleManager>gpuParticleManager_ = nullptr;
+  
 protected:
     
     //継承するもの

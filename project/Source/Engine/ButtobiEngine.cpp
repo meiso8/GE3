@@ -204,7 +204,11 @@ void ButtobiEngine::Create(const std::wstring& title, const int32_t clientWidth,
     ParticleEmitter::SetParticleManager(particleManager_.get());
 
     LogFile::Log("CreateparticleManager");
-    //ファイルへのログ出力
+
+
+    gpuParticleManager_ = std::make_unique<GPUParticleManager>();
+    gpuParticleManager_->Create(PSO::GetRootSignature(),srvDescriptorHeap_.get(),directXCommon_->GetCommandList());
+    gpuParticleManager_->Initialize();
 
 #ifdef _DEVELOP
     // デバッグカメラの初期化
@@ -375,6 +379,12 @@ void ButtobiEngine::PreCommandSet() {
 
     //パーティクルの描画
     particleManager_->Draw();
+    //GPUパーティクルの描画
+    if (camera) {
+        gpuParticleManager_->Draw(*camera);
+
+    }
+
     //ポストエフェクトのあと設定
     directXCommon_->RenderTexturePostDraw(depthTexture_.get());
     //描画前処理

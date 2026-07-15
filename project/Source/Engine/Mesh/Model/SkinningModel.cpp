@@ -92,7 +92,7 @@ void SkinningModel::CreateOutVertexResource()
     UINT vertexBufferSize = sizeof(VertexData) *UINT( modelData_->vertices.size());
     //UAVの作成をするよ
     skinningCSResorce_.outputVertexResource_.CreateBufferResourceForUAV(L"outputVertexResource",vertexBufferSize);
-    skinningCSResorce_.outputVertexResource_.Allocate(cbvSrvUavDescriptorHeap_);
+    skinningCSResorce_.outputVertexResource_.AllocateUAV(cbvSrvUavDescriptorHeap_);
     skinningCSResorce_.outputVertexResource_.CreateUAV(cbvSrvUavDescriptorHeap_,UINT(modelData_->vertices.size()));
 
     // 頂点バッファビューの作成 上書き

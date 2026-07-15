@@ -7,15 +7,15 @@
 
 class CbvSrvUavDescriptorHeap;
 
-
 class GPUParticleManager {
 private:
     struct ParticleCS {
         float32_t3 translate;
-        float32_t3 scale;
         float32_t lifeTime;
-        float32_t3 velocity;
+        float32_t3 scale;
         float32_t currentTime;
+        float32_t3 velocity;
+        float32_t padding;
         float32_t4 color;
     };
 
@@ -35,14 +35,13 @@ private:
         
         CResource<Object3d::Material>materialResource;
         CResource<ParView>parViewResource;
-        UAVResource<ParticleCS>particleResource_;
+        UAVResource<ParticleCS>particleUAVResource_;
     };
 
 private:
     RootSignature* rootSignature_ = nullptr;
     ID3D12GraphicsCommandList* commandList_ = nullptr;
     CbvSrvUavDescriptorHeap* cbvSrvUavDescriptorHeap_ = nullptr;
-
     std::unique_ptr<ParticleGroup> particleGroup_ = nullptr;
 private:
     void CreateGroup();
@@ -56,5 +55,4 @@ public:
     void Initialize();
 
     void Draw(Camera& camera);
-
 };
