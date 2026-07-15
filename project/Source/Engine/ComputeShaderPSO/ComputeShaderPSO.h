@@ -12,6 +12,7 @@ private:
     DxcCompiler* dxCompiler_ = nullptr;
     RootSignature* rootSignature_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineStatesForSkinning_ = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineStatesForInitializeParticle_ = nullptr;
 private:
     ComputeShaderPSO() = default;
     ~ComputeShaderPSO() = default;
@@ -30,6 +31,12 @@ public:
         return computePipelineStatesForSkinning_
             ;
     };
+
+    Microsoft::WRL::ComPtr<ID3D12PipelineState>& GetInitializeParticlePSO() {
+        return computePipelineStatesForInitializeParticle_
+            ;
+    };
+
     void CreatePSO(
         DxcCompiler* dxCompiler,
         RootSignature* rootSignature);

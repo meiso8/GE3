@@ -88,9 +88,12 @@ struct CResource :public Resource<T> {
 template <typename T>
 struct UAVResource :public CResource<T> {
     uint32_t uavIndex = 0;
+    uint32_t srvIndex = 0;
     void CreateBufferResourceForUAV(const LPCWSTR& label, size_t sizeInBytes = sizeof(T));
-    void Allocate(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+    void AllocateUAV(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
+    void AllocateSRV(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     void CreateUAV(CbvSrvUavDescriptorHeap* srvDescriptorHeap, UINT numElements, UINT structureByteStride = sizeof(T));
+    void CreateSRVforStructuredBuffer(CbvSrvUavDescriptorHeap* srvDescriptorHeap, UINT numElements, UINT structureByteStride = sizeof(T));
 };
 
 
@@ -183,19 +186,37 @@ inline void UAVResource<T>::CreateBufferResourceForUAV(const LPCWSTR& label, siz
 }
 
 template<typename T>
-inline void UAVResource<T>::Allocate(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
+inline void UAVResource<T>::AllocateUAV(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
 {    //まだないとき
     if (uavIndex == 0) {
         uavIndex = srvDescriptorHeap->Allocate();
     }
 
 }
+template<typename T>
+inline void UAVResource<T>::AllocateSRV(CbvSrvUavDescriptorHeap* srvDescriptorHeap)
+{    //まだないとき
+    if (srvIndex == 0) {
+        srvIndex = srvDescriptorHeap->Allocate();
+    }
 
+}
 template<typename T>
 inline void UAVResource<T>::CreateUAV(CbvSrvUavDescriptorHeap* srvDescriptorHeap, UINT numElements, UINT structureByteStride)
 {
     srvDescriptorHeap->CreateUAV(
         uavIndex,
+        IResource::Get(),
+        numElements,
+        structureByteStride
+    );
+}
+
+template<typename T>
+inline void UAVResource<T>::CreateSRVforStructuredBuffer(CbvSrvUavDescriptorHeap* srvDescriptorHeap, UINT numElements, UINT structureByteStride)
+{
+    srvDescriptorHeap->CreateSRVforStructuredBuffer(
+        srvIndex,
         IResource::Get(),
         numElements,
         structureByteStride

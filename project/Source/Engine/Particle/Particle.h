@@ -121,10 +121,10 @@ private:
     static const uint32_t kNumMaxInstance = 1000;//インスタンス数
     static std::unordered_map<std::string, std::unique_ptr <ParticleGroup>>particleGroups;
 
-    Matrix4x4 backToFrontMatrix;
-    Matrix4x4 billboardMatrix;
-    Matrix4x4 worldMatrix;
-    Matrix4x4 worldViewProjectionMatrix;
+    Matrix4x4 backToFrontMatrix{};
+    Matrix4x4 billboardMatrix{};
+    Matrix4x4 worldMatrix{};
+    Matrix4x4 worldViewProjectionMatrix{};
 public:
     static const uint32_t GetMaxInstance() { return kNumMaxInstance; };
     static void Reset(const std::string& name);

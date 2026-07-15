@@ -12,8 +12,8 @@ public:
     enum TYPE {
         NORMAL,
         PARTICLE,
+        PARTICLE_GPU,
         SPRITE,
-  /*      SKINNING,*/
         FONT,
         SKYBOX,
         OFFSCREEN,
@@ -34,6 +34,7 @@ public:
         LINE,
         //ComputeShader用Skinning
         CS_SKINNING,
+        CS_PARTICLE_GPU,
         TYPES,
     };
 
