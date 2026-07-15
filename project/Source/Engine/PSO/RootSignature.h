@@ -36,6 +36,7 @@ public:
         CS_SKINNING,
         CS_INITIALIZE_PARTICLE,
         CS_EMIT_PARTICLE,
+        CS_UPDATE_PARTICLE,
         TYPES,
     };
 

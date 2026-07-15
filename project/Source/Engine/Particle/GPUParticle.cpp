@@ -46,7 +46,7 @@ void GPUParticleManager::Initialize()
     cbvSrvUavDescriptorHeap_->PreDraw(commandList_);
 
     commandList_->SetComputeRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::CS_INITIALIZE_PARTICLE));
-    commandList_->SetPipelineState(ComputeShaderPSO::GetInstance()->GetInitializeParticlePSO().Get());
+    commandList_->SetPipelineState(ComputeShaderPSO::GetInstance()->GetParticlePSO(ComputeShaderPSO::kParticleInitializePSO).Get());
     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(0, particleGroup_->particleUAVResource_.uavIndex, commandList_);
     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(1, particleGroup_->particleGFreeCounterUAVResource_.uavIndex, commandList_);
 

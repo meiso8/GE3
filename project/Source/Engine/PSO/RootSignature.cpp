@@ -318,6 +318,18 @@ void RootSignature::Create() {
     rootParametersForEmitParticleCS[3].DescriptorTable.pDescriptorRanges = descriptorRangeForGPUParticleGFreeCounterUAV;//Tableの中身の配列を指定
     rootParametersForEmitParticleCS[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForGPUParticleGFreeCounterUAV);//Tableで利用する数
     
+    //==============================//UpdateParticle================================================
+
+    D3D12_ROOT_PARAMETER rootParametersForUpdateParticle[2] = {};
+
+    rootParametersForUpdateParticle[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParametersForUpdateParticle[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForUpdateParticle[0].DescriptorTable.pDescriptorRanges = descriptorRangeForGPUParticleUAV;//Tableの中身の配列を指定
+    rootParametersForUpdateParticle[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForGPUParticleUAV);//Tableで利用する数
+
+    rootParametersForUpdateParticle[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParametersForUpdateParticle[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+    rootParametersForUpdateParticle[1].Descriptor.ShaderRegister = 0;//レジスタ番号0を使う
 
 #pragma endregion
 
@@ -528,7 +540,9 @@ void RootSignature::Create() {
     //CS　EmitParticle
     descriptionRootSignature[CS_EMIT_PARTICLE].pParameters = rootParametersForEmitParticleCS;
     descriptionRootSignature[CS_EMIT_PARTICLE].NumParameters = _countof(rootParametersForEmitParticleCS);//配列の長さ
-
+    //CS　UpdateParticle
+    descriptionRootSignature[CS_UPDATE_PARTICLE].pParameters = rootParametersForUpdateParticle;
+    descriptionRootSignature[CS_UPDATE_PARTICLE].NumParameters = _countof(rootParametersForUpdateParticle);//配列の長さ
     //シリアライズしてバイナリにする
     Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;
     Microsoft::WRL::ComPtr <ID3DBlob> errorBlob = nullptr;

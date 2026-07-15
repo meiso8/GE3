@@ -7,17 +7,27 @@
 #include<wrl.h>
 class ComputeShaderPSO
 {
+public:
+
+    enum ParticlePSO {
+        kParticleInitializePSO,
+        kParticleEmitPSO,
+        kParticleUpdatePSO,
+        kMaxParticlePSO,
+    };
 private:
 
     DxcCompiler* dxCompiler_ = nullptr;
     RootSignature* rootSignature_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineStatesForSkinning_ = nullptr;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineStatesForInitializeParticle_ = nullptr;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> computePipelineStatesForEmitParticle_ = nullptr;
+
+    std::array< Microsoft::WRL::ComPtr<ID3D12PipelineState>, kMaxParticlePSO> particlePSOs_;
+
 private:
     ComputeShaderPSO() = default;
     ~ComputeShaderPSO() = default;
 public:
+
 
     static ComputeShaderPSO* GetInstance()
     {
@@ -32,14 +42,9 @@ public:
         return computePipelineStatesForSkinning_ ;
     };
 
-    Microsoft::WRL::ComPtr<ID3D12PipelineState>& GetComputePipelineStatesForEmitParticle() {
-        return computePipelineStatesForEmitParticle_;
-    };
-
-    Microsoft::WRL::ComPtr<ID3D12PipelineState>& GetInitializeParticlePSO() {
-        return computePipelineStatesForInitializeParticle_
-            ;
-    };
+    Microsoft::WRL::ComPtr<ID3D12PipelineState>& GetParticlePSO(const ParticlePSO& type) {
+        return particlePSOs_.at(type);
+    }
 
     void CreatePSO(
         DxcCompiler* dxCompiler,
