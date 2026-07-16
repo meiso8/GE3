@@ -401,5 +401,7 @@
     <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />
     <None Include="Resource\shader\Hlsli\Random.hlsli" />
+    <None Include="Resource\shader\Hlsli\Dissolve.hlsli" />
+    <None Include="Resource\shader\Hlsli\Object3dCommon.hlsli" />
   </ItemGroup>
 </Project>

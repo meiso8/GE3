@@ -1,23 +1,5 @@
 #include "../Hlsli/SkinningObject.hlsli"
 
-struct Vertex
-{
-    float4 position;
-    float2 texcoord;
-    float3 normal;
-};
-
-struct VertexInfluence
-{
-    float4 weight;
-    int4 index;
-};
-
-struct SkinningInformation
-{
-    uint numVertices;
-};
-
 //SkinningObject3d.VS.hlsl Same
 StructuredBuffer<Well> gMatrixPalette : register(t6);
 //VertexBufferView stream0 inputVertex

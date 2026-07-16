@@ -1,19 +1,11 @@
 
 #include "../Hlsli/Fullscreen.hlsli"
+#include "../Hlsli/Dissolve.hlsli"
 
-struct Material
-{
-    float32_t maskVal;
-    float32_t3 rgb;
-};
-
-
-ConstantBuffer<Material> gMaterial : register(b0);
-
+ConstantBuffer<DissolveMaterial> gMaterial : register(b0);
 Texture2D<float> gMaskTexture : register(t0);
 Texture2D<float4> gTexture : register(t2);
 SamplerState gSampler : register(s0);
-
 
 struct PixelShaderOutput
 {

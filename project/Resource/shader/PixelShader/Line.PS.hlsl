@@ -15,6 +15,7 @@ struct PixelShaderOutput
 PixelShaderOutput main(VertexShaderOutput input)
 {
     PixelShaderOutput output;
+    
     output.color = gMaterial.color;
     return output;
 }
