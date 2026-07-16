@@ -1,20 +1,6 @@
 
 #include "../Hlsli/Object3d.hlsli"
 
-struct TransformationMatrix
-{
-    float32_t4x4 WVP;
-    float32_t4x4 World;
-    float32_t4x4 WorldInverseTranspose;
-};
-
-struct VertexShaderInput
-{
-    float4 position : POSITION0;
-    float2 texcoord : TEXCOORD0;
-    float3 normal : NORMAL0;
-};
-
 ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b1);
 
 VertexShaderOutput main(VertexShaderInput input)

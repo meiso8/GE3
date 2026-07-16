@@ -1,7 +1,5 @@
 #include "../Hlsli/object3d.hlsli"
 
-//テクスチャを貼り付けたり、ライティングを行ったりと、もっとも主要なShaderである
-
 struct Material
 {
     float4 color;

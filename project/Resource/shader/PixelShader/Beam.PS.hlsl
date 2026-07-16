@@ -9,14 +9,6 @@ struct Material
 
 };
 
-
-ConstantBuffer<Material> gMaterial : register(b0);
-ConstantBuffer<Camera> gCamera : register(b2);
-ConstantBuffer<ObjectID> gObjectID : register(b3);
-
-Texture2D<float4> gTexture : register(t2);
-SamplerState gSampler : register(s0);
-
 struct PixelShaderOutput
 {
     float4 color : SV_TARGET0;
@@ -24,6 +16,13 @@ struct PixelShaderOutput
     uint1 objectID : SV_TARGET2;
 };
 
+
+ConstantBuffer<Material> gMaterial : register(b0);
+ConstantBuffer<Camera> gCamera : register(b2);
+ConstantBuffer<ObjectID> gObjectID : register(b3);
+
+Texture2D<float4> gTexture : register(t2);
+SamplerState gSampler : register(s0);
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
