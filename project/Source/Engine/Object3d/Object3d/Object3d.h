@@ -230,7 +230,13 @@ protected:
     virtual void MeshDraw();
 private:
     void CreateUV();
-    void CreateMaterial(const float temperature = 0.0f, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const uint32_t lightType = LightMode::kLightModeHalfL, const float shininess = 50.0f, const float  environmentCoefficient = 0.0f);
+    /// @brief マテリアル作成関数
+    /// @param temperature 温度
+    /// @param color 色
+    /// @param lightType　ライトの種類 
+    /// @param shininess 輝度　100が最大数にしておく
+    /// @param environmentCoefficient 環境色の影響度
+    void CreateMaterial(const float temperature = 0.0f, const Vector4& color = { 1.0f,1.0f,1.0f,1.0f }, const uint32_t lightType = LightMode::kLightModeHalfL, const float shininess = 1.0f, const float  environmentCoefficient = 0.0f);
     void CreateWaveData();
     void CreateBalloonData();
     void CreateID();

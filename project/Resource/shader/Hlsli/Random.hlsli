@@ -1,5 +1,5 @@
-#ifndef COMMON_FUNCTIONS_HLSLI
-#define COMMON_FUNCTIONS_HLSLI
+#ifndef RANDOM_FUNCTIONS_HLSLI
+#define RANDOM_FUNCTIONS_HLSLI
 
 float rand2dTo1d(float2 value, float2 dotDir = float2(12.9898, 78.233))
 {
@@ -49,4 +49,4 @@ class RandomGenerator
     }
 };
 
-#endif // COMMON_FUNCTIONS_HLSLI
+#endif // RANDOM_FUNCTIONS_HLSLI

@@ -11,4 +11,11 @@ float4 GetTemperatureTexture(float objectAlpha, float temperature)
     return float4(temperature, outlineMask, 0.0, 1.0);
 };
 
+bool DisCardColor(float textureAlpha, float materialAlpha, float temperatureR)
+{
+    
+    bool isColorAlpha = textureAlpha == 0.0 || temperatureR == 0.0;
+   
+    return textureAlpha <= 0.0 && isColorAlpha;
+}
 #endif // OBJECT_FUNCTIONS_HLSLI
