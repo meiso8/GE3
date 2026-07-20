@@ -174,9 +174,9 @@ void GameScene::CheckAllCollision()
     collisionManager_->ClearColliders();
 
     //めもとの当たり判定
-    for (auto& [texture, memo] : memoManager_->GetMemos()) {
-        collisionManager_->AddCollider(memo.get());
-    }
+    //for (auto& [texture, memo] : memoManager_->GetMemos()) {
+    //    collisionManager_->AddCollider(memo.get());
+    //}
 
 
     //プレイヤーのコライダーを追加する
@@ -219,12 +219,14 @@ void GameScene::Debug()
     //プレイヤーのデバッグ
     player_->Debug();
 
+
+#endif // !USE_IMGUI
+
     if (Input::IsTriggerKey(DIK_B)) {
         auto* stageManager = StageManager::GetInstance();
         stageManager->SetNestStage("BastetStage");
     }
 
-#endif // !USE_IMGUI
 }
 
 void GameScene::DrawModel() {

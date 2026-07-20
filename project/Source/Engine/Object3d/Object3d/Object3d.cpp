@@ -71,6 +71,17 @@ void Object3d::InitWaveDataIndex(const uint32_t& index)
 
 }
 
+void Object3d::InitMeltData()
+{
+
+    if (meltResource_.data) {
+        meltResource_.data->size = 2.0f;
+        meltResource_.data->time = 0.0f;
+        meltResource_.data->meltTime = 5.0f;
+        meltResource_.data->thickness = 0.1f;
+    }
+}
+
 void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, const TextureFactory::Handle skyBoxTexture)
 {
     //データを書き込む
@@ -102,8 +113,10 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(8, PointLightManager::GetSrvIndex(), commandList_);
         //SpotLightのDescriptorTableの設定をする
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(9, SpotLightManager::GetSrvIndex(), commandList_);
-
+        //SkyBox
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture), commandList_);
+        //MeltData
+        commandList_->SetGraphicsRootConstantBufferView(11, meltResource_.GetGPUVirtualAddress());
 
         MeshDraw();
 
@@ -195,6 +208,8 @@ void Object3d::Finalize()
     expansionResource_.Reset();
     waveResource_.UnMap();
     waveResource_.Reset();
+    meltResource_.UnMap();
+    meltResource_.Reset();
     idResource_.UnMap();
     idResource_.Reset();
 }
@@ -236,6 +251,7 @@ void Object3d::Create()
     CreateUV();
     CreateWaveData();
     CreateBalloonData();
+    CreateMeltData();
     CreateID();
     //生成と同時に初期化する
     Initialize();
@@ -310,6 +326,14 @@ void Object3d::CreateID()
     idResource_.Map();
 
     idResource_.data->id = 0;
+}
+
+void Object3d::CreateMeltData()
+{
+    meltResource_.CreateBufferResource(L"Object3d_Melt_Resource");
+    //書き込むためのアドレスを取得
+    meltResource_.Map();
+    InitMeltData();
 }
 
 void Object3d::CreateMaterial(

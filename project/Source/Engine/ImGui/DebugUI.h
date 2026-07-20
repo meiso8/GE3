@@ -8,6 +8,7 @@
 #include"Transform.h"
 #include"Balloon.h"
 #include"Wave.h"
+#include"Melt.h"
 #include <functional>
 #include<memory>
 #include<unordered_map>
@@ -76,6 +77,7 @@ public:
     static void CheckFont(Font& sprite, const char* label);
     static void CheckBalloonData(Balloon& balloon);
     static void CheckWaveData(Wave& wave, const char* label);
+    static void CheckMeltData(Melt& melt, const char* label);
 
     /// @brief Object3d
     /// @param object3d Object3d
