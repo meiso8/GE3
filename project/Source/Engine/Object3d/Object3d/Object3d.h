@@ -8,6 +8,8 @@
 #include"WorldTransform.h"
 #include"Balloon.h"
 #include"Wave.h"
+#include"Melt.h"
+
 #include"Transform.h"
 #include<memory>
 #include"ResourceManager/ResourceManager.h"
@@ -76,6 +78,8 @@ protected:
     CResource<Balloon>expansionResource_;
     // ==============波データ==================
     CResource<Wave>waveResource_;
+    // ==============とけとけデータ==================
+    CResource<Melt>meltResource_;
     // ==============ID情報==================
     CResource<ObjectID>idResource_;
     // ==============メッシュ情報==================
@@ -134,6 +138,11 @@ public:
     Wave& GetWaveData(size_t index) { return waveResource_.data[index]; };
     void InitWaveData();
     void InitWaveDataIndex(const uint32_t& index);
+
+    // ==============溶けデータ==================
+
+    Melt& GetMeltData() { return *meltResource_.data; };
+    void InitMeltData();
 
     // ==============マテリアルデータ==================
     Material& GetMaterial() { return *material_; };
@@ -240,5 +249,6 @@ private:
     void CreateWaveData();
     void CreateBalloonData();
     void CreateID();
+    void CreateMeltData();
 };
 

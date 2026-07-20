@@ -483,6 +483,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Thoth\Thoth.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Mesh\MeshCommon\Melt.h" />
     <ClInclude Include="Source\Engine\Particle\GPUParticle.h" />
     <ClInclude Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.h" />
     <ClInclude Include="Source\Application\GameObject\Bastet\Bastet.h" />
@@ -700,6 +701,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resource\JsonFiles\notes.json" />
     <None Include="Resource\shader\Hlsli\BallonData.hlsli" />
     <None Include="Resource\shader\Hlsli\Dissolve.hlsli" />
+    <None Include="Resource\shader\Hlsli\Melt.hlsli" />
     <None Include="Resource\shader\Hlsli\Object3dCommon.hlsli" />
     <None Include="Resource\shader\Hlsli\Random.hlsli" />
     <None Include="Resource\shader\Hlsli\WaveData.hlsli" />

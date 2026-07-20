@@ -162,7 +162,7 @@ void RootSignature::Create() {
 #pragma region//NormalRootParameters
     //CBufferを利用することになったので、RootParameterに設定を追加する
    /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
-    D3D12_ROOT_PARAMETER rootParameters[11] = {};
+    D3D12_ROOT_PARAMETER rootParameters[12] = {};
     //Material b0
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
@@ -170,7 +170,7 @@ void RootSignature::Create() {
     //Transform用 b1
     rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    rootParameters[1].Descriptor.ShaderRegister = 1;//レジスタ番号0を使う
+    rootParameters[1].Descriptor.ShaderRegister = 1;//レジスタ番号1を使う
     //Texture t2
     rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
     rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
@@ -187,12 +187,11 @@ void RootSignature::Create() {
     //DirectionalLight b4
     rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-    rootParameters[5].Descriptor.ShaderRegister = 4;//レジスタ番号1を使う
-    //Ballon b5
+    rootParameters[5].Descriptor.ShaderRegister = 4;//レジスタ番号4を使う
+    //Ballon b2
     rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
-    rootParameters[6].Descriptor.ShaderRegister = 5;//レジスタ番号1を使う
-
+    rootParameters[6].Descriptor.ShaderRegister = 2;//レジスタ番号2を使う
     //Wave t1
     rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;//SRVを使う
     rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
@@ -212,6 +211,11 @@ void RootSignature::Create() {
     rootParameters[10].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParameters[10].DescriptorTable.pDescriptorRanges = descriptorRangeForSkyBox;//Tableの中身の配列を指定
     rootParameters[10].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSkyBox);//Tableで利用する数
+
+    //Melt b3
+    rootParameters[11].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+    rootParameters[11].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
+    rootParameters[11].Descriptor.ShaderRegister = 3;//レジスタ番号2を使う
 
 #pragma endregion
 

@@ -280,7 +280,7 @@ void ButtobiEngine::Update() {
         particleManager_->Update(*camera);
     }
 
-    gpuParticleEmitter_->Update();
+    //gpuParticleEmitter_->Update();
 
     auto* ppm = PostProcessManager::GetInstance();
 

@@ -782,6 +782,19 @@ void DebugUI::CheckWaveData(Wave& wave, const char* label)
     }
 #endif
 }
+void DebugUI::CheckMeltData(Melt& melt, const char* label)
+{
+#ifdef USE_IMGUI
+    if (ImGui::TreeNode(label)) {
+
+        ImGui::DragFloat("time", &melt.time, 0.03f);
+        ImGui::DragFloat("size", &melt.size, 0.03f);
+        ImGui::DragFloat("meltTime", &melt.meltTime, 0.03f, 0.0f, 100.0f);
+        ImGui::DragFloat("thickness", &melt.thickness, 0.03f, 0.0f, 10.0f);
+        ImGui::TreePop();
+    }
+#endif
+}
 void DebugUI::CheckPointLightData()
 {
 #ifdef USE_IMGUI
@@ -999,6 +1012,7 @@ void DebugUI::CheckObject3d(Object3d& object3d)
         CheckWaveData(object3d.GetWaveData(0), "Wave0");
         CheckWaveData(object3d.GetWaveData(1), "Wave1");
         CheckBalloonData(object3d.GetBalloonData());
+        CheckMeltData(object3d.GetMeltData(), "meltData");
 
         auto* primitive = object3d.GetPrimitive();
 

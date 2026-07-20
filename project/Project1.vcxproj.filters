@@ -383,6 +383,7 @@
     <ClInclude Include="Source\Engine\Particle\GPUParticle.h" />
     <ClInclude Include="Source\Engine\Particle\GPUParticleEmitter\GPUParticleEmitter.h" />
     <ClInclude Include="Source\Engine\Particle\ParticleStruct.h" />
+    <ClInclude Include="Source\Engine\Mesh\MeshCommon\Melt.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />
@@ -403,5 +404,6 @@
     <None Include="Resource\shader\Hlsli\Random.hlsli" />
     <None Include="Resource\shader\Hlsli\Dissolve.hlsli" />
     <None Include="Resource\shader\Hlsli\Object3dCommon.hlsli" />
+    <None Include="Resource\shader\Hlsli\Melt.hlsli" />
   </ItemGroup>
 </Project>

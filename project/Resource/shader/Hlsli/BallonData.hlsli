@@ -9,42 +9,42 @@ struct Balloon
     float cube;
     bool isSphere;
 };
-float3 BalloonUpdate(float3 normal, Balloon balloon)
+float3 BalloonUpdate(float3 normal, float expansion)
 {
-    return normal * balloon.expansion;
+    return normal * expansion;
 }
 
-float4 SphereUpdate(float4 position, Balloon balloon)
+float4 SphereUpdate(float4 position, float size,float sphere)
 {
     float4 output;
     
-    output.xyz = lerp(position.xyz, normalize(position.xyz), balloon.sphere);
+    output.xyz = lerp(position.xyz, normalize(position.xyz)*size, sphere);
     output.w = position.w;
     
     return output;
 }
 
-float4 CubeUpdate(float4 position, Balloon balloon)
+float4 CubeUpdate(float4 position, float cube)
 {
     float4 output;
     
-    output.xyz = lerp(position.xyz, clamp(normalize(position.xyz), -0.5f, 0.5f), balloon.cube);
+    output.xyz = lerp(position.xyz, clamp(normalize(position.xyz), -0.5f, 0.5f), cube);
     output.w = position.w;
     
     return output;
 }
 
-float4 UpdateExpansionData(float4 position, float3 normal,Balloon balloon,float4x4 WVP)
+float4 UpdateExpansionData(float4 position, float3 normal,Balloon balloon)
 {
-    position.xyz += BalloonUpdate(normal, balloon);
+    position.xyz += BalloonUpdate(normal, balloon.expansion);
 
     if (balloon.isSphere)
     {
-        return mul(SphereUpdate(position, balloon), WVP);
+        return SphereUpdate(position,1.0f, balloon.sphere);
     }
     else
     {
-        return mul(CubeUpdate(position, balloon), WVP);
+        return CubeUpdate(position, balloon.cube);
     }
 
 }
