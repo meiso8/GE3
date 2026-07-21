@@ -84,7 +84,11 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager)
 
     meltBlockMap_->RayCastHit(*player_->GerRaySprite());
 
-
+    if (meltBlockMap_->IsClear()) {
+        //なぞ解きに正解したらコライダーなど追加
+        bastet_->RayCastHit(*player_->GerRaySprite());
+        collisionManager.AddCollider(bastet_.get());
+    }
     // 壁との当たり判定
     for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());

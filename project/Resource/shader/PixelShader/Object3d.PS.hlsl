@@ -43,6 +43,13 @@ StructuredBuffer<PointLight> gPointLights : register(t4);
 StructuredBuffer<SpotLight> gSpotLights : register(t5);
 TextureCube<float4> gEnvironmentTexture : register(t7);
 
+float3 Dissolve(float edgeMin,float edgeMax,float mask,float3 edgeColor,float gamma)
+{
+    
+    float edge = 1.0f - smoothstep(edgeMin, edgeMax, mask);
+    return edge * edgeColor * gamma;
+}
+
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
@@ -99,9 +106,17 @@ PixelShaderOutput main(VertexShaderOutput input)
         output.color.rgb += environmentColor.rgb * gMaterial.environmentCoefficient;
         // ======================================================================
     }
+    
+    if (input.meltTime >= 0.0f)
+    {
+        output.color.rgb += Dissolve(0.0f, input.meltTime, mask, gMaterial.rgb, 4.0f);
+    }
+    else
+    {
+        output.color.rgb += Dissolve(gMaterial.maskEdgeMin, gMaterial.maskEdgeMax, mask, gMaterial.rgb, gMaterial.maskGamma);
+    }
+      
 
-    float edge = 1.0f - smoothstep(gMaterial.maskEdgeMin, gMaterial.maskEdgeMax, mask);
-    output.color.rgb += edge * gMaterial.rgb* gMaterial.maskGamma;
     
     if (DisCardColor(textureColor.a, gMaterial.color.a, output.temperature.r))
     {

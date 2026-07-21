@@ -16,7 +16,8 @@ VertexShaderOutput main(VertexShaderInput input)
     output.position = UpdateExpansionData(input.position, input.normal, gBalloon);
     //Melt
     output.position = mul(MeltUpdate(input.normal, output.position, gMelt), gTransformationMatrix.WVP);
-
+    output.meltTime = clamp(gMelt.time * rcp(gMelt.meltTime), 0.0f, 1.0f);
+    
     output.texcoord = input.texcoord;
     output.normal = normalize(mul(input.normal, (float3x3) gTransformationMatrix.WorldInverseTranspose));
     output.worldPosition = mul(input.position, gTransformationMatrix.World).xyz;

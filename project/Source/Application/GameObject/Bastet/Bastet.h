@@ -3,7 +3,7 @@
 #include"Collider.h"
 
 class ParticleEmitter;
-
+class RaySprite;
 class Bastet :public Collider
 {
 public:
@@ -13,6 +13,7 @@ public:
     void Initialize();
     void LoadMap(const std::string& tagName = "MeltStage_BastetStep");
     void OnCollision(Collider* collider) override;
+    void RayCastHit(RaySprite& raySprite);
 private:
     void CreateParticle();
 private:
