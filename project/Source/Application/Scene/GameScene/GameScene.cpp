@@ -93,7 +93,10 @@ void GameScene::Initialize() {
 
     auto* stageManager = StageManager::GetInstance();
     stageManager->SetNestStage("AmenStage");
-   
+#ifdef _DEVELOP
+    stageManager->SetNestStage("AnubisStage");
+
+#endif
     //ステージ遷移の初期化
     sceneChange_->Initialize();
     //現在のステージの初期化
@@ -219,13 +222,13 @@ void GameScene::Debug()
     //プレイヤーのデバッグ
     player_->Debug();
 
-
-#endif // !USE_IMGUI
-
     if (Input::IsTriggerKey(DIK_B)) {
         auto* stageManager = StageManager::GetInstance();
         stageManager->SetNestStage("BastetStage");
     }
+
+#endif // !USE_IMGUI
+
 
 }
 

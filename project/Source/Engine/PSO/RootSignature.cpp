@@ -162,7 +162,7 @@ void RootSignature::Create() {
 #pragma region//NormalRootParameters
     //CBufferを利用することになったので、RootParameterに設定を追加する
    /* RootParameter作成。PixelShaderのMaterialとVertexShaderのTransform*/
-    D3D12_ROOT_PARAMETER rootParameters[12] = {};
+    D3D12_ROOT_PARAMETER rootParameters[13] = {};
     //Material b0
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
@@ -211,12 +211,16 @@ void RootSignature::Create() {
     rootParameters[10].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
     rootParameters[10].DescriptorTable.pDescriptorRanges = descriptorRangeForSkyBox;//Tableの中身の配列を指定
     rootParameters[10].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForSkyBox);//Tableで利用する数
-
     //Melt b3
     rootParameters[11].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
     rootParameters[11].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//VertexShaderで使う
     rootParameters[11].Descriptor.ShaderRegister = 3;//レジスタ番号2を使う
-
+    //Dissolve
+    rootParameters[12].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//Table
+    rootParameters[12].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+    rootParameters[12].DescriptorTable.pDescriptorRanges = descriptorRangeForDepthBasedOutline;//Tableの中身の配列を指定
+    rootParameters[12].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForDepthBasedOutline);//Tableで利用する数
+    
 #pragma endregion
 
 #pragma region//rootParametersForComputeShaderSkinning

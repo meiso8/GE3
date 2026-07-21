@@ -120,6 +120,10 @@ public:
         float& tempereture,
         Matrix4x4& uvMatrix,
         float& environmentCoefficient,
+        float& maskVal,
+        Vector3& dissolveRgb,
+        float& maskEdgeMin,
+        float& maskEdgeMax,
         const char* label
     );
     static void CheckLightMode(int32_t& lightMode, const char* label);

@@ -1005,7 +1005,12 @@ void DebugUI::CheckObject3d(Object3d& object3d)
             material.shininess,
             material.temperature,
             material.uvTransform,
-            material.environmentCoefficient, "Material");
+            material.environmentCoefficient,
+            material.maskVal,
+            material.rgb,
+            material.maskEdgeMin,
+            material.maskEdgeMax,
+            "Material");
 
 
         CheckTransform(object3d.GetUVTransform(), "UVTransfrom");
@@ -1137,7 +1142,16 @@ void DebugUI::CheckParticle(ParticleManager* particleManager)
                 ImGui::Checkbox("useSpriteCamera", &group->useSpriteCamera);
                 auto& material = group->materialResource.data;
                 CheckObject3dMaterial(
-                    material->color, material->lightMode, material->shininess, material->temperature, material->uvTransform, material->environmentCoefficient, "Material");
+                    material->color, material->lightMode,
+                    material->shininess,
+                    material->temperature,
+                    material->uvTransform, 
+                    material->environmentCoefficient,
+                    material->maskVal,
+                    material->rgb,
+                    material->maskEdgeMin,
+                    material->maskEdgeMax,
+                    "Material");
                 ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
                 for (std::list<Particle>::iterator itr = group->particles.begin(); itr != group->particles.end(); ++itr) {
@@ -1170,7 +1184,20 @@ void DebugUI::CheckColor(Vector4& color, const char* label) {
 #endif
 }
 
-void DebugUI::CheckObject3dMaterial(Vector4& color, int32_t& lightMode, float& shininess, float& tempereture, Matrix4x4& uvMatrix, float& environmentCoefficient, const char* label) {
+void DebugUI::CheckObject3dMaterial(
+    Vector4& color,
+    int32_t& lightMode,
+    float& shininess,
+    float& tempereture,
+    Matrix4x4& uvMatrix,
+    float& environmentCoefficient,
+    float& maskVal,
+    Vector3& dissolveRgb,
+    float& maskEdgeMin,
+    float& maskEdgeMax,
+
+
+    const char* label) {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
         CheckColor(color, "color");
@@ -1179,6 +1206,11 @@ void DebugUI::CheckObject3dMaterial(Vector4& color, int32_t& lightMode, float& s
         ImGui::SliderFloat("temperature", &tempereture, 0.0f, 1.0f);
         ShowMatrix4x4(uvMatrix, "uvMatrix");
         ImGui::SliderFloat("environmentCoefficient", &environmentCoefficient, 0.0f, 1.0f);
+
+        ImGui::DragFloat("maskVal", &maskVal, 0.01f, 0.0f, 1.0f);
+        ImGui::ColorEdit3("maskEdigColor", &dissolveRgb.x);
+        ImGui::SliderFloat("maskEdgeMin", &maskEdgeMin, 0.0f, maskEdgeMax);
+        ImGui::SliderFloat("maskEdgeMax", &maskEdgeMax, maskEdgeMin, 1.0f);
         ImGui::TreePop();
     }
 #endif
