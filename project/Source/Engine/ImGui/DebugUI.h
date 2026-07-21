@@ -124,6 +124,7 @@ public:
         Vector3& dissolveRgb,
         float& maskEdgeMin,
         float& maskEdgeMax,
+        float& gamma,
         const char* label
     );
     static void CheckLightMode(int32_t& lightMode, const char* label);

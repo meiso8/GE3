@@ -54,7 +54,8 @@ public:
 
         float maskEdgeMin;
         float maskEdgeMax;
-        float2 padding;
+        float maskGamma;
+        float padding;
     };
 
 protected:

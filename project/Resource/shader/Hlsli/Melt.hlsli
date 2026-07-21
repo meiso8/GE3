@@ -23,8 +23,15 @@ float4 MeltStart(float4 position, float3 normal, float thickness, float size,flo
 
 float4 MeltUpdate(float3 normal, float4 position, Melt melt)
 {
+    melt.time = min(melt.time, melt.meltTime * 3.0f - melt.thickness);
+    
+    if (position.y >= melt.thickness)
+    {
+        position.y += WaveCreate(position, float3(0.0f, 1.0f, 0.0f), melt.time, melt.thickness * melt.time * 0.25f, 20);
+        
+    }
+    
 
-    position.y += WaveCreate(position, float3(0.0f, 1.0f, 0.0f), melt.time, melt.thickness * melt.time * 0.25f, 20);
 
     float meltTimer = clamp((melt.time - melt.meltTime) * rcp(melt.meltTime * 2.0f), 0.0f, 1.0f);
     

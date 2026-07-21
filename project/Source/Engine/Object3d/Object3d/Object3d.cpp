@@ -367,9 +367,10 @@ void Object3d::CreateMaterial(
     //マスク
     material_->maskVal = 0.0f;
     //マスクの色
-    material_->rgb = { 1.0f,0.0f,0.0f };
+    material_->rgb = { 1.0f,0.4f,0.3f };
     material_->maskEdgeMax = 0.0f;
     material_->maskEdgeMin = 0.0f;
+    material_->maskGamma = 1.0f;
     //白色にしておく
     textureHandles_[TEXTURE_USAGE_DIFFUSE] = Texture::GetSRVHandle(TextureFactory::WHITE_1X1);
 }

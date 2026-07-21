@@ -1010,6 +1010,7 @@ void DebugUI::CheckObject3d(Object3d& object3d)
             material.rgb,
             material.maskEdgeMin,
             material.maskEdgeMax,
+            material.maskGamma,
             "Material");
 
 
@@ -1151,6 +1152,7 @@ void DebugUI::CheckParticle(ParticleManager* particleManager)
                     material->rgb,
                     material->maskEdgeMin,
                     material->maskEdgeMax,
+                    material->maskGamma,
                     "Material");
                 ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
@@ -1196,7 +1198,7 @@ void DebugUI::CheckObject3dMaterial(
     float& maskEdgeMin,
     float& maskEdgeMax,
 
-
+    float& gamma,
     const char* label) {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
@@ -1211,6 +1213,7 @@ void DebugUI::CheckObject3dMaterial(
         ImGui::ColorEdit3("maskEdigColor", &dissolveRgb.x);
         ImGui::SliderFloat("maskEdgeMin", &maskEdgeMin, 0.0f, maskEdgeMax);
         ImGui::SliderFloat("maskEdgeMax", &maskEdgeMax, maskEdgeMin, 1.0f);
+        ImGui::SliderFloat("gamma", &gamma, 0.0f, 1000.0f);
         ImGui::TreePop();
     }
 #endif
