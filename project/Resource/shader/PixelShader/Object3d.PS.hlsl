@@ -11,6 +11,15 @@ struct ObjectMaterial
     float32_t environmentCoefficient;
     float temperature;
     float32_t4x4 uvTransform;
+    
+    float32_t maskVal;
+    float32_t3 rgb;
+    
+    
+    float maskEdgeMin;
+    float maskEdgeMax;
+    float2 padding;
+    
 };
 
 struct PixelShaderOutput
@@ -27,10 +36,12 @@ ConstantBuffer<DirectionalLight> gDirectionalLight : register(b4);
 
 SamplerState gSampler : register(s0);
 
+Texture2D<float> gMaskTexture : register(t0);
 Texture2D<float4> gTexture : register(t2);
 StructuredBuffer<PointLight> gPointLights : register(t4);
 StructuredBuffer<SpotLight> gSpotLights : register(t5);
 TextureCube<float4> gEnvironmentTexture : register(t7);
+
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
@@ -46,6 +57,15 @@ PixelShaderOutput main(VertexShaderOutput input)
     {
         discard;
     }
+    
+    //Mask
+    float mask = gMaskTexture.Sample(gSampler, input.texcoord);
+    
+    if (mask <= gMaterial.maskVal)
+    {
+        discard;
+    }
+    
     
     if (gMaterial.lightMode == 0)
     {
@@ -79,10 +99,13 @@ PixelShaderOutput main(VertexShaderOutput input)
         // ======================================================================
     }
 
+    float edge = 1.0f - smoothstep(gMaterial.maskEdgeMin, gMaterial.maskEdgeMax, mask);
+    output.color.rgb += edge * gMaterial.rgb;
+    
     if (DisCardColor(textureColor.a, gMaterial.color.a, output.temperature.r))
     {
         discard;
     }
-   
+    
     return output;
 }

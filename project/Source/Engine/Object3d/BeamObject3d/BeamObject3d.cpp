@@ -7,10 +7,11 @@ BeamObject3d::~BeamObject3d()
 {
 }
 
-void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, const TextureFactory::Handle skyBoxTexture)
+void BeamObject3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, const TextureFactory::Handle skyBoxTexture, const TextureFactory::Handle dissolveTexture)
 {
 
     (void)skyBoxTexture;
+    (void)dissolveTexture;
 
     //データを書き込む
     transformationMatrixResource_.data->World = worldTransform_.matWorld_;

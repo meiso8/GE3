@@ -79,10 +79,12 @@ void Object3d::InitMeltData()
         meltResource_.data->time = 0.0f;
         meltResource_.data->meltTime = 5.0f;
         meltResource_.data->thickness = 0.1f;
+       
     }
 }
 
-void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, const TextureFactory::Handle skyBoxTexture)
+void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, 
+    const TextureFactory::Handle skyBoxTexture,const TextureFactory::Handle dissolveTexture)
 {
     //データを書き込む
 
@@ -117,7 +119,8 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture), commandList_);
         //MeltData
         commandList_->SetGraphicsRootConstantBufferView(11, meltResource_.GetGPUVirtualAddress());
-
+        //SkyBox
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(12, Texture::GetSRVHandle(dissolveTexture), commandList_);
         MeshDraw();
 
     }
@@ -361,7 +364,12 @@ void Object3d::CreateMaterial(
     material_->environmentCoefficient = environmentCoefficient;
     //体温
     material_->temperature = temperature;
-
+    //マスク
+    material_->maskVal = 0.0f;
+    //マスクの色
+    material_->rgb = { 1.0f,0.0f,0.0f };
+    material_->maskEdgeMax = 0.0f;
+    material_->maskEdgeMin = 0.0f;
     //白色にしておく
     textureHandles_[TEXTURE_USAGE_DIFFUSE] = Texture::GetSRVHandle(TextureFactory::WHITE_1X1);
 }

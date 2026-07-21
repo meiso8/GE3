@@ -171,7 +171,10 @@ void AnimationObject3d::SetModelAndLoadAnimation(Model* model)
 
 }
 
-void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode,const bool usePSOKey,const TextureFactory::Handle skyBoxTexture)
+void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const CullMode& cullMode,
+    const MaskMode maskMode,const bool usePSOKey,
+    const TextureFactory::Handle skyBoxTexture, 
+    const TextureFactory::Handle dissolveTexture)
 {
     transformationMatrixResource_.data->World = worldMatrix_;
     transformationMatrixResource_.data->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
@@ -235,6 +238,14 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(9, SpotLightManager::GetSrvIndex(), commandList_);
 
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture), commandList_);
+
+
+        //MeltData
+        commandList_->SetGraphicsRootConstantBufferView(11, meltResource_.GetGPUVirtualAddress());
+
+        //SkyBox
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(12, Texture::GetSRVHandle(dissolveTexture), commandList_);
+
         //ここでテクスチャの設定をする
         MeshDraw();
     }

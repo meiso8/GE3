@@ -25,7 +25,9 @@ public:
     void Update()override;
     void UpdateAniTimer(const bool& isLoop = true);
     bool IsAnimEnd();
-    void Draw(Camera& camera, const BlendMode& blendMode = kBlendModeNormal, const CullMode& cullMode = kCullModeBack, const MaskMode maskMode = kAll,const bool usePSOKye =false, const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX)override;
+    void Draw(Camera& camera, const BlendMode& blendMode = kBlendModeNormal, const CullMode& cullMode = kCullModeBack, const MaskMode maskMode = kAll,const bool usePSOKye =false, 
+        const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX,
+        const TextureFactory::Handle dissolveTexture = TextureFactory::Handle::NOIZE0)override;
     /// @brief メッシュデータのドロー
     /// @param commandList コマンドリストをセットする
     void MeshDraw()override;

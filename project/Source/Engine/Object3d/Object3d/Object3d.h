@@ -45,6 +45,16 @@ public:
         float32_t temperature;
         //UV
         float32_t4x4 uvTransform;
+
+
+        //マスク
+        float32_t maskVal;
+        //マスクの色
+        float32_t3 rgb;
+
+        float maskEdgeMin;
+        float maskEdgeMax;
+        float2 padding;
     };
 
 protected:
@@ -226,7 +236,9 @@ public:
         const CullMode& cullMode = kCullModeBack,
         const MaskMode maskMode = kAll,
         const bool usePSOKey = false,
-        const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX);
+        const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX,
+        const TextureFactory::Handle dissolveTexture =TextureFactory::Handle::NOIZE0
+    );
 protected:
     /// @brief モデルの描画
     /// @param modelData モデルデータを入れる
