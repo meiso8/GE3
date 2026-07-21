@@ -218,6 +218,12 @@ void GameScene::Debug()
     //ステージの確認
     DebugUI::CheckStageManager();
 
+    //太陽円盤取得フラグ
+    bool isGetDisc = ItemManager::IsGetSolarDisc();
+    ImGui::Checkbox("isGetDisc", &isGetDisc);
+
+    ItemManager::SetIsGetSolarDisc(isGetDisc);
+
     ImGui::End();
     //プレイヤーのデバッグ
     player_->Debug();
@@ -226,6 +232,8 @@ void GameScene::Debug()
         auto* stageManager = StageManager::GetInstance();
         stageManager->SetNestStage("BastetStage");
     }
+
+
 
 #endif // !USE_IMGUI
 

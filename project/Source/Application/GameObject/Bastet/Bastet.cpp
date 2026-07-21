@@ -7,6 +7,11 @@
 #include"TimeManager.h"
 #include"JsonFile.h"
 #include"PrimitiveFactory/PrimitiveFactory.h"
+#include"CollisionManager.h"
+#include"Player/RaySprite.h"
+#include"InputBind.h"
+#include"SoundManager/SoundManager.h"
+#include"../../StageManager/StageManager.h"
 
 namespace {
     const float kAlphaSpeed_ = 0.5f;
@@ -17,9 +22,9 @@ Bastet::Bastet()
 {
     obj_ = std::make_unique<Object3d>();
     obj_->Create();
-    obj_->SetMeshAndMaterial(ModelManager::GetModel("AmenRa.obj"));
+    obj_->SetMeshAndMaterial(ModelManager::LoadModelAndGet("Resource/Models/Cat/cat.obj"));
     obj_->SetLightMode(Object3d::kLightModeLReflectance);
-    obj_->SetTemperature(0.2f);
+    obj_->SetTemperature(0.5f);
 
     AABB aabb = { .min = {-0.5f,0.0f,-0.5f},.max = {0.5f,1.0f,0.5f} };
 
@@ -40,17 +45,18 @@ void Bastet::Initialize() {
     step_ = 0;
     isApper_ = false;
     obj_->Initialize();
+    obj_->SetNextStageName("BastetStage");
     obj_->SetObjectName("Bastet");
     obj_->RegisterObject();
     obj_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
     obj_->SetTemperature(0.2f);
 
-#ifdef _DEVELOP
-    obj_->SetMeshAndMaterial(PrimitiveFactory::GetPrimitive(Primitive::kPlane));
-    obj_->SetScale({ 0.5f,0.5f,0.5f });
-    obj_->SetRotate({ 1.57f,0.0f,0.0f });
-    obj_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-#endif
+//#ifdef _DEVELOP
+//    obj_->SetMeshAndMaterial(PrimitiveFactory::GetPrimitive(Primitive::kPlane));
+//    obj_->SetScale({ 0.5f,0.5f,0.5f });
+//    obj_->SetRotate({ 1.57f,0.0f,0.0f });
+//    obj_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+//#endif
 
 }
 
@@ -116,7 +122,7 @@ void Bastet::Update() {
         }
 
 
-        //obj_->SetTranslate(footSteps_[footSteps_.size() - 1].translate);
+        obj_->SetTranslate(footSteps_[footSteps_.size() - 1].translate);
 
         obj_->Update();
 
@@ -136,7 +142,7 @@ void Bastet::Update() {
     }
 
     if (ImGui::Button("DeleteStep")) {
-        // 配列が空でない場合のみ削除する（空のときに呼ぶとエラーになります）
+        // 配列が空でない場合のみ削除する
         if (!footSteps_.empty()) {
             footSteps_.pop_back();
         }
@@ -155,7 +161,7 @@ void Bastet::Update() {
             footSteps_.erase(footSteps_.begin() + i);
 
             // 要素を削除するとループのインデックスがズレるため、
-            // 1回分のループを終了して抜けるか、ImGuiの描画をリセットします
+            // 1回分のループを終了して抜けるか、ImGuiの描画をリセット
             break;
         }
     }
@@ -197,11 +203,28 @@ void Bastet::OnCollision(Collider* collider) {
         return;
     }
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Player")) {
-        // プレイヤーとぶつかったときの処理（必要なら）
+        // プレイヤーとぶつかったときの処理
         isApper_ = true;
     }
 
 }
+
+void Bastet::RayCastHit(RaySprite& raySprite)
+{
+    AABB aabb = GetAABBWorldPos(this);
+
+    if (raySprite.IntersectsAABB(aabb, obj_->GetWorldTransform().GetWorldPosition())) {
+
+        if (InputBind::IsClick()) {
+            //正解音を鳴らす
+           SoundManager::PlayCorrectSE();
+           //次のステージに進む
+           StageManager::GetInstance()->SetNestStage(obj_->GetNextStageName());
+        }
+
+    }
+}
+
 
 void Bastet::CreateParticle()
 {

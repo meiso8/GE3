@@ -168,6 +168,13 @@ void BastetBlockMap::Update()
                 steppedOrder_.push_back(i);
             }
 
+            // 間違った順番ならリセット
+            if (steppedOrder_.size() >= correctOrder_.size() ||
+                steppedOrder_[steppedOrder_.size() - 1] != correctOrder_[steppedOrder_.size() - 1]) {
+
+                isReset = true;
+            }
+
             // 正しい順番と一致したらクリア
             if (steppedOrder_ == correctOrder_) {
                 if (!isClear_) {
@@ -176,12 +183,6 @@ void BastetBlockMap::Update()
                     return;
                 }
             }
-
-            // 全てふんでみて間違った順番ならリセット
-            if (steppedOrder_.size() >= correctOrder_.size()) {
-                isReset = true;
-            }
-
 
         }
 
