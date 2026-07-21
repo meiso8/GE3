@@ -18,7 +18,8 @@ struct ObjectMaterial
     
     float maskEdgeMin;
     float maskEdgeMax;
-    float2 padding;
+    float maskGamma;
+    float padding;
     
 };
 
@@ -100,7 +101,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     }
 
     float edge = 1.0f - smoothstep(gMaterial.maskEdgeMin, gMaterial.maskEdgeMax, mask);
-    output.color.rgb += edge * gMaterial.rgb;
+    output.color.rgb += edge * gMaterial.rgb* gMaterial.maskGamma;
     
     if (DisCardColor(textureColor.a, gMaterial.color.a, output.temperature.r))
     {
