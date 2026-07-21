@@ -11,7 +11,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
-            "name": "Object11",
+            "name": "Object111",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -45,7 +45,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object22",
+            "name": "Object222",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.20000000298023224,
@@ -79,7 +79,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object33",
+            "name": "Object333",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.20000000298023224,
@@ -113,7 +113,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object44",
+            "name": "Object444",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -147,7 +147,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object55",
+            "name": "Object555",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 1.0,
@@ -182,7 +182,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Fountain.obj",
-            "name": "Object66",
+            "name": "Object666",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -250,14 +250,14 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "player.obj",
-            "name": "Player4",
+            "name": "Player19",
             "nextStageName": "",
             "shininess": 491.148193359375,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 4.160955429077148,
+                    "y": 1.5355603694915771,
                     "z": 0.0
                 },
                 "scale": {
@@ -266,12 +266,114 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 0.37932640314102173,
+                    "x": 0.0,
                     "y": -0.5,
-                    "z": -18.93587303161621
+                    "z": -5.0
                 }
             },
             "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "name": "Bastet8",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.20000000298023224,
+            "textureHandle": 60,
+            "transform": {
+                "rotate": {
+                    "x": 1.5700000524520874,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 0.5,
+                    "y": 0.5,
+                    "z": 0.5
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Glass",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "glass.obj",
+            "name": "Object9",
+            "nextStageName": "",
+            "shininess": 368.4763488769531,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 6.830531597137451,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "disabled": false,
+            "environmentCoefficient": 1.0,
+            "file_name": "Anubis.obj",
+            "name": "Object10",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 8.848295211791992,
+                    "y": 0.0,
+                    "z": 3.831899642944336
+                }
+            },
+            "type": "MESH"
         }
     ]
 }
