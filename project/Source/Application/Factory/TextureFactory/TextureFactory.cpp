@@ -52,6 +52,7 @@ void TextureFactory::Load()
 
     Texture::LoadAndMapHandle("Resource/Textures/slot.png", SLOT);
     Texture::LoadAndMapHandle("Resource/Textures/eye.png", EYE);
+    Texture::LoadAndMapHandle("Resource/Textures/hand.png", HAND);
     Texture::LoadAndMapHandle("Resource/Textures/world.png", WORLD);
 
     Texture::LoadAndMapHandle("Resource/Textures/night.dds", SKYBOX_TEX);
@@ -80,4 +81,5 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/normalGlass.png", NORMAL_GLASS);
 
     Texture::LoadAndMapHandle("Resource/Textures/music.png", MUSIC);
+
 }

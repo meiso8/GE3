@@ -164,6 +164,11 @@ void GameScene::CheckAllCollision()
         return;
     }
 
+
+#ifdef _DEVELOP
+    collisionManager_->UpdateAllCollider();
+#endif
+
     //// ========================//Ray================================
 
     //アイテムがヒットしているか
@@ -221,8 +226,11 @@ void GameScene::Debug()
     //太陽円盤取得フラグ
     bool isGetDisc = ItemManager::IsGetSolarDisc();
     ImGui::Checkbox("isGetDisc", &isGetDisc);
-
     ItemManager::SetIsGetSolarDisc(isGetDisc);
+    //コライダーの描画フラグ
+    bool isColliderDraw =collisionManager_->GetIsDraw();
+    ImGui::Checkbox("isColliderDraw", &isColliderDraw);
+    collisionManager_->SetIsDraw(isColliderDraw);
 
     ImGui::End();
     //プレイヤーのデバッグ
@@ -232,8 +240,6 @@ void GameScene::Debug()
         auto* stageManager = StageManager::GetInstance();
         stageManager->SetNestStage("BastetStage");
     }
-
-
 
 #endif // !USE_IMGUI
 
@@ -255,8 +261,13 @@ void GameScene::DrawModel() {
 
     //プレイヤーの描画
     player_->Draw(*currentCamera_);
-    ////アイテムを手前に描画する
+
+    //アイテムを手前に描画する
     itemManager_->DrawGetItem();
+
+#ifdef _DEVELOP
+    collisionManager_->DrawAllCollider(currentCamera_);
+#endif
 }
 
 void GameScene::DrawSprite() {

@@ -126,6 +126,14 @@ bool IsCollision(const Sphere& s1, const Sphere& s2);
 /// @return 当たったかどうか
 bool IsCollision(const Segment& segment, const Plane& plane);
 
+/// @brief 半直線と球の衝突判定
+/// @param ray 半直線
+/// @param sphere 球
+/// @param Q1 貫通点1
+/// @param Q2 貫通点2
+/// @return 当たったかどうか
+bool IsCollision(const Ray& ray, const Sphere& sphere, Vector3& Q1, Vector3& Q2);
+
 /// @brief 半直線と平面の衝突判定
 /// @param ray 半直線
 /// @param plane 平面

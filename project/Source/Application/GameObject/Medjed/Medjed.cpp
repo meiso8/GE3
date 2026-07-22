@@ -95,6 +95,8 @@ void Medjed::Update()
     if (isFind_) {
         aniTimer_ += TimeManager::DeltaTime() * 0.25f;
         aniTimer_ = std::clamp(aniTimer_, 0.0f, 1.0f);
+        SetColor({ 1.0f,1.0f,1.0f,1.0f });
+        aniObj_->SetMaskVol(Easing::EaseInOut(1.0f, 0.0f, aniTimer_));
         aniObj_->SetColor({ 1.0f,1.0f,1.0f,Easing::EaseInOut(0.0f,1.0f,aniTimer_) });
     } else {
         SetColor({ 1.0f,1.0f,1.0f,0.0f });
@@ -102,7 +104,6 @@ void Medjed::Update()
 
     aniObj_->UpdateAniTimer();
     aniObj_->Update();
-    ColliderUpdate();
 
 #ifdef USE_IMGUI
 
@@ -121,6 +122,7 @@ void Medjed::Init()
     isHit_ = false;
     isFind_ = false;
     aniObj_->Initialize();
+    aniObj_->SetMaskVol(0.0f);
     aniObj_->SetAnimation("Idle");
     aniObj_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
     aniObj_->SetObjectName("Medjed");
@@ -132,7 +134,7 @@ void Medjed::Draw(Camera& camera)
     if (IsHide()) {
         return;
     }
-    /*   ColliderDraw(camera);*/
+
     aniObj_->Draw(camera);
 
 

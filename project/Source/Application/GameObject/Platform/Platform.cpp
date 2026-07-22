@@ -34,13 +34,11 @@ void Platform::Initialize() {
 
 void Platform::Update() {
     object_->Update();
-    ColliderUpdate();
-
 }
 
 void Platform::Draw(Camera& camera) {
     object_->Draw(camera);
-    ColliderDraw(camera);
+   
 }
 
 

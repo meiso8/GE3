@@ -145,10 +145,7 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
         const auto& obj = item->GetObject3d();
         if (!obj) continue;
 
-        AABB box = GetAABBWorldPos(item.get()); // AABBなど
-        Vector3 itemPos = item->GetWorldPosition();
-
-        if (raySprite.IntersectsAABB(box, itemPos)) {
+        if (raySprite.Intersect(item.get())) {
 
             obj->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 

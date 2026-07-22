@@ -185,8 +185,8 @@ void BlockMap::RayCastHit(RaySprite& raySprite)
     for (auto& y : map_) {
         for (auto& block : y) {
             if (!block->GetIsPush() && block->CanPushBlock()) {
-                AABB aabb = GetAABBWorldPos(block.get());
-                if (raySprite.IntersectsAABB(aabb, block->GetWorldTransform().GetWorldPosition())) {
+
+                if (raySprite.Intersect( block.get())) {
 
                     block->SetColor({ 1.0f,0.0f,0.0f,1.0f });
                     block->RayCastHit();

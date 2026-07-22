@@ -31,7 +31,6 @@ uint32_t CollisionTag::GetTag(const std::string& tagName)
 void TagFactory::SetTag()
 {
 
-
    CollisionTag::AddTag("Player");
    CollisionTag::AddTag("PlayerBulletCold");
    CollisionTag::AddTag("PlayerBulletHot");
@@ -47,8 +46,10 @@ void TagFactory::SetTag()
    CollisionTag::AddTag("Wall");
    CollisionTag::AddTag("Floor");
    CollisionTag::AddTag("Water");
-   
+   CollisionTag::AddTag("Block");
+
    CollisionTag::AddTag("Item");
+   CollisionTag::AddTag("Memo");
 
    CollisionTag::AddTag("StageTrigger");
 }

@@ -202,7 +202,7 @@ bool IsCollision(const Ray& ray, const Sphere& sphere,Vector3& Q1,Vector3& Q2) {
    float a1 = (B - s) / A;
    float a2 = (B + s) / A;
 
-   if (a1 < 0.0f || a1 < 0.0f) {
+   if (a1 < 0.0f || a2 < 0.0f) {
        //レイの反対で衝突
        return false;
    }

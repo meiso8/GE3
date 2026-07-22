@@ -3,7 +3,7 @@
 
 Memo::Memo() {
 
-    SetCollisionAttribute(CollisionTag::GetTag("Wall"));
+    SetCollisionAttribute(CollisionTag::GetTag("Memo"));
     SetCollisionMask(CollisionTag::GetTag("Player"));
 
     SetAABB({ .min = {-0.5f,-0.5f,-0.5f}, .max = {0.5f,0.5f,0.5f} });
@@ -23,12 +23,11 @@ void Memo::Initialize() {
 void Memo::Update() {
     object_->Update();
     object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-    ColliderUpdate();
 }
 
 void Memo::Draw(Camera& camera) {
     object_->Draw(camera);
-    ColliderDraw(camera);
+
 }
 void Memo::OnCollision(Collider* collider)
 {

@@ -4,6 +4,10 @@
 #include"Input.h"
 #include"Sound.h"
 #include"InputBind.h"
+#include"Collider.h"
+#include"CollisionManager.h"
+#include"Collision.h"
+
 
 RaySprite::RaySprite()
 {
@@ -27,17 +31,22 @@ void RaySprite::Draw()
     sprite_->Draw();
 }
 
-bool RaySprite::IntersectsAABB(const AABB& aabb, const Vector3& pos,const float kMaxDistance)
+bool RaySprite::Intersect(Collider* collider,const float kMaxDistance)
 {
+    if (collider == nullptr) {
+        return false;
+    }
 
-    if (RayIntersectsAABB(ray_, aabb, tMin_, tMax_)) {
 
-        float dist = Distance(ray_.origin, pos);
-        if (dist <= kMaxDistance) {
-            OnCollisionColor();
-            return true;
-        }
 
+    auto type = collider->GetType();
+
+    if (type == Collider::kSphere) {
+        return IntersectSphere(collider, kMaxDistance);
+    }
+
+    if (type == Collider::kAABB) {
+       return IntersectAABB(collider, kMaxDistance);
     }
 
     return false;
@@ -45,5 +54,62 @@ bool RaySprite::IntersectsAABB(const AABB& aabb, const Vector3& pos,const float 
 
 void RaySprite::Update()
 {
-    sprite_->SetColor({ 1.0f,1.0f,1.0f,0.125f });
+    sprite_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
+}
+
+bool RaySprite::IntersectAABB(Collider* collider, const float kMaxDistance)
+{
+
+    if (RayIntersectsAABB(ray_, ColliderWorldPos::GetAABBWorldPos(collider), tMin_, tMax_)) {
+        return CanSelect(collider,kMaxDistance);
+    }
+
+    return false;
+}
+
+bool RaySprite::IntersectSphere(Collider* collider, const float kMaxDistance)
+{
+    Vector3 pos1 = {0.0f};
+    Vector3 pos2 = {0.0f};
+    Sphere  sphere = ColliderWorldPos::GetSphereWorldPos(collider);
+    if (IsCollision(ray_, sphere, pos1, pos2)) {
+        return CanSelect(collider, kMaxDistance);
+    };
+
+    return false;
+}
+
+bool RaySprite::CanSelect(Collider* collider, const float kMaxDistance)
+{
+    float dist = Distance(ray_.origin, collider->CalculateWorldPos());
+    if (dist <= kMaxDistance) {
+        OnCollisionColor();
+        SetSprite(collider);
+        return true;
+    }
+
+    return false;
+}
+
+void RaySprite::SetSprite(Collider* collider)
+{
+    //アイテムのタグからテクスチャをセットする
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Item")||
+        collider->GetCollisionAttribute() == CollisionTag::GetTag("Block")) {
+        sprite_->SetTexture(TextureFactory::HAND);
+    }
+
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Memo")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("Medjed")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("Enemy")
+        ) {
+        sprite_->SetTexture(TextureFactory::EYE);
+    }
+
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("EnemyBulletCold")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("EnemyBulletHot")
+        ) {
+       /* sprite_->SetTexture(TextureFactory::EYE);*/
+    }
+
 }

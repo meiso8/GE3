@@ -132,8 +132,8 @@ void MeltBlockMap::RayCastHit(RaySprite& raySprite)
     for (int i = 0; i < kMaxBolckTempareture; ++i) {
 
         if (!blocks_[i]->GetIsPush()) {
-            AABB aabb = GetAABBWorldPos(blocks_[i].get());
-            if (raySprite.IntersectsAABB(aabb, blocks_[i]->GetWorldTransform().GetWorldPosition())) {
+
+            if (raySprite.Intersect(blocks_[i].get())) {
                 Vector4 color = COLOR::ToShadowColor(colorMap_[i]);
                 blocks_[i]->SetColor(color);
                 //ブロックテクスチャによって判定しない

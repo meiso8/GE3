@@ -3,7 +3,7 @@
 #include "Collision.h"
 #include"Sound.h"
 
-AABB GetAABBWorldPos(Collider* aabb)
+AABB ColliderWorldPos::GetAABBWorldPos(Collider* aabb)
 {
     //中心点を考慮した座標を取得してくる
     Vector3 pos = aabb->CalculateWorldPos();
@@ -13,7 +13,7 @@ AABB GetAABBWorldPos(Collider* aabb)
     return aabbWorld;
 }
 
-Sphere GetSphereWorldPos(Collider* sphere)
+Sphere ColliderWorldPos::GetSphereWorldPos(Collider* sphere)
 {
     //中心点を考慮した座標を取得してくる
     return Sphere{
@@ -49,6 +49,11 @@ void CollisionManager::CheckAllCollisions() {
 
 void CollisionManager::DrawAllCollider(Camera* camera)
 {
+
+    if (!isDraw_) {
+        return;
+    }
+
     for (auto& collider : colliders_) {
         collider->ColliderDraw(*camera);
     }
@@ -64,7 +69,7 @@ void CollisionManager::UpdateAllCollider()
 void CollisionManager::CheckCollisionSpherePair(Collider* colliderA, Collider* colliderB)
 {
     // 衝突判定
-    if (IsCollision(GetSphereWorldPos(colliderA), GetSphereWorldPos(colliderB))) {
+    if (IsCollision(ColliderWorldPos::GetSphereWorldPos(colliderA), ColliderWorldPos::GetSphereWorldPos(colliderB))) {
         
         OnCollision(colliderA, colliderB);
     }
@@ -72,8 +77,8 @@ void CollisionManager::CheckCollisionSpherePair(Collider* colliderA, Collider* c
 
 void CollisionManager::CheckCollisionAABBPair(Collider* colliderA, Collider* colliderB)
 {
-    AABB worldPosA = GetAABBWorldPos(colliderA);
-    AABB worldPosB = GetAABBWorldPos(colliderB);
+    AABB worldPosA = ColliderWorldPos::GetAABBWorldPos(colliderA);
+    AABB worldPosB = ColliderWorldPos::GetAABBWorldPos(colliderB);
 
     colliderA->SetCollisionInfo(GetCollisionInfo(worldPosA, worldPosB));
     colliderB->SetCollisionInfo(GetCollisionInfo(worldPosA, worldPosB));
@@ -87,9 +92,8 @@ void CollisionManager::CheckCollisionAABBPair(Collider* colliderA, Collider* col
 void CollisionManager::CheckCollisionSphereAABBPair(Collider* sphereC, Collider* aabbC)
 {
 
-
-    Sphere worldSphereC = GetSphereWorldPos(sphereC);
-    AABB worldAABBC = GetAABBWorldPos(aabbC);
+    Sphere worldSphereC = ColliderWorldPos::GetSphereWorldPos(sphereC);
+    AABB worldAABBC = ColliderWorldPos::GetAABBWorldPos(aabbC);
 
     CollisionInfo info = GetCollisionInfo(worldSphereC, worldAABBC);
 
@@ -106,10 +110,6 @@ void CollisionManager::CheckCollisionSphereAABBPair(Collider* sphereC, Collider*
         OnCollision(aabbC, sphereC);
     }
 
-    //// 衝突判定
-    //if (IsCollision(GetAABBWorldPos(aabbC), GetSphereWorldPos(sphereC))) {
-    //    OnCollision(sphereC, aabbC);
-    //}
 }
 
 

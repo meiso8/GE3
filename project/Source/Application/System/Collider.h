@@ -46,12 +46,12 @@ private:
 
 	Vector3 tempWorldTransform_ = {0.0f};
 	bool isCalculatedThisFrame_ = false; // 今フレーム計算済みかどうかのフラグ
-#ifdef _DEBUG
+#ifdef _DEVELOP
 	//デバック用
 	std::unique_ptr<Primitive>debugMesh_ = nullptr;
 	//位置
 	std::unique_ptr<Object3d> object3d_ = nullptr;
-#endif // DEBUG
+#endif // _DEVELOP
 public:
 	Collider();
 	virtual ~Collider();
@@ -98,7 +98,7 @@ public:
 	/// @param radius 衝突半径
 	void SetRadius(float radius) { 
 		type_ = ColliderType::kSphere;
-#ifdef _DEBUG
+#ifdef _DEVELOP
 
 		if (debugMesh_) {
 			debugMesh_->Create(PrimitiveGenerator::CreateSphere({ .center = {0.0f,0.0f,0.0f}, .radius = radius }));
@@ -113,7 +113,7 @@ public:
 
 		type_ = ColliderType::kAABB;
 
-#ifdef _DEBUG
+#ifdef _DEVELOP
 		if (debugMesh_) {
 			debugMesh_->Create(PrimitiveGenerator::CreateCube(aabb));
 			object3d_->SetMeshAndMaterial(debugMesh_.get());

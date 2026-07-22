@@ -84,16 +84,13 @@ void Fountain::Update()
     } 
  
     DebugUI::CheckEmitter(particleEmitter_[1]->GetEmitter(),"water");
-
-    ColliderUpdate();
-    //StageManager::GetInstance()->SetNestStage("MedjedStage");
 }
 
 void Fountain::Draw(Camera& camera)
 {
     object_->Draw(camera);
     waterObject_->Draw(camera);
-    ColliderDraw(camera);
+
 }
 
 void Fountain::OnCollision(Collider* collider)
