@@ -211,9 +211,8 @@ void Bastet::OnCollision(Collider* collider) {
 
 void Bastet::RayCastHit(RaySprite& raySprite)
 {
-    AABB aabb = GetAABBWorldPos(this);
 
-    if (raySprite.IntersectsAABB(aabb, obj_->GetWorldTransform().GetWorldPosition())) {
+    if (raySprite.Intersect(this,2.0f)) {
 
         if (InputBind::IsClick()) {
             //正解音を鳴らす

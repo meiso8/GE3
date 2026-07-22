@@ -10,6 +10,7 @@ Bullet::Bullet() {
     body_->Create();
     body_->SetMeshAndMaterial(model_);
     body_->SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
+   
     SetAABB({ {-1.0f,-1.0f,-1.0f} ,{1.0f,1.0f,1.0f} });
     SetBulletType(kEnemyCold);
     SetWorldMatrix(body_->GetWorldTransform());
@@ -68,9 +69,6 @@ void Bullet::Update() {
     transform.translate += moveDir_ * moveSpeed_;
     body_->Update();
 
-
-    ColliderUpdate();
-
 }
 
 void Bullet::Draw(Camera& camera) {
@@ -80,7 +78,7 @@ void Bullet::Draw(Camera& camera) {
     }
 
     body_->Draw(camera, kBlendModeNormal);
-    ColliderDraw(camera);
+ 
 }
 
 void Bullet::SetBulletType(const BulletType& type)

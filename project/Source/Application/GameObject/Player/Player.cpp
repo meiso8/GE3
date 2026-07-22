@@ -46,6 +46,7 @@ void Player::OnCollision(Collider* collider)
         || collider->GetCollisionAttribute() == CollisionTag::GetTag("Enemy")
         || collider->GetCollisionAttribute() == CollisionTag::GetTag("Mummy")
         || collider->GetCollisionAttribute() == CollisionTag::GetTag("Floor")
+        || collider->GetCollisionAttribute() == CollisionTag::GetTag("Block")
 
         ) {
 
@@ -81,6 +82,7 @@ Player::Player() {
         | CollisionTag::GetTag("Water") 
         | CollisionTag::GetTag("Floor")
         | CollisionTag::GetTag("StageTrigger")
+        | CollisionTag::GetTag("Block")
     );
 
     //それぞれのObject3dを作る
@@ -164,7 +166,7 @@ void Player::Draw(Camera& camera)
 #ifdef _DEBUG
     bodyPos_->Draw(camera);
     eyeCollider_->Draw(camera);
-    ColliderDraw(camera);
+ 
 #endif
 }
 
@@ -200,8 +202,7 @@ void Player::Update()
 
     bodyPos_->Update();
     eyeCollider_->Update();
-   
-    ColliderUpdate();
+
 }
 
 void Player::Debug()

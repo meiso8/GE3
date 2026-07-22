@@ -77,9 +77,8 @@ void ShotBulletManager::RayCastHit()
 
         if (!bullet->GetIsActive() && bullet->GetType() != Bullet::kPlayerCold && bullet->GetType() != Bullet::kPlayerHot) { continue; }
 
-        AABB aabb = GetAABBWorldPos(bullet.get());
 
-        if (raySprite_->IntersectsAABB(aabb, bullet->GetWorldPosition())) {
+        if (raySprite_->Intersect( bullet.get())) {
 
             bullet->SetColor({ 1.0f,0.5f,0.5f,1.0f });
 

@@ -47,7 +47,7 @@ void Item::DrawInfoUI()
 void Item::Draw(Camera& camera)
 {
     object_->Draw(camera);
-    //ColliderDraw(camera);
+
 }
 
 void Item::DrawForSlotItem(Camera& camera)
@@ -118,5 +118,5 @@ void Item::Update()
 {
     object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
     object_->Update();
-    ColliderUpdate();
+
 }

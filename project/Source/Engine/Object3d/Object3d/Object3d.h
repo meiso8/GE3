@@ -52,10 +52,10 @@ public:
         //マスクの色
         float32_t3 rgb;
 
-        float maskEdgeMin;
-        float maskEdgeMax;
-        float maskGamma;
-        float padding;
+        float32_t maskEdgeMin;
+        float32_t maskEdgeMax;
+        float32_t maskGamma;
+        float32_t padding;
     };
 
 protected:
@@ -176,6 +176,12 @@ public:
     void SetTemperature(const float temp) { material_->temperature = temp; }
     //温度の設定
     float32_t GetTemperature() { return material_->temperature; }
+    //マスク量の設定
+    void SetMaskVol(const float maskVol) { material_->maskVal = maskVol; };
+    //マスク量の設定
+    float32_t GetMaskVol() { return material_->maskVal; }
+
+
 
     // ==============UVデータ==================
 

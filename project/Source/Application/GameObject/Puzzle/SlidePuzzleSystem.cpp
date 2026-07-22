@@ -92,10 +92,8 @@ void SlidePuzzleSystem::RayCastHit(RaySprite& ray)
     if (isActive_) {
         return;
     }
-    AABB box = GetAABBWorldPos(puzzleObj_.get()); // AABBなど
-    Vector3 itemPos = puzzleObj_->GetWorldPosition();
 
-    if (ray.IntersectsAABB(box, itemPos)) {
+    if (ray.Intersect(puzzleObj_.get())) {
 
         puzzleObj_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 

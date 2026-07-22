@@ -136,9 +136,6 @@ void Enemy::Draw(Camera& camera, const Object3d::LightMode& lightMode)
     bodyPos_->Draw(camera);
     //ColliderDraw(camera);
 
-    for (auto& [name, group] : colliders_) {
-        group.collider_->ColliderDraw(camera);
-    }
 }
 
 void Enemy::Update()
@@ -199,19 +196,11 @@ void Enemy::Update()
     bodyPos_->Update();
 
 
-
-    ColliderUpdate();
-
     //マトリックスの更新
     colliders_["EnemyFoot_L"].matrix_ = bodyPos_->GetWorldJointMatrix("foot_L");
     colliders_["EnemyFoot_R"].matrix_ = bodyPos_->GetWorldJointMatrix("foot_R");
     //頭の位置を仮入れ
     colliders_["EnemyHead"].matrix_ = bodyPos_->GetWorldJointMatrix("head");
-
-    for (auto& [name, collider] : colliders_) {
-        /*   collider.collider_->SetWorldMatrix(collider.matrix_);*/
-        collider.collider_->ColliderUpdate();
-    }
 
 
     for (auto& [name, mat] : eyeMats_) {

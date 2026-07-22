@@ -43,20 +43,13 @@ void MedjedManager::RayCastHit() {
 
     for (auto& medjed : dummyMedjeds_) {
 
-        AABB aabb = GetAABBWorldPos(medjed.get());
+        AABB aabb = ColliderWorldPos::GetAABBWorldPos(medjed.get());
         float dist = 5.0f;
         if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
             dist = 10.0f;
-
         }
 
-        if (raySprite_->IntersectsAABB(aabb, medjed->GetWorldTransform().GetWorldPosition(), dist)) {
-            if (auto correctMedjed = dynamic_cast<Medjed*>(medjed.get())) {
-                medjed->SetColor({ 1.0f,1.0f,1.0f,0.5f });
-            } else {
-                medjed->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-            }
-
+        if (raySprite_->Intersect(medjed.get(), dist)) {
 
             //メジェドざまを当ててないとき
             if (!GetIsFindMedjed()) {

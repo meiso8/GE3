@@ -10,13 +10,13 @@ void Collider::InitCalcuatedTisFrameFlag()
 
 Collider::Collider()
 {
-#ifdef _DEBUG
+#ifdef _DEVELOP
     object3d_ = std::make_unique<Object3d>();
     object3d_->Create();
     debugMesh_ = std::make_unique<Primitive>();
     debugMesh_->Create(PrimitiveGenerator::CreateSphere({ .center = {0.0f,0.0f,0.0f}, .radius = 0.5f }));
     object3d_->SetMeshAndMaterial(debugMesh_.get());
-#endif // _DEBUG
+#endif // _DEVELOP
 
     collisionInfo_.collided = false;
     collisionInfo_.normal = { 0.0f,0.0f,0.0f };
@@ -31,10 +31,10 @@ Collider::Collider()
 
 Collider::~Collider()
 {
-#ifdef _DEBUG
+#ifdef _DEVELOP
     object3d_.reset();
     debugMesh_.reset();
-#endif // _DEBUG
+#endif // _DEVELOP
 }
 
 const Vector3& Collider::CalculateWorldPos()
@@ -50,9 +50,9 @@ const Vector3& Collider::CalculateWorldPos()
     //行列から位置を取得する
     tempWorldTransform_ = Math::GetWorldTransformByMatrix(child);
 
-#ifdef _DEBUG
+#ifdef _DEVELOP
     object3d_->SetTranslate(tempWorldTransform_);
-#endif // _DEBUG
+#endif // _DEVELOP
 
     //計算終了
     isCalculatedThisFrame_ = true;
@@ -62,25 +62,25 @@ const Vector3& Collider::CalculateWorldPos()
 
 void Collider::ColliderUpdate()
 {
-#ifdef _DEBUG
+#ifdef _DEVELOP
     object3d_->SetColor({ 1.0f,1.0f,0.0f,0.5f });
     object3d_->Update();
-#endif // _DEBUG
+#endif // _DEVELOP
 }
 
 void Collider::ColliderDraw(Camera& camera)
 {
-#ifdef _DEBUG
+#ifdef _DEVELOP
     object3d_->SetLightMode(Object3d::kLightModeNone);
     object3d_->Draw(camera);
-#endif // _DEBUG
+#endif // _DEVELOP
 }
 
 void Collider::OnCollisionCollider()
 {
-#ifdef _DEBUG
+#ifdef _DEVELOP
     object3d_->SetColor({ 1.0f,0.0f,0.0f,0.5f });
-#endif // _DEBUG
+#endif // _DEVELOP
 
 }
 

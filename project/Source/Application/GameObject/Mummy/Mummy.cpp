@@ -27,7 +27,7 @@ Mummy::Mummy() {
 
     aniObj_->SetModelAndLoadAnimation(coffinModel_);
 
-    SetCollisionAttribute(CollisionTag::GetTag("Wall")); // ミイラの衝突属性
+    SetCollisionAttribute(CollisionTag::GetTag("Block"));
 
     // プレイヤーや壁と衝突
     SetCollisionMask(

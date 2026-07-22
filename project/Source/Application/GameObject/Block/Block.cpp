@@ -10,7 +10,8 @@
 #include"../Engine/ImGui/DebugUI.h"
 Block::Block()
 {
-    SetCollisionAttribute(CollisionTag::GetTag("Floor"));
+    SetCollisionAttribute(CollisionTag::GetTag("Block"));
+
     SetCollisionMask(
           CollisionTag::GetTag("Player")
         | CollisionTag::GetTag("Enemy") 
@@ -41,7 +42,7 @@ void Block::Update()
     }
 
     object_->Update();
-    ColliderUpdate();
+
 }
 
 void Block::OnCollision(Collider* collider)

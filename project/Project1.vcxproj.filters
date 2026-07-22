@@ -177,6 +177,7 @@
     <ClCompile Include="Source\Engine\Mesh\Model\Model.cpp" />
     <ClCompile Include="Source\Engine\Particle\GPUParticle.cpp" />
     <ClCompile Include="Source\Engine\Particle\GPUParticleEmitter\GPUParticleEmitter.cpp" />
+    <ClCompile Include="Source\ColliderObject\ColliderObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -384,6 +385,7 @@
     <ClInclude Include="Source\Engine\Particle\GPUParticleEmitter\GPUParticleEmitter.h" />
     <ClInclude Include="Source\Engine\Particle\ParticleStruct.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\Melt.h" />
+    <ClInclude Include="Source\ColliderObject\ColliderObject.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />

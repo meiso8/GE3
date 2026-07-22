@@ -114,9 +114,7 @@ void MummyStage::Update() {
 bool MummyStage::IsRayCastHit(RaySprite& raySprite)
 {
 
-    AABB aabb = GetAABBWorldPos(mummy_.get());
-
-    if (raySprite.IntersectsAABB(aabb, mummy_->GetWorldTransform().GetWorldPosition())) {
+    if (raySprite.Intersect( mummy_.get())) {
 
         if (InputBind::IsClick()) {
             //Openしていなかったらmummyをあける

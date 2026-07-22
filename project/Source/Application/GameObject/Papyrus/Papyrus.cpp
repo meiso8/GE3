@@ -44,13 +44,10 @@ void Papyrus::Initialize() {
 
 void Papyrus::Update() {
     object_->Update();
-    ColliderUpdate();
 }
 
 void Papyrus::Draw(Camera& camera) {
     object_->Draw(camera);
-    ColliderDraw(camera);
-
 }
 
 void Papyrus::OnCollision(Collider* collider) {
