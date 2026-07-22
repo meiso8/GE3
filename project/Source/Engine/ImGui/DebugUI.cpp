@@ -833,6 +833,7 @@ void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForRenderTextu
         if (ImGui::Combo("EffectType", &type_current, lights, IM_ARRAYSIZE(lights))) {
             material.type = type_current % 3;
         };
+        ImGui::SliderFloat("effectVol", &material.effectVol,0.0f,1.0f);
         ImGui::TreePop();
     }
 #endif

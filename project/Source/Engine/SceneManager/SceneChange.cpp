@@ -3,16 +3,13 @@
 #include"Easing.h"
 #include"ImGuiClass.h"
 #include"TimeManager.h"
-
-float SceneChange::timer_ = 0.0f;
-float SceneChange::endTime_ = 1.0f;
+#include"PostProcessManager/PostProcessManager.h"
 
 std::unordered_map<SceneChange::State, PFunc>SceneChange::StatesUpdate_ =
 {
     {State::kFadeIn, &SceneChange::FadeIn},
     {State::kFadeOut, &SceneChange::FadeOut},
-    {State::kWipeIn, &SceneChange::WipeIn},
-    {State::kWipeOut, &SceneChange::WipeOut},
+
 };
 
 SceneChange::~SceneChange()
@@ -43,39 +40,51 @@ void SceneChange::Initialize()
 
 void SceneChange::FadeOut()
 {
-    sprite_->SetScale({ 1.0f,1.0f });
-    sprite_->SetColor({ 0.0f,0.0f,0.0f,1.0f - timer_ / endTime_ });
+
+    float time = 1.0f - timer_ / endTime_;
+
+    
+    sprite_->SetColor({ 0.0f,0.0f,0.0f,time });
+
+    auto* grayScaleaterial = PostProcessManager::GetInstance()->
+        GetPostEffectMaterial(PostProcessManager::kModel)->
+        GetMaterialGrayScale();
+    grayScaleaterial->useEffect = true;
+    grayScaleaterial->type = PostEffectMaterial::RenderTextureEffectType::kGrayScale;
+    grayScaleaterial->effectVol = EaseOutQuadT(time);
 }
 
 void SceneChange::FadeIn()
 {
-    sprite_->SetScale({ 1.0f,1.0f });
-    sprite_->SetColor({ 0.0f,0.0f,0.0f,timer_ / endTime_ });
+    float time = timer_ / endTime_;
+    sprite_->SetColor({ 0.0f,0.0f,0.0f,time });
+
+    auto* grayScaleaterial = PostProcessManager::GetInstance()->
+        GetPostEffectMaterial(PostProcessManager::kModel)->
+        GetMaterialGrayScale();
+    grayScaleaterial->useEffect = true;
+    grayScaleaterial->type = PostEffectMaterial::RenderTextureEffectType::kGrayScale;
+    grayScaleaterial->effectVol = EaseInQuadT(time);
 }
 
-void SceneChange::WipeOut()
-{
-    sprite_->SetColor({ 0.0f,0.0f,0.0f,1.0 });
-    sprite_->SetScale(Easing::EaseOutSine(Vector2{ 1.0f,1.0f }, { 0.0f,1.0f }, timer_ / endTime_));
-}
-
-void SceneChange::WipeIn()
-{
-    sprite_->SetColor({ 0.0f,0.0f,0.0f,1.0 });
-    sprite_->SetScale(Easing::EaseOutSine(Vector2{ 0.0f,1.0f }, { 1.0f,1.0f }, timer_ / endTime_));
-}
 
 
 void SceneChange::SwitchScene()
 {
     if (state_ == kSceneStart || state_ == kSceneEnd) {
         state_ = kUnKnown;
+
     }
-    if (state_ == kFadeOut || state_ == kWipeOut) {
+    if (state_ == kFadeOut ) {
         state_ = kSceneStart;
         sprite_->SetColor({ 0.0f,0.0f,0.0f,0.0f});
+        auto* grayScaleaterial = PostProcessManager::GetInstance()->
+            GetPostEffectMaterial(PostProcessManager::kModel)->
+            GetMaterialGrayScale();
+        grayScaleaterial->useEffect = false;
+
     }
-    if (state_ == kFadeIn || state_ == kWipeIn) {
+    if (state_ == kFadeIn ) {
         state_ = kSceneEnd;
     }
 }
@@ -91,7 +100,7 @@ void SceneChange::Update()
 
 void SceneChange::TimerUpdate()
 {
-    if (timer_ == endTime_) { return; }
+    if (timer_ >= endTime_) { return; }
 
     timer_+= TimeManager::DeltaTime();
 
