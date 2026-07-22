@@ -116,6 +116,7 @@ void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handl
         case TextureFactory::BOOK3: key = "book3"; break;
         case TextureFactory::BOOK4: key = "book4"; break;
         case TextureFactory::BOOK5: key = "book5"; break;
+        case TextureFactory::BOOK6: key = "book6"; break;
         default: continue;
         }
 
@@ -127,15 +128,9 @@ void MemoManager::GenerateMemos(const std::vector<TextureFactory::Handle>& handl
             transform.rotate.x = file[key]["rotate"]["x"];
             transform.rotate.y = file[key]["rotate"]["y"];
             transform.rotate.z = file[key]["rotate"]["z"];
-            memo->GetWorldTransform().eTransform_ = transform;
-        }
-
-        if (handle == TextureFactory::BOOK || handle == TextureFactory::BOOK2 || handle == TextureFactory::BOOK5) {
-            memo->SetCubeSize(memoAABB["bookSize"]);
-        } else if (handle == TextureFactory::BOOK3 || handle == TextureFactory::BOOK4) {
-            memo->SetCubeSize(memoAABB["noteSize"]);
-        } else {
-            memo->SetCubeSize(memoAABB["memoSize"]);
+            memo->GetWorldTransform().eTransform_ = transform;  
+            //大きさの設定は別で
+            memo->SetCubeSize(memoAABB[file[key]["size"]]);
         }
 
 

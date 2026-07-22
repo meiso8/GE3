@@ -16,6 +16,8 @@ void BastetStage::Initialize()
     lightingManager_->Initialize();
     //パーティクルのリセット
     ParticleManager::ResetAll();
+
+    memoManager_->GenerateMemos({ TextureFactory::BOOK6 });
     //背景の初期化
     backGround_->Initialize();
    

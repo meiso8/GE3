@@ -140,6 +140,10 @@ void Player::Init(const Vector3& pos)
         GetMaterialForDissolve()
         ->maskVal = 1.0f - thermography_;
 
+    auto* vignetteMaterial = PostProcessManager::GetInstance()->
+        GetPostEffectMaterial(PostProcessManager::kModel)->
+        GetMaterialForVignette();
+
     Json file = JsonFile::GetJsonFiles("config");
 
     characterState_.hps.hp = file["CharacterState"]["hp"];
@@ -187,7 +191,7 @@ void Player::Update()
     Move();
     Jump();
     Zoom();
-    /*   LookBack();*/
+
     Thermography();
     MouseLook();
     UpdateRay();
@@ -499,6 +503,10 @@ void Player::OnCollisionEnemy(const int hitPoint)
     hitTimer_ = 1.0f;
 
     if (characterState_.hps.hp <= 0.0f) {
+        auto* material = PostProcessManager::GetInstance()->
+            GetPostEffectMaterial(PostProcessManager::kModel)->
+            GetMaterialForVignette();
+      
         characterState_.isDead = true;
     }
 
