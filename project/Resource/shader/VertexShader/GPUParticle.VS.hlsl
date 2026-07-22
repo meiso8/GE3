@@ -17,10 +17,8 @@ VertexShaderOutput main(VertexShaderInput input, uint instanceId : SV_InstanceID
     worldMatrix[2] *= particle.scale.z;
     worldMatrix[3].xyz = particle.translate;
     
-    
     output.position = mul(input.position, mul(worldMatrix,gParView.viewProjection));
     output.texcoord = input.texcoord;
-    //Skup Normal
     output.color = particle.color;
     output.normal = float3(0.0f, 0.0f, -1.0f);
     return output;

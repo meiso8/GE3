@@ -82,6 +82,8 @@ public:
         MELT_GLASS,
         NORMAL_GLASS,
         MUSIC,
+        //後でここら辺のシステムを変更する。6番
+        BOOK6,
         // ======================
         TEXTURES,
     };

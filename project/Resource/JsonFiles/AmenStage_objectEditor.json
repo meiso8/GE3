@@ -11,7 +11,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object61",
+            "name": "Object611",
             "nextStageName": "",
             "shininess": 0.0,
             "temperature": 0.5,
@@ -130,9 +130,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -17.933629989624023,
-                    "y": 1.306300401687622,
-                    "z": -24.168039321899414
+                    "x": -17.931665420532227,
+                    "y": 1.1074283123016357,
+                    "z": -25.398239135742188
                 }
             },
             "type": "StageChangeTrigger"
@@ -148,14 +148,14 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "player.obj",
-            "name": "Player5",
+            "name": "Player19",
             "nextStageName": "",
             "shininess": 491.148193359375,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 1.5625569820404053,
+                    "y": 6.445784568786621,
                     "z": 0.0
                 },
                 "scale": {
@@ -164,9 +164,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -17.211883544921875,
+                    "x": -18.6701602935791,
                     "y": -0.5,
-                    "z": -20.160476684570313
+                    "z": -16.643125534057617
                 }
             },
             "type": "EMPTY"
@@ -182,7 +182,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Puzzle.gltf",
-            "name": "PuzzleObj6",
+            "name": "PuzzleObj5",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.75,
@@ -216,7 +216,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "AmenRa.obj",
-            "name": "AmenRa7",
+            "name": "AmenRa6",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.10000000149011612,
