@@ -12,11 +12,18 @@ class Camera;
 class PostEffectMaterial
 {
 public:
+    enum RenderTextureEffectType {
+             kSepia,
+             kGrayScale,
+             kNone,
+    };
+
     struct MaterialForRenderTexture {
         float4 color;
         bool useEffect = false;
         uint32_t type = false;
-        bool padding[2] = { };
+        float effectVol;
+        float padding;
     };
 
     struct MaterialForVignette

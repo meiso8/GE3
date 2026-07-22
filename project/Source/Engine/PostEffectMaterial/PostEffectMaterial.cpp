@@ -93,6 +93,7 @@ void PostEffectMaterial::CreateMaterialBufferForGrayScale()
     materialForGrayScale_.Map();
     //マテリアルにデータを書き込む
     materialForGrayScale_.data->color = sepiaColor_;
+    materialForGrayScale_.data->effectVol = 0.0f;
 
     LogFile::Log("Create : MaterialBuffer : GrayScale\n");
 }
