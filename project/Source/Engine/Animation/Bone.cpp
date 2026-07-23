@@ -2,6 +2,7 @@
 #include"MakeMatrix.h"
 #include"Log.h"
 #include"Object3d.h"
+#include"PrimitiveFactory/PrimitiveFactory.h"
 
 Skeleton Bone::CreateSkeleton(const Node& rootNode)
 {
@@ -82,7 +83,10 @@ void Bone::UpdateSkeleton(Skeleton& skeleton)
 void DebugBone::Draw(Camera& camera)
 {
     for (auto& value : bones_) {
-        value->Draw(camera, true);
+        value->Draw(camera,kBlendModeNormal,kCullModeBack,kZero);
+    }
+    for (auto& value : boneLines_) {
+        value->Draw(camera, false,kBlendModeNormal, kCullModeBack, kAll);
     }
 }
 
@@ -93,7 +97,7 @@ void DebugBone::Finalize()
 
 DebugBone::DebugBone()
 {
- 
+
 }
 
 
@@ -102,14 +106,27 @@ void DebugBone::Create(Skeleton& skeleton)
     skeleton_ = &skeleton;
     bones_.clear();
     assert(!skeleton_->joints.empty());
+    sphere_ = std::make_unique<Primitive>();
+    sphere_->Create(PrimitiveGenerator::CreateSphere({{ 0.0f,0.0f,0.0f }, 0.0625f}, 8));
+    for (Joint& joint : skeleton_->joints) {
+
+        std::unique_ptr<Object3d> object3d = std::make_unique<Object3d>();
+        object3d = std::make_unique<Object3d>();
+        object3d->Create();
+        object3d->SetMeshAndMaterial(sphere_.get());
+        object3d->SetTranslate(joint.transform.translate);
+        object3d->SetScale({ 0.125f,0.125f,0.125f });
+        object3d->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+        bones_.push_back(std::move(object3d));
+    }
 
     for (Joint& joint : skeleton_->joints) {
 
         std::unique_ptr<LineObject3d> object3d = std::make_unique<LineObject3d>();
         object3d = std::make_unique<LineObject3d>();
-        object3d->Create(Vector3{ 0.0f,0.0f,0.0f }, joint.transform.translate);
+        object3d->Create({0.0f,0.0f,0.0f},joint.transform.translate);
         object3d->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-        bones_.push_back(std::move(object3d));
+        boneLines_.push_back(std::move(object3d));
     }
 }
 
@@ -155,14 +172,12 @@ void DebugBone::Update(const Matrix4x4& parentMatrix)
 
         if (joint.parent.has_value()) {
             int32_t parentIndex = joint.parent.value();
-            Vector3 parentPos = skeleton_->joints[parentIndex].transform.translate;
-            bones_[i]->SetVertex(joint.transform.translate, parentPos);
-
+            boneLines_[i]->SetVertex(bones_[i]->GetWorldTransform().GetWorldPosition(), bones_[parentIndex]->GetWorldTransform().GetWorldPosition());
         } else {
-            bones_[i]->SetVertex(joint.transform.translate, skeleton_->joints[0].transform.translate);
+            boneLines_[i]->SetVertex(bones_[i]->GetWorldTransform().GetWorldPosition(), bones_[0]->GetWorldTransform().GetWorldPosition());
         }
-        
-        bones_[i]->SetWorldMatrix(parentMatrix * joint.skeletonSpaceMatrix);
+        Matrix4x4 mat = joint.skeletonSpaceMatrix * parentMatrix;
+        bones_[i]->SetWorldMatrix(mat);
 
     }
 
@@ -170,7 +185,7 @@ void DebugBone::Update(const Matrix4x4& parentMatrix)
 
     ImGui::Begin("Bones");
 
-        CheckJoint(skeleton_->joints[0], skeleton_->joints);
+    CheckJoint(skeleton_->joints[0], skeleton_->joints);
 
     ImGui::End();
 #endif

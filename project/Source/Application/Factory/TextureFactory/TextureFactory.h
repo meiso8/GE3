@@ -86,6 +86,7 @@ public:
         BOOK6,
         //手
         HAND,
+        MUSIC_HINT,
         // ======================
         TEXTURES,
     };

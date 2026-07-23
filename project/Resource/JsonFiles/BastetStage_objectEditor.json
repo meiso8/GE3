@@ -11,7 +11,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
-            "name": "Object11111",
+            "name": "Object1",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -45,10 +45,10 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object55522",
+            "name": "Object2",
             "nextStageName": "",
             "shininess": 250.0,
-            "temperature": 1.0,
+            "temperature": 0.0,
             "textureHandle": 58,
             "transform": {
                 "rotate": {
@@ -71,6 +71,40 @@
         },
         {
             "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Toki",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "toki.obj",
+            "name": "Object3",
+            "nextStageName": "",
+            "shininess": 40.909000396728516,
+            "temperature": 0.5,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415908336639404,
+                    "y": 0.0015925478655844927,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -3.676196575164795,
+                    "y": 0.5955987572669983,
+                    "z": 4.790996551513672
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
                 "w": 1.0,
                 "x": 1.0,
                 "y": 1.0,
@@ -80,7 +114,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
-            "name": "Object3",
+            "name": "Object4",
             "nextStageName": "AmenStage",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -110,13 +144,13 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/AmenRa",
+            "directoryPath": "Resource/Models/Cat",
             "disabled": false,
             "environmentCoefficient": 0.0,
-            "file_name": "AmenRa.obj",
-            "name": "Bastet4",
-            "nextStageName": "",
-            "shininess": 250.0,
+            "file_name": "cat.obj",
+            "name": "Bastet5",
+            "nextStageName": "BastetStage",
+            "shininess": 0.0,
             "temperature": 0.20000000298023224,
             "transform": {
                 "rotate": {
@@ -130,9 +164,9 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 12.118858337402344,
-                    "y": 0.03529096022248268,
-                    "z": 3.863213300704956
+                    "x": 3.1956429481506348,
+                    "y": 0.07388612627983093,
+                    "z": 3.862908124923706
                 }
             },
             "type": "EMPTY"
@@ -155,7 +189,7 @@
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 3.0863945484161377,
+                    "y": -4.3309783935546875,
                     "z": 0.0
                 },
                 "scale": {
@@ -164,12 +198,46 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -1.4316565990447998,
+                    "x": -0.15467528998851776,
                     "y": -0.5,
-                    "z": -5.5525336265563965
+                    "z": -14.088994979858398
                 }
             },
             "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "name": "Object6",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.5,
+            "textureHandle": 61,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 5.296999931335449,
+                    "y": 1.215999960899353,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 2.335428476333618,
+                    "z": 9.04207992553711
+                }
+            },
+            "type": "MESH"
         }
     ]
 }
