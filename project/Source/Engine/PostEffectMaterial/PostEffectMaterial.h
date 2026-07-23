@@ -87,6 +87,15 @@ public:
         float sigma;
         float padding[1];
     };
+
+    struct MaterialForMosaic
+    {
+        bool useMosaic;
+        int size;
+        float vol;
+        float padding;
+    };
+
 public:
     void SetCamera(Camera* camera);
 
@@ -104,7 +113,8 @@ public:
     MaterialForRadialBlur* GetMaterialForRadialBlur(){ return materialForRadialBlur_.data; };
     MaterialForDissolve* GetMaterialForDissolve(){ return materialForDissolve_.data; };
     MaterialForThermography* GetMaterialThermography() { return materialForThermography_.data; };
-    MaterialForRandom* GetmaterialForRandom() { return materialForRandom_.data; };
+    MaterialForRandom* GetMaterialForRandom() { return materialForRandom_.data; };
+    MaterialForMosaic* GetMaterialForMosaic() { return materialForMosaic_.data; }
     D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress(const PSO::EffectType& type);
 private:
     Camera* camera_ = nullptr;   
@@ -121,6 +131,7 @@ private:
     CResource <PostEffectMaterial::MaterialForDissolve> materialForDissolve_;
     CResource <PostEffectMaterial::MaterialForThermography> materialForThermography_;
     CResource <PostEffectMaterial::MaterialForRandom> materialForRandom_;
+    CResource <PostEffectMaterial::MaterialForMosaic> materialForMosaic_;
     std::unordered_map<PSO::EffectType, ID3D12Resource*> resourceMap_;
 private:
     void CreateMaterialBufferForGrayScale();
@@ -134,5 +145,6 @@ private:
     void CreateMaterialDissolve();
     void CreateMaterialRandom();
     void CreateMaterialThermography();
+    void CreateMaterialMosaic();
 };
 

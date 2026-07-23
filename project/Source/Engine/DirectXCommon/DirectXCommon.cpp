@@ -139,6 +139,7 @@ void DirectXCommon::DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap)
     ppm->AddEffect(PSO::kEffectBoxFilter, modelLayer);
     ppm->AddEffect(PSO::kEffectGaussianFilter, modelLayer);
     ppm->AddEffect(PSO::kEffectRadialBlur, modelLayer);
+    ppm->AddEffect(PSO::kEffectMosaic, modelLayer);
     ppm->AddEffect(PSO::kEffectVignette, modelLayer);
     //ppm.AddEffect(PSO::kEffectRandom);
     ppm->AddEffect(PSO::kEffectThermography, modelLayer);

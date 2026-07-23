@@ -8,11 +8,6 @@
 #include<vector>
 #include<memory>
 
-struct Vector2Int {
-    int x;
-    int y;
-};
-
 #include <Xinput.h>
 #pragma comment(lib, "xinput.lib")
 #include<array>

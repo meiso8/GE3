@@ -40,6 +40,7 @@ public:
         kEffectDissolve,
         kEffectRandom,
         kEffectThermography,
+        kEffectMosaic,
         kCountOfEffect,
 
     };

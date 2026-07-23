@@ -52,6 +52,9 @@ void SceneChange::FadeOut()
     grayScaleaterial->useEffect = true;
     grayScaleaterial->type = PostEffectMaterial::RenderTextureEffectType::kGrayScale;
     grayScaleaterial->effectVol = EaseOutQuadT(time);
+    auto* mosaic = PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialForMosaic();
+    mosaic->useMosaic = true;
+    mosaic->size = { Lerp(Window::GetClientWidth(),32,time) };
 }
 
 void SceneChange::FadeIn()
@@ -65,6 +68,9 @@ void SceneChange::FadeIn()
     grayScaleaterial->useEffect = true;
     grayScaleaterial->type = PostEffectMaterial::RenderTextureEffectType::kGrayScale;
     grayScaleaterial->effectVol = EaseInQuadT(time);
+    auto* mosaic = PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialForMosaic();
+    mosaic->useMosaic = true;
+    mosaic->size = { Lerp(Window::GetClientWidth(),32,time) };
 }
 
 
@@ -82,6 +88,9 @@ void SceneChange::SwitchScene()
             GetPostEffectMaterial(PostProcessManager::kModel)->
             GetMaterialGrayScale();
         grayScaleaterial->useEffect = false;
+       
+        PostProcessManager::GetInstance()->GetPostEffectMaterial(PostProcessManager::kModel)->GetMaterialForMosaic()->useMosaic = false;
+
 
     }
     if (state_ == kFadeIn ) {

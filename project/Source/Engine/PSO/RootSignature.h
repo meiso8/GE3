@@ -26,6 +26,8 @@ public:
         RADIAL_BLUR,
         DISSOLVE,
         RANDOM,
+        //モザイク
+        MOSAIC,
         //サーモグラフィー
         THERMOGRAPHY,
         //ビーム用

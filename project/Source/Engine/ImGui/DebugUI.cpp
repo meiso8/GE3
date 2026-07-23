@@ -945,6 +945,18 @@ void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForThermograph
 #endif
 }
 
+void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForMosaic& material)
+{
+#ifdef USE_IMGUI
+    if (ImGui::TreeNode("Mosaic")) {
+        ImGui::Checkbox("useMosaic", &material.useMosaic);
+        ImGui::SliderInt("size", &material.size,0,2000);
+        ImGui::SliderFloat("vol", &material.vol,0.0f,1.0f);
+        ImGui::TreePop();
+    }
+#endif
+}
+
 
 void DebugUI::CheckObject3d(Object3d& object3d)
 {
@@ -1505,7 +1517,8 @@ void DebugUI::CheckPostEffect()
         CheckPostEffectMaterial(*modelMaterial->GetMaterialForRadialBlur());
         CheckPostEffectMaterial(*modelMaterial->GetMaterialForDissolve());
         CheckPostEffectMaterial(*modelMaterial->GetMaterialThermography());
-        CheckPostEffectMaterial(*modelMaterial->GetmaterialForRandom());
+        CheckPostEffectMaterial(*modelMaterial->GetMaterialForRandom());
+        CheckPostEffectMaterial(*modelMaterial->GetMaterialForMosaic());
         ImGui::TreePop();
     }
     if (ImGui::TreeNode("PostEffect Sprite")) {
@@ -1521,7 +1534,8 @@ void DebugUI::CheckPostEffect()
         CheckPostEffectMaterial(*spritelMaterial->GetMaterialForRadialBlur());
         CheckPostEffectMaterial(*spritelMaterial->GetMaterialForDissolve());
         CheckPostEffectMaterial(*spritelMaterial->GetMaterialThermography());
-        CheckPostEffectMaterial(*spritelMaterial->GetmaterialForRandom());
+        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForRandom());
+        CheckPostEffectMaterial(*spritelMaterial->GetMaterialForMosaic());
         ImGui::TreePop();
     }
 

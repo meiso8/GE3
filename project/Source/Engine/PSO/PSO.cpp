@@ -387,6 +387,21 @@ void PSO::CreateALLPSO()
         rtvFormat
     );
 
+
+    graphicsPipelineStateOffScreen_[kEffectMosaic] = Create(
+        kBlendModeNone,
+        kCullModeBack,
+        kNone,
+        false,
+        RootSignature::RADIAL_BLUR,
+        DxcCompiler::VS_OffScreen,
+        DxcCompiler::PS_Mosaic,
+        kTriangle,
+        InputLayout::kInputLayoutTypeOffScreen,
+        rtvFormat
+    );
+
+
     graphicsPipelineStateOffScreen_[kEffectDissolve] = Create(
         kBlendModeNone,
         kCullModeBack,

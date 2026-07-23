@@ -31,6 +31,7 @@ void PostEffectMaterial::Create()
     CreateMaterialDissolve();
     CreateMaterialRandom();
     CreateMaterialThermography();
+    CreateMaterialMosaic();
 }
 
 void PostEffectMaterial::Clear()
@@ -67,6 +68,9 @@ void PostEffectMaterial::Clear()
 
     materialForRandom_.UnMap();
     materialForRandom_.Reset();
+
+    materialForMosaic_.UnMap();
+    materialForMosaic_.Reset();
 }
 
 PostEffectMaterial::~PostEffectMaterial()
@@ -257,4 +261,22 @@ void PostEffectMaterial::CreateMaterialThermography()
     materialForThermography_.data->sigma = 10.0f;
     materialForThermography_.data->kernel = 14;
     LogFile::Log("Create : MaterialBuffer : Thermography\n");
-};
+}
+void PostEffectMaterial::CreateMaterialMosaic()
+{
+
+    //マテリアル用のリソースを作る。
+    materialForMosaic_.CreateBufferResource(L"Mosaic_MaterialResource");
+    //マップする
+    resourceMap_[PSO::kEffectMosaic] = materialForMosaic_.Get();
+    //書き込むためのアドレスを取得
+    materialForMosaic_.Map();
+    //データを書きこむ
+    materialForMosaic_.data->useMosaic = false;
+    materialForMosaic_.data->size = 64;
+    materialForMosaic_.data->vol = 1.0f;
+    LogFile::Log("Create : MaterialBuffer : Mosaic\n");
+    
+
+}
+;

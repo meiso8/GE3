@@ -160,5 +160,6 @@ private:
     static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForDissolve& material);
     static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForRandom& material);
     static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForThermography& material);
+    static void CheckPostEffectMaterial(PostEffectMaterial::MaterialForMosaic& material);
 };
 
