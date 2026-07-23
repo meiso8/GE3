@@ -47,8 +47,10 @@ namespace Bone{
 
 class DebugBone {
 private:
-    std::vector < std::unique_ptr<LineObject3d>>bones_;
+    std::vector < std::unique_ptr<Object3d>>bones_;
+    std::vector < std::unique_ptr<LineObject3d>>boneLines_;
     Skeleton* skeleton_ = nullptr;
+    std::unique_ptr<Primitive>sphere_ = nullptr;
 public:
     DebugBone();
 

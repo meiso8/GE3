@@ -81,5 +81,5 @@ void TextureFactory::Load()
     Texture::LoadAndMapHandle("Resource/Textures/normalGlass.png", NORMAL_GLASS);
 
     Texture::LoadAndMapHandle("Resource/Textures/music.png", MUSIC);
-
+    Texture::LoadAndMapHandle("Resource/Textures/musicH.png", MUSIC_HINT);
 }
