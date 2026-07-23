@@ -548,12 +548,14 @@ void RootSignature::Create() {
     descriptionRootSignature[GAUSSIANFILTER].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
     descriptionRootSignature[LUMINANCE_BASED_OUTLINE].pParameters = rootParametersForOffScreen;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[LUMINANCE_BASED_OUTLINE].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
+    descriptionRootSignature[MOSAIC].pParameters = rootParametersForOffScreen;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[MOSAIC].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
+    descriptionRootSignature[RADIAL_BLUR].pParameters = rootParametersForOffScreen;//ルートパラメータ配列へのポインタ
+    descriptionRootSignature[RADIAL_BLUR].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
 
     descriptionRootSignature[DEPTH_BASED_OUTLINE].pParameters = rootParametersForDepthBasedOutline;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[DEPTH_BASED_OUTLINE].NumParameters = _countof(rootParametersForDepthBasedOutline);//配列の長さ
 
-    descriptionRootSignature[RADIAL_BLUR].pParameters = rootParametersForOffScreen;//ルートパラメータ配列へのポインタ
-    descriptionRootSignature[RADIAL_BLUR].NumParameters = _countof(rootParametersForOffScreen);//配列の長さ
 
     descriptionRootSignature[DISSOLVE].pParameters = rootParametersForDepthBasedOutline;//ルートパラメータ配列へのポインタ
     descriptionRootSignature[DISSOLVE].NumParameters = _countof(rootParametersForDepthBasedOutline);//配列の長さ

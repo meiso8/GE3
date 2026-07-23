@@ -11,6 +11,10 @@ struct Vector2 {
 
 };
 
+struct Vector2Int {
+    int x, y;
+};
+
 Vector2 Add(const Vector2& v1, const Vector2& v2);
 Vector2 Subtract(const Vector2& v1, const Vector2& v2);
 Vector2 Multiply(const float scalar, const Vector2& v);

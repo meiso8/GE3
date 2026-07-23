@@ -61,11 +61,11 @@ void DxcCompiler::ShaderSetting() {
     //BoxFilter
     pixelShaderBlobs_[PS_BoxFilter] = CompileShader(L"Resource/shader/PixelShader/BoxFilter.PS.hlsl", L"ps_6_0");
     //GaussianFilter
-    pixelShaderBlobs_[PS_GaussianFilter] =CompileShader(L"Resource/shader/PixelShader/GaussianFilter.PS.hlsl", L"ps_6_0");
+    pixelShaderBlobs_[PS_GaussianFilter] = CompileShader(L"Resource/shader/PixelShader/GaussianFilter.PS.hlsl", L"ps_6_0");
     //PS_LuminanceBasedOutline
     pixelShaderBlobs_[PS_LuminanceBasedOutline] = CompileShader(L"Resource/shader/PixelShader/LuminanceBasedOutline.PS.hlsl", L"ps_6_0");
     //DepthBasedOutline
-    pixelShaderBlobs_[PS_DepthBasedOutline] =CompileShader(L"Resource/shader/PixelShader/DepthBasedOutline.PS.hlsl", L"ps_6_0");
+    pixelShaderBlobs_[PS_DepthBasedOutline] = CompileShader(L"Resource/shader/PixelShader/DepthBasedOutline.PS.hlsl", L"ps_6_0");
     //RadialBlur
     pixelShaderBlobs_[PS_RadialBlur] = CompileShader(L"Resource/shader/PixelShader/RadialBlur.PS.hlsl", L"ps_6_0");
     //Dissolve
@@ -74,7 +74,8 @@ void DxcCompiler::ShaderSetting() {
     pixelShaderBlobs_[PS_Random] = CompileShader(L"Resource/shader/PixelShader/Random.PS.hlsl", L"ps_6_0");
     //PS_Thermography
     pixelShaderBlobs_[PS_Thermography] = CompileShader(L"Resource/shader/PixelShader/Thermography.PS.hlsl", L"ps_6_0");
-
+    //PS_Mosaic
+    pixelShaderBlobs_[PS_Mosaic] = CompileShader(L"Resource/shader/PixelShader/Mosaic.PS.hlsl", L"ps_6_0");
     //Beam
     vertexShaderBlobs_[VS_Beam] = CompileShader(L"Resource/shader/VertexShader/Beam.VS.hlsl", L"vs_6_0");
     pixelShaderBlobs_[PS_Beam] = CompileShader(L"Resource/shader/PixelShader/Beam.PS.hlsl", L"ps_6_0");
@@ -84,7 +85,7 @@ void DxcCompiler::ShaderSetting() {
     pixelShaderBlobs_[PS_Line] = CompileShader(L"Resource/shader/PixelShader/Line.PS.hlsl", L"ps_6_0");
 
     //===================ComputeShader====================
-    
+
     //Skinning
     computeShaderBlobs_[CS_Skinning] = CompileShader(L"Resource/shader/ComputeShader/Skinning.CS.hlsl", L"cs_6_0");
     //GPUParticle

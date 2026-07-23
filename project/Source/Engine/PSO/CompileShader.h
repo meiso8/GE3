@@ -42,6 +42,7 @@ public:
         PS_Dissolve,
         PS_Random,
         PS_Thermography,
+        PS_Mosaic,
         PS_Beam,
         PS_Line,
         PS_Shaders,
