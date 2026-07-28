@@ -73,7 +73,7 @@ void Building::SetWallAABB()
 
     // 床
     aabbs_[Floor] = {
-        {-kWallWidth_, kWallMinHeight_, -kWallWidth_},
+        {-kWallWidth_, -kFloorThickness_, -kWallWidth_},
         { kWallWidth_, kFloorThickness_,  kWallWidth_}
     };
 

@@ -6,7 +6,7 @@ void ModelFactory::Load() {
     ModelManager::LoadModel("Resource/Models/Box/Box.obj");
     ModelManager::LoadModel("Resource/Models/AmenRa/AmenRa.obj");
     ModelManager::LoadModel("Resource/Models/Medjed/medjed.gltf");
-    ModelManager::LoadModel("Resource/Models/player/player.obj");
+    ModelManager::LoadModel("Resource/Models/gentleman/gentleman.gltf");
     ModelManager::LoadModel("Resource/Models/people/people.obj");
     ModelManager::LoadModel("Resource/Models/mummy/mummy.obj");
     ModelManager::LoadModel("Resource/Models/mummy/dummyMummy.gltf");

@@ -7,7 +7,7 @@ class CollisionTag {
 public:
     static void AddTag(const std::string& tagName);
     static uint32_t GetTag(const std::string& tagName);
-    static const std::string& GetTagName(uint32_t tagNum);
+    static const std::string GetTagName(uint32_t tagNum);
     static std::unordered_map<std::string, uint32_t>& GetAllTags() { return tags_; };
 private:
     static uint32_t useIndex_;

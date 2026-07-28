@@ -54,10 +54,10 @@ private:
     const float kWallMaxHeight_ = 5.0f;
     const float kWallMinHeight_ = -1.0f;
     const float kWallThickness_ = 0.5f;
-    const float kFloorThickness_ = 0.25f;
+    const float kFloorThickness_ = 0.375f;
     //壁の座標を設定する
     const float kWallPosXZ_ = 26.0f;
     const float kWallOriginPos_ = 0.0f;
-    const float kFloorPosY_ = -0.75f;
+    const float kFloorPosY_ = -kFloorThickness_;
 };
 

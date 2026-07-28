@@ -1,11 +1,9 @@
 #pragma once
 
 #include"WorldTransform.h"
-#include"Object3d.h"
-#include"Circle.h"
+#include"AnimationObject3d.h"
 #include"CharacterState.h"
 #include"AABB.h"
-#include"Line.h"
 #include"Collider.h"
 #include"EyeCollider.h"
 #include"RaySprite.h"
@@ -41,10 +39,10 @@ public:
     }
 
     WorldTransform& GetBodyWorldTransform() {
-        return bodyPos_->GetWorldTransform();
+        return aniObject_->GetWorldTransform();
     }
-    void SetBodyRotate(const Vector3& rotate){ bodyPos_->SetRotate(rotate); }
-    void SetBodyScale(const Vector3& scale) { bodyPos_->SetScale(scale); }
+    void SetBodyRotate(const Vector3& rotate){ aniObject_->SetRotate(rotate); }
+    void SetBodyScale(const Vector3& scale) { aniObject_->SetScale(scale); }
     HPs* GetHpsPtr() { return &characterState_.hps; }
 
     void OnCollision(Collider* collider)override;
@@ -103,13 +101,14 @@ private:
 
     float soundTimer_ = 0.0f;
     Model* model_;
-
-    std::unique_ptr<Object3d> bodyPos_  = nullptr;
+    //アニメーション付きオブジェクト
+    std::unique_ptr<AnimationObject3d> aniObject_  = nullptr;
     std::unique_ptr<EyeCollider>eyeCollider_ = nullptr;
     float cameraRotateY_ = 0.0f;
     float cameraRotateX_ = 0.0f;
 
     CharacterState characterState_;
 
+    Matrix4x4 headMatrix_{};
 };
 
