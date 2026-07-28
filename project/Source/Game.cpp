@@ -8,7 +8,7 @@ void Game::Initialize()
 {
     
     //エンジンの生成
-    ButtobiEngine::Create(L"LE3A_19_ヨシダ_トモカ_打ち倒すもの", WIN_WIDTH, WIN_HEIGHT);
+    ButtobiEngine::Create(L"LE3A_19_ヨシダ_トモカ_第Ⅲのめ", WIN_WIDTH, WIN_HEIGHT);
 }
 
 void Game::Finalize()
