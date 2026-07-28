@@ -56,7 +56,10 @@ void UIManager::UpdatePauseScreen()
         curPos_->Update();
     } else {
         curPos_->Initialize();
+#ifdef _RELEASE
         Input::SetCursorPosition(*curPos_->GetScreenPosPtr());
+#endif // _RELEASE
+
     }
 
     pauseScreen_->Update();

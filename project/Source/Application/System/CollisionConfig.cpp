@@ -28,7 +28,7 @@ uint32_t CollisionTag::GetTag(const std::string& tagName)
     return 0;
 }
 
-const std::string& CollisionTag::GetTagName(uint32_t tagNum)
+const std::string CollisionTag::GetTagName(uint32_t tagNum)
 {
     if (names_.contains(tagNum)) {
         return names_.at(tagNum);

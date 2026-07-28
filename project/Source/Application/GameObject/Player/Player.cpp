@@ -50,7 +50,7 @@ void Player::OnCollision(Collider* collider)
 
         ) {
 
-        ResolveCollision(bodyPos_->GetTransform().translate, velocity_, GetCollisionInfo());
+        ResolveCollision(aniObject_->GetTransform().translate, velocity_, GetCollisionInfo());
 
     }
 
@@ -63,7 +63,7 @@ void Player::OnCollision(Collider* collider)
 Player::Player() {
 
     //モデルを取得する
-    model_ = ModelManager::GetModel("player.obj");
+    model_ = ModelManager::GetModel("gentleman.gltf");
 
     float radius = 0.25f;
     localAabb_.min = { -radius , 0.0f ,-radius };
@@ -86,15 +86,16 @@ Player::Player() {
     );
 
     //それぞれのObject3dを作る
-    bodyPos_= std::make_unique<Object3d>();
-    bodyPos_->Create();
-    bodyPos_->SetMeshAndMaterial(model_);
-    SetWorldMatrix(bodyPos_->GetWorldTransform());
+    aniObject_= std::make_unique<AnimationObject3d>();
+    aniObject_->Create();
+    aniObject_->SetMeshAndMaterial(model_);
+    aniObject_->SetModelAndLoadAnimation(model_);
+    SetWorldMatrix(aniObject_->GetWorldTransform());
 
     raySprite_ = std::make_unique<RaySprite>();
     eyeCollider_ = std::make_unique<EyeCollider>();
     //体の位置を親に設定
-    eyeCollider_->SetParent(bodyPos_->GetWorldTransform());
+    eyeCollider_->SetParentMatrix(&headMatrix_);
 
     isInvincible_ = false;
 #ifdef _DEBUG
@@ -107,7 +108,7 @@ Player::Player() {
 
 Player::~Player()
 {
-    bodyPos_->UnRegisterObject();
+    aniObject_->UnRegisterObject();
 }
 
 void Player::Init(const Vector3& pos)
@@ -117,11 +118,13 @@ void Player::Init(const Vector3& pos)
     zoomStartTimer_ = 0.0f;
     
     //体の位置初期化
-    bodyPos_->Initialize();
-    bodyPos_->SetTranslate(pos);
-    bodyPos_->SetObjectName("Player");
-    bodyPos_->RegisterObject();
-    bodyPos_->Update();
+    aniObject_->Initialize();
+    aniObject_->SetAnimation("Idle");
+    aniObject_->SetTranslate(pos);
+    aniObject_->SetObjectName("Player");
+    aniObject_->RegisterObject();
+    aniObject_->Update();
+
 
     //目の位置初期化
     eyeCollider_->Initialize();
@@ -164,7 +167,7 @@ void Player::UpdateRay()
 void Player::Draw(Camera& camera)
 {
 #ifdef _DEBUG
-    bodyPos_->Draw(camera);
+    aniObject_->Draw(camera);
     eyeCollider_->Draw(camera);
  
 #endif
@@ -200,7 +203,14 @@ void Player::Update()
         Sound::PlaySE(SoundFactory::SWITCH_ON);
     }
 
-    bodyPos_->Update();
+    //アニメーションタイマーのアップデート
+    aniObject_->UpdateAniTimer();
+    
+
+
+    aniObject_->Update();
+    headMatrix_ = aniObject_->GetWorldJointMatrix("Head");
+   
     eyeCollider_->Update();
 
 }
@@ -213,6 +223,8 @@ void Player::Debug()
     DebugUI::CheckCaracterState(characterState_, "CharacterStage");
     ImGui::Checkbox("isInvincible", &isInvincible_);
     ImGui::SliderFloat3("velocity_", &velocity_.x, -1000.0f, 1000.0f);
+    DebugUI::CheckObject3d(*aniObject_);
+    DebugUI::ShowMatrix4x4(headMatrix_, "HeadMatrix");
     ImGui::End();
 
 #endif //USE_IMGUI
@@ -254,8 +266,6 @@ void Player::Move()
             soundTimer_ = 0.0f;
         }
 
-
-
         //前の方向を取得
         Vector3 forward = GetForward();
         forward.y = 0.0f;
@@ -264,18 +274,19 @@ void Player::Move()
         Vector3 right = Cross(Vector3(0, 1, 0), forward);
         right = Normalize(right);
 
-        //移動時の縦揺れを再現　速さによって揺れの周期を変更
-        eyeCollider_->Walk(kSpeed_);
-
+   
         //速度を正規化しそれぞれ足す
      // x, z 成分だけ正規化 
         Vector3 horizontal = Normalize(Vector3{ velocity_.x, 0.0f, velocity_.z });
 
-        auto& transform = bodyPos_->GetTransform();
+        auto& transform = aniObject_->GetTransform();
         transform.translate += forward * horizontal.z * kSpeed_;
         transform.translate += right * horizontal.x * kSpeed_;
+
+        aniObject_->SetAnimation("Walk");
+
     } else {
-        eyeCollider_->WalkStop();
+        aniObject_->SetAnimation("Idle");
     }
 
 
@@ -304,7 +315,7 @@ void Player::Jump()
 
     velocity_.y -= TimeManager::DeltaTime() * 0.98f;
   
-    auto& transform = bodyPos_->GetTransform();
+    auto& transform = aniObject_->GetTransform();
     transform.translate.y += velocity_.y;
 }
 
@@ -313,8 +324,6 @@ void Player::Zoom()
     const float deltaTime = TimeManager::DeltaTime();
 
     if (InputBind::IsClickPress()) {
-
-   
 
         zoomStartTimer_ += deltaTime;
         zoomStartTimer_ = std::clamp(zoomStartTimer_, 0.0f, 0.2f);
@@ -351,7 +360,7 @@ Vector3& Player::GetForward()
 
 void Player::LookBack()
 {
-    auto& transform = bodyPos_->GetTransform();
+    auto& transform = aniObject_->GetTransform();
 
     if (InputBind::IsClickR()) {
         isLookBack_ = true;
@@ -475,7 +484,7 @@ void Player::MouseLook()
         cameraRotateX_,
         -std::numbers::pi_v<float> *0.5f,
         std::numbers::pi_v<float> *0.5f);
-    auto& transform = bodyPos_->GetTransform();
+    auto& transform = aniObject_->GetTransform();
     transform.rotate.y = Lerp(transform.rotate.y, cameraRotateY_, 0.5f);
     eyeCollider_->MouseLook(cameraRotateX_);
 
