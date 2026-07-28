@@ -35,9 +35,6 @@ void CurPos::Update()
         screenPos_.x += curPosSpeed_.x * kSpeed_;
         screenPos_.y -= curPosSpeed_.y * kSpeed_;
 
-        Vector2 aspect = centerPos_ * 2.0f;
-        screenPos_.x = std::clamp(screenPos_.x, 0.0f, aspect.x);
-        screenPos_.y = std::clamp(screenPos_.y, 0.0f, aspect.y);
 
     } else {
 
@@ -51,10 +48,14 @@ void CurPos::Update()
 
             screenPos_ = SnapCursorToNearestSprite(screenPos_, SlidePuzzleSystem::GetPuzzle()->GetSprites());
 
-        }
+        } 
     }
 
- 
+
+    Vector2 aspect = centerPos_ * 2.0f;
+    screenPos_.x = std::clamp(screenPos_.x, 0.0f, aspect.x);
+    screenPos_.y = std::clamp(screenPos_.y, 0.0f, aspect.y);
+
     curPos_->SetPosition(screenPos_);
 
 }

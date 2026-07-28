@@ -1,5 +1,6 @@
 #include "Stage.h"
 
+
 Player* Stage::player_ =nullptr;
 ItemManager* Stage::itemManager_ = nullptr;
 MemoManager* Stage::memoManager_ = nullptr;
@@ -48,6 +49,12 @@ void Stage::AddObjectCollision(CollisionManager& collisionManager)
     for (auto& trigger : stageTriggers_) {
         collisionManager.AddCollider(trigger.get());
     }
+
+    for (auto& obj : objects_) {
+        //オブジェクト内のコライダーを追加
+        collisionManager.AddCollider(obj->collider_.get());
+    }
+
 }
 
 Stage::Stage()

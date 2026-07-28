@@ -12,14 +12,22 @@
 #include"JsonFile.h"
 
 #include"Log.h"
+#include"CollisionManager.h"
+#include"CollisionConfig.h"
+#include"MakeMatrix.h"
 
-namespace {
+namespace MatArray {
 
     void ConvertMatArray(const Matrix4x4& srcMatrix, float dstArray[16])
     {
         // 行列のメモリ構造をそのまま16個のfloat配列にコピー
         std::memcpy(dstArray, &srcMatrix.m[0][0], sizeof(float) * 16);
     }
+    void ConvertArrayToMat(const float dstArray[16], Matrix4x4& srcMatrix) {
+        std::memcpy(&srcMatrix.m[0][0], dstArray, sizeof(float) * 16);
+
+    }
+
 }
 
 ObjectManager* ObjectManager::GetInstance() {
@@ -55,6 +63,12 @@ void ObjectManager::UnregisterObject(Object3d* gameObject) {
         objects_.erase(it, objects_.end());
     }
 
+    //colliderMapを削除する
+// コライダーマップから削除する際、コライダー内の object3d_ も解除しておく
+    auto itr = colliderMaps_.find(gameObject);
+    if (itr != colliderMaps_.end()) {
+        colliderMaps_.erase(itr);
+    }
     // 【追加】実体を管理している unique_ptr の配列からも削除して完全に解放する
     auto itCreate = std::remove_if(createObjects_.begin(), createObjects_.end(),
         [gameObject](const std::unique_ptr<Object3d>& obj) {
@@ -63,6 +77,8 @@ void ObjectManager::UnregisterObject(Object3d* gameObject) {
     if (itCreate != createObjects_.end()) {
         createObjects_.erase(itCreate, createObjects_.end());
     }
+
+
 }
 
 Object3d* ObjectManager::FindObjectByID(uint32_t id) {
@@ -128,14 +144,21 @@ void ObjectManager::ClickObject(Camera& camera)
         objectCommandManager_.ReDo();
     }
 
+ 
+    ImGui::Checkbox("edit", &editCollider_);
+
     if (clickedID_ != 0) {
-        isClicked = UpdateImGuizmo(camera);
+        isClicked = SelectObject(camera);
     }
 
     auto* selectedObj = ObjectManager::GetInstance()->FindObjectByID(clickedID_);
+
     if (selectedObj) {
         DebugUI::CheckObject3d(*selectedObj);
+        colliderObjectPtr_ = selectedObj;
     }
+
+    ColliderCheck(camera);
 
     if (!isClicked && !ImGui::GetIO().WantCaptureMouse) {
         //ImGuiでどこにもマウスがキャプチャーしてないとき
@@ -160,14 +183,18 @@ void ObjectManager::Clear() {
     objects_.clear();
     idMap_.clear();
     createObjects_.clear();
+    colliderMaps_.clear();
     nextID_ = 1; // IDのリセット
     clickedID_ = 0;
+    editCollider_ = false;
+    colliderObjectPtr_ = nullptr;
 }
 
 void ObjectManager::Initialize()
 {
     objectCommandManager_.Initialize();
-
+    editCollider_ = false;
+    colliderObjectPtr_ = nullptr;
     LogFile::Log("ObjectManager Initialize");
 }
 
@@ -184,17 +211,32 @@ void ObjectManager::Update()
     }
 }
 
+void ObjectManager::CheckCollision(CollisionManager* collisionManager)
+{
+    for (auto& [objPtr, collider] : colliderMaps_) {
+        collisionManager->AddCollider(collider.get());
+    }
+}
+
 void ObjectManager::Draw(Camera& camera)
 {
     for (auto& obj : createObjects_) {
         obj->Draw(camera);
     }
+
+#ifdef _DEVELOP
+
+    for (auto& [objPtr, collider] : colliderMaps_) {
+        collider->ColliderDraw(camera);
+    }
+
+#endif
 }
 
 void ObjectManager::Finalize()
 {
     createObjects_.clear();
-
+    colliderMaps_.clear();
 }
 
 void ObjectManager::Save()
@@ -231,7 +273,7 @@ void ObjectManager::Save()
             {"name", name},
             {"type", object->GetObjectType() },
             {"nextStageName",object->GetNextStageName()},
-      
+
         };
 
         //輝度を追加
@@ -244,7 +286,31 @@ void ObjectManager::Save()
             objectJson["textureHandle"] = object->GetTextureHandle();
         }
 
+        if (colliderMaps_.contains(object)) {
 
+            auto& collider = colliderMaps_.at(object);
+
+            Vector3 size = { 0.0f };
+            std::string typeName = "";
+            if (collider->GetType() == Collider::ColliderType::kAABB) {
+                AABB aabb = collider->GetAABB();
+                size = aabb.max - aabb.min;
+                typeName = "AABB";
+            }
+            if (collider->GetType() == Collider::ColliderType::kSphere) {
+                float sizeX = collider->GetRadius() * 2.0f;
+                size = { sizeX ,sizeX ,sizeX };
+                typeName = "Sphere";
+            }
+
+            objectJson["collider"] = {
+                {"tag",CollisionTag::GetTagName(collider->GetCollisionAttribute())},
+                {"maskTag", collider->GetCollisionMask()},
+                {"type",typeName},
+                {"center",JsonFile::Vector3ToJson(collider->GetCenter())},
+                { "size", JsonFile::Vector3ToJson(size)},
+            };
+        }
 
         // 4. 配列に要素を追加
         json["objects"].push_back(objectJson);
@@ -280,12 +346,15 @@ void ObjectManager::CreateObject()
     createObjects_.push_back(std::move(newObject));
 }
 
-bool ObjectManager::UpdateImGuizmo(Camera& camera)
+bool ObjectManager::SelectObject(Camera& camera)
 {
+    Object3d* selectedObj = FindObjectByID(clickedID_);
+    return UpdateImGuizmo(camera, selectedObj);
+}
 
-    auto* selectedObj = FindObjectByID(clickedID_);
-
-    if (selectedObj == nullptr) {
+bool ObjectManager::UpdateImGuizmo(Camera& camera, Object3d* object3d)
+{
+    if (editCollider_|| object3d == nullptr) {
         return false;
     }
 #ifdef USE_IMGUI
@@ -294,50 +363,31 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera)
 
     static ImGuizmo::MODE currentMode = ImGuizmo::LOCAL;
     static ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;// TRANSLATE, ROTATE, SCALE
-
-    static int currentOp = 0; // 0: TRANSLATE, 1: ROTATE, 2: SCALE
-
-    if (ImGui::RadioButton("Grab : G", &currentOp, 0) || ImGui::IsKeyPressed(ImGuiKey_G)) {
-        currentOperation = ImGuizmo::TRANSLATE;
-        currentOp = 0;
-    }
-    ImGui::SameLine(); // 横並びにする場合
-
-    if (ImGui::RadioButton("Rotate : R", &currentOp, 1) || ImGui::IsKeyPressed(ImGuiKey_R)) {
-        currentOperation = ImGuizmo::ROTATE;
-        currentOp = 1;
-    }
-    ImGui::SameLine();
-
-    if (ImGui::RadioButton("Scale : S", &currentOp, 2) || ImGui::IsKeyPressed(ImGuiKey_S)) {
-        currentOperation = ImGuizmo::SCALE;
-        currentOp = 2;
-    }
-
+    static bool snap = false;
+    SelectMovement(currentMode, currentOperation, snap);
 
     ImGuiIO& io = ImGui::GetIO();
     //画面全域に合わせる
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+    static EulerTransform beforeTransform;
+
+    //前フレームでギズモ使用しているか
+    static bool isUsingPrev = false;
+    bool isUsingNow = ImGuizmo::IsUsing();
+
+    //  ドラッグが始まった瞬間トリガーの状態を保存
+    if (isUsingNow && !isUsingPrev) {
+        beforeTransform = object3d->GetTransform();
+    }
 
     float viewMat[16] = { 0.0f };
     float projectionMat[16] = { 0.0f };
     float worldMat[16] = { 0.0f };
 
-    ConvertMatArray(camera.GetViewMatrix(), viewMat);
-    ConvertMatArray(camera.GetProjectionMatrix(), projectionMat);
-    ConvertMatArray(selectedObj->GetWorldMatrix(), worldMat);
+    MatArray::ConvertMatArray(camera.GetViewMatrix(), viewMat);
+    MatArray::ConvertMatArray(camera.GetProjectionMatrix(), projectionMat);
+    MatArray::ConvertMatArray(object3d->GetWorldMatrix(), worldMat);
 
-    //前フレームでギズモ使用しているか
-    static bool isUsingPrev = false;
-    //ドラッグ開始時の状態の保存をする変数
-    static EulerTransform beforeTransform;
-
-    bool isUsingNow = ImGuizmo::IsUsing();
-
-    //  ドラッグが始まった瞬間トリガーの状態を保存
-    if (isUsingNow && !isUsingPrev) {
-        beforeTransform = selectedObj->GetTransform();
-    }
 
     if (ImGuizmo::Manipulate(
         viewMat,          // float[16]
@@ -363,10 +413,7 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera)
             targetScale
         );
 
-        // オブジェクトのTransformへの書き戻し
-        // (注: GetTransform() が値をコピーではなく「参照(&)」を返す関数であることを前提としています)
-        auto& transform = selectedObj->GetTransform();
-
+        EulerTransform& transform = object3d->GetTransform();
         transform.translate = { targetTranslation[0], targetTranslation[1], targetTranslation[2] };
         transform.scale = { targetScale[0], targetScale[1], targetScale[2] };
 
@@ -378,33 +425,18 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera)
             targetRotation[2] * ToRadian
         };
 
-        //if (targetObject.worldTransform_.parent_) {
-        //    // 親の逆行列を掛けることで、親から見たローカルな行列に変換する
-        //    Matrix4x4 invParent = Inverse(targetObject.worldTransform_.parent_->matWorld_);
-        //    targetObject.worldTransform_.matWorld_ = Multiply(targetObject.worldTransform_.matWorld_, invParent);
-
-        //    // ローカル行列から再度SRTを抽出し直す
-        //    float localMatrix[16];
-        //    ConvertMatArray(targetObject.worldTransform_.matWorld_, localMatrix);
-        //    
-        //    ImGuizmo::DecomposeMatrixToComponents(
-        //        localMatrix,
-        //        &targetObject.worldTransform_.scale_.x, &targetObject.worldTransform_.rotate_.x, &targetObject.worldTransform_.translate_.x
-        //    );
-        //}
     };
 
     //リリース時
     if (!isUsingNow && isUsingPrev) {
 
-        EulerTransform afterTransform;
-        afterTransform = selectedObj->GetTransform();
+        EulerTransform afterTransform = object3d->GetTransform();
 
         if (beforeTransform != afterTransform)
         {
             // コマンドマネージャーに登録
             objectCommandManager_.Do<UpdateGuizmoCommand>(
-                selectedObj->GetObjectID(),
+                object3d->GetObjectID(),
                 beforeTransform,
                 afterTransform
             );
@@ -418,4 +450,178 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera)
     return isUsingPrev;
 
 #endif
+}
+
+bool ObjectManager::UpdateImGuizmoForCollider(Camera& camera, Collider* collider, const Matrix4x4& objectMat)
+{
+    if (!editCollider_) {
+        return false;
+    }
+
+#ifdef USE_IMGUI
+    ImGuizmo::BeginFrame();
+    ImGuizmo::Enable(true);
+    static ImGuizmo::MODE currentMode = ImGuizmo::LOCAL;
+    static ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;// TRANSLATE, ROTATE, SCALE
+    static bool  useSnap = false;
+    SelectMovement(currentMode, currentOperation, useSnap);
+
+    ImGuiIO& io = ImGui::GetIO();
+    //画面全域に合わせる
+    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+    float viewMat[16] = { 0.0f };
+    float projectionMat[16] = { 0.0f };
+    float worldMat[16] = { 0.0f };
+
+    MatArray::ConvertMatArray(camera.GetViewMatrix(), viewMat);
+    MatArray::ConvertMatArray(camera.GetProjectionMatrix(), projectionMat);
+
+    Vector3 center = collider->GetCenter();
+    Vector3 scale = { 0.0f };
+
+    if (collider->GetType() == Collider::ColliderType::kAABB) {
+        scale = Math::AABBSize(collider->GetAABB());
+
+    } else if (collider->GetType() == Collider::ColliderType::kSphere) {
+        float diameter = collider->GetRadius() * 2.0f;
+        scale = { diameter ,diameter ,diameter };
+    }
+
+    Matrix4x4 child = MakeAffineMatrix(scale, Vector3{ 0.0f,0.0f,0.0f }, center);
+    MatArray::ConvertMatArray(child * objectMat, worldMat);
+
+    static float snapP = 1.0f;
+
+    if (useSnap) {
+        ImGui::SliderFloat("snap", &snapP, 0.0f, 10.0f);
+    }
+
+    float snapValues[3] = { snapP, snapP, snapP };
+
+    bool isManipulated = ImGuizmo::Manipulate(
+        viewMat,          // float[16]
+        projectionMat,    // float[16]
+        currentOperation, // 現在の操作（移動・回転・拡大縮小）
+        currentMode,      // 座標系（WORLD / LOCAL）
+        worldMat,         // 操作対象の行列
+        nullptr,
+        useSnap ? snapValues : nullptr // スナップ指定
+    );
+
+    if (isManipulated) {
+        Matrix4x4 newColliderWorldMat;
+        MatArray::ConvertArrayToMat(worldMat, newColliderWorldMat); // ※配列からMatrixに戻す関数があると便利です
+
+        // 3. 親の逆行列（Inverse）を掛けることで、新しい「ローカル行列（newChild）」を取り出す
+        Matrix4x4 invObjectMat = Inverse(objectMat);
+        Matrix4x4 newChild = newColliderWorldMat * invObjectMat;
+
+        Vector3 newCenter = {
+            newChild.m[3][0],
+            newChild.m[3][1],
+            newChild.m[3][2]
+        };
+
+        collider->SetCenter(newCenter);
+
+        // 各軸の長さ（ベクトルの大きさ）からスケールを計算
+        Vector3 newScale = {
+            Length({ newChild.m[0][0], newChild.m[0][1], newChild.m[0][2] }),
+            Length({ newChild.m[1][0], newChild.m[1][1], newChild.m[1][2] }),
+            Length({ newChild.m[2][0], newChild.m[2][1], newChild.m[2][2] })
+        };
+
+        if (collider->GetType() == Collider::ColliderType::kAABB) {
+            float halfX = fabsf(newScale.x) * 0.5f;
+            float halfY = fabsf(newScale.y) * 0.5f;
+            float halfZ = fabsf(newScale.z) * 0.5f;
+
+            collider->SetAABB({
+                .min = { -halfX, -halfY, -halfZ },
+                .max = {  halfX,  halfY,  halfZ }
+                });
+        } else if (collider->GetType() == Collider::ColliderType::kSphere) {
+            float radius = fabsf(newScale.x) * 0.5f;
+            collider->SetRadius(radius);
+
+        }
+
+        return true;
+    };
+#endif
+
+    return false;
+}
+
+void ObjectManager::SelectMovement(ImGuizmo::MODE& currentMode, ImGuizmo::OPERATION& currentOperation, bool& snap)
+{
+
+#ifdef USE_IMGUI
+    static int mode = ImGuizmo::LOCAL;
+
+    if (ImGui::RadioButton("Local", &mode, 0)) {
+        currentMode = ImGuizmo::LOCAL;
+        mode = ImGuizmo::LOCAL;
+    }
+    ImGui::SameLine(); // 横並びにする場合
+    if (ImGui::RadioButton("World", &mode, 1)) {
+        currentMode = ImGuizmo::WORLD;
+        mode = ImGuizmo::WORLD;
+    }
+    ImGui::SameLine(); // 横並びにする場合
+    ImGui::Checkbox("Snap", &snap);
+
+    static int currentOp = 0; // 0: TRANSLATE, 1: ROTATE, 2: SCALE
+
+    if (ImGui::RadioButton("Grab : G", &currentOp, 0) || ImGui::IsKeyPressed(ImGuiKey_G)) {
+        currentOperation = ImGuizmo::TRANSLATE;
+        currentOp = 0;
+    }
+    ImGui::SameLine(); // 横並びにする場合
+
+    if (ImGui::RadioButton("Rotate : R", &currentOp, 1) || ImGui::IsKeyPressed(ImGuiKey_R)) {
+        currentOperation = ImGuizmo::ROTATE;
+        currentOp = 1;
+    }
+    ImGui::SameLine();
+
+    if (ImGui::RadioButton("Scale : S", &currentOp, 2) || ImGui::IsKeyPressed(ImGuiKey_S)) {
+        currentOperation = ImGuizmo::SCALE;
+        currentOp = 2;
+    }
+#endif
+
+}
+
+void ObjectManager::ColliderCheck(Camera& camera)
+{
+
+    if (!editCollider_ || colliderObjectPtr_ == nullptr) {
+        return;
+    }
+#ifdef _DEVELOP
+    if (ImGui::TreeNode("Collider")) {
+
+        if (!colliderMaps_.contains(colliderObjectPtr_)) {
+            if (ImGui::Button("AddCollider")) {
+                colliderMaps_[colliderObjectPtr_] = std::make_unique<Collider>();
+                //コライダーに自分のワールドマトリックスを追加する
+                colliderMaps_[colliderObjectPtr_]->SetWorldMatrix(colliderObjectPtr_->GetWorldTransform().matWorld_);
+            }
+        }
+
+        if (editCollider_) {
+            if (colliderMaps_.contains(colliderObjectPtr_)) {
+                auto& collider = colliderMaps_.at(colliderObjectPtr_);
+                DebugUI::CheckCollider(*collider, "collider");
+                UpdateImGuizmoForCollider(camera, collider.get(), colliderObjectPtr_->GetWorldMatrix());
+            }
+        }
+
+        ImGui::TreePop();
+
+    }
+#endif
+
 }

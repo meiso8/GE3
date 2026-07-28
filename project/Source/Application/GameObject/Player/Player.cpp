@@ -466,11 +466,10 @@ void Player::MouseLook()
     if (Input::IsControllerStickPosMove(BUTTON_RIGHT, 0, &controllerPos)) {
         cameraRotateY_ += controllerPos.x * kDeltaTime * cameraSpeed_ * 2.0f;
         cameraRotateX_ -= controllerPos.y * kDeltaTime * cameraSpeed_ * 2.0f;
+    } else {
+        cameraRotateY_ += Input::GetMousePosFiltered().x * kDeltaTime / cameraSpeed_ *0.03125f;
+        cameraRotateX_ += Input::GetMousePosFiltered().y * kDeltaTime / cameraSpeed_ *0.03125f;
     }
-
-
-    cameraRotateY_ += Input::GetMousePosFiltered().x *kDeltaTime / cameraSpeed_*0.25f;
-    cameraRotateX_ += Input::GetMousePosFiltered().y *kDeltaTime / cameraSpeed_*0.25f;
 
     cameraRotateX_ = std::clamp(
         cameraRotateX_,

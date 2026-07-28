@@ -24,7 +24,7 @@
 #include"../Stage/AnubisStage/AnubisStage.h"
 #include"../Stage/MeltStage/MeltStage.h"
 #include"../Stage/BastetStage/BastetStage.h"
-
+#include"ObjectManager/ObjectManager.h"
 GameScene::GameScene()
 {
     // 現在のカメラを設定
@@ -61,6 +61,7 @@ GameScene::GameScene()
     //ライト管理をセットする
     stageManager->SetLightingManager(lightingManager_.get());
     stageManager->SetSceneChange(sceneChange_.get());
+    stageManager->SetCollisionManager(collisionManager_.get());
 
     stageManager->SetMap("AmenStage", std::move(std::make_unique<AmenStage>()));
     stageManager->SetMap("WaterStage", std::move(std::make_unique<WaterStage>()));
@@ -190,7 +191,9 @@ void GameScene::CheckAllCollision()
     //プレイヤーのコライダーを追加する
     collisionManager_->AddCollider(player_.get());
 
-    StageManager::GetInstance()->CheckCollision(*collisionManager_);
+    StageManager::GetInstance()->CheckCollision();
+    //ここに入れるか同化は迷い中
+    ObjectManager::GetInstance()->CheckCollision(collisionManager_.get());
 
     collisionManager_->CheckAllCollisions();
 

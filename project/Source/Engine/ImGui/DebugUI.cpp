@@ -148,20 +148,16 @@ void DebugUI::CheckEmitter(Emitter& emitter, const char* label)
 
         ImGui::Separator();
         if (ImGui::TreeNode("transformMinMax")) {
-            ImGui::SliderFloat3("scaleAABBMin", &emitter.scaleAABB_.min.x, -20.0f, 0.0f);
-            ImGui::SliderFloat3("scaleAABBMax", &emitter.scaleAABB_.max.x, 0.0f, 20.0f);
+            CheckAABB(emitter.scaleAABB_, "scaleAABB");
             ImGui::Separator();
-            ImGui::SliderFloat3("rotateAABBMin", &emitter.rotateAABB_.min.x, -20.0f, 0.0f);
-            ImGui::SliderFloat3("rotateAABBMax", &emitter.rotateAABB_.max.x, 0.0f, 20.0f);
+            CheckAABB(emitter.rotateAABB_, "rotateAABB");
             ImGui::Separator();
-            ImGui::SliderFloat3("translateMin", &emitter.translateAABB_.min.x, -20.0f, 0.0f);
-            ImGui::SliderFloat3("translateMax", &emitter.translateAABB_.max.x, 0.0f, 20.0f);
+            CheckAABB(emitter.translateAABB_, "translateAABB");
             ImGui::TreePop();
         }
 
         ImGui::Separator();
-        ImGui::SliderFloat3("velcityAABBMax", &emitter.velocityAABB.min.x, -20.0f, 0.0f);
-        ImGui::SliderFloat3("velcityAABBMin", &emitter.velocityAABB.max.x, 0.0f, 20.0f);
+        CheckAABB(emitter.velocityAABB, "velocityAABB");
         ImGui::Separator();
 
         ImGui::SliderFloat("radius", &emitter.radius, 0.1f, 10.0f);
@@ -169,6 +165,7 @@ void DebugUI::CheckEmitter(Emitter& emitter, const char* label)
 
         ImGui::Separator();
         ImGui::SliderFloat("polarSpeed", &emitter.polarSpeed, -100.f, 100.0f);
+
         ImGui::SliderFloat("polarSpeedAABBMin", &emitter.polarSpeedMinMax.min, -20.0f, 0.0f);
         ImGui::SliderFloat("polarSpeedAABBMax", &emitter.polarSpeedMinMax.max, 0.0f, 20.0f);
         ImGui::Separator();
@@ -192,8 +189,8 @@ void DebugUI::CheckJsonFile()
 
     ImGui::Begin("Json");
 
-        //新しくJsonFileを作成する
-        CreateJsonFile();
+    //新しくJsonFileを作成する
+    CreateJsonFile();
 
     if (ImGui::TreeNode("FindTag")) {
 
@@ -833,7 +830,7 @@ void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForRenderTextu
         if (ImGui::Combo("EffectType", &type_current, lights, IM_ARRAYSIZE(lights))) {
             material.type = type_current % 3;
         };
-        ImGui::SliderFloat("effectVol", &material.effectVol,0.0f,1.0f);
+        ImGui::SliderFloat("effectVol", &material.effectVol, 0.0f, 1.0f);
         ImGui::TreePop();
     }
 #endif
@@ -950,8 +947,8 @@ void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForMosaic& mat
 #ifdef USE_IMGUI
     if (ImGui::TreeNode("Mosaic")) {
         ImGui::Checkbox("useMosaic", &material.useMosaic);
-        ImGui::SliderInt("size", &material.size,0,2000);
-        ImGui::SliderFloat("vol", &material.vol,0.0f,1.0f);
+        ImGui::SliderInt("size", &material.size, 0, 2000);
+        ImGui::SliderFloat("vol", &material.vol, 0.0f, 1.0f);
         ImGui::TreePop();
     }
 #endif
@@ -1004,7 +1001,7 @@ void DebugUI::CheckObject3d(Object3d& object3d)
 
         CheckWorldTransform(object3d.GetWorldTransform(), "WorldTransform");
         ShowMatrix4x4(object3d.GetWorldMatrix());
-       
+
         //表示と非表示を切り替える
         bool disable = object3d.GetDisabled();
         ImGui::Checkbox("disable", &disable);
@@ -1036,7 +1033,7 @@ void DebugUI::CheckObject3d(Object3d& object3d)
         auto* primitive = object3d.GetPrimitive();
 
         if (primitive) {
-            
+
             //プリミティブならテクスチャをセットできる
             int textureIndex = object3d.GetTextureHandle();
             if (ImGui::SliderInt("texture", &textureIndex, 0, TextureFactory::TEXTURES)) {
@@ -1159,7 +1156,7 @@ void DebugUI::CheckParticle(ParticleManager* particleManager)
                     material->color, material->lightMode,
                     material->shininess,
                     material->temperature,
-                    material->uvTransform, 
+                    material->uvTransform,
                     material->environmentCoefficient,
                     material->maskVal,
                     material->rgb,
@@ -1192,7 +1189,99 @@ void DebugUI::CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translat
         ImGui::TreePop();
     }
 #endif
-};
+}
+void DebugUI::CheckCollider(Collider& collider, const char* label)
+{
+#ifdef USE_IMGUI
+    if (ImGui::TreeNode(label)) {
+        //Center
+        Vector3 center = collider.GetCenter();
+        ImGui::SliderFloat3("center", &center.x, -1000.0f, 1000.0f);
+        collider.SetCenter(center);
+        //MeshType
+        const char* type[] = { "Sphere", "AABB" };
+        int type_current = collider.GetType();
+ 
+        if (ImGui::Combo("colliderType", &type_current, type, IM_ARRAYSIZE(type))) {
+            collider.SetType(static_cast<Collider::ColliderType >( type_current % IM_ARRAYSIZE(type)));
+        };
+
+        if (collider.GetType() == Collider::ColliderType::kSphere) {
+            float radius = collider.GetRadius();
+            ImGui::SliderFloat("radius", &radius, 0.0f, 1000.0f);
+            collider.SetRadius(radius);
+        }
+
+        if (collider.GetType() == Collider::ColliderType::kAABB) {
+            AABB aabb = collider.GetAABB();
+            CheckAABB(aabb, "colliderAABB");
+            collider.SetAABB(aabb);
+        }
+
+        //InFo
+        if (ImGui::TreeNode("CollisionInfo")) {
+            auto& info = collider.GetCollisionInfo();
+            ImGui::Checkbox("collided", &info.collided);
+            ImGui::SliderFloat3("normal", &info.normal.x, -1000.0f, 1000.0f);
+            ImGui::SliderFloat("penetration", &info.penetration, -1000.0f, 1000.0f);
+            ImGui::TreePop();
+        }
+
+        ImGui::Text("attribute : %X", collider.GetCollisionAttribute());
+        ImGui::Text("     mask : %X", collider.GetCollisionMask());
+
+        if (ImGui::BeginCombo("Tag", CollisionTag::GetTagName(collider.GetCollisionAttribute()).c_str())) {
+
+            // マップ内のすべてのタグをループして選択肢を作る
+            for (const auto& [name, tagNum] : CollisionTag::GetAllTags()) {
+
+                // 選択肢を表示（クリックされたら true を返す）
+                if (ImGui::Selectable(name.c_str(), true)) {
+                    // クリックされたら切り替え関数を呼ぶ
+                    collider.SetCollisionAttribute(tagNum);
+                    break;
+                }
+            }
+
+            ImGui::EndCombo();
+        }
+
+        if (ImGui::BeginCombo("MaskTag", "Select Masks...")) {
+
+            // 現在のマスク値を取得
+            uint32_t currentMask = collider.GetCollisionMask();
+
+            // すべてのタグをループして選択肢を作成
+            for (const auto& [name, tagNum] : CollisionTag::GetAllTags()) {
+
+                // 1. 指定したフラグ(tagNum)が現在のマスクに含まれているかチェック
+                bool isSelected = (currentMask & tagNum) != 0;
+
+                // 2. Selectableの表示 (isSelected を渡すことでチェックマーク等の選択状態を表示)
+                if (ImGui::Selectable(name.c_str(), isSelected, ImGuiSelectableFlags_DontClosePopups)) {
+
+                    if (isSelected) {
+                        // 既に選択されている場合 -> フラグを削除（ビット OFF）
+                        currentMask &= ~tagNum;
+                    } else {
+                        // 選択されていない場合 -> フラグを追加（ビット ON）
+                        currentMask |= tagNum;
+                    }
+
+                    // 更新したマスクをセット
+                    collider.SetCollisionMask(currentMask);
+                }
+            }
+
+            ImGui::EndCombo();
+        }
+
+        ImGui::TreePop();
+    }
+
+#endif
+}
+;
 void DebugUI::CheckColor(Vector4& color, const char* label) {
 #ifdef USE_IMGUI
     ImGui::ColorEdit4(label, (float*)&color);
@@ -1523,7 +1612,7 @@ void DebugUI::CheckPostEffect()
     }
     if (ImGui::TreeNode("PostEffect Sprite")) {
 
-        auto* spritelMaterial = postProcessManager ->GetPostEffectMaterial(PostProcessManager::kSprite);
+        auto* spritelMaterial = postProcessManager->GetPostEffectMaterial(PostProcessManager::kSprite);
 
         CheckPostEffectMaterial(*spritelMaterial->GetMaterialGaussianFilter());
         CheckPostEffectMaterial(*spritelMaterial->GetMaterialGrayScale());
@@ -1539,6 +1628,27 @@ void DebugUI::CheckPostEffect()
         ImGui::TreePop();
     }
 
+#endif
+
+}
+
+void DebugUI::CheckAABB(AABB& aabb, const char* label)
+{
+#ifdef _DEVELOP
+    if (ImGui::TreeNode(label)) {
+        ImGui::SliderFloat3("min", &aabb.min.x, -1000.0f, 1000.0f);
+
+        aabb.min.x = std::min(aabb.min.x, aabb.max.x);
+        aabb.min.y = std::min(aabb.min.y, aabb.max.y);
+        aabb.min.z = std::min(aabb.min.z, aabb.max.z);
+
+        ImGui::SliderFloat3("max", &aabb.max.x, -1000, 1000.0f);
+
+        aabb.max.x = std::max(aabb.min.x, aabb.max.x);
+        aabb.max.y = std::max(aabb.min.y, aabb.max.y);
+        aabb.max.z = std::max(aabb.min.z, aabb.max.z);
+        ImGui::TreePop();
+    }
 #endif
 
 }

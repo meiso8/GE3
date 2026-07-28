@@ -6,8 +6,15 @@
 #include "Object3d.h"
 #include"ObjectCommandManager.h"
 #include "nlohmann/json.hpp"
+#include"Collider.h"
+class CollisionManager;
 class CbvSrvUavDescriptorHeap;
 class RenderTexture;
+
+namespace ImGuizmo {
+    enum OPERATION : int;
+    enum MODE : int;
+}
 class ObjectManager
 {
 public:
@@ -34,6 +41,7 @@ public:
     void SetCommandListAndSrvDescriptorHeap(ID3D12GraphicsCommandList* commandList, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     //更新
     void Update();
+    void CheckCollision(CollisionManager* collisionManager);
     //描画
     void Draw(Camera& camera);
     //終了処理
@@ -42,8 +50,11 @@ private:
     void Save();
     void SetName();
     void CreateObject();
-    bool UpdateImGuizmo(Camera& camera);
-
+    bool SelectObject(Camera& camera);
+    bool UpdateImGuizmo(Camera& camera, Object3d* object3d);
+    bool UpdateImGuizmoForCollider(Camera& camera, Collider* collider, const Matrix4x4& objectMat);
+    void SelectMovement(ImGuizmo::MODE& currentMode,ImGuizmo::OPERATION& currentOperation, bool& snap);
+    void ColliderCheck(Camera& camera);
     ObjectManager() = default;
     ~ObjectManager() = default;
 private:
@@ -54,10 +65,15 @@ private:
     std::unordered_map<uint32_t, Object3d* > idMap_;
     uint32_t nextID_ = 1; // 1から順にAllocateしていく
     uint32_t clickedID_ = 0;
+    bool editCollider_ = false;
+    Object3d* colliderObjectPtr_ = nullptr;
     /// @brief オブジェクトエディターのファイル名を設定しておく
     const std::string kJsonFileName_ = "objectEditor";
     /// @brief jsonファイル名
     std::string jsonFileName_ = kJsonFileName_;
+    //オブジェクト
     std::vector<std::unique_ptr<Object3d>> createObjects_;
+    //コライダーマップ
+    std::unordered_map<Object3d*, std::unique_ptr<Collider>>colliderMaps_;
 };
 

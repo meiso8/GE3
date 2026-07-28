@@ -63,6 +63,9 @@ const Vector3& Collider::CalculateWorldPos()
 void Collider::ColliderUpdate()
 {
 #ifdef _DEVELOP
+    if (!object3d_) {
+        return;
+    }
     object3d_->SetColor({ 1.0f,1.0f,0.0f,0.5f });
     object3d_->Update();
 #endif // _DEVELOP
@@ -71,6 +74,9 @@ void Collider::ColliderUpdate()
 void Collider::ColliderDraw(Camera& camera)
 {
 #ifdef _DEVELOP
+    if (!object3d_) {
+        return;
+    }
     object3d_->SetLightMode(Object3d::kLightModeNone);
     object3d_->Draw(camera);
 #endif // _DEVELOP
@@ -79,6 +85,11 @@ void Collider::ColliderDraw(Camera& camera)
 void Collider::OnCollisionCollider()
 {
 #ifdef _DEVELOP
+
+    if (!object3d_) {
+        return;
+    }
+
     object3d_->SetColor({ 1.0f,0.0f,0.0f,0.5f });
 #endif // _DEVELOP
 

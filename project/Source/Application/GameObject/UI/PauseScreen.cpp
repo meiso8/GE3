@@ -91,11 +91,6 @@ void PauseScreen::Update()
             isActive_ = true;
             selectButtonNum_ = kBackToGame;
             Input::SetShowCursor(true);
-
-            float width = static_cast<float>(Window::GetClientWidth());
-            float height = static_cast<float>(Window::GetClientHeight());
-
-            Input::SetCursorPosition({ width * 0.5f, height * 0.5f });
         }
 
     } else {

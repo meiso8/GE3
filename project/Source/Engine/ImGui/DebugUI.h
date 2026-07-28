@@ -16,7 +16,7 @@
 #include"PostEffectMaterial/PostEffectMaterial.h"
 
 enum BlendMode;
-
+struct AABB;
 class Input;
 class Sprite;
 class Font;
@@ -40,7 +40,7 @@ struct PointLight;
 
 struct CharacterState;
 class CbvSrvUavDescriptorHeap;
-
+class Collider;
 #include "nlohmann/json.hpp"
 class DebugUI
 {
@@ -57,7 +57,7 @@ public:
     static void CheckSRVTexture(const int srvIndex, CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     static void CheckTextures(CbvSrvUavDescriptorHeap* srvDescriptorHeap);
     static void CheckStageManager();
-    
+
     /// @brief 入力
     /// @param input 
     static void CheckInput();
@@ -94,6 +94,11 @@ public:
     static void CheckTransform(EulerTransform& transform, const char* label);
 
     static void CheckTransforms(Vector3& scale, Vector3& rotate, Vector3& translate, const char* label);
+
+    /// @brief コライダーのチェック
+    /// @param collider コライダーのアドレス
+    /// @param label ラベル
+    static void CheckCollider(Collider& collider, const char* label);
 
     /// @brief 
     /// @param worldTransform 
@@ -138,6 +143,9 @@ public:
     static void SwitchFlag(bool& flag, const char* label);
     static void Button(const char* label, std::function<void()> onSwitch);
     static void CheckPostEffect();
+    //AABBを調べる
+    static void CheckAABB(AABB& aabb, const char* label = "AABB");
+
 private:
     /// @brief 光源
 /// @param directionalLights 

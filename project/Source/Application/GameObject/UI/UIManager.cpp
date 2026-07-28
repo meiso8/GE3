@@ -1,6 +1,8 @@
 #include "UIManager.h"
 #include"Window.h"
 #include"ItemManager/ItemManager.h"
+#include"Input.h"
+
 UIManager::UIManager()
 {
     effectSprite_ = std::make_unique<Sprite>();
@@ -54,6 +56,7 @@ void UIManager::UpdatePauseScreen()
         curPos_->Update();
     } else {
         curPos_->Initialize();
+        Input::SetCursorPosition(*curPos_->GetScreenPosPtr());
     }
 
     pauseScreen_->Update();
