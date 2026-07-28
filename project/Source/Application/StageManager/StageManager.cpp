@@ -3,6 +3,7 @@
 #include"SceneManager.h"
 #include"ObjectManager/ObjectManager.h"
 #include"ItemManager/ItemManager.h"
+#include"CollisionManager.h"
 
 StageManager::~StageManager()
 {
@@ -59,6 +60,7 @@ void StageManager::TransitionStage()
     //次のステージがセットされていたら次のステージにする
     if (nextStage_) {
 
+        collisionManager_->ClearColliders();
         //コマンドを初期化する
         ObjectManager::GetInstance()->Initialize();
         //オブジェクトをクリアする
@@ -94,14 +96,20 @@ void StageManager::SetMap(const std::string& name, std::unique_ptr<Stage> stage)
 
 void StageManager::SetNestStage(const std::string& name)
 {
-    //最初の位置を保持
-    nextStage_ = stages_[name].get();
+    // すでに遷移予約が入っている場合は重複予約しない
+    if (nextStage_ != nullptr) return;
+    auto it = stages_.find(name);
+    if (it != stages_.end()) {
+        nextStage_ = it->second.get();
+    }
+    ////最初の位置を保持
+    //nextStage_ = stages_[name].get();
 }
 
-void StageManager::CheckCollision(CollisionManager& collisionManager)
+void StageManager::CheckCollision()
 {
-    if (currentStage_) {
-        currentStage_->CheckCollision(collisionManager);
+    if (currentStage_&& collisionManager_) {
+        currentStage_->CheckCollision(*collisionManager_);
     }
 }
 
@@ -126,6 +134,11 @@ void StageManager::SetUIManager(UIManager* uiManager)
 void StageManager::SetPlayer(Player* player)
 {
     Stage::SetPlayer(player);
+}
+
+void StageManager::SetCollisionManager(CollisionManager* collisionManger)
+{
+    collisionManager_ = collisionManger;
 }
 
 void StageManager::SetLightingManager(LightingManager* lightingManager)

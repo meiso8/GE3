@@ -34,7 +34,6 @@ private:
 	AABB aabb_;
 	Ray ray_;
 
-	std::string colliderName_ = "Collider";
 	uint32_t collisionAttribute_ = 0xffffffff;	// 衝突属性
 	uint32_t collisionMask_ = 0xffffffff;		// 衝突マスク
 
@@ -57,8 +56,6 @@ public:
 	virtual ~Collider();
 
 	void InitCalcuatedTisFrameFlag();
-	const std::string GetColliderName() { return colliderName_; };
-	void SetColliderName(const std::string& colliderName) { colliderName_ = colliderName; }
 	/// @brief 衝突時コールバック関数
 	virtual void OnCollision(Collider* collider) {
 		(void)collider;
@@ -74,6 +71,12 @@ public:
 	void SetCenter(const Vector3& center) {
 		center_ = center;
 	};
+	/// @brief 中心を取得する
+	/// @return 中心
+	const Vector3& GetCenter() {
+		return center_;
+	}
+
 	/// @brief ワールド座標を設定する
 	/// @param worldMat 
 	void SetWorldMatrix(Matrix4x4& worldMat) {
@@ -124,7 +127,7 @@ public:
 	};
 
 	ColliderType GetType() const { return type_; }
-
+	void SetType(const ColliderType& type) { type_ = type; }
 	/// @brief 衝突属性を取得する
 	/// @return 衝突属性
 	uint32_t GetCollisionAttribute() const { return collisionAttribute_; }

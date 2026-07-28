@@ -9,6 +9,8 @@ class Memo : public Collider {
 private:
     std::unique_ptr<Primitive>cubeMesh_ = nullptr;
     std::unique_ptr<Object3d> object_ = nullptr;
+    const float kOffset_ = 0.25f;
+    const float kThickness_ = 0.1f;
 public:
     Memo();
     void Initialize();
@@ -23,7 +25,8 @@ public:
         object_->SetTranslate(translate);
     }
     void SetCubeSize(const AABB& aabb) {
-        SetAABB(aabb);
+        AABB offset = { .min = {-kOffset_,-kThickness_,-kOffset_},.max = {kOffset_,kThickness_,kOffset_} };
+        SetAABB(aabb+ offset);
         object_->SetScale(aabb.max - aabb.min);
         object_->SetMeshAndMaterial(cubeMesh_.get());
     };

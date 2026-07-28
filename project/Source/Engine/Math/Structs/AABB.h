@@ -10,4 +10,7 @@ struct AABB {
 
 namespace Math {
     Vector3 AABBCenter(const AABB& aabb);
+    Vector3 AABBSize(const AABB& aabb);
 }
+
+AABB operator+(const AABB& aabb1, const AABB& aabb2);

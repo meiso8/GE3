@@ -37,7 +37,7 @@ public:
         inputChars_.clear();
         return copy;
     }
-    static void SetShowCursor(const bool flag);
+
     HRESULT Initialize(Window& window);
     /// @brief キーを押した状態 
     static bool IsPressKey(const uint8_t& key);
@@ -112,6 +112,7 @@ public:
     static BYTE GetControllerTriggerCount(ButtonType type, DWORD dwUserIndex);
 
     static bool IsControllerDeadZone(BYTE& triggerButton);
+    static void SetShowCursor(const bool flag);
     static Vector2& GetCursorPosition();
     static Vector2Int GetCursorPositionInt();
     static void SetCursorPosition(const Vector2& pos);
