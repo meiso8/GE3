@@ -83,10 +83,10 @@ void Bone::UpdateSkeleton(Skeleton& skeleton)
 void DebugBone::Draw(Camera& camera)
 {
     for (auto& value : bones_) {
-        value->Draw(camera,kBlendModeNormal,kCullModeBack,kZero);
+        value->Draw(camera,kBlendModeNormal, kCullModeNone, kZero_Depth_Stencil_Enable,true);
     }
     for (auto& value : boneLines_) {
-        value->Draw(camera, false,kBlendModeNormal, kCullModeBack, kAll);
+        value->Draw(camera, false,kBlendModeNormal, kCullModeNone, kZero_Depth_Stencil_Enable,true);
     }
 }
 
@@ -107,7 +107,7 @@ void DebugBone::Create(Skeleton& skeleton)
     bones_.clear();
     assert(!skeleton_->joints.empty());
     sphere_ = std::make_unique<Primitive>();
-    sphere_->Create(PrimitiveGenerator::CreateSphere({{ 0.0f,0.0f,0.0f }, 0.0625f}, 8));
+    sphere_->Create(PrimitiveGenerator::CreateSphere({{ 0.0f,0.0f,0.0f }, 0.03125f}, 8));
     for (Joint& joint : skeleton_->joints) {
 
         std::unique_ptr<Object3d> object3d = std::make_unique<Object3d>();
@@ -115,7 +115,7 @@ void DebugBone::Create(Skeleton& skeleton)
         object3d->Create();
         object3d->SetMeshAndMaterial(sphere_.get());
         object3d->SetTranslate(joint.transform.translate);
-        object3d->SetScale({ 0.125f,0.125f,0.125f });
+
         object3d->SetColor({ 1.0f,0.0f,0.0f,1.0f });
         bones_.push_back(std::move(object3d));
     }

@@ -8,6 +8,7 @@ enum MaskMode {
     kZero,
     kAll,
     kNone,
+    kZero_Depth_Stencil_Enable,
     kMasks
 };
 
