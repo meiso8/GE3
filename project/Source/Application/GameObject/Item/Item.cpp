@@ -2,6 +2,7 @@
 #include"Model.h"
 #include"TransformAni/TransformAni.h"
 #include"TimeManager.h"
+#include"MakeMatrix.h"
 
 #include"CoordinateTransform.h"
 
@@ -9,6 +10,10 @@ Item::Item()
 {
     object_ = std::make_shared<Object3d>();
     object_->Create();
+
+    handItemObj_ = std::make_unique<Object3d>();
+    handItemObj_->Create();
+   
     SetAABB({ .min = { -0.5f,-0.5f,-0.5f},.max = { 0.5f,0.5f,0.5f } });
     SetCollisionAttribute(CollisionTag::GetTag("Item"));
     SetCollisionMask(!CollisionTag::GetTag("Item"));
@@ -18,6 +23,7 @@ Item::Item()
 void Item::SetModel(const std::string& tagName)
 {
     object_->SetMeshAndMaterial(ModelManager::GetModel(tagName));
+    handItemObj_->SetMeshAndMaterial(ModelManager::GetModel(tagName));
 }
 void Item::Init()
 {
@@ -27,6 +33,9 @@ void Item::Init()
     aniTimer_ = 0.0f;
     object_->Initialize();
     object_->SetTemperature(0.5f);
+    handItemObj_->Initialize();
+    handItemObj_->SetTemperature(0.5f);
+
     startPos_ = { 0.0f };
     endPos_ = { 0.0f };
 }
@@ -46,8 +55,15 @@ void Item::DrawInfoUI()
 
 void Item::Draw(Camera& camera)
 {
-    object_->Draw(camera);
+    if (isGet_) {
+    
+        if (parent_) {
+            handItemObj_->Draw(camera);
+        }
 
+    } else {
+        object_->Draw(camera);
+    }   
 }
 
 void Item::DrawForSlotItem(Camera& camera)
@@ -119,4 +135,8 @@ void Item::Update()
     object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
     object_->Update();
 
+    if (parent_&&isGet_) {
+        handItemObj_->SetWorldMatrix(*parent_);
+    }
+   
 }

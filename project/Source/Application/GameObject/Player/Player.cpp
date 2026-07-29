@@ -206,11 +206,10 @@ void Player::Update()
     //アニメーションタイマーのアップデート
     aniObject_->UpdateAniTimer();
     
-
-
     aniObject_->Update();
     headMatrix_ = aniObject_->GetWorldJointMatrix("Head");
-   
+    handMatrix_ = aniObject_->GetWorldJointMatrix("Hand.L");
+
     eyeCollider_->Update();
 
 }

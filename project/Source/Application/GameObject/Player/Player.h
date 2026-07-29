@@ -56,6 +56,7 @@ public:
     const float& GetZoomTimer() { return zoomTimer_; }
     //レイスプライトクラスを包含する
     RaySprite* GerRaySprite() { return raySprite_.get(); };
+    Matrix4x4* GetHandMatrixPtr() { return &handMatrix_; }
 private:
 
     void UpdateRay();
@@ -110,5 +111,6 @@ private:
     CharacterState characterState_;
 
     Matrix4x4 headMatrix_{};
+    Matrix4x4 handMatrix_{};
 };
 

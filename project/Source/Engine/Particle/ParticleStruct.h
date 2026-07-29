@@ -28,7 +28,7 @@ struct ParticleGroupGPU {
     std::unique_ptr<Primitive> primitive = nullptr;
     CResource<Object3d::Material>materialResource;
     CResource<ParView>parViewResource;
-    UAVResource<ParticleCS>particleUAVResource_;
-    UAVResource<int>particleFreeListIndexResource_;
-    UAVResource<uint32_t>particleFreeListResource_;
+    UAVResource<ParticleCS>particleUAVResource;
+    UAVResource<int>particleFreeListIndexResource;
+    UAVResource<uint32_t>particleFreeListResource;
 };

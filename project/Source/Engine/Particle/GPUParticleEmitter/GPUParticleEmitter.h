@@ -39,4 +39,5 @@ private:
     //エミッターリソース
     CResource<EmitterSphere>emitterResource_;
     CResource<PerFrame>perFrameResource_;
+
 };
