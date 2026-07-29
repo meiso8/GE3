@@ -14,6 +14,10 @@ void DepthStencil::Create(MaskMode maskMode) {
             depthStencilDesc_.DepthEnable = true;
         } else if (maskMode == MaskMode::kNone) {
             depthStencilDesc_.DepthEnable = false;
+        } else if (maskMode == MaskMode::kZero_Depth_Stencil_Enable) {
+            depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+            depthStencilDesc_.DepthEnable = FALSE;
+            depthStencilDesc_.StencilEnable = FALSE;
         }
         if (depthStencilDesc_.DepthEnable) {
             //比較関数はLessEqual。つまり、近ければ描画される
