@@ -42,6 +42,8 @@ GameScene::GameScene()
     collisionManager_ = std::make_unique<CollisionManager>();
     //アイテム管理
     itemManager_ = std::make_unique<ItemManager>();
+    //プレイヤーの手の行列
+    itemManager_->SetPlayerHandMatrix(player_->GetHandMatrixPtr());
     //UI管理
     uIManager_ = std::make_unique<UIManager>();
     //メモ管理

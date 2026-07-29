@@ -51,6 +51,9 @@ public:
     /// @param pos 置きたい大体の位置
     /// @param name アイテム名
     void UseItemFromSlot(const Vector3& pos, const char* name);
+    /// @brief プレイヤーの手の行列をセットする
+    /// @param matrix 行列
+    void SetPlayerHandMatrix(Matrix4x4* matrix) { playerHandMatrix_ = matrix; }
 private:
     /// @brief アイテムの辞書登録
     std::map<std::string, std::shared_ptr<Item>> items_;
@@ -58,4 +61,6 @@ private:
     ItemSlot itemSlot_;
     /// @brief 太陽円盤取得フラグの静的メンバ変数
     static bool isGetSolarDisc_;
+    //プレイヤーの手の行列
+    Matrix4x4* playerHandMatrix_ = nullptr;
 };

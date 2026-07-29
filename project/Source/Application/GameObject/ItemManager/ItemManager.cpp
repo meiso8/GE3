@@ -83,6 +83,8 @@ void ItemManager::Update() {
         //取得アニメーションの終了を検知したとき
         if (item && item->IsGet()&&item->IsGetAnimEnd()) {
             isGetSolarDisc_ = true;
+            //プレイヤーの手の行列を入れる
+            item->SetParentMat(playerHandMatrix_);
         };
     }
 
@@ -98,9 +100,6 @@ void ItemManager::Draw(Camera& camera) {
   
     for (auto& [name, item] : items_) {
         if (!item) continue;
-        //★ 取得済みのアイテムはステージ上には描画しない スロット側で描画する
-        if (item->IsGet()) continue;
-
         item->Draw(camera);
     }
 
