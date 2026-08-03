@@ -54,6 +54,10 @@ void Player::OnCollision(Collider* collider)
 
     }
 
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("CameraUp")) {
+        //カメラ上昇するコライダーに当たった時を記入していく
+
+    }
 
 
     OnCollisionCollider();
@@ -66,20 +70,18 @@ Player::Player() {
     model_ = ModelManager::GetModel("gentleman.gltf");
 
     float radius = 0.25f;
-    localAabb_.min = { -radius , 0.0f ,-radius };
-    localAabb_.max = { radius , 1.5f ,radius };
 
-    SetAABB(localAabb_);
+    SetAABB(AABB{ .min = {-radius , 0.0f ,-radius},.max = { radius , 1.5f ,radius} });
     SetCollisionAttribute(CollisionTag::GetTag("Player"));
     SetCollisionMask(
-          CollisionTag::GetTag("Enemy")
+        CollisionTag::GetTag("Enemy")
         | CollisionTag::GetTag("EnemyBulletCold")
         | CollisionTag::GetTag("EnemyBulletHot")
         | CollisionTag::GetTag("Medjed")
-        | CollisionTag::GetTag("DummyMedjed") 
+        | CollisionTag::GetTag("DummyMedjed")
         | CollisionTag::GetTag("Wall")
-        | CollisionTag::GetTag("Mummy") 
-        | CollisionTag::GetTag("Water") 
+        | CollisionTag::GetTag("Mummy")
+        | CollisionTag::GetTag("Water")
         | CollisionTag::GetTag("Floor")
         | CollisionTag::GetTag("StageTrigger")
         | CollisionTag::GetTag("Block")
@@ -87,14 +89,14 @@ Player::Player() {
     );
 
     //それぞれのObject3dを作る
-    aniObject_= std::make_unique<AnimationObject3d>();
+    aniObject_ = std::make_unique<AnimationObject3d>();
     aniObject_->Create();
     aniObject_->SetMeshAndMaterial(model_);
     aniObject_->SetModelAndLoadAnimation(model_);
     SetWorldMatrix(aniObject_->GetWorldTransform());
 
     raySprite_ = std::make_unique<RaySprite>();
-    eyeCollider_ = std::make_unique<EyeCollider>();
+    eyeCollider_ = std::make_unique<EyePosition>();
     //体の位置を親に設定
     eyeCollider_->SetParentMatrix(&headMatrix_);
 
@@ -104,7 +106,7 @@ Player::Player() {
 #endif
 
     velocity_ = { 0.0f,0.0f,0.0f };
-    kSpeed_ = { 0.5f };
+    speed_ = { 0.5f };
 }
 
 Player::~Player()
@@ -117,7 +119,7 @@ void Player::Init(const Vector3& pos)
     isJump_ = false;
     zoomTimer_ = 0.0f;
     zoomStartTimer_ = 0.0f;
-    
+
     //体の位置初期化
     aniObject_->Initialize();
     aniObject_->SetAnimation("Idle");
@@ -133,9 +135,8 @@ void Player::Init(const Vector3& pos)
 
 
     velocity_ = { 0.0f,0.0f,0.0f };
-    kSpeed_ = { 0.5f };
-    lookBackTime_ = 1.0f;
-    isLookBackEnd_ = true;
+    speed_ = { 0.5f };
+
 
     isThermography_ = false;
     isThermographyEnd_ = false;
@@ -170,7 +171,7 @@ void Player::Draw(Camera& camera)
 #ifdef _DEBUG
     aniObject_->Draw(camera);
     eyeCollider_->Draw(camera);
- 
+
 #endif
 }
 
@@ -207,7 +208,7 @@ void Player::Update()
     //アニメーションタイマーのアップデート
     // 一旦コメントアウトしておく
     //aniObject_->UpdateAniTimer();
-    
+
     aniObject_->Update();
     headMatrix_ = aniObject_->GetWorldJointMatrix("Head");
     handMatrix_ = aniObject_->GetWorldJointMatrix("Hand.L");
@@ -250,19 +251,19 @@ void Player::Move()
     if (InputBind::IsPressMoveB()) { velocity_.z = -1.0f; }
 
     float length = Length(Vector2{ velocity_.x,velocity_.z });
-    kSpeed_ = (InputBind::IsPressSpeedButton() || length <= 0.5f) ? 0.125f : 0.25f;
+    speed_ = (InputBind::IsPressSpeedButton() || length <= 0.5f) ? 0.125f : 0.25f;
 
     if (fabs(velocity_.x) > 0.0f || fabs(velocity_.z) > 0.0f) {
 
         if (!isJump_) {
             if (soundTimer_ == 0.0f) {
-                Sound::PlaySE(SoundFactory::FOOT_STEP, (kSpeed_ == 0.25f) ? 0.5f : 0.0f);
+                Sound::PlaySE(SoundFactory::FOOT_STEP, (speed_ == 0.25f) ? 0.5f : 0.0f);
             }
 
         }
 
         if (soundTimer_ < 7.5f) {
-            soundTimer_ += kSpeed_;
+            soundTimer_ += speed_;
         } else {
             soundTimer_ = 0.0f;
         }
@@ -275,14 +276,14 @@ void Player::Move()
         Vector3 right = Cross(Vector3(0, 1, 0), forward);
         right = Normalize(right);
 
-   
+
         //速度を正規化しそれぞれ足す
      // x, z 成分だけ正規化 
         Vector3 horizontal = Normalize(Vector3{ velocity_.x, 0.0f, velocity_.z });
 
         auto& transform = aniObject_->GetTransform();
-        transform.translate += forward * horizontal.z * kSpeed_;
-        transform.translate += right * horizontal.x * kSpeed_;
+        transform.translate += forward * horizontal.z * speed_;
+        transform.translate += right * horizontal.x * speed_;
 
         aniObject_->SetAnimation("Walk");
 
@@ -315,7 +316,7 @@ void Player::Jump()
 
 
     velocity_.y -= TimeManager::DeltaTime() * 0.98f;
-  
+
     auto& transform = aniObject_->GetTransform();
     transform.translate.y += velocity_.y;
 }
@@ -357,57 +358,6 @@ void Player::Zoom()
 Vector3& Player::GetForward()
 {
     return eyeCollider_->GetForward();
-}
-
-void Player::LookBack()
-{
-    auto& transform = aniObject_->GetTransform();
-
-    if (InputBind::IsClickR()) {
-        isLookBack_ = true;
-
-        if (isLookBackEnd_) {
-            isLookBackEnd_ = false;
-            lookBackTime_ = 0.0f;
-            startRotateY = transform.rotate.y;
-            endRotateY_ = transform.rotate.y + std::numbers::pi_v<float>;
-        }
-
-    }
-
-    if (!isLookBack_) {
-        return;
-    }
-
-
-    const float deltaTime = TimeManager::DeltaTime();
-
-
-    if (InputBind::IsClickPressR()) {
-
-        if (!isLookBackEnd_) {
-            if (lookBackTime_ < 1.0f) {
-                lookBackTime_ += deltaTime * 2.0f;
-            } else {
-                lookBackTime_ = 1.0f;
-                isLookBackEnd_ = true;
-            }
-        }
-        transform.rotate.y = Easing::EaseOutBack(startRotateY, endRotateY_, lookBackTime_);
-
-    } else {
-        if (lookBackTime_ > 0.0f) {
-            lookBackTime_ -= deltaTime * 2.0f;
-        } else {
-            lookBackTime_ = 0.0f;
-            isLookBack_ = false;
-        }
-
-        transform.rotate.y = Easing::EaseOutQuad(startRotateY, endRotateY_, lookBackTime_);
-
-    }
-
-
 }
 
 void Player::Thermography()
@@ -465,10 +415,6 @@ void Player::Thermography()
 void Player::MouseLook()
 {
 
-    if (isLookBack_) {
-        return;
-    }
-
     Vector2 controllerPos = { cameraRotateY_ ,cameraRotateX_ };
 
     const float kDeltaTime = TimeManager::DeltaTime();
@@ -477,8 +423,8 @@ void Player::MouseLook()
         cameraRotateY_ += controllerPos.x * kDeltaTime * cameraSpeed_ * 2.0f;
         cameraRotateX_ -= controllerPos.y * kDeltaTime * cameraSpeed_ * 2.0f;
     } else {
-        cameraRotateY_ += Input::GetMousePosFiltered().x * kDeltaTime / cameraSpeed_ *0.03125f;
-        cameraRotateX_ += Input::GetMousePosFiltered().y * kDeltaTime / cameraSpeed_ *0.03125f;
+        cameraRotateY_ += Input::GetMousePosFiltered().x * kDeltaTime / cameraSpeed_ * 0.03125f;
+        cameraRotateX_ += Input::GetMousePosFiltered().y * kDeltaTime / cameraSpeed_ * 0.03125f;
     }
 
     cameraRotateX_ = std::clamp(
