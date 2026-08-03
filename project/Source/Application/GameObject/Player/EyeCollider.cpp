@@ -5,45 +5,32 @@
 #include<algorithm>
 #include"MakeMatrix.h"
 
-EyeCollider::EyeCollider()
+
+void EyePosition::Update()
 {
-    object_ = std::make_unique<Object3d>();
-    object_->Create();
+    transform_.matWorld_ = MakeAffineMatrix(transform_.eTransform_.scale, transform_.eTransform_.rotate, transform_.eTransform_.translate)* *parent_;
 }
 
-void EyeCollider::Update()
+
+void EyePosition::Initialize()
 {
-    //object_->Update();
-    auto& transform = object_->GetTransform();
-    Matrix4x4 child = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate)* *parent_;
-    object_->SetWorldMatrix(child);
+    transform_.Initialize();
+    transform_.eTransform_.translate.z = 0.0f;
+    transform_.eTransform_.translate.y = 0.0f;
 
 }
 
-void EyeCollider::Draw(Camera& camera)
+Vector3& EyePosition::GetForward()
 {
-    object_->Draw(camera);
-}
-
-void EyeCollider::Initialize()
-{
-    object_->Initialize();
-    auto& transform = object_->GetTransform();
-    transform.translate.y = kEyeDefaultPosY_;
-    transform.translate.z = kEyeDefaultPosZ_;
-}
-
-Vector3& EyeCollider::GetForward()
-{
+    //前方を取得する
     static Vector3 forward;
     forward = Math::GetForward(GetWorldMatrix());
     return forward;
 }
 
 
-void EyeCollider::MouseLook(const float& rotateX)
+void EyePosition::MouseLook(const float& rotateX)
 {
-    auto& transform = object_->GetTransform();
-    transform.rotate.x = Lerp(transform.rotate.x, rotateX, 0.5f);
+    transform_.eTransform_.rotate.x = Lerp(transform_.eTransform_.rotate.x, rotateX, 0.5f);
 }
 
