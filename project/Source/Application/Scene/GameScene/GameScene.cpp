@@ -32,11 +32,12 @@ GameScene::GameScene()
 
     //プレイヤーのインスタンスを生成
     player_ = std::make_unique<Player>();
+
     //ライトマネージャーのインスタンスを生成
     lightingManager_ = std::make_unique<LightingManager>();
 
     lightingManager_->GetPlayerHandPos().Parent(player_->GetEyeWorldTransform());
-    lightingManager_->SetDirection(&player_->GetBodyForward());
+    lightingManager_->SetDirection(&player_->GetEyeForward());
 
     //衝突判定
     collisionManager_ = std::make_unique<CollisionManager>();
@@ -83,9 +84,7 @@ void GameScene::Initialize() {
     ParticleManager::ResetAll();
     //ライト管理の初期化
     lightingManager_->Initialize();
-    //カメラを初期化する
-    camera_->Initialize();
-    //camera_->UpdateMatrix();
+
     //UI管理の初期化
     uIManager_->Initialize();
     //アイテム管理の初期化
@@ -100,6 +99,11 @@ void GameScene::Initialize() {
     stageManager->SetNestStage("AnubisStage");
 
 #endif
+
+    //カメラを初期化する
+    camera_->Initialize();
+    camera_->UpdateMatrix();
+
     //ステージ遷移の初期化
     sceneChange_->Initialize();
     //現在のステージの初期化

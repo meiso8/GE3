@@ -95,6 +95,7 @@ Player::Player() {
     aniObject_->Create();
     aniObject_->SetMeshAndMaterial(model_);
     aniObject_->SetModelAndLoadAnimation(model_);
+    aniObject_->SetAnimation("Idle");
     SetWorldMatrix(aniObject_->GetWorldTransform());
 
     raySprite_ = std::make_unique<RaySprite>();
@@ -170,11 +171,11 @@ void Player::UpdateRay()
 
 void Player::Draw(Camera& camera)
 {
-#ifdef _DEBUG
-    aniObject_->Draw(camera);
-    eyeCollider_->Draw(camera);
 
-#endif
+    if (eyeCollider_->IsCameraUpOrDown()) {
+        aniObject_->Draw(camera);
+    }
+
 }
 
 void Player::DrawRaySprite()
