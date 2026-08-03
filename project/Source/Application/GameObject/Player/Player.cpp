@@ -56,7 +56,9 @@ void Player::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("CameraUp")) {
         //カメラ上昇するコライダーに当たった時を記入していく
-
+        eyeCollider_->SiftToUp();
+    } else {
+        eyeCollider_->ShftToTDown();
     }
 
 
@@ -163,7 +165,7 @@ void Player::Init(const Vector3& pos)
 
 void Player::UpdateRay()
 {
-    raySprite_->UpdateRay(Ray{ .origin = eyeCollider_->GetWorldTransform().GetWorldPosition(),.diff = GetForward() });
+    raySprite_->UpdateRay(Ray{ .origin = eyeCollider_->GetWorldTransform().GetWorldPosition(),.diff = GetEyeForward() });
 }
 
 void Player::Draw(Camera& camera)
@@ -269,7 +271,7 @@ void Player::Move()
         }
 
         //前の方向を取得
-        Vector3 forward = GetForward();
+        Vector3 forward = GetBodyForward();
         forward.y = 0.0f;
 
         // forwardに垂直な右方向ベクトルを計算
@@ -355,11 +357,17 @@ void Player::Zoom()
     zoomTimer_ = std::clamp(zoomTimer_, 0.0f, 1.0f);
 }
 
-Vector3& Player::GetForward()
+Vector3& Player::GetEyeForward()
 {
     return eyeCollider_->GetForward();
 }
-
+Vector3& Player::GetBodyForward()
+{
+    //前方を取得する
+    static Vector3 forward;
+    forward = Math::GetForward(aniObject_->GetWorldMatrix());
+    return forward;
+}
 void Player::Thermography()
 {
 
@@ -415,6 +423,12 @@ void Player::Thermography()
 void Player::MouseLook()
 {
 
+    if (eyeCollider_->IsCameraUpOrDown()) {
+        //上昇時または下降時は回転を固定する
+        aniObject_->GetTransform().rotate.y = 0.0f;
+        return;
+    }
+
     Vector2 controllerPos = { cameraRotateY_ ,cameraRotateX_ };
 
     const float kDeltaTime = TimeManager::DeltaTime();
@@ -433,6 +447,8 @@ void Player::MouseLook()
         std::numbers::pi_v<float> *0.5f);
     auto& transform = aniObject_->GetTransform();
     transform.rotate.y = Lerp(transform.rotate.y, cameraRotateY_, 0.5f);
+
+
     eyeCollider_->MouseLook(cameraRotateX_);
 
 }
