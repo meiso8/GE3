@@ -29,7 +29,8 @@ public:
     void Update();
     void Debug();
 
-    Vector3& GetForward();
+    Vector3& GetEyeForward();
+    Vector3& GetBodyForward();
 
     const Matrix4x4& GetEyeMatrix() {
         return eyeCollider_->GetWorldMatrix();

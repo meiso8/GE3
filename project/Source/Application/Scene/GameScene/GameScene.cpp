@@ -36,7 +36,7 @@ GameScene::GameScene()
     lightingManager_ = std::make_unique<LightingManager>();
 
     lightingManager_->GetPlayerHandPos().Parent(player_->GetEyeWorldTransform());
-    lightingManager_->SetDirection(&player_->GetForward());
+    lightingManager_->SetDirection(&player_->GetBodyForward());
 
     //衝突判定
     collisionManager_ = std::make_unique<CollisionManager>();

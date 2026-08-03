@@ -10,8 +10,8 @@ BastetBlockMap::BastetBlockMap()
     AABB blackAABB = aabb;
     blackAABB.min.x *= 0.5f;
     blackAABB.max.x *= 0.5f;
-    AABB collisionAABB = { aabb.min * 0.5f,aabb.max * 0.5f };
-    AABB collisionBlackAABB = { blackAABB.min * 0.5f,blackAABB.max * 0.5f };
+    AABB collisionAABB = { aabb.min * 0.75f,aabb.max * 0.75f };
+    AABB collisionBlackAABB = { blackAABB.min * 0.75f,blackAABB.max * 0.75f };
 
     for (auto& block : blocks_) {
         block = std::make_unique<Block>();
@@ -88,14 +88,16 @@ void BastetBlockMap::Initialize()
     }
 
     AABB collisionAABB = whiteMap_[0]->GetAABB();
+    collisionAABB.min *= 0.666f;
+    collisionAABB.max *= 0.666f;
     float blockSize = collisionAABB.max.x - collisionAABB.min.x;
 
     float offset = -blockSize * 2.0f * 4.0f + blockSize;
 
     for (int i = 0; i < whiteMap_.size(); ++i) {
         Vector3 pos = {
-            static_cast<float>(i) * blockSize * 2.0f+ offset,
-            0.0f,
+            static_cast<float>(i) * blockSize * 2.0f + offset,
+            0.25f,
             6.0f
         };
 
@@ -104,7 +106,8 @@ void BastetBlockMap::Initialize()
     }
 
     AABB collisionBlackAABB = blackMap_[0]->GetAABB();
-
+    collisionBlackAABB.min *= 0.666f;
+    collisionBlackAABB.max *= 0.666f;
     float blockSizeBlack = collisionBlackAABB.max.x - collisionBlackAABB.min.x;
 
     for (int i = 0; i < blackMap_.size(); ++i) {
@@ -178,7 +181,7 @@ void BastetBlockMap::Update()
             // 正しい順番と一致したらクリア
             if (steppedOrder_ == correctOrder_) {
                 if (!isClear_) {
-                    ClearSet(); 
+                    ClearSet();
                     ResetPushMap();
                     return;
                 }
@@ -221,8 +224,14 @@ void BastetBlockMap::RayCastHit(RaySprite& raySprite)
 
         if (!blocks_[i]->GetIsPush()) {
 
-            if (raySprite.Intersect( blocks_[i].get())) {
-                Vector4 color = COLOR::ToShadowColor(colorMap_[static_cast<BlockHz>(i)]);
+            if (raySprite.Intersect(blocks_[i].get(),10.0f)) {
+                Vector4 color{};
+                if (colorMap_[static_cast<BlockHz>(i)] == COLOR::BLACK) {
+                    color = { 0.25f, 0.25f, 0.25f, 1.0f };
+                } else {
+                    color = COLOR::ToShadowColor(colorMap_[static_cast<BlockHz>(i)]);
+                }
+
                 blocks_[i]->SetColor(color);
                 //ブロックテクスチャによって判定しない
                 blocks_[i]->RayCastHit(false);
