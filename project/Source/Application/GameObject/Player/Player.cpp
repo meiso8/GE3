@@ -83,6 +83,7 @@ Player::Player() {
         | CollisionTag::GetTag("Floor")
         | CollisionTag::GetTag("StageTrigger")
         | CollisionTag::GetTag("Block")
+        | CollisionTag::GetTag("CameraUp")
     );
 
     //それぞれのObject3dを作る
@@ -204,7 +205,8 @@ void Player::Update()
     }
 
     //アニメーションタイマーのアップデート
-    aniObject_->UpdateAniTimer();
+    // 一旦コメントアウトしておく
+    //aniObject_->UpdateAniTimer();
     
     aniObject_->Update();
     headMatrix_ = aniObject_->GetWorldJointMatrix("Head");

@@ -1230,6 +1230,7 @@ void DebugUI::CheckCollider(Collider& collider, const char* label)
         ImGui::Text("attribute : %X", collider.GetCollisionAttribute());
         ImGui::Text("     mask : %X", collider.GetCollisionMask());
 
+
         if (ImGui::BeginCombo("Tag", CollisionTag::GetTagName(collider.GetCollisionAttribute()).c_str())) {
 
             // マップ内のすべてのタグをループして選択肢を作る
@@ -1274,6 +1275,33 @@ void DebugUI::CheckCollider(Collider& collider, const char* label)
             }
 
             ImGui::EndCombo();
+        }
+
+        if (ImGui::TreeNode("AddTag")) {
+            static char tagBuffer[128] = "";
+            static bool isInitialized = false;
+
+            //ファイルタグ名を入力
+            ImGui::InputText("TagName", tagBuffer, IM_ARRAYSIZE(tagBuffer));
+
+            if (CollisionTag::GetAllTags().contains(tagBuffer)) {
+                ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "This tagName already exists!!!");
+            } else {
+                // 3. 空文字でなければ追加ボタンを有効化
+                if (tagBuffer[0] != '\0') {
+                    if (ImGui::Button("AddTag")) {
+                        CollisionTag::AddTag(tagBuffer);
+                        // 追加に成功したら入力欄をリセット
+                        tagBuffer[0] = '\0';
+                        //全てのタグをセットする
+                        CollisionTag::SaveTagNames();
+                    }
+                }
+       
+            }
+
+            ImGui::TreePop();
+   
         }
 
         ImGui::TreePop();

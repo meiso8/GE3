@@ -112,6 +112,8 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
         auto& transform = newObjctData->obj_->GetWorldTransform();
 
         transform.eTransform_ = objectData.transform;
+        //ここで一度 Object3d の行列計算(Update)を走らせて matWorld_ を確定させる！
+        newObjctData->obj_->Update();
 
         //コライダーの設定
         newObjctData->collider_ = std::make_unique<Collider>();
