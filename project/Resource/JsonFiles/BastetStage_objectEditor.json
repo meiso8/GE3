@@ -2,6 +2,21 @@
     "name": "GameScene",
     "objects": [
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294967295,
+                "size": {
+                    "x": 14.0,
+                    "y": 6.0,
+                    "z": 1.0
+                },
+                "tag": "Wall",
+                "type": "AABB"
+            },
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -11,7 +26,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
-            "name": "Object1",
+            "name": "Object11",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -45,7 +60,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object2",
+            "name": "Object22",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -80,7 +95,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "toki.obj",
-            "name": "Object3",
+            "name": "Object33",
             "nextStageName": "",
             "shininess": 40.909000396728516,
             "temperature": 0.5,
@@ -105,6 +120,40 @@
         },
         {
             "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "name": "Object64",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.5,
+            "textureHandle": 61,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 5.296999931335449,
+                    "y": 1.215999960899353,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 2.335428476333618,
+                    "z": 9.04207992553711
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
                 "w": 1.0,
                 "x": 1.0,
                 "y": 1.0,
@@ -114,7 +163,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
-            "name": "Object4",
+            "name": "Object5",
             "nextStageName": "AmenStage",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -148,7 +197,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "cat.obj",
-            "name": "Bastet5",
+            "name": "Bastet6",
             "nextStageName": "BastetStage",
             "shininess": 0.0,
             "temperature": 0.20000000298023224,
@@ -178,18 +227,18 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/player",
+            "directoryPath": "Resource/Models/gentleman",
             "disabled": false,
             "environmentCoefficient": 0.0,
-            "file_name": "player.obj",
+            "file_name": "gentleman.gltf",
             "name": "Player5",
             "nextStageName": "",
-            "shininess": 491.148193359375,
+            "shininess": 250.0,
             "temperature": 0.0,
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": -4.3309783935546875,
+                    "y": 0.6052324771881104,
                     "z": 0.0
                 },
                 "scale": {
@@ -198,28 +247,43 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -0.15467528998851776,
-                    "y": -0.5,
-                    "z": -14.088994979858398
+                    "x": 8.098037719726563,
+                    "y": 0.0,
+                    "z": 4.086365699768066
                 }
             },
             "type": "EMPTY"
         },
         {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294705155,
+                "size": {
+                    "x": 14.0,
+                    "y": 2.9077279567718506,
+                    "z": 10.000000953674316
+                },
+                "tag": "CameraUp",
+                "type": "AABB"
+            },
             "color": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             },
             "disabled": false,
             "environmentCoefficient": 0.0,
-            "file_name": "Plane",
+            "file_name": "Cube",
             "name": "Object6",
             "nextStageName": "",
             "shininess": 250.0,
-            "temperature": 0.5,
-            "textureHandle": 61,
+            "temperature": 0.0,
+            "textureHandle": 39,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -227,14 +291,14 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 5.296999931335449,
-                    "y": 1.215999960899353,
-                    "z": 1.0
+                    "x": 13.258249282836914,
+                    "y": 1.0,
+                    "z": 9.907705307006836
                 },
                 "translate": {
                     "x": 0.0,
-                    "y": 2.335428476333618,
-                    "z": 9.04207992553711
+                    "y": -0.46169745922088623,
+                    "z": 3.7767319679260254
                 }
             },
             "type": "MESH"

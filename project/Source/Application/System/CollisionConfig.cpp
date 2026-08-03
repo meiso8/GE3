@@ -1,5 +1,5 @@
 #include "CollisionConfig.h"
-
+#include"JsonFile.h"
 
 uint32_t CollisionTag::useIndex_ = 0;
 const uint32_t CollisionTag::maxCount_ = 1000;
@@ -37,9 +37,38 @@ const std::string CollisionTag::GetTagName(uint32_t tagNum)
     return "unKnown";
 }
 
+void CollisionTag::SaveTagNames()
+{
+    nlohmann::json  json;
+
+    for (auto& [name, tag] : tags_) {
+        nlohmann::json tagName = { "name" ,name };
+        json.push_back(tagName );
+    }
+
+    JsonFile::SetJson("TagNames", json);
+}
+
+void CollisionTag::LoadTagNames()
+{
+    auto& json = JsonFile::GetJsonFiles("TagNames");
+
+    for (auto& [name, tag] : tags_) {
+
+        //タグ名が既に存在するときスキップする
+        if (name.c_str() == json["name"]) {
+            continue;
+        }
+        //タグを追加する
+        AddTag(name);
+    }
+
+}
 
 void TagFactory::SetTag()
 {
+
+    CollisionTag::SaveTagNames();
 
     CollisionTag::AddTag("Player");
     CollisionTag::AddTag("PlayerBulletCold");
@@ -62,4 +91,7 @@ void TagFactory::SetTag()
     CollisionTag::AddTag("Memo");
 
     CollisionTag::AddTag("StageTrigger");
+    CollisionTag::AddTag("CameraUp");
+    CollisionTag::LoadTagNames();
+
 }

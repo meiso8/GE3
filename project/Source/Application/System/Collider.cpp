@@ -42,16 +42,17 @@ const Vector3& Collider::CalculateWorldPos()
     if (isCalculatedThisFrame_) {
         return tempWorldTransform_;
     }
-    //中心点のローカル行列を計算する
-    Matrix4x4 child = MakeTranslateMatrix(center_);
+
     assert(worldMat_);
-    //親の行列と掛け算する
-    child = Multiply(child, *worldMat_);
-    //行列から位置を取得する
-    tempWorldTransform_ = Math::GetWorldTransformByMatrix(child);
+    // 親（Object3d）のワールド行列から「ワールド平行移動量」だけを取り出す
+    Vector3 objectWorldPos = Math::GetWorldTransformByMatrix(*worldMat_);
+
+    // 単純にワールド座標で center_ 分を足し込む場合
+    tempWorldTransform_ = objectWorldPos + center_;
 
 #ifdef _DEVELOP
     object3d_->SetTranslate(tempWorldTransform_);
+
 #endif // _DEVELOP
 
     //計算終了

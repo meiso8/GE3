@@ -9,6 +9,9 @@ public:
     static uint32_t GetTag(const std::string& tagName);
     static const std::string GetTagName(uint32_t tagNum);
     static std::unordered_map<std::string, uint32_t>& GetAllTags() { return tags_; };
+    /// @brief タグ名の保存
+    static void SaveTagNames();
+    static void LoadTagNames();
 private:
     static uint32_t useIndex_;
     static const uint32_t maxCount_;
@@ -20,4 +23,5 @@ private:
 class TagFactory {
 public:
     void SetTag();
+
 };
