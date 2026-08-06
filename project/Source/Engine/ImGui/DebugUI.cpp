@@ -955,7 +955,7 @@ void DebugUI::CheckPostEffectMaterial(PostEffectMaterial::MaterialForMosaic& mat
 }
 
 
-void DebugUI::CheckObject3d(Object3d& object3d)
+void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
 {
 #ifdef USE_IMGUI
     if (!&object3d) {
@@ -974,7 +974,7 @@ void DebugUI::CheckObject3d(Object3d& object3d)
         isInitialized = true;
     }
 
-    std::string selectObjectName = "SelectObject :" + std::to_string(object3d.GetObjectID());
+    std::string selectObjectName = label  + std::to_string(object3d.GetObjectID());
 
     if (ImGui::TreeNode(selectObjectName.c_str())) {
 

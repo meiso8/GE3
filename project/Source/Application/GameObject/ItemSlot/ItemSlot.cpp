@@ -14,12 +14,12 @@ ItemSlot::ItemSlot()
     //カメラについての
     itemCamera_ = std::make_unique<Camera>();
     itemCamera_->Initialize();
-    float scales = 0.005f;
+   
 
     itemCamera_->SetTransform(
-        { .scale = { scales,scales,scales },
+        { .scale = { 1.0f,1.0f,1.0f},
         .rotate = {Math::ZERO},
-        .translate = { 0.0f,0.0f,-10.0f } }
+        .translate = { 0.0f,0.0f,0.0f } }
     );
 
     matViewport = MakeViewportMatrix(0, 0, width, height, 0, 1);

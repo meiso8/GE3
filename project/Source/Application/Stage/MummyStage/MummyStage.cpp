@@ -158,11 +158,12 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager)
 
         //オープンし終わったら
         if (mummy_->GetIsOpenEnd()) {
+            const Vector3 mummyPos = GetMummy()->GetWorldTransform().GetWorldPosition();
+            Vector3 endPosOffset_ = { -0.3f,0.3f,0.01f };
+            Vector3 startPosOffset_ = { -0.3f,0.5f,0.01f };
 
             //心臓を使う
-            itemManager_->UseItemFromSlot(
-                GetMummy()->GetWorldTransform().GetWorldPosition(),
-                "GoldHeart"
+            itemManager_->UseItemFromSlot(mummyPos+ startPosOffset_, mummyPos+ endPosOffset_, "GoldHeart"
             );
         }
 

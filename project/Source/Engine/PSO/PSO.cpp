@@ -153,6 +153,7 @@ void PSO::CreateALLPSO()
     depthStencils[kAll].Create(kAll);
     depthStencils[kNone].Create(kNone);
     depthStencils[kZero_Depth_Stencil_Enable].Create(kZero_Depth_Stencil_Enable);
+
     LogFile::Log("Create depthStencilDesc");
 
     std::vector<DXGI_FORMAT> rtvFormatsForTermoAndObjectID =

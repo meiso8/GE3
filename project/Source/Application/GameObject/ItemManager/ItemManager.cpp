@@ -158,7 +158,7 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
     return nullptr;
 }
 
-void ItemManager::UseItemFromSlot(const Vector3& pos,const char* name)
+void ItemManager::UseItemFromSlot(const Vector3& startPos,const Vector3& endPos,const char* name)
 {
 
     auto item = GetItem(name);
@@ -168,7 +168,7 @@ void ItemManager::UseItemFromSlot(const Vector3& pos,const char* name)
         if (item && !item->IsUsed() && item->IsGet()) {
             SoundManager::PlayCorrectSE();
             item->Use();
-            item->SetStartEndPos(pos + item->GetStartPosOffset(), pos + item->GetEndPosOffset());
+            item->SetStartEndPos(startPos, endPos);
             item->SetRotate(item->GetUseRotate());
             //スケールの初期化
             item->InitScale();
