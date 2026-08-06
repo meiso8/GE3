@@ -81,8 +81,8 @@ public:
 
     /// @brief Object3d
     /// @param object3d Object3d
-    /// @param label 
-    static void CheckObject3d(Object3d& object3d);
+    /// @param label ラベル
+    static void CheckObject3d(Object3d& object3d, const char* label= "SelectObject : ");
     /// @brief ワールドトランスフォーム
     /// @param worldTransform 
     static void CheckWorldTransform(WorldTransform& worldTransform, const char* label);

@@ -10,22 +10,40 @@ BastetStage::BastetStage()
 void BastetStage::Initialize()
 {
 
-    //ステージのロード
-    LoadAndCreateObject("BastetStage_objectEditor");
+    StageTransitionInitialize();
+
+    if (isInitialize_) {
+        return;
+    }
+
     //ライトの初期化
     lightingManager_->Initialize();
-    //パーティクルのリセット
-    ParticleManager::ResetAll();
 
-    memoManager_->GenerateMemos({ TextureFactory::BOOK6 });
     //背景の初期化
     backGround_->Initialize();
    
     //ブロックマップ
     bastetBlockMap_->Initialize();
+    //バステトの初期化
+    bastet_->Initialize();
+
+    isInitialize_ = true;
+}
+
+void BastetStage::StageTransitionInitialize()
+{
+
+    //パーティクルのリセット
+    ParticleManager::ResetAll();
+    //ステージのロード
+    LoadAndCreateObject("BastetStage_objectEditor");
+    //メモの生成
+    memoManager_->GenerateMemos({ TextureFactory::BOOK6 });
     //バステト　
     bastet_->LoadMap("BastetStage_BastetStep");
-    bastet_->Initialize();
+    //パーティクルのリセット
+    ParticleManager::ResetAll();
+
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -5.0f });
 }
@@ -68,10 +86,10 @@ void BastetStage::CheckCollision(CollisionManager& collisionManager)
         collisionManager.AddCollider(object.get());
     }
 
-    ////ブロックの当たり判定の追加
-    //for (auto& object : bastetBlockMap_->GetMap()) {
-    //    collisionManager.AddCollider(object.get());
-    //}
+    //ブロックの当たり判定の追加
+    for (auto& object : bastetBlockMap_->GetMap()) {
+        collisionManager.AddCollider(object.get());
+    }
 
     //コライダーを追加する
     AddObjectCollision(collisionManager);

@@ -11,20 +11,32 @@ WaterStage::WaterStage()
 
 void WaterStage::Initialize()
 {
+    StageTransitionInitialize();
 
-    //ステージのロード
-    LoadAndCreateObject("WaterStage_objectEditor");
-
-    memoManager_->GenerateMemos({ TextureFactory::MEMO2, TextureFactory::BOOK2 });
+    if (isInitialize_) {
+        return;
+    }
     water_->Initialize();
+
     papyrusWall_->Init();
     papyrusWall_->Update();
     blockMap_->Initialize();
     blockMap_->Update();
 
-    player_->Init({ 0.0f,0.0f, -10.0f });
 
     itemApper_ = false;
+
+    isInitialize_ = true;
+}
+
+void WaterStage::StageTransitionInitialize()
+{
+    //ステージのロード
+    LoadAndCreateObject("WaterStage_objectEditor");
+
+    memoManager_->GenerateMemos({ TextureFactory::MEMO2, TextureFactory::BOOK2 });
+
+    player_->Init({ 0.0f,0.0f, -10.0f });
 }
 
 void WaterStage::Update()

@@ -16,6 +16,7 @@ private:
 public:
     BastetStage();
     void Initialize()override;
+    void StageTransitionInitialize()override;
     void Update()override;
     void Draw(Camera& camera)override;
     void CheckCollision(CollisionManager& collisionManager)override;

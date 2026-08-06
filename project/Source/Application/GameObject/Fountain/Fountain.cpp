@@ -45,8 +45,6 @@ void Fountain::Initialize()
     waterObject_->InitWaveData();
     waterObject_->SetColor({ 0.0f,1.0f,1.0f,0.2f });
 
-    object_->SetObjectName("Fountain");
-    object_->RegisterObject();
 }
 
 void Fountain::Update()

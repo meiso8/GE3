@@ -14,26 +14,34 @@ AnubisStage::AnubisStage()
 void AnubisStage::Initialize()
 {
 
+    StageTransitionInitialize();
+
+    if (isInitialize_) {
+        return;
+    }
+    anubisBlockMap_->Initialize();
+    anubisBlockMap_->Update();
+
+    backGround_->Initialize();
+    fountain_->Initialize();
+    thoth_->Initialize();
+
+    isInitialize_ = true;
+}
+
+void AnubisStage::StageTransitionInitialize()
+{
+
+    Sound::StopAllSound();
+    Sound::bgmVolume_ = 0.1f;
+
     //ステージのロード
     LoadAndCreateObject("AnubisStage_objectEditor");
 
     memoManager_->GenerateMemos({ TextureFactory::BOOK5 });
 
-    anubisBlockMap_->Initialize();
-    anubisBlockMap_->Update();
-
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -10.0f });
-
-    Sound::StopAllSound();
-
-    backGround_->Initialize();
-
-    Sound::bgmVolume_ = 0.1f;
-
-    fountain_->Initialize();
-
-    thoth_->Initialize();
 }
 
 void AnubisStage::Update()
@@ -47,8 +55,6 @@ void AnubisStage::Update()
         if (!thoth_->GetIsActive()) {
             thoth_->SetIsActive(true);
         }
-
-
     }
 
     backGround_->Update();

@@ -55,7 +55,7 @@ void Item::DrawInfoUI()
 
 void Item::Draw(Camera& camera)
 {
-    if (isGet_) {
+    if (isGet_&& !isUsed_) {
     
         if (parent_) {
             handItemObj_->Draw(camera);
@@ -68,7 +68,7 @@ void Item::Draw(Camera& camera)
 
 void Item::DrawForSlotItem(Camera& camera)
 {
-    object_->Draw(camera, kBlendModeNormal, kCullModeBack, kNone, true);
+    object_->Draw(camera);
 }
 
 void Item::OnCollision(Collider* collider)

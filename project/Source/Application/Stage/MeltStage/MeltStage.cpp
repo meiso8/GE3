@@ -12,24 +12,32 @@ MeltStage::MeltStage()
 
 void MeltStage::Initialize()
 {
+    StageTransitionInitialize();
 
-    //ステージのロード
-    LoadAndCreateObject("MeltStage_objectEditor");
-    //ライトの初期化
-    lightingManager_->Initialize();
-    //パーティクルのリセット
-    ParticleManager::ResetAll();
-   
+    if (isInitialize_) {
+        return;
+    }
+    //背景の初期化
     backGround_->Initialize();
 
     //メルトブロック
-
     meltBlockMap_->Initialize();
 
+    //バステトの初期化は一度だけにしておく
+    bastet_->Initialize();
+    isInitialize_ = true;
+}
+
+void MeltStage::StageTransitionInitialize()
+{
+    //パーティクルのリセット
+    ParticleManager::ResetAll();
+
+    //ステージのロード
+    LoadAndCreateObject("MeltStage_objectEditor");
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -5.0f });
     bastet_->LoadMap("MeltStage_BastetStep");
-    bastet_->Initialize();
 }
 
 void MeltStage::Update()

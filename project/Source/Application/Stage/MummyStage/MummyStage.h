@@ -27,6 +27,7 @@ public:
     MummyStage();
     ~MummyStage();
     void Initialize()override;
+    void StageTransitionInitialize()override;
     void Update()override;
     void Draw(Camera& camera)override;
 

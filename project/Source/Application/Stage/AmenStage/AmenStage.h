@@ -18,9 +18,11 @@ private:
     std::unique_ptr<AmenRa>amenRa_ = nullptr;
     bool isGenerateItem_ = false;
 public:
+
     AmenStage();
     ~AmenStage();
     void Initialize()override;
+    void StageTransitionInitialize()override;
     void Update()override;
     void Draw(Camera& camera)override;
     void DrawSprite()override;

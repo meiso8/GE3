@@ -1,6 +1,6 @@
 #include "GoldHeart.h"
 #include"Lerp.h"
-
+#include"DebugUI.h"
 void GoldHeart::Init()
 {
     isGetAnimEnd_ = false;
@@ -8,6 +8,8 @@ void GoldHeart::Init()
     isGet_ = false;
     aniTimer_ = 0.0f;
     object_->Initialize();
+    //鏡面反射する
+    object_->SetEnvironmentCoefficient(1.0f);
     auto& transform = object_->GetTransform();
     transform.translate.y = -1.2f;
     //熱々
@@ -26,7 +28,6 @@ void GoldHeart::Update()
 
     object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
     object_->Update();
- 
 }
 
 void GoldHeart::Use()

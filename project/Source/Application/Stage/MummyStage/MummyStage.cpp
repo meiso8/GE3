@@ -15,6 +15,8 @@ MummyStage::MummyStage()
     for (auto& dummyMummy : dummyMummies_) {
         dummyMummy = std::make_unique<DummyMummy>();
     }
+
+    DummyMummy::SetTargetPosPtr(&player_->GerRaySprite()->ray_.origin);
 }
 
 MummyStage::~MummyStage()
@@ -30,22 +32,22 @@ void MummyStage::TimerUpdate()
 
 void MummyStage::Initialize() {
 
-    //ステージのロード
-    LoadAndCreateObject("MummyStage_objectEditor");
 
-    memoManager_->GenerateMemos({ TextureFactory::BOOK,TextureFactory::MEMO5 });
+    StageTransitionInitialize();
 
-    DummyMummy::SetTargetPosPtr(&player_->GerRaySprite()->ray_.origin);
+    if (isInitialize_) {
+        return;
+    }
 
-    Sound::Stop(SoundFactory::BGM_Sea);
-    Sound::PlaySE(SoundFactory::HORROR1);
     heartSetEndTime_ = maxTime_;
-    papyrus_->Initialize();
-    mummy_->Initialize();
+
     mummyRoom_->Init();
     mummyRoom_->Update();
-    // ミイラ前に移動
-    player_->Init({ 0.0f, 0.0f, -5.0f });
+
+    papyrus_->Initialize();
+    mummy_->Initialize();
+
+
 
     const float distance = 7.0f;
     const float spacing = 2.5f;
@@ -75,6 +77,24 @@ void MummyStage::Initialize() {
         dummyMummies_[i]->SetRotateY(rotate);
         dummyMummies_[i]->Update();
     }
+
+    isInitialize_ = true;
+
+}
+
+void MummyStage::StageTransitionInitialize()
+{
+
+
+    Sound::Stop(SoundFactory::BGM_Sea);
+    Sound::PlaySE(SoundFactory::HORROR1);
+
+    //ステージのロード
+    LoadAndCreateObject("MummyStage_objectEditor");
+
+    memoManager_->GenerateMemos({ TextureFactory::BOOK,TextureFactory::MEMO5 });
+    // ミイラ前に移動
+    player_->Init({ 0.0f, 0.0f, -5.0f });
 
 }
 
@@ -138,11 +158,12 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager)
 
         //オープンし終わったら
         if (mummy_->GetIsOpenEnd()) {
+            const Vector3 mummyPos = GetMummy()->GetWorldTransform().GetWorldPosition();
+            Vector3 endPosOffset_ = { -0.3f,0.3f,0.01f };
+            Vector3 startPosOffset_ = { -0.3f,0.5f,0.01f };
 
             //心臓を使う
-            itemManager_->UseItemFromSlot(
-                GetMummy()->GetWorldTransform().GetWorldPosition(),
-                "GoldHeart"
+            itemManager_->UseItemFromSlot(mummyPos+ startPosOffset_, mummyPos+ endPosOffset_, "GoldHeart"
             );
         }
 

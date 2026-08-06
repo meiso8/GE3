@@ -18,7 +18,7 @@ void DepthStencil::Create(MaskMode maskMode) {
             depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
             depthStencilDesc_.DepthEnable = FALSE;
             depthStencilDesc_.StencilEnable = FALSE;
-        }
+        } 
         if (depthStencilDesc_.DepthEnable) {
             //比較関数はLessEqual。つまり、近ければ描画される
             depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;

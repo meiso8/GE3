@@ -40,8 +40,6 @@ void Thoth::Initialize()
     auto& transform = object_->GetTransform();
     transform.translate = { 0.0f,kHidePosY_,11.0f };
     transform.rotate.y = std::numbers::pi_v<float>;
-    object_->SetObjectName("thoth");
-    object_->RegisterObject();
 
     isActive_ = false;
     timer_ = 0.0f;

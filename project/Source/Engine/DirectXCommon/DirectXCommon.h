@@ -73,7 +73,7 @@ public:
     void DrawRenderTexture(RtvDescriptorHeap* rtvDescriptorHeap);
     void DrawRenderTextureForSprite(RtvDescriptorHeap* rtvDescriptorHeap);
     void RenderTexturePostDraw(DepthTexture* depthTexture);
- 
+
     void SettingIdTextureBarrierPre();
     void SettingIdTextureBarrierPost();
 

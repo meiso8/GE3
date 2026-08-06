@@ -203,6 +203,7 @@ void DirectXCommon::RenderTexturePostDraw(DepthTexture* depthTexture)
 }
 
 
+
 void DirectXCommon::SettingIdTextureBarrierPost()
 {
 

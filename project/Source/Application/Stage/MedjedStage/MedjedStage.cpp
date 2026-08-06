@@ -31,29 +31,43 @@ MedjedStage::MedjedStage()
 
 void MedjedStage::Initialize()
 {
-    //ステージのロード
-    LoadAndCreateObject("MedjedStage_objectEditor");
+  
+    StageTransitionInitialize();
+    if (isInitialize_) {
+        //いまコンストラクタでやればいいのではとなっている
+        return;
+    }
 
+    isInitialize_ = true;
 
-    //パーティクルの初期化
-    particleEmitters_[kMedjed_Particle]->GetEmitter().transform.Parent(GetMedjed()->GetWorldTransform());
+}
+
+void MedjedStage::StageTransitionInitialize()
+{
 
     //パーティクルのリセット
     ParticleManager::ResetAll();
-
-    //メモの生成
-    memoManager_->GenerateMemos({ TextureFactory::BOOK3 });
     SoundManager::InitMedjedScene();
+    Sound::PlaySE(SoundFactory::VOICE_Asobimasyo, 0.5f);
+
+    //ステージのロード
+    LoadAndCreateObject("MedjedStage_objectEditor");
+    
     backGround_->Initialize();
     backGround_->Update();
 
     medjedManager_->Initialize();
     rhythmBullet_->Initialize();
 
-    player_->Init({ 0.0f, 0.0f, 0.0f });
+    //パーティクルの初期化
+    particleEmitters_[kMedjed_Particle]->GetEmitter().transform.Parent(GetMedjed()->GetWorldTransform());
 
+    //メモの生成
+    memoManager_->GenerateMemos({ TextureFactory::BOOK3 });
+    //アイテムの生成
     itemManager_->GenerateItems({ "SunRod" });
-    Sound::PlaySE(SoundFactory::VOICE_Asobimasyo, 0.5f);
+
+    player_->Init({ 0.0f, 0.0f, 0.0f });
 }
 
 void MedjedStage::Update()

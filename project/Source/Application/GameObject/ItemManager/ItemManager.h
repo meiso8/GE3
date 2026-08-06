@@ -48,9 +48,10 @@ public:
     /// @return レイにヒットしているアイテムを返す
     std::shared_ptr<Item> RaycastHitItem(RaySprite& raySprite);
     /// @brief アイテムスロットからアイテムを使う関数
-    /// @param pos 置きたい大体の位置
+    /// @param startPos 置きたい始点位置
+    /// @param endPos 置きたい終点位置
     /// @param name アイテム名
-    void UseItemFromSlot(const Vector3& pos, const char* name);
+    void UseItemFromSlot(const Vector3& startPos, const Vector3& endPos, const char* name);
     /// @brief プレイヤーの手の行列をセットする
     /// @param matrix 行列
     void SetPlayerHandMatrix(Matrix4x4* matrix) { playerHandMatrix_ = matrix; }
