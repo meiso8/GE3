@@ -65,3 +65,8 @@ Stage::~Stage()
 {
 
 }
+
+void Stage::ResetInitializeFlag()
+{
+    isInitialize_ = false;
+}

@@ -24,8 +24,16 @@ void StageManager::Initialize()
     //メモマネージャー
     memoManager_->Initialize();
     LogFile::Log("Initialize　MemoManager");
-    currentStage_->Initialize();
-    LogFile::Log("Initialize　NextScene");
+
+
+    if (currentStage_) {
+        currentStage_->ResetInitializeFlag();
+        LogFile::Log("ResetInitializeFlag");
+        //currentStage_->Initialize();
+        //LogFile::Log("Initialize　NextScene");
+    }
+
+
 
 }
 

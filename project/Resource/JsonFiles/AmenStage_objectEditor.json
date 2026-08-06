@@ -11,7 +11,7 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object611",
+            "name": "Object6111",
             "nextStageName": "",
             "shininess": 0.0,
             "temperature": 0.5,
@@ -96,8 +96,8 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 0.026001866906881332,
-                    "y": -0.586564302444458,
+                    "x": 0.026001034304499626,
+                    "y": -0.12857156991958618,
                     "z": 19.555145263671875
                 }
             },
@@ -144,79 +144,11 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/player",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "player.obj",
-            "name": "Player19",
-            "nextStageName": "",
-            "shininess": 491.148193359375,
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 6.445784568786621,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": -18.6701602935791,
-                    "y": -0.5,
-                    "z": -16.643125534057617
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/Puzzle",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "Puzzle.gltf",
-            "name": "PuzzleObj5",
-            "nextStageName": "",
-            "shininess": 250.0,
-            "temperature": 0.75,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": -24.0,
-                    "y": 0.25,
-                    "z": -24.0
-                }
-            },
-            "type": "EMPTY"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
             "directoryPath": "Resource/Models/AmenRa",
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "AmenRa.obj",
-            "name": "AmenRa6",
+            "name": "AmenRa5",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.10000000149011612,
@@ -235,6 +167,40 @@
                     "x": 0.0,
                     "y": 0.0,
                     "z": 0.0
+                }
+            },
+            "type": "EMPTY"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/gentleman",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "gentleman.gltf",
+            "name": "Player6",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.5745508670806885,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -2.1004867553710938,
+                    "y": 0.0,
+                    "z": 14.804019927978516
                 }
             },
             "type": "EMPTY"

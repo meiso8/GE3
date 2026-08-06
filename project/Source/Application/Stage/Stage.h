@@ -21,7 +21,7 @@ protected:
     std::vector<std::unique_ptr<LevelEditor::ObjectSet>>objects_;
     // 1. トリガーを管理するリストを用意
     std::vector<std::unique_ptr<StageChangeTrigger>> stageTriggers_;
-
+    bool isInitialize_ = false;
 protected:
     void LoadAndCreateObject(const std::string& fileName );
     void UpdateObject();
@@ -35,9 +35,11 @@ public:
     static void SetPlayer(Player* player) { player_ = player; };
     static void SetUIManager(UIManager* uiManager) { uiManager_ = uiManager; };
     static void SetLightingManager(LightingManager* lightingManager) { lightingManager_ = lightingManager; }
-
+    void ResetInitializeFlag();
     virtual void CheckCollision(CollisionManager& collisionManager) = 0;
     virtual void Initialize() = 0;
+    //ステージ遷移時初期化
+    virtual void StageTransitionInitialize() = 0;
     virtual void Update() = 0;
     virtual void Draw(Camera& camera) = 0;
     virtual void DrawSprite() {};

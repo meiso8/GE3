@@ -19,23 +19,36 @@ AmenStage::~AmenStage()
 
 void AmenStage::Initialize()
 {
+
+
+    StageTransitionInitialize();
+
+    if (isInitialize_) {
+        return;
+    }
+
     //アイテムの生成を初期化する
     isGenerateItem_ = false;
+    //スライドパズルシステムの初期化
+    slidePuzzleSystem_->Initialize();
 
+    isInitialize_ = true;
+}
+
+void AmenStage::StageTransitionInitialize()
+{
+    //サウンドの初期化
+    Sound::StopAllSound();
+    Sound::bgmVolume_ = 0.1f;
     //ステージのロード
     LoadAndCreateObject("AmenStage_objectEditor");
-
+    //像の初期化
+    amenRa_->Initialize();
+    //メモの生成
     memoManager_->GenerateMemos({ TextureFactory::MEMO1, TextureFactory::MEMO3,TextureFactory::MEMO4,TextureFactory::BOOK4 });
+    backGround_->Initialize();
     // ミイラ前に移動
     player_->Init({ 0.0f, 0.0f, -5.0f });
-
-    Sound::StopAllSound();
-    slidePuzzleSystem_->Initialize();
-    backGround_->Initialize();
-
-    amenRa_->Initialize();
-    Sound::bgmVolume_ = 0.1f;
-
 }
 
 void AmenStage::Update()

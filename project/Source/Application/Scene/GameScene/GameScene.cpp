@@ -94,6 +94,7 @@ void GameScene::Initialize() {
     //アメンステージにする
 
     auto* stageManager = StageManager::GetInstance();
+
     stageManager->SetNestStage("AmenStage");
 #ifdef _DEVELOP
     stageManager->SetNestStage("AnubisStage");
@@ -106,6 +107,8 @@ void GameScene::Initialize() {
 
     //ステージ遷移の初期化
     sceneChange_->Initialize();
+
+    stageManager->Initialize();
     //現在のステージの初期化
     stageManager->TransitionStage();
 }
