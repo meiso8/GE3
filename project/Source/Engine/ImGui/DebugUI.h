@@ -130,6 +130,9 @@ public:
         float& maskEdgeMin,
         float& maskEdgeMax,
         float& gamma,
+        float& reflect,
+        float& glassFactor,
+        float& specular,
         const char* label
     );
     static void CheckLightMode(int32_t& lightMode, const char* label);

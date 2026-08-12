@@ -31,6 +31,12 @@ struct SpotLight
     float padding[1];
 };
 
+struct LightOutPut
+{
+    float3 diffuseLight;
+    float3 specularLight;
+};
+
 float GetCosin(float NdotL, int lightMode)
 {
     return (lightMode == 1) ? saturate(NdotL) : pow(NdotL * 0.5f + 0.5f, 2.0f);
@@ -97,11 +103,11 @@ float3 CalculateDirectionalSpecular(float3 normal, float3 dir, float3 toEye, flo
     return spec * color; //<-selectReflectColor
 }
 
-float4 GetCalculateAllLightColor(
+
+
+LightOutPut GetCalculateAllLightColor(
 int lightMode,
 float shininess,
-float4 materialColor,
-float4 textureColor,
 float3 objectNormal,
 float3 objectWorldPos,
 float3 toEye,
@@ -111,13 +117,11 @@ DirectionalLight directionalLight
 
 )
 {
-    float4 output;
+    LightOutPut output;
     
      // ==========================//Common//====================================
         //normal
         float3 normalInput = normalize(objectNormal);
-        //baseColor
-        float3 baseColor = materialColor.rgb * textureColor.rgb;
      // ======================================================================
   
      // totalPointLightDiffuse
@@ -152,21 +156,13 @@ DirectionalLight directionalLight
                   toEye,
                   directionalLight.color.rgb,
                   shininess
-                  );
-                  
-             output.rgb = baseColor * (DirectionalLightDiffuse + lightTotalDiffuse) + lightTotalSpecular;
-
-                 
+            );
+                         
     }
-    else
-    {
-     //NoneReflect
-        output.rgb = baseColor * (DirectionalLightDiffuse + lightTotalDiffuse);
-    }
-        
-    //commonLightMode
-    output.a = materialColor.a * textureColor.a;
-        
+  
+  //NoneReflect
+    output.diffuseLight = DirectionalLightDiffuse + lightTotalDiffuse;
+    output.specularLight = lightTotalSpecular;
     return output;
 
 }

@@ -371,6 +371,10 @@ void Object3d::CreateMaterial(
     material_->maskEdgeMax = 0.0f;
     material_->maskEdgeMin = 0.0f;
     material_->maskGamma = 1.0f;
+    material_->refraction = 0.0f;
+
+    material_->glassFactor = 0.0f;
+    material_->specular = 0.5f;
     //白色にしておく
     textureHandles_[TEXTURE_USAGE_DIFFUSE] = Texture::GetSRVHandle(TextureFactory::WHITE_1X1);
 }

@@ -5,22 +5,27 @@
 
 struct ObjectMaterial
 {
+     //Color
     float4 color;
+
     int32_t lightMode;
     float32_t shininess;
     float32_t environmentCoefficient;
-    float temperature;
+    float32_t temperature;
     float32_t4x4 uvTransform;
-    
+
     float32_t maskVal;
     float32_t3 rgb;
+
+    float32_t maskEdgeMin;
+    float32_t maskEdgeMax;
+    float32_t maskGamma;
+    float32_t refraction;
     
-    
-    float maskEdgeMin;
-    float maskEdgeMax;
-    float maskGamma;
-    float padding;
-    
+    float32_t glassFactor;
+    float32_t specular;
+
+    float2 padding;
 };
 
 struct PixelShaderOutput
@@ -43,7 +48,7 @@ StructuredBuffer<PointLight> gPointLights : register(t4);
 StructuredBuffer<SpotLight> gSpotLights : register(t5);
 TextureCube<float4> gEnvironmentTexture : register(t7);
 
-float3 Dissolve(float edgeMin,float edgeMax,float mask,float3 edgeColor,float gamma)
+float3 Dissolve(float edgeMin, float edgeMax, float mask, float3 edgeColor, float gamma)
 {
     
     float edge = 1.0f - smoothstep(edgeMin, edgeMax, mask);
@@ -74,7 +79,6 @@ PixelShaderOutput main(VertexShaderOutput input)
         discard;
     }
     
-    
     if (gMaterial.lightMode == 0)
     {
         output.color = gMaterial.color * textureColor;
@@ -83,11 +87,9 @@ PixelShaderOutput main(VertexShaderOutput input)
     //toCameraVector
     float3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
     
-    output.color = GetCalculateAllLightColor(
+    LightOutPut lightColor = GetCalculateAllLightColor(
     gMaterial.lightMode,
     gMaterial.shininess,
-    gMaterial.color,
-    textureColor,
     input.normal,
     input.worldPosition,
     toEye,
@@ -96,17 +98,43 @@ PixelShaderOutput main(VertexShaderOutput input)
     gDirectionalLight
     );
     
-    if (gMaterial.lightMode != 0)
-    {
-        //EnvironmentReflection    
-        // ======================================================================
-        float3 cameraToPosition = -toEye;
-        float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
-        float4 environmentColor = gEnvironmentTexture.Sample(gSampler, reflectedVector);
-        output.color.rgb += environmentColor.rgb * gMaterial.environmentCoefficient;
-        // ======================================================================
-    }
+    float4 baseColor = gMaterial.color * textureColor;
+        
+    //EnvironmentReflection    
+    // ======================================================================
+
+    float3 N = normalize(input.normal);
+    float NdotV = saturate(dot(N, toEye));
+
+    // -----------------
+    // Glass
+    // -----------------
+    float fresnel = pow(1.0 - NdotV, 5.0);
+    float F0 = 0.08*gMaterial.specular; 
+    fresnel = F0 + (1.0 - F0) * fresnel;
     
+    //================refractColor======================
+    float3 refractVector = refract(-toEye, N, gMaterial.refraction);
+    float3 refractionColor = gEnvironmentTexture.Sample(gSampler, refractVector).rgb;
+    
+    //================reflectColor======================
+    float3 reflectVector = reflect(-toEye, N);
+    float3 reflectionColor = gEnvironmentTexture.Sample(gSampler, reflectVector).rgb;
+    
+    // Blend refrect reflect color
+    float3 glassColor = lerp(refractionColor, reflectionColor, fresnel) * baseColor.rgb + lightColor.specularLight;
+    
+    //SurfaceColor
+    float3 surfaceColor = baseColor.rgb * lightColor.diffuseLight;
+    float3 normalColor = surfaceColor + lightColor.specularLight;
+    //EnvironmentColor
+    normalColor += reflectionColor * gMaterial.environmentCoefficient;
+    
+    output.color.rgb = lerp(normalColor, glassColor, gMaterial.glassFactor);
+    output.color.a = baseColor.a;
+
+    // ======================================================================
+     
     if (input.meltTime >= 0.0f)
     {
         output.color.rgb += Dissolve(0.0f, input.meltTime, mask, gMaterial.rgb, 4.0f);
@@ -115,9 +143,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     {
         output.color.rgb += Dissolve(gMaterial.maskEdgeMin, gMaterial.maskEdgeMax, mask, gMaterial.rgb, gMaterial.maskGamma);
     }
-      
 
-    
     if (DisCardColor(textureColor.a, gMaterial.color.a, output.temperature.r))
     {
         discard;

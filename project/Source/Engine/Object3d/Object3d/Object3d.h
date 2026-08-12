@@ -55,7 +55,11 @@ public:
         float32_t maskEdgeMin;
         float32_t maskEdgeMax;
         float32_t maskGamma;
-        float32_t padding;
+        float32_t refraction;
+
+        float32_t glassFactor;
+        float32_t specular;
+        float2 padding;
     };
 
 protected:
