@@ -1021,6 +1021,9 @@ void DebugUI::CheckObject3d(Object3d& object3d,const char* label)
             material.maskEdgeMin,
             material.maskEdgeMax,
             material.maskGamma,
+            material.refraction,
+            material.glassFactor,
+            material.specular,
             "Material");
 
 
@@ -1163,6 +1166,9 @@ void DebugUI::CheckParticle(ParticleManager* particleManager)
                     material->maskEdgeMin,
                     material->maskEdgeMax,
                     material->maskGamma,
+                    material->refraction,
+                    material->glassFactor,
+                    material->specular,
                     "Material");
                 ImGui::SliderFloat2("textureSize", &group->textureSize.x, 0.0f, static_cast<float>(Window::GetClientWidth()));
 
@@ -1329,6 +1335,10 @@ void DebugUI::CheckObject3dMaterial(
     float& maskEdgeMax,
 
     float& gamma,
+    float& reflect,
+
+    float& glassFactor,
+float& specular,
     const char* label) {
 #ifdef USE_IMGUI
     if (ImGui::TreeNode(label)) {
@@ -1344,6 +1354,10 @@ void DebugUI::CheckObject3dMaterial(
         ImGui::SliderFloat("maskEdgeMin", &maskEdgeMin, 0.0f, maskEdgeMax);
         ImGui::SliderFloat("maskEdgeMax", &maskEdgeMax, maskEdgeMin, 1.0f);
         ImGui::SliderFloat("gamma", &gamma, 0.0f, 1000.0f);
+        ImGui::SliderFloat("reflect", &reflect, 0.0f, 5.0f);
+        ImGui::SliderFloat("glassFactor", &glassFactor, 0.0f, 1.0f);
+        ImGui::SliderFloat("specular", &specular, 0.0f, 1.0f);
+
         ImGui::TreePop();
     }
 #endif
