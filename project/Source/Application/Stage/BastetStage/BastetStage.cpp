@@ -86,10 +86,10 @@ void BastetStage::CheckCollision(CollisionManager& collisionManager)
         collisionManager.AddCollider(object.get());
     }
 
-    //ブロックの当たり判定の追加
-    for (auto& object : bastetBlockMap_->GetMap()) {
-        collisionManager.AddCollider(object.get());
-    }
+    ////ブロックの当たり判定の追加
+    //for (auto& object : bastetBlockMap_->GetMap()) {
+    //    collisionManager.AddCollider(object.get());
+    //}
 
     //コライダーを追加する
     AddObjectCollision(collisionManager);

@@ -11,7 +11,7 @@ class MummyStage :public Stage
 {
 
 public:
-    const float maxTime_ = 2.0f;
+
 private:
     static const int kMaxMummy_ = 13;
 
@@ -19,10 +19,8 @@ private:
     std::unique_ptr<Papyrus> papyrus_ = nullptr;
     std::unique_ptr<MummyRoom> mummyRoom_ = nullptr; 
     std::array<std::unique_ptr<DummyMummy>, kMaxMummy_> dummyMummies_;
-    float heartSetEndTime_ = maxTime_;
-public:
 
-    void TimerUpdate();
+public:
 
     MummyStage();
     ~MummyStage();

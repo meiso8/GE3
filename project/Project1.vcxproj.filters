@@ -178,6 +178,9 @@
     <ClCompile Include="Source\Engine\Particle\GPUParticle.cpp" />
     <ClCompile Include="Source\Engine\Particle\GPUParticleEmitter\GPUParticleEmitter.cpp" />
     <ClCompile Include="Source\ColliderObject\ColliderObject.cpp" />
+    <ClCompile Include="Source\Application\GameObject\ResultMedjed\ResultMedjed.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\Glass\Glass.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\Scarab\Scarab.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -386,6 +389,9 @@
     <ClInclude Include="Source\Engine\Particle\ParticleStruct.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\Melt.h" />
     <ClInclude Include="Source\ColliderObject\ColliderObject.h" />
+    <ClInclude Include="Source\Application\GameObject\ResultMedjed\ResultMedjed.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\Glass\Glass.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\Scarab\Scarab.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />

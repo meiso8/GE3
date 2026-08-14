@@ -23,12 +23,6 @@ MummyStage::~MummyStage()
 {
 }
 
-void MummyStage::TimerUpdate()
-{
-    heartSetEndTime_ -= TimeManager::DeltaTime();
-    heartSetEndTime_ = std::clamp(heartSetEndTime_, 0.0f, maxTime_);
-
-}
 
 void MummyStage::Initialize() {
 
@@ -39,7 +33,6 @@ void MummyStage::Initialize() {
         return;
     }
 
-    heartSetEndTime_ = maxTime_;
 
     mummyRoom_->Init();
     mummyRoom_->Update();
@@ -105,7 +98,7 @@ void MummyStage::Update() {
 
     if (itemManager_ && item && item->IsUsed()) {
         //メジェドあらわる
-        TimerUpdate();
+       
     };
 
 
@@ -120,7 +113,6 @@ void MummyStage::Update() {
     }
 
     for (auto& dummyMummy : dummyMummies_) {
-
         dummyMummy->Update();
     }
 

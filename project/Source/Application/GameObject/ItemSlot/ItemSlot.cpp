@@ -168,9 +168,7 @@ void ItemSlot::GetAnimation(const std::shared_ptr<Item>& item, const Vector2& sc
         item->Rotate();
     }
     if (item->GetAnimTimer() > 2.0f) {
-        item->LerpScreenPos(screenPos, matInverseVPV);
-        const float size = 0.03125f;
-        item->Scale({ 1.0f,1.0f,1.0f }, { size,size,size });
+        item->LerpScreenPosAndScale(screenPos, matInverseVPV);
     }
 
 }

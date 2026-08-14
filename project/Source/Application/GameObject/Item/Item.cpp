@@ -27,30 +27,20 @@ void Item::SetModel(const std::string& tagName)
 }
 void Item::Init()
 {
-    isGetAnimEnd_ = false;
+    aniTimer_ = 0.0f;
+    isAnimEnd_ = false;
     isGet_ = false;
     isUsed_ = false;
-    aniTimer_ = 0.0f;
+    isMeltEnd_ = false;
+
     object_->Initialize();
     object_->SetTemperature(0.5f);
+
     handItemObj_->Initialize();
     handItemObj_->SetTemperature(0.5f);
 
     startPos_ = { 0.0f };
     endPos_ = { 0.0f };
-}
-
-void Item::DrawInfoUI()
-{
-    //#ifdef USE_IMGUI
-    //
-    //    ImGui::Begin("Item");
-    //    //ImGui::Text(description_.c_str());
-    //    DebugUI::CheckObject3d(*object_, name_.c_str());
-    //
-    //    ImGui::End();
-    //
-    //#endif
 }
 
 void Item::Draw(Camera& camera)
@@ -79,14 +69,7 @@ void Item::OnCollision(Collider* collider)
 
 void Item::Rotate()
 {
-
     TransformAni::RotateY(object_->GetWorldTransform(), 1.0f);
-}
-
-void Item::Scale(const Vector3 start, const Vector3 end)
-{
-    float localTime = (aniTimer_ - 2.0f) / 2.0f;
-    object_->SetScale(Lerp(start, end, localTime));
 }
 
 void Item::SetScreenStartPos()
@@ -103,7 +86,7 @@ void Item::SetScreenStartPos()
 void Item::UpdateAniTimer(const float& endTime)
 {
     if (aniTimer_ == endTime) {
-        isGetAnimEnd_ = true;
+        isAnimEnd_ = true;
         return;
     }
 
@@ -111,7 +94,7 @@ void Item::UpdateAniTimer(const float& endTime)
     aniTimer_ = std::clamp(aniTimer_, 0.0f, endTime);
 }
 
-void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV)
+void Item::LerpScreenPosAndScale(const Vector2& screenPos, const Matrix4x4& matInverseVPV)
 {
 
     float localTime = (aniTimer_ - 2.0f) / 2.0f;
@@ -122,6 +105,8 @@ void Item::LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVP
     // アイテムの位置を更新！ Trigger時に格納したstartPos
     object_->SetTranslate(Lerp(startPos_, worldPos, localTime));
 
+    //スケールのラープ
+    object_->SetScale(Lerp({ 1.0f,1.0f,1.0f }, Vector3{ screenEndSize_,screenEndSize_,screenEndSize_ }, localTime));
 }
 
 void Item::SetStartEndPos(const Vector3& start, const Vector3& end)

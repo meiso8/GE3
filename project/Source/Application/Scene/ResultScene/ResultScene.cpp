@@ -5,6 +5,9 @@
 #include<algorithm>
 #include"TimeManager.h"
 #include"SceneManager.h"
+#include "ResultMedjed/ResultMedjed.h"  
+#include"SkyboxObject3d.h"
+#include"Sprite.h"
 
 ResultScene::~ResultScene() {}
 
@@ -12,7 +15,7 @@ ResultScene::ResultScene()
 {
 
     skipSprite_ = std::make_unique<Sprite>();
-    skipSprite_->Create(TextureFactory::Handle::SKIP, { 1280.0f-128.0f-64.0f, 720.0f-64.0f });
+    skipSprite_->Create(TextureFactory::Handle::SKIP, { 1280.0f - 128.0f - 64.0f, 720.0f - 64.0f });
     skipSprite_->SetAnchorPoint({ 0.5f, 0.5f });
 
     symbolSprite_ = std::make_unique<Sprite>();
@@ -30,12 +33,19 @@ ResultScene::ResultScene()
     creditSprite_ = std::make_unique<Sprite>();
     creditSprite_->Create(TextureFactory::Handle::CREDIT, { 640.0f, 360.0f });
     creditSprite_->SetAnchorPoint({ 0.5f, 0.5f });
+    medjed_ =std::make_unique<ResultMedjed>();
 
+    skyBoxObj_ = std::make_unique<SkyboxObject3d>();
+    skyBoxObj_->Create();
 }
 
 
 void ResultScene::Initialize()
 {
+
+    camera_->Initialize();
+    currentCamera_ = camera_.get();
+
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
 
@@ -49,12 +59,18 @@ void ResultScene::Initialize()
     lookTimer_ = 0.0f;
 
     isSkipDraw_ = false;
+
+    medjed_->Initialize();
+
+    skyBoxObj_->Initialize();
 }
 
 void ResultScene::Update()
 {
     Sound::PlayBGM(SoundFactory::BGM_SandCity);
 
+#ifdef _RELEASE
+    //リリースビルド時にスキップできるようにする。
     if (InputBind::IsClick()) {
 
         Sound::PlaySE(SoundFactory::FALL);
@@ -69,25 +85,25 @@ void ResultScene::Update()
                 isSkipDraw_ = true;
             }
         }
-
     }
-
+#endif
 
     symbolSprite_->Update();
     const float deltaTime = TimeManager::DeltaTime();
     lookTimer_ += deltaTime;
     timer_ += deltaTime;
-
-    if (timer_ >= switchInterval_) {
+    bool switchTex = timer_ >= switchInterval_;
+    if (switchTex) {
         timer_ = 0.0f;
         currentIndex_ = (currentIndex_ + 1) % textureSequence_.size();
         symbolSprite_->SetTexture(textureSequence_[currentIndex_]);
         symbolSprite_->AdjustTextureSize();
+
     }
 
     if (timer_ <= 0.5f) {
         // αを徐々に増やす 
-        alpha_ += fadeSpeed_* deltaTime;
+        alpha_ += fadeSpeed_ * deltaTime;
     }
 
     if (timer_ >= 4.5f) {
@@ -102,6 +118,11 @@ void ResultScene::Update()
     // UVのYを上にスクロール 
     creditSprite_->GetUVTranslate().y += scrollSpeed_;
     creditSprite_->Update();
+
+
+    currentCamera_->UpdateMatrix();
+
+    medjed_->Update(switchTex);
 
 #ifdef _DEBUG
     ImGui::SliderFloat("scrollSpeed", &scrollSpeed_, -1.0f, 1.0f);
@@ -128,9 +149,12 @@ void ResultScene::DrawSprite()
 
 void ResultScene::DrawModel()
 {
- 
+    skyBoxObj_->Draw(*currentCamera_);
+
+    medjed_->Draw(*currentCamera_);
 }
 
 void ResultScene::SceneChangeUpdate()
-{    sceneChange_->Update();
+{
+    sceneChange_->Update();
 }

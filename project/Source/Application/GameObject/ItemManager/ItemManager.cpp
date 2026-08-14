@@ -12,6 +12,8 @@
 #include "../Item/GoldHeart/GoldHeart.h"
 #include"../Item/SunRod/SunRod.h"
 #include"../Item/SolarDisc/SolarDisc.h"
+#include"../Item/Glass/Glass.h"
+#include"../Item/Scarab/Scarab.h"
 #include"Line.h"
 
 bool ItemManager::isGetSolarDisc_ = false;
@@ -56,6 +58,10 @@ void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
             item = std::make_shared<SunRod>();
         } else if(name == "SolarDisc") {
             item = std::make_shared<SolarDisc>();
+        } else if (name == "Glass") {
+            item = std::make_shared<Glass>();
+        } else if (name == "Scarab") {
+            item = std::make_shared<Scarab>();
         }
 
         if (item) {
