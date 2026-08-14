@@ -130,7 +130,7 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager)
             if (player_->GerRaySprite()->Intersect(collider)) {
                 Vector3 pos = obj->obj_->GetWorldTransform().GetWorldPosition();
                 Vector3 eyePos  = player_->GetEyeWorldTransform().GetWorldPosition();
-                Vector3 offset = { 0.0f,0.5f,0.0f };
+                Vector3 offset = { 0.0f,0.75f,0.0f };
 
                 //ガラスを使う
                 itemManager_->UseItemFromSlot(eyePos, pos+offset, "Glass"

@@ -76,7 +76,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\FontModel\\nbt_smt_ht",
+            "directoryPath": "Resource/Models/FontModel/nbt_smt_ht",
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "nbt_smt_ht.obj",
@@ -178,7 +178,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "directoryPath": "Resource/Models/Anubis",
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
@@ -212,7 +212,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "directoryPath": "Resource/Models/Anubis",
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
@@ -246,7 +246,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "directoryPath": "Resource/Models/Anubis",
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
@@ -280,7 +280,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "directoryPath": "Resource/Models/Anubis",
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
@@ -314,7 +314,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "directoryPath": "Resource/Models/Anubis",
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
@@ -348,7 +348,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "directoryPath": "Resource/Models/Anubis",
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
@@ -382,7 +382,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "directoryPath": "Resource/Models/Anubis",
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
@@ -416,7 +416,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "directoryPath": "Resource/Models/Anubis",
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
@@ -450,7 +450,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "directoryPath": "Resource/Models/Anubis",
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
@@ -484,7 +484,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Anubis",
+            "directoryPath": "Resource/Models/Anubis",
             "disabled": false,
             "environmentCoefficient": 1.0,
             "file_name": "Anubis.obj",
@@ -552,7 +552,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "directoryPath": "Resource/Models/UpStairs",
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
@@ -586,7 +586,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "directoryPath": "Resource/Models/UpStairs",
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",

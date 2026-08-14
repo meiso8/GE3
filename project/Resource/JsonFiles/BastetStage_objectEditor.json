@@ -91,7 +91,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\Toki",
+            "directoryPath": "Resource/Models/Toki",
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "toki.obj",
@@ -159,7 +159,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "directoryPath": "Resource/Models/UpStairs",
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
