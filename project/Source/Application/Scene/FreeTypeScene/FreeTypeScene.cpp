@@ -34,9 +34,6 @@ FreeTypeScene::FreeTypeScene()
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
 
-    beam_ = std::make_unique<Beam>();
-
-
 }
 
 void FreeTypeScene::Initialize()
@@ -46,13 +43,8 @@ void FreeTypeScene::Initialize()
     LevelEditor::GetInstance()->Load("FreeTypeScene_objectEditor", true);
     LevelEditor::GetInstance()->CreateObject(objects_);
 
-
-
     camera_->Initialize();
-
     currentCamera_ = camera_.get();
-
-    beam_->Initialize();
 
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
@@ -92,7 +84,6 @@ void FreeTypeScene::Update()
 
 #endif //_DEVELOP
 
-    beam_->Update();
 
 
     for (auto& obj : objects_) {
@@ -119,8 +110,6 @@ void FreeTypeScene::DrawModel()
 {
 
     skyBoxObj_->Draw(*currentCamera_);
-
-    beam_->Draw(currentCamera_);
 
     for (auto& obj : objects_) {
         obj->obj_->Draw(*currentCamera_);

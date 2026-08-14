@@ -34,7 +34,7 @@ void Player::OnCollision(Collider* collider)
         OnCollisionEnemy();
     }
 
-    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Floor")) {
+    if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Floor")|| collider->GetCollisionAttribute() == CollisionTag::GetTag("Block")) {
         isFloorHit_ = true;
         isJump_ = false;
     }
@@ -69,7 +69,7 @@ void Player::OnCollision(Collider* collider)
 Player::Player() {
 
     //モデルを取得する
-    model_ = ModelManager::GetModel("gentleman.gltf");
+    model_ = ModelManager::GetModel("player.gltf");
 
     float radius = 0.25f;
 
@@ -210,7 +210,7 @@ void Player::Update()
 
     //アニメーションタイマーのアップデート
     // 一旦コメントアウトしておく
-    //aniObject_->UpdateAniTimer();
+    aniObject_->UpdateAniTimer();
 
     aniObject_->Update();
     headMatrix_ = aniObject_->GetWorldJointMatrix("Head");

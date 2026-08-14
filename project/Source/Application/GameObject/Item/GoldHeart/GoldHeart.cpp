@@ -3,7 +3,7 @@
 #include"DebugUI.h"
 void GoldHeart::Init()
 {
-    isGetAnimEnd_ = false;
+    isAnimEnd_ = false;
     isUsed_ = false;
     isGet_ = false;
     aniTimer_ = 0.0f;
@@ -32,7 +32,9 @@ void GoldHeart::Update()
 
 void GoldHeart::Use()
 {
+    //アニメーションタイマーをリセットする
     aniTimer_ = 0.0f;
     isUsed_ = true;
+
     //ミイラにはめ込む
 }

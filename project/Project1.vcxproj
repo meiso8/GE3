@@ -170,6 +170,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Item\Scarab\Scarab.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\Glass\Glass.cpp" />
+    <ClCompile Include="Source\Application\GameObject\ResultMedjed\ResultMedjed.cpp" />
     <ClCompile Include="Source\ColliderObject\ColliderObject.cpp" />
     <ClCompile Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bastet\Bastet.cpp" />
@@ -484,6 +487,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Thoth\Thoth.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Item\Scarab\Scarab.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\Glass\Glass.h" />
+    <ClInclude Include="Source\Application\GameObject\ResultMedjed\ResultMedjed.h" />
     <ClInclude Include="Source\ColliderObject\ColliderObject.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\Melt.h" />
     <ClInclude Include="Source\Engine\Particle\GPUParticle.h" />

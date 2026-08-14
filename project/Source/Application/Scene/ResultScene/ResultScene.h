@@ -1,8 +1,10 @@
 #pragma once
 
-#include"Sprite.h"
 #include<memory>
 #include"BaseScene.h"
+class Sprite;
+class ResultMedjed;
+class SkyboxObject3d;
 
 class ResultScene :public BaseScene
 {
@@ -22,6 +24,11 @@ private:
     std::unique_ptr<Sprite> skipSprite_ = nullptr;
     std::unique_ptr<Sprite> symbolSprite_ = nullptr; 
     std::vector<TextureFactory::Handle> textureSequence_;
+    //メジェド様
+    std::unique_ptr<ResultMedjed>medjed_ = nullptr;
+    //スカイボックス
+    std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
+
     size_t currentIndex_ = 0;
     float switchInterval_ = 5.0f; // 1秒ごとに切り替え
 

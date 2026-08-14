@@ -11,9 +11,9 @@ static const float32_t4 kPositions[kNumVertex] =
 
 static const float32_t2 kTexcoords[kNumVertex] =
 {
-    { 0.0f,0.0f},//左上
-    { 2.0f,0.0f},//右上
-    { 0.0f,2.0f},//左下
+    { 0.0f,0.0f},
+    { 2.0f,0.0f},
+    { 0.0f,2.0f},
   
 };
 

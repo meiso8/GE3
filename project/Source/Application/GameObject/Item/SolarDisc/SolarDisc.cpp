@@ -3,7 +3,7 @@
 
 void SolarDisc::Init()
 {
-    isGetAnimEnd_ = false;
+    isAnimEnd_ = false;
     isGet_ = false;
     isUsed_ = false;
     aniTimer_ = 0.0f;

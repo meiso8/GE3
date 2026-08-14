@@ -25,6 +25,12 @@ void MeltStage::Initialize()
 
     //バステトの初期化は一度だけにしておく
     bastet_->Initialize();
+   
+    //空メモ
+    memoManager_->GenerateMemos({ });
+    //アイテム生成する
+    itemManager_->GenerateItems({ "Glass" });
+
     isInitialize_ = true;
 }
 
@@ -38,6 +44,8 @@ void MeltStage::StageTransitionInitialize()
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -5.0f });
     bastet_->LoadMap("MeltStage_BastetStep");
+
+
 }
 
 void MeltStage::Update()
@@ -51,13 +59,17 @@ void MeltStage::Update()
 
 
     if (meltBlockMap_->IsClear()) {
-        //なぞ解きをクリアしたら
-   
+        //なぞ解きをクリアしたら   
         bastet_->Update();
 
     }
 
 
+    auto item = itemManager_->GetItem("Glass");
+
+    if (itemManager_ && item && item->IsUsed() && item->GetMeltEnd()) {
+        itemManager_->GenerateItems({ "Scarab" });
+    };
 
     //オブジェクトの更新
     UpdateObject();
@@ -92,6 +104,24 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager)
 
     meltBlockMap_->RayCastHit(*player_->GerRaySprite());
 
+    //火のコライダーと当たっていたらがあるところで
+
+    for (auto& obj : objects_) {
+
+        if (obj->collider_->GetCollisionAttribute() == CollisionTag::GetTag("Fire")) {
+            auto* collider = obj->collider_.get();
+            if (player_->GerRaySprite()->Intersect(collider)) {
+                Vector3 pos = obj->obj_->GetWorldTransform().GetWorldPosition();
+                Vector3 eyePos  = player_->GetEyeWorldTransform().GetWorldPosition();
+                Vector3 offset = { 0.0f,0.5f,0.0f };
+
+                //ガラスを使う
+                itemManager_->UseItemFromSlot(eyePos, pos+offset, "Glass"
+                );
+            }
+        }
+    }
+
     if (meltBlockMap_->IsClear()) {
         //なぞ解きに正解したらコライダーなど追加
         bastet_->RayCastHit(*player_->GerRaySprite());
@@ -113,8 +143,6 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager)
         collisionManager.AddCollider(bastet_.get());
     }
 
- 
-
     //コライダーを追加する
     AddObjectCollision(collisionManager);
 }
@@ -126,7 +154,6 @@ void MeltStage::CreateParticle()
         particleEmitters_[i]->Initialize();
 
     }
-
 
     auto& emitter0 = particleEmitters_[0]->GetEmitter();
     emitter0.count = 8;

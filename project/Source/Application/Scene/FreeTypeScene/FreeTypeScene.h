@@ -4,7 +4,7 @@
 #include"Object3d/Object3d.h"
 #include"SkyboxObject3d.h"
 #include"Particle/ParticleEmitter.h"
-#include"../GameObject/Beam/Beam.h"
+
 #include"BaseScene.h"
 #include"LevelEditor/LevelEditor.h"
 #include <vector>
@@ -24,12 +24,12 @@ private:
     Text text_;
     uint32_t handle_;
     Text pressSpaceText_;
+
     std::unique_ptr<Sprite>sprite_ = nullptr;
 
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
-    std::unique_ptr<Beam>beam_ = nullptr;
-    std::vector<std::unique_ptr<LevelEditor::ObjectSet>> objects_;
 
+    std::vector<std::unique_ptr<LevelEditor::ObjectSet>> objects_;
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
 
 

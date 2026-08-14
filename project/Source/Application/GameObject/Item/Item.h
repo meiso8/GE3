@@ -7,7 +7,7 @@ class Item :public Collider {
 public:
     Item();
     virtual ~Item() = default;
-    virtual void SetModel(const std::string& tagName);
+    void SetModel(const std::string& tagName);
 
     // 使用時の効果（プレイヤーや環境に作用）
     virtual void Use() = 0;
@@ -17,14 +17,16 @@ public:
         return nullptr; // デフォルトは組み合わせ不可 
     }
 
-    // UI表示用（ImGuiなど） 
     virtual void Init();
-    virtual void DrawInfoUI();
     virtual void Update();
-    
     virtual void Draw(Camera& camera);
-    void DrawForSlotItem(Camera& camera);
     void OnCollision(Collider* collider)override;
+
+    //スクリーン座標に変換する
+    virtual void LerpScreenPosAndScale(const Vector2& screenPos, const Matrix4x4& matInverseVPV);
+    //スロットアイテムとして描画する
+    void DrawForSlotItem(Camera& camera);
+
 
     Vector3 GetWorldPosition() const {
         return object_->GetWorldTransform().GetWorldPosition();
@@ -32,13 +34,12 @@ public:
 
     void Rotate();
     void SetRotate(const Vector3& rotate) { object_->SetRotate(rotate); };
-    void Scale(const Vector3 start, const Vector3 end);
     void SetScale(const Vector3& scale) { object_->SetScale(scale); }
-    void InitScale() const { object_->SetScale(Math::UNIT_SCALE); };
-    void SetScreenStartPos();
-    void UpdateAniTimer(const float& endTime = 4.0f);
 
-    virtual void LerpScreenPos(const Vector2& screenPos, const Matrix4x4& matInverseVPV);
+    void InitScale() const { object_->SetScale(Math::UNIT_SCALE); };
+
+    void SetScreenStartPos();
+
     void SetStartEndPos(const Vector3& start, const Vector3& end);
 
     const Vector3& GetUseRotate() { return useRotate_; }
@@ -46,12 +47,15 @@ public:
 
     bool IsUsed() { return isUsed_; };
     bool IsGet() { return isGet_; };
-    bool IsGetAnimEnd() { return isGetAnimEnd_; }
+    bool IsGetAnimEnd() { return isAnimEnd_; }
+
     void SetIsGet(const bool flag) { isGet_ = flag; }
     const float GetAnimTimer() { return aniTimer_; }
     std::shared_ptr<Object3d>& GetObject3d() { return object_; };
     const std::string& GetName() {return name_; };
     void SetParentMat(Matrix4x4* parent) { parent_ = parent; }
+    void UpdateAniTimer(const float& endTime = 4.0f);
+    bool GetMeltEnd() { return isMeltEnd_; };
 protected:
 
     float aniTimer_ = 0.0f;
@@ -59,7 +63,9 @@ protected:
     bool isUsed_ = false;
     //取得する
     bool isGet_ = false;
-    bool isGetAnimEnd_ = false;
+    bool isAnimEnd_ = false;
+    //溶け終わり
+    bool isMeltEnd_ =  false;
 
     // 3Dオブジェクトの参照（描画や当たり判定用）
     std::shared_ptr<Object3d> object_ = nullptr;
@@ -74,4 +80,6 @@ protected:
     Vector3 endPos_ = { 0.0f };
  
     Matrix4x4* parent_ = nullptr;
+
+    float screenEndSize_ = 0.03125f;
 };

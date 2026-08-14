@@ -31,7 +31,6 @@ float gauss(float x, float y, float sigma)
 
 float3 ThermalColorLookup(float temp)
 {
-    // 簡易的なジェットカラースケール（青 -> 緑 -> 赤）
     float3 color;
     color.r = saturate(1.5 - abs(4.0 * temp - 3.0));
     color.g = saturate(1.5 - abs(4.0 * temp - 2.0));
@@ -45,7 +44,6 @@ PixelShaderOutput main(VertexShaderOutput input)
     
     output.color = float4(0.0f, 0.0f, 0.0f,1.0f);
 
-    //最初にぼかしをかける
     uint width, height;
     
     gTemperatureTexture.GetDimensions(width, height);
