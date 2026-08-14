@@ -16,11 +16,37 @@
 #include"Texture.h"
 #include"DebugUI.h"
 
+namespace fs = std::filesystem;
+
 namespace ImGuiLoadFile {
-    std::filesystem::path droppedFilePath = "";
+    fs::path droppedFilePath = "";
     bool isFileDropped = false;
+    fs::path projectPath = "";
 }
 
+
+namespace ImGuiLoadFile {
+    // プロジェクトのルート（基準パス）を自動探索する関数
+    fs::path FindProjectRoot() {
+        // 1. まず現在のカレントディレクトリ（実行位置）を取得
+        fs::path currentDir = fs::current_path();
+
+        // ルートディレクトリ（C:\ など）に達するまで、上に遡るループ
+        while (currentDir.has_parent_path()) {
+            // 現在の階層に "project.root" が存在するか確認
+            if (fs::exists(currentDir / "project.root")) {
+                return currentDir; // 見つかったらそこがプロジェクトのルート！
+            }
+            // 見つからなければ、1つ上の階層へ移動
+            currentDir = currentDir.parent_path();
+        }
+
+        // 万が一見つからなかった場合は、安全のために現在のパスを返す
+        std::cerr << "[エラー] project.root が見つかりませんでした。" << std::endl;
+        return fs::current_path();
+    }
+
+}
 
 #ifdef USE_IMGUI
 void ImGuiClass::Initialize(Window& window,
@@ -120,6 +146,8 @@ void ImGuiClass::Initialize(Window& window,
 
     //ドラッグ可能にする
     DragAcceptFiles(window.GetHwnd(), TRUE);
+
+    ImGuiLoadFile::projectPath = ImGuiLoadFile::FindProjectRoot();
 }
 
 void ImGuiClass::FrameStart() {
@@ -181,23 +209,30 @@ void ImGuiClass::DropFiles(WPARAM wParam) {
 }
 
 
+
 void HandleDroppedFile(const std::filesystem::path& fullPath) {
-    std::string directoryPath = fullPath.parent_path().string() + "/";
-    std::string filename = fullPath.filename().string();
-    std::string ext = fullPath.extension().string();
+
+    // 3. basePath から見た相対パスに変換する
+    std::filesystem::path relativePath = std::filesystem::relative(fullPath, ImGuiLoadFile::projectPath);
+
+    // 4. これをベースに分解する
+    std::string directoryPath = relativePath.generic_string();
+  /*  std::string filename = relativePath.filename().string();*/
+    std::string ext = relativePath.extension().string();
+
     // すべて小文字に変換
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
     // 拡張子ごとのロード処理
     if (ext == ".gltf" || ext == ".obj") {
-        ModelManager::LoadModel(fullPath);
+        ModelManager::LoadModel(directoryPath);
     } else if (ext == ".png" || ext == ".jpeg" || ext == ".jpg" || ext == ".dds") {
         // ─── テクスチャのロード ───
-        Texture::AddTextureHandle(fullPath);
+        Texture::AddTextureHandle(directoryPath);
     } else if (ext == ".mp3" || ext == ".wav") {
         // ─── サウンドのロード ───
         //一旦これにしておくが後で変更する
-        Sound::Load(fullPath);
+        Sound::Load(directoryPath);
     } else {
         // 対応していない拡張子の場合
         std::string message = "未対応のファイル形式です: " + ext;

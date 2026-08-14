@@ -559,7 +559,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "directoryPath": "Resource/Models/UpStairs",
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
@@ -675,56 +675,92 @@
         },
         "type": "MESH"
       },
-        {
-            "collider": {
-                "center": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "maskTag": 4294705155,
-                "size": {
-                    "x": 8.0,
-                    "y": 8.0,
-                    "z": 8.0
-                },
-                "tag": "Fire",
-                "type": "Sphere"
-            },
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "Cube",
-            "glassFactor": 0.0,
-            "lightMode": 2,
-            "name": "Object17",
-            "nextStageName": "",
-            "shininess": 250.0,
-            "temperature": 0.0,
-            "textureHandle": 31,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": -10.127548217773438,
-                    "y": -0.13944251835346222,
-                    "z": -2.361088991165161e-05
-                }
-            },
-            "type": "MESH"
-        }
+      {
+        "collider": {
+          "center": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "maskTag": 4294705155,
+          "size": {
+            "x": 8.0,
+            "y": 8.0,
+            "z": 8.0
+          },
+          "tag": "Fire",
+          "type": "Sphere"
+        },
+        "color": {
+          "w": 1.0,
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "disabled": false,
+        "environmentCoefficient": 0.0,
+        "file_name": "Cube",
+        "glassFactor": 0.0,
+        "lightMode": 2,
+        "name": "Object17",
+        "nextStageName": "",
+        "shininess": 250.0,
+        "temperature": 0.0,
+        "textureHandle": 31,
+        "transform": {
+          "rotate": {
+            "x": 0.0,
+            "y": -0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "translate": {
+            "x": -10.127548217773438,
+            "y": -0.13944251835346222,
+            "z": -2.361088991165161e-05
+          }
+        },
+        "type": "MESH"
+      },
+      {
+        "color": {
+          "w": 1.0,
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "directoryPath": "Resource/Models/HeadObj",
+        "disabled": false,
+        "environmentCoefficient": 0.0,
+        "file_name": "headObj.obj",
+        "glassFactor": 1.0,
+        "lightMode": 1,
+        "name": "Object20",
+        "nextStageName": "",
+        "shininess": 250.0,
+        "temperature": 0.0,
+        "transform": {
+          "rotate": {
+            "x": 2.891838788986206,
+            "y": -0.4135594964027405,
+            "z": -3.0394372940063477
+          },
+          "scale": {
+            "x": 4.3900017738342285,
+            "y": 4.389998435974121,
+            "z": 4.3900017738342285
+          },
+          "translate": {
+            "x": 12.011425971984863,
+            "y": 1.3135473728179932,
+            "z": -5.021933555603027
+          }
+        },
+        "type": "MESH"
+      }
     ]
 }

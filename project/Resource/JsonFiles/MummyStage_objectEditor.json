@@ -40,7 +40,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\DownStaris",
+            "directoryPath": "Resource/Models/DownStaris",
             "disabled": false,
             "file_name": "DownStairs.obj",
             "name": "Object2",
@@ -72,7 +72,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "C:\\Users\\k024g\\Lessons\\GE3\\project\\Resource\\Models\\UpStairs",
+            "directoryPath": "Resource/Models/UpStairs",
             "disabled": false,
             "file_name": "UpStairs.obj",
             "name": "Object3",

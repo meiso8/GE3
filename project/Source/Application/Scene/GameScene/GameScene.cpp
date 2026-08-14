@@ -248,10 +248,10 @@ void GameScene::Debug()
     //プレイヤーのデバッグ
     player_->Debug();
 
-    if (Input::IsTriggerKey(DIK_B)) {
-        auto* stageManager = StageManager::GetInstance();
-        stageManager->SetNestStage("BastetStage");
-    }
+    //if (Input::IsTriggerKey(DIK_B)) {
+    //    auto* stageManager = StageManager::GetInstance();
+    //    stageManager->SetNestStage("BastetStage");
+    //}
 
 #endif // !USE_IMGUI
 

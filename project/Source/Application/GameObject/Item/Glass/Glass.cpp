@@ -33,9 +33,12 @@ void Glass::Init()
 
 void Glass::Update()
 {
+
+    //色
+    object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+
     if (isUsed_) {
-        //色
-        object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+
         //溶ける
         auto& melt = object_->GetMeltData();
         melt.time += TimeManager::DeltaTime();
