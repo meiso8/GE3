@@ -1,1 +1,20 @@
-null
+[
+    "Player",
+    "Medjed",
+    "EnemyBulletHot",
+    "PlayerBulletCold",
+    "DummyMedjed",
+    "PlayerBulletHot",
+    "CameraUp",
+    "Memo",
+    "Enemy",
+    "EnemyBulletCold",
+    "Mummy",
+    "Wall",
+    "Floor",
+    "Water",
+    "Block",
+    "Item",
+    "StageTrigger",
+    "Fire"
+]

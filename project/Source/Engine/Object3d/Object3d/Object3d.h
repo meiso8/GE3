@@ -184,9 +184,10 @@ public:
     void SetMaskVol(const float maskVol) { material_->maskVal = maskVol; };
     //マスク量の設定
     float32_t GetMaskVol() { return material_->maskVal; }
-
-
-
+    //ガラス度
+    float GetGlassFactor() { return material_->glassFactor; };
+    //ガラス度合い
+    void SetGlassFactor(const float factor) { material_->glassFactor = factor; }
     // ==============UVデータ==================
 
     Vector3& GetUVScale() { return uvTransform_.scale; };

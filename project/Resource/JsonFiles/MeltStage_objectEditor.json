@@ -11,7 +11,9 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
-            "name": "Object1111",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object1111111",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -29,7 +31,7 @@
                 },
                 "translate": {
                     "x": -5.960464477539063e-08,
-                    "y": 2.2542881965637207,
+                    "y": 2.2701427936553955,
                     "z": 9.356305122375488
                 }
             },
@@ -45,7 +47,9 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object2222",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object2222222",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.20000000298023224,
@@ -79,7 +83,9 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object3333",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object3333333",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.20000000298023224,
@@ -113,7 +119,9 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object4444",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object4444444",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -147,7 +155,9 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
-            "name": "Object5555",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object5555555",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 1.0,
@@ -171,41 +181,74 @@
             },
             "type": "MESH"
         },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+      {
+        
+          "collider": {
+            "center": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
             },
-            "directoryPath": "Resource/Models/Fountain",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "Fountain.obj",
-            "name": "Object6666",
-            "nextStageName": "",
-            "shininess": 250.0,
-            "temperature": 0.0,
-            "transform": {
-                "rotate": {
+            "maskTag": 4294508547,
+            "size": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "tag": "Wall",
+            "type": "AABB"
+          },
+          "color": {
+            "w": 1.0,
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "disabled": false,
+          "environmentCoefficient": 0.0,
+          "file_name": "Cube",
+          "glassFactor": 0.0,
+          "lightMode": 2,
+          "name": "Object97776",
+          "nextStageName": "",
+          "shininess": 368.4763488769531,
+          "temperature": 0.0,
+          "textureHandle": 29,
+          "transform": {
+            "rotate": {
+              "x": 0.0,
+              "y": -0.0,
+              "z": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "translate": {
+              "x": 8.496278762817383,
+              "y": 0.5022550821304321,
+              "z": -5.006439208984375
+            }
+          },
+          "type": "MESH"
+        },
+        {
+            "collider": {
+                "center": {
                     "x": 0.0,
-                    "y": -0.0,
+                    "y": 0.0,
                     "z": 0.0
                 },
-                "scale": {
+                "maskTag": 4294508547,
+                "size": {
                     "x": 1.0,
                     "y": 1.0,
                     "z": 1.0
                 },
-                "translate": {
-                    "x": -10.02487850189209,
-                    "y": 0.29288169741630554,
-                    "z": 0.0
-                }
+                "tag": "Wall",
+                "type": "AABB"
             },
-            "type": "MESH"
-        },
-        {
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -215,45 +258,13 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
-            "name": "Object97",
-            "nextStageName": "",
-            "shininess": 368.4763488769531,
-            "temperature": 0.0,
-            "textureHandle": 0,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 8.920119285583496,
-                    "y": 0.6117597818374634,
-                    "z": 0.0
-                }
-            },
-            "type": "MESH"
-        },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "disabled": false,
-            "environmentCoefficient": 1.0,
-            "file_name": "Cube",
-            "name": "Object108",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object108887",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
-            "textureHandle": 95,
+            "textureHandle": 29,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -266,9 +277,277 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 8.848295211791992,
+                    "x": 12.08037281036377,
                     "y": 0.5,
-                    "z": 3.831899642944336
+                    "z": -4.960704326629639
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object11998",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureHandle": 25,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.12631036341190338,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 2.9170398712158203,
+                    "y": 1.0,
+                    "z": 0.41248685121536255
+                },
+                "translate": {
+                    "x": -10.133925437927246,
+                    "y": -0.1473516821861267,
+                    "z": 0.0716494470834732
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object1210109",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureHandle": 29,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.46921542286872864,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 0.47512292861938477,
+                    "y": 0.8706591129302979,
+                    "z": 3.5484695434570313
+                },
+                "translate": {
+                    "x": -10.022645950317383,
+                    "y": -0.30321595072746277,
+                    "z": -0.07020455598831177
+                }
+            },
+            "type": "MESH"
+        },
+      {
+
+        "color": {
+          "w": 1.0,
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "disabled": false,
+        "environmentCoefficient": 0.0,
+        "file_name": "Cube",
+        "glassFactor": 0.0,
+        "lightMode": 2,
+        "name": "Object13111110",
+        "nextStageName": "",
+        "shininess": 250.0,
+        "temperature": 0.0,
+        "textureHandle": 28,
+        "transform": {
+          "rotate": {
+            "x": 0.0,
+            "y": 0.9929179549217224,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 0.26789090037345886,
+            "y": 1.0,
+            "z": 3.2440059185028076
+          },
+          "translate": {
+            "x": -10.141114234924316,
+            "y": -0.22568875551223755,
+            "z": -0.10545645654201508
+          }
+        },
+        "type": "MESH"
+      },
+        {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "maskTag": 4294508547,
+                "size": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "tag": "Wall",
+                "type": "AABB"
+            },
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object141211",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureHandle": 29,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 4.643767833709717,
+                    "y": 0.48589026927948,
+                    "z": -5.258721351623535
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 0.4156862795352936,
+                "y": 0.8980392217636108,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/GlassCup",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "GlassCup.obj",
+            "glassFactor": 1.0,
+            "lightMode": 1,
+            "name": "Object151312",
+            "nextStageName": "",
+            "shininess": 100.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 4.637145519256592,
+                    "y": 0.9918180108070374,
+                    "z": -5.316076278686523
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object121413",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureHandle": 29,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.18063779175281525,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 0.4751230776309967,
+                    "y": 0.8706591129302979,
+                    "z": 3.548469066619873
+                },
+                "translate": {
+                    "x": -10.022645950317383,
+                    "y": -0.11623087525367737,
+                    "z": -0.147985577583313
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Cube",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object131514",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureHandle": 28,
+            "transform": {
+                "rotate": {
+                    "x": 3.1415839195251465,
+                    "y": 0.539252519607544,
+                    "z": 3.1415839195251465
+                },
+                "scale": {
+                    "x": 0.26789090037345886,
+                    "y": 1.0,
+                    "z": 3.2440059185028076
+                },
+                "translate": {
+                    "x": -10.251940727233887,
+                    "y": -0.15654359757900238,
+                    "z": -0.10014445334672928
                 }
             },
             "type": "MESH"
@@ -284,7 +563,9 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "UpStairs.obj",
-            "name": "Object9",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object15",
             "nextStageName": "AmenStage",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -318,6 +599,8 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "player.gltf",
+            "glassFactor": 0.0,
+            "lightMode": 2,
             "name": "Player6",
             "nextStageName": "",
             "shininess": 250.0,
@@ -325,7 +608,7 @@
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": -2.538088798522949,
+                    "y": 0.8978520631790161,
                     "z": 0.0
                 },
                 "scale": {
@@ -334,89 +617,72 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -10.50184154510498,
+                    "x": 3.8151791095733643,
                     "y": 0.0,
-                    "z": 4.190587043762207
+                    "z": -6.872626781463623
                 }
             },
             "type": "EMPTY"
         },
-        {
-            "color": {
-                "w": 0.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "directoryPath": "Resource/Models/Cat",
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "cat.obj",
-            "name": "Bastet10",
-            "nextStageName": "BastetStage",
-            "shininess": 0.0,
-            "temperature": 0.20000000298023224,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                }
-            },
-            "type": "EMPTY"
+      {
+        "collider": {
+          "center": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "maskTag": 4294508547,
+          "size": {
+            "x": 6.180190563201904,
+            "y": 6.180190563201904,
+            "z": 6.180190563201904
+          },
+          "tag": "Wall",
+          "type": "Sphere"
         },
-        {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "Cube",
-            "name": "Object11",
-            "nextStageName": "",
-            "shininess": 250.0,
-            "temperature": 0.0,
-            "textureHandle": 25,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.4242800176143646,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 2.9170403480529785,
-                    "y": 1.0,
-                    "z": 0.4124869406223297
-                },
-                "translate": {
-                    "x": -10.290483474731445,
-                    "y": 0.0,
-                    "z": 0.14237207174301147
-                }
-            },
-            "type": "MESH"
+        "color": {
+          "w": 1.0,
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
         },
+        "directoryPath": "Resource/Models/Fountain",
+        "disabled": false,
+        "environmentCoefficient": 0.0,
+        "file_name": "Fountain.obj",
+        "glassFactor": 0.0,
+        "lightMode": 2,
+        "name": "Fountain",
+        "nextStageName": "",
+        "shininess": 250.0,
+        "temperature": 0.0,
+        "transform": {
+          "rotate": {
+            "x": 0.0,
+            "y": -0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "translate": {
+            "x": -10.025607109069824,
+            "y": 0.25578248500823975,
+            "z": 0.0
+          }
+        },
+        "type": "MESH"
+      },
         {
             "collider": {
                 "center": {
-                    "x": 0.09572982788085938,
-                    "y": -0.013987543992698193,
-                    "z": 0.01386650837957859
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
                 },
-                "maskTag": 4294443011,
+                "maskTag": 4294705155,
                 "size": {
                     "x": 8.0,
                     "y": 8.0,
@@ -434,11 +700,13 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Cube",
-            "name": "Object12",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object17",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
-            "textureHandle": 29,
+            "textureHandle": 31,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -446,63 +714,14 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 0.4751228392124176,
-                    "y": 0.8706591129302979,
-                    "z": 3.5484697818756104
-                },
-                "translate": {
-                    "x": -10.022645950317383,
-                    "y": 0.0,
-                    "z": -0.07020455598831177
-                }
-            },
-            "type": "MESH"
-        },
-        {
-            "collider": {
-                "center": {
-                    "x": 0.072021484375,
-                    "y": 0.2875218391418457,
-                    "z": 0.07635331153869629
-                },
-                "maskTag": 4294705155,
-                "size": {
-                    "x": 5.999999523162842,
-                    "y": 5.999999523162842,
-                    "z": 5.999999523162842
-                },
-                "tag": "Wall",
-                "type": "Sphere"
-            },
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "disabled": false,
-            "environmentCoefficient": 0.0,
-            "file_name": "Cube",
-            "name": "Object13",
-            "nextStageName": "",
-            "shininess": 250.0,
-            "temperature": 0.0,
-            "textureHandle": 28,
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.540314257144928,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 0.26789090037345886,
+                    "x": 1.0,
                     "y": 1.0,
-                    "z": 3.2440054416656494
+                    "z": 1.0
                 },
                 "translate": {
-                    "x": -10.141114234924316,
-                    "y": 0.027564287185668945,
-                    "z": -0.10545645654201508
+                    "x": -10.127548217773438,
+                    "y": -0.13944251835346222,
+                    "z": -2.361088991165161e-05
                 }
             },
             "type": "MESH"

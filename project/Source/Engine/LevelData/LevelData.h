@@ -26,6 +26,8 @@ struct LevelData {
         float tempareture;
         float shininess;
         float environmentCoefficient;
+        float glassFactor;
+        uint32_t lightMode;
     };
 
     struct ObjectData {

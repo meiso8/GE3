@@ -42,8 +42,7 @@ void CollisionTag::SaveTagNames()
     nlohmann::json  json;
 
     for (auto& [name, tag] : tags_) {
-        nlohmann::json tagName = { "name" ,name };
-        json.push_back(tagName );
+        json.push_back(name);
     }
 
     JsonFile::SetJson("TagNames", json);
@@ -52,15 +51,9 @@ void CollisionTag::SaveTagNames()
 void CollisionTag::LoadTagNames()
 {
     auto& json = JsonFile::GetJsonFiles("TagNames");
-
-    for (auto& [name, tag] : tags_) {
-
-        //タグ名が既に存在するときスキップする
-        if (name.c_str() == json["name"]) {
-            continue;
-        }
+    for (auto& data : json) {
         //タグを追加する
-        AddTag(name);
+        AddTag(data);
     }
 
 }
@@ -68,7 +61,7 @@ void CollisionTag::LoadTagNames()
 void TagFactory::SetTag()
 {
 
-    CollisionTag::SaveTagNames();
+    CollisionTag::LoadTagNames();
 
     CollisionTag::AddTag("Player");
     CollisionTag::AddTag("PlayerBulletCold");
@@ -92,6 +85,7 @@ void TagFactory::SetTag()
 
     CollisionTag::AddTag("StageTrigger");
     CollisionTag::AddTag("CameraUp");
-    CollisionTag::LoadTagNames();
+
+    CollisionTag::SaveTagNames();
 
 }
