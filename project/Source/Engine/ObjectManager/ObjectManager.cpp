@@ -264,12 +264,15 @@ void ObjectManager::Save()
 
         nlohmann::json objectJson = {
             {"file_name", meshName},
+
             {"transform", JsonFile::EulerTransformToJson(object->GetTransform())},
             {"disabled", object->GetDisabled()},
+            {"lightMode",object->GetLightMode()},
             {"temperature",object->GetTemperature()},
             {"color",JsonFile::Vector4ToJson(object->GetColor())},
             {"shininess",object->GetShininess()},
             {"environmentCoefficient",object->GetEnvironmentCoefficient()},
+             {"glassFactor",object->GetGlassFactor()},
             {"name", name},
             {"type", object->GetObjectType() },
             {"nextStageName",object->GetNextStageName()},

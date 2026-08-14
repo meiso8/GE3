@@ -1,7 +1,7 @@
 #include "MeltStage.h"
 #include "ParticleEmitter.h"
 #include"DebugUI.h"
-
+#include"SoundManager/SoundManager.h"
 MeltStage::MeltStage()
 {
     backGround_ = std::make_unique<BackGround>();
@@ -72,6 +72,8 @@ void MeltStage::Update()
     if (itemManager_ && item && item->IsUsed() && item->GetMelt()) {
 
         if (!isGenerateScarab_) {
+            //正解音が鳴る
+            SoundManager::PlayCorrectSE();
             //スカラベを生成していないとき
             itemManager_->GenerateItems({ "Scarab" });
 
@@ -128,11 +130,12 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager)
             if (player_->GerRaySprite()->Intersect(collider)) {
                 Vector3 pos = obj->obj_->GetWorldTransform().GetWorldPosition();
                 Vector3 eyePos  = player_->GetEyeWorldTransform().GetWorldPosition();
-                Vector3 offset = { 0.0f,0.375f,0.0f };
+                Vector3 offset = { 0.0f,0.5f,0.0f };
 
                 //ガラスを使う
                 itemManager_->UseItemFromSlot(eyePos, pos+offset, "Glass"
                 );
+                break;
             }
         }
     }

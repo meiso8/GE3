@@ -106,6 +106,11 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
         newObjctData->obj_->SetShininess(objectData.materialData.shininess);
         //環境光
         newObjctData->obj_->SetEnvironmentCoefficient(objectData.materialData.environmentCoefficient);
+        //ガラス度合い
+        newObjctData->obj_->SetGlassFactor(objectData.materialData.glassFactor);
+        //ライトモード
+        newObjctData->obj_->SetLightMode(static_cast<Object3d::LightMode>(objectData.materialData.lightMode));
+
         newObjctData->obj_->SetObjectName(objectData.objectName);
         newObjctData->obj_->RegisterObject();
 
@@ -142,15 +147,15 @@ void LevelEditor::CreateObject(std::vector<std::unique_ptr<ObjectSet>>& objects)
 void LevelEditor::CreateStageChangeTriggers(std::vector<std::unique_ptr<StageChangeTrigger>>& triggers)
 {
 
-    // 驟榊・繧偵け繝ｪ繧｢
+    //ステージ遷移トリガーをクリアする
     triggers.clear();
 
     for (auto& triggerData : levelData_->stageChangeTriggers_) {
 
-        // 繧､繝ｳ繧ｹ繧ｿ繝ｳ繧ｹ繧剃ｽ懈・
+        // 生成
         std::unique_ptr<StageChangeTrigger> newTrigger = std::make_unique<StageChangeTrigger>();
         newTrigger->Create(triggerData);
-        // 邂｡逅・畑驟榊・縺ｫ霑ｽ蜉
+        //データ挿入
         triggers.push_back(std::move(newTrigger));
     }
 
@@ -159,7 +164,7 @@ void LevelEditor::CreateStageChangeTriggers(std::vector<std::unique_ptr<StageCha
 
 void LevelEditor::LoadVector4(nlohmann::json& object, Vector4& vector)
 {
-    //濶ｲ縺ｮ蜿門ｾ・
+    //カラーを探す
     if (object.contains("color")) {
         vector = {
             .x = (float)object["color"]["x"] ,
@@ -172,83 +177,85 @@ void LevelEditor::LoadVector4(nlohmann::json& object, Vector4& vector)
     }
 }
 
+void LevelEditor::LoadMaterialData(LevelData::MaterialData& data, nlohmann::json& object)
+{
+    //テクスチャハンドル
+    LoadTextureHandle(object, data.textureHandle);
+    //色
+    LoadVector4(object, data.color);
+    //温度
+    LoadFloat(data.tempareture, object);
+    //輝度の読みこみ
+    LoadFloat(data.shininess, object, "shininess");
+    //環境
+    LoadFloat(data.environmentCoefficient, object, "environmentCoefficient");
+    //ガラス度合
+    LoadFloat(data.glassFactor, object, "glassFactor");
+    LoadLightMode(data.lightMode, object);
+}
+
 void LevelEditor::LoadObject(nlohmann::json& object, LevelData* levelData) {
 
     assert(object.contains("type"));
-    //遞ｮ蛻･繧貞叙蠕・
+    //タイプ
     std::string type = object["type"].get<std::string>();
-    //遞ｮ鬘槭＃縺ｨ縺ｮ蜃ｦ逅・
 
-    //MESH縺後≠繧句ｴ蜷・
+
+    //MESH
     if (type.compare(objectTypeName_[kMesh]) == 0) {
 
-        //隕∫ｴ霑ｽ蜉
+        //オブジェクト
         levelData->objects.emplace_back(LevelData::ObjectData{});
         LevelData::ObjectData& objectData = levelData->objects.back();
+        //マテリアル情報
+        LoadMaterialData(objectData.materialData, object);
 
-        //繝・け繧ｹ繝√Ε繝上Φ繝峨Ν縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadTextureHandle(object, objectData.materialData.textureHandle);
-        //濶ｲ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadVector4(object, objectData.materialData.color);
-        //貂ｩ蠎ｦ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadFloat(objectData.materialData.tempareture, object);
-        //輝度の読みこみ
-        LoadFloat(objectData.materialData.shininess, object, "shininess");
-        //環境
-        LoadFloat(objectData.materialData.environmentCoefficient, object, "environmentCoefficient");
-        //繧ｪ繝悶ず繧ｧ繧ｯ繝亥錐縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
+        //名前
         LoadName(objectData.objectName, object, "name");
-        //繝｡繝・す繝･繝輔ぃ繧､繝ｫ繝代せ繝・・繧ｿ繧偵Ο繝ｼ繝峨☆繧・
+        //ファイルパス
         LoadMeshData(objectData.filePath, object);
-        //繝医Λ繝ｳ繧ｹ繝輔か繝ｼ繝縺ｮ繝代Λ繝｡繝ｼ繧ｿ隱ｭ縺ｿ霎ｼ縺ｿ
+        //トランスフォーム
         LoadTransform(object, objectData.transform);
-        //蟄占ｦ∫ｴ縺ｮ襍ｰ譟ｻ
+        //子要素
         LoadChildren(object, levelData);
-        //繧ｳ繝ｩ繧､繝繝ｼ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
+        //コライダー子要素
         LoadCollider(objectData.colliderData, object);
 
     } else if (type.compare(objectTypeName_[kPlayerSpawn]) == 0) {
-        //隕∫ｴ霑ｽ蜉
+        //ぷれいやーでーた　
         levelData->players.emplace_back(LevelData::PlayerSpawnData{});
         LevelData::PlayerSpawnData& playerData = levelData->players.back();
-        //繝医Λ繝ｳ繧ｹ繝輔か繝ｼ繝縺ｮ繝代Λ繝｡繝ｼ繧ｿ隱ｭ縺ｿ霎ｼ縺ｿ
+       //トランスフォームの読み込み
         LoadTransform(object, playerData.transform);
 
     } else if (type.compare(objectTypeName_[kEnemySpawn]) == 0) {
-        //隕∫ｴ霑ｽ蜉
+        //敵
         levelData->enemies.emplace_back(LevelData::EnemySpawnData{});
         LevelData::EnemySpawnData& enemyData = levelData->enemies.back();
 
-        //貂ｩ蠎ｦ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
+        //温度
         LoadFloat(enemyData.tempareture, object);
-        //繝医Λ繝ｳ繧ｹ繝輔か繝ｼ繝縺ｮ繝代Λ繝｡繝ｼ繧ｿ隱ｭ縺ｿ霎ｼ縺ｿ
+        //トランスフォームの読み込み
         LoadTransform(object, enemyData.transform);
-        //蟄占ｦ∫ｴ縺ｮ襍ｰ譟ｻ
+        //子供
         LoadChildren(object, levelData);
-        //繝｡繝・す繝･繝輔ぃ繧､繝ｫ繝代せ繝・・繧ｿ繧偵Ο繝ｼ繝峨☆繧・
+        //ファイルパス
         LoadMeshData(enemyData.filePath, object);
 
     } else if (type.compare(objectTypeName_[kStageChangeTrigger]) == 0) {
         //隕∫ｴ霑ｽ蜉
         levelData->stageChangeTriggers_.emplace_back(LevelData::StageChangeTriggerData{});
         LevelData::StageChangeTriggerData& stageChangeTriggerData = levelData->stageChangeTriggers_.back();
-        //繝・け繧ｹ繝√Ε繝上Φ繝峨Ν縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadTextureHandle(object, stageChangeTriggerData.materialData.textureHandle);
-        //濶ｲ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadVector4(object, stageChangeTriggerData.materialData.color);
-        //貂ｩ蠎ｦ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
-        LoadFloat(stageChangeTriggerData.materialData.tempareture, object);
-        //輝度の読み込み
-        LoadFloat(stageChangeTriggerData.materialData.shininess, object, "shininess");
-        //環境
-        LoadFloat(stageChangeTriggerData.materialData.environmentCoefficient, object, "environmentCoefficient");
-        //谺｡縺ｮ繧ｹ繝・・繧ｸ蜷阪ｒ險倬鹸
+        //マテリアル情報
+        LoadMaterialData(stageChangeTriggerData.materialData, object);
+
+        //次のステージ
         LoadName(stageChangeTriggerData.nextStageName, object, "nextStageName");
-        //繝｡繝・す繝･繝輔ぃ繧､繝ｫ繝代せ繝・・繧ｿ繧偵Ο繝ｼ繝峨☆繧・
+        //ファイルパス
         LoadMeshData(stageChangeTriggerData.filePath, object);
-        //繝医Λ繝ｳ繧ｹ繝輔か繝ｼ繝縺ｮ繝代Λ繝｡繝ｼ繧ｿ隱ｭ縺ｿ霎ｼ縺ｿ
+        //トランスフォーム
         LoadTransform(object, stageChangeTriggerData.transform);
-        //繧ｳ繝ｩ繧､繝繝ｼ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
+        //コライダー
         LoadCollider(stageChangeTriggerData.colliderData, object);
     }
 
@@ -263,6 +270,16 @@ void LevelEditor::LoadTextureHandle(nlohmann::json& object, uint32_t& handle)
         handle = TextureFactory::WHITE_1X1;
     }
 
+}
+
+void LevelEditor::LoadLightMode( uint32_t& handle, nlohmann::json& object)
+{
+    if (object.contains("lightMode")) {
+
+        handle = object["lightMode"];
+    } else {
+        handle = Object3d::LightMode::kLightModeHalfL;
+    }
 }
 
 void LevelEditor::LoadName(std::string& fileName, nlohmann::json& object, const std::string& loadName)
@@ -280,12 +297,12 @@ void LevelEditor::LoadMeshData(LevelData::MeshFileData& meshData, nlohmann::json
     LoadName(meshData.directoryPath, object, "directoryPath");
 }
 
-void LevelEditor::LoadFloat(float& tempareture, nlohmann::json& object, const std::string& name)
+void LevelEditor::LoadFloat(float& value, nlohmann::json& object, const std::string& name)
 {
     if (object.contains(name)) {
-        tempareture = object[name];
+        value = object[name];
     } else {
-        tempareture = 0.0f;
+        value = 0.0f;
     }
 }
 

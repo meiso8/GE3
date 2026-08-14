@@ -53,7 +53,7 @@ public:
 
     LevelEditor(const LevelEditor&) = delete;
     LevelEditor& operator=(const LevelEditor&) = delete;
-   
+
     static const std::array<std::string, kObjectTypeNames>GetObjectTypeName() { return  objectTypeName_; };
     LevelData* GetLevelData() { return levelData_.get(); };
     void Load(const std::string& fileName, bool useButtobiEditor = false);
@@ -64,13 +64,15 @@ public:
     /// @param triggers ステージトリガーのvector
     void CreateStageChangeTriggers(std::vector<std::unique_ptr<StageChangeTrigger>>& triggers);
 private:
- 
+    //マテリアル情報の読み込み
+    void LoadMaterialData(LevelData::MaterialData& data, nlohmann::json& object);
 
     void LoadObject(nlohmann::json& object, LevelData* levelData);
     /// @brief テクスチャハンドルの読みこみ
     /// @param object json
     /// @param handle テクスチャハンドル
     void LoadTextureHandle(nlohmann::json& object, uint32_t& handle);
+    void LoadLightMode( uint32_t& handle, nlohmann::json& object);
     /// @brief Vector4型の読み込み
     /// @param object json
     /// @param vector ベクター4
@@ -84,7 +86,7 @@ private:
     /// @param meshData メッシュ情報
     /// @param object json
     void LoadMeshData(LevelData::MeshFileData& meshData, nlohmann::json& object);
-    void LoadFloat(float& tempareture, nlohmann::json& object ,const std::string & name ="temperature");
+    void LoadFloat(float& value, nlohmann::json& object, const std::string& name = "temperature");
     /// @brief 位置情報の読み込み
     /// @param object json
     /// @param transform 位置情報

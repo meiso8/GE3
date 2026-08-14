@@ -44,6 +44,11 @@ void StageChangeTrigger::Create(
     object_->SetShininess(data.materialData.shininess);
     //環境光
     object_->SetEnvironmentCoefficient(data.materialData.environmentCoefficient);
+    //ガラス度合い
+    object_->SetGlassFactor(data.materialData.glassFactor);
+    //ライトモード
+    object_->SetLightMode(static_cast<Object3d::LightMode>(data.materialData.lightMode));
+
     //メッシュの設定
     if (data.filePath.fileName != "empty") {
         //メッシュ名が空ではないとき

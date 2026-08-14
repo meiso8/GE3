@@ -10,6 +10,8 @@ void Glass::Init()
 
     aniTimer_ = 0.0f;
     object_->Initialize();
+
+    object_->SetTranslate({ 8.5f,1.111f,-5.0f });
     object_->SetTemperature(0.2f);
 
     auto& material = object_->GetMaterial();
@@ -25,8 +27,6 @@ void Glass::Init()
 
     startPos_ = { 0.0f };
     endPos_ = { 0.0f };
-
-
 
     screenEndSize_ = 0.03125f*0.75f;
 }
