@@ -31,6 +31,8 @@ void MeltStage::Initialize()
     //アイテム生成する
     itemManager_->GenerateItems({ "Glass" });
 
+    isGenerateScarab_ = false;
+
     isInitialize_ = true;
 }
 
@@ -67,8 +69,21 @@ void MeltStage::Update()
 
     auto item = itemManager_->GetItem("Glass");
 
-    if (itemManager_ && item && item->IsUsed() && item->GetMeltEnd()) {
-        itemManager_->GenerateItems({ "Scarab" });
+    if (itemManager_ && item && item->IsUsed() && item->GetMelt()) {
+
+        if (!isGenerateScarab_) {
+            //スカラベを生成していないとき
+            itemManager_->GenerateItems({ "Scarab" });
+
+            std::shared_ptr scarab = itemManager_->GetItem("Scarab");
+            //ガラスが溶け終わったら位置を変更する
+            Vector3 pos = item->GetWorldPosition() + Vector3{ 0.0f,0.25f,0.0f };
+            scarab->SetTranslate(pos);
+            isGenerateScarab_ = true;
+        }
+
+
+
     };
 
     //オブジェクトの更新
@@ -113,7 +128,7 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager)
             if (player_->GerRaySprite()->Intersect(collider)) {
                 Vector3 pos = obj->obj_->GetWorldTransform().GetWorldPosition();
                 Vector3 eyePos  = player_->GetEyeWorldTransform().GetWorldPosition();
-                Vector3 offset = { 0.0f,0.5f,0.0f };
+                Vector3 offset = { 0.0f,0.375f,0.0f };
 
                 //ガラスを使う
                 itemManager_->UseItemFromSlot(eyePos, pos+offset, "Glass"
