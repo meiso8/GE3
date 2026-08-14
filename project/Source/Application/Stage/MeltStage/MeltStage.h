@@ -13,6 +13,7 @@ private:
     std::unique_ptr<MeltBlockMap>meltBlockMap_ = nullptr;
     std::array<std::unique_ptr<ParticleEmitter>, 3>particleEmitters_;
     std::unique_ptr<Bastet>bastet_ = nullptr;
+    bool isGenerateScarab_ = false;
 public:
     MeltStage();
     void Initialize()override;

@@ -31,7 +31,7 @@ void Item::Init()
     isAnimEnd_ = false;
     isGet_ = false;
     isUsed_ = false;
-    isMeltEnd_ = false;
+    isMelt_ = false;
 
     object_->Initialize();
     object_->SetTemperature(0.5f);

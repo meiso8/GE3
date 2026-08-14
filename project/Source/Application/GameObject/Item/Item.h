@@ -33,8 +33,10 @@ public:
     };
 
     void Rotate();
+
     void SetRotate(const Vector3& rotate) { object_->SetRotate(rotate); };
     void SetScale(const Vector3& scale) { object_->SetScale(scale); }
+    void SetTranslate(const Vector3& translate) { object_->SetTranslate(translate); }
 
     void InitScale() const { object_->SetScale(Math::UNIT_SCALE); };
 
@@ -55,7 +57,7 @@ public:
     const std::string& GetName() {return name_; };
     void SetParentMat(Matrix4x4* parent) { parent_ = parent; }
     void UpdateAniTimer(const float& endTime = 4.0f);
-    bool GetMeltEnd() { return isMeltEnd_; };
+    bool GetMelt() { return isMelt_; };
 protected:
 
     float aniTimer_ = 0.0f;
@@ -65,7 +67,7 @@ protected:
     bool isGet_ = false;
     bool isAnimEnd_ = false;
     //溶け終わり
-    bool isMeltEnd_ =  false;
+    bool isMelt_ =  false;
 
     // 3Dオブジェクトの参照（描画や当たり判定用）
     std::shared_ptr<Object3d> object_ = nullptr;
