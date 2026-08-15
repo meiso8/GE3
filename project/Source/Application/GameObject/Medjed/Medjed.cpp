@@ -18,7 +18,7 @@ void Medjed::OnCollision(Collider* collider)
         if (!isHit_) {
             isHit_ = true;
             if (!isFind_) {
-                Sound::PlayOriginSE(SoundFactory::VOICE_Asobimasyo, 0.5f);
+                Sound::PlayOriginSE(SoundFactory::VOICE_Asobimasyo, 2.0f);
             }
         }
 

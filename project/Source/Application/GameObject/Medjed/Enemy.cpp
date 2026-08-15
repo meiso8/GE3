@@ -269,7 +269,7 @@ void Enemy::OnCollision(Collider* collider)
 
         if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Player")) {
 
-            Sound::PlaySE(SoundFactory::VOICE_Asobimasyo, 1.0f);
+            Sound::PlaySE(SoundFactory::VOICE_Asobimasyo, 2.0f);
 
         }
 

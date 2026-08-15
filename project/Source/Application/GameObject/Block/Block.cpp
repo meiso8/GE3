@@ -94,7 +94,7 @@ void Block::RayCastHit(const bool isCheckPushBlock)
         return;
     }
 
-    Sound::PlaySE(SoundFactory::MOVE_ROCK, 1.0f);
+    Sound::PlaySE(SoundFactory::MOVE_ROCK, 2.0f);
     aniTimer_ = 0.0f;
     isPush_ = true;
 

@@ -61,8 +61,8 @@ void ShotBeamManager::Update()
         }
 
         if (currentTime_ <= 0.0f) {
-
-            Vector3 target = raySprite_->ray_.origin;
+            
+            Vector3 target = raySprite_->GetRay().origin;
 
             if (beamManager_->ShotBeam(target, enemyEyeMatL, Beam::kEnemy) && beamManager_->ShotBeam(target, enemyEyeMatR, Beam::kEnemy)) {
                 Sound::PlaySE(SoundFactory::BEAM);
@@ -118,12 +118,12 @@ void ShotBeamManager::RayCastHit()
 
                 if (beam->GetBeamType() != Beam::kPlayer) {
 
-                    Sound::PlaySE(SoundFactory::FALL, 0.5f);
-
+                    Sound::PlaySE(SoundFactory::FALL, 1.5f);
+                    Ray ray = raySprite_->GetRay();
                     //rayのオリジンから　rayの方向にLength分shotする
-                    Vector3 target = raySprite_->ray_.origin + raySprite_->ray_.diff * length;
+                    Vector3 target = ray.origin + ray.diff * length;
                     //親なし
-                    beam->Shot(target, Beam::kPlayer, raySprite_->ray_.origin, nullptr);
+                    beam->Shot(target, Beam::kPlayer, ray.origin, nullptr);
                 }
 
             } else {

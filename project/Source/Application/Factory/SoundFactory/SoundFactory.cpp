@@ -35,5 +35,5 @@ void SoundFactory::Load()
     Sound::LoadAndMap("Resource/Sounds/jump.mp3", MEDJED_JUMP);
 
     Sound::LoadAndMap("Resource/Sounds/externals/maou_se_inst_piano1_1do.mp3", Sound_C);
-    
+    Sound::LoadAndMap("Resource/Sounds/externals/fire.mp3", Fire);
 }

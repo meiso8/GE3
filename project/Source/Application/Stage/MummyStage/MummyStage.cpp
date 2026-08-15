@@ -16,7 +16,7 @@ MummyStage::MummyStage()
         dummyMummy = std::make_unique<DummyMummy>();
     }
 
-    DummyMummy::SetTargetPosPtr(&player_->GerRaySprite()->ray_.origin);
+    DummyMummy::SetTargetPosPtr(&player_->GerRaySprite()->GetRay().origin);
 }
 
 MummyStage::~MummyStage()

@@ -97,7 +97,7 @@ void Puzzle::Game(const Vector2& screenPos)
 
             if (InputBind::IsClick()) {
                 clickedIndex = i;
-                Sound::PlaySE(SoundFactory::MOVE_ROCK,0.5f);
+                Sound::PlaySE(SoundFactory::MOVE_ROCK,2.0f);
             }
 
         } else {

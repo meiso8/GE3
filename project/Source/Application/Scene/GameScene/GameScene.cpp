@@ -74,8 +74,12 @@ GameScene::GameScene()
     stageManager->SetMap("MeltStage", std::move(std::make_unique<MeltStage>()));
     stageManager->SetMap("BastetStage", std::move(std::make_unique<BastetStage>()));
 
+    //スカイボックス
     skyboxObject3d_ = std::make_unique<SkyboxObject3d>();
     skyboxObject3d_->Create();
+
+    SoundManager::SetCollisionManager(collisionManager_.get());
+    SoundManager::SetRaySprite(player_->GerRaySprite());
 }
 
 void GameScene::Initialize() {
@@ -158,6 +162,8 @@ void GameScene::Update() {
     memoManager_->Update();
 
     CheckAllCollision();
+
+    SoundManager::Update();
 }
 
 GameScene::~GameScene()

@@ -30,23 +30,22 @@ public:
 public:
     /// @brief BGＭを再生する
     /// @param tag タグ
-    /// @param volumeOffset offset
+    /// @param volumeFactor 倍率
     /// @param loop ループフラグ　デフォルト true
-    static void PlayBGM(const SoundFactory::TAG& tag, const float& volumeOffset = 0.0f, const bool& loop = true);
+    static void PlayBGM(const SoundFactory::TAG& tag, const float& volumeFactor = 1.0f, const bool& loop = true);
     /// @brief SEを再生する
     /// @param tag タグ
-    /// @param volumeOffset  offset
+    /// @param volumeFactor  倍率
     /// @param loop ループフラグ デフォルト false
-    static void PlaySE(const SoundFactory::TAG& tag, const float& volumeOffset = 0.0f, const bool& loop = false);
+    static void PlaySE(const SoundFactory::TAG& tag, const float& volumeFactor = 1.0f, const bool& loop = false);
     /// @brief LoopSEを再生する
     /// @param tag タグ
-    /// @param volumeOffset  offset
-    static void PlayLoopSE(const SoundFactory::TAG& tag, const float& volumeOffset = 0.0f);
+    /// @param volumeFactor   倍率
+    static void PlayLoopSE(const SoundFactory::TAG& tag, const float& volumeFactor = 1.0f);
     /// @brief 重複を省いたSEを再生する
     /// @param tag タグ
-    /// @param volumeOffset offset
-    static void PlayOriginSE(const SoundFactory::TAG& tag, const float& volumeOffset = 0.0f);
-
+    /// @param volumeFactor  倍率
+    static void PlayOriginSE(const SoundFactory::TAG& tag, const float& volumeFactor = 1.0f);
 
     //何も囲わない
     static void Play(const SoundFactory::TAG& tag, const float& volume, const bool& isLoop = false);

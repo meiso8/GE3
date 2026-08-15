@@ -84,8 +84,8 @@ void ShotBulletManager::RayCastHit()
 
             if (InputBind::IsClick()) {
 
-                Sound::PlaySE(SoundFactory::CRACKER, 0.5f);
-                Vector3 shotDirection = raySprite_->ray_.diff;
+                Sound::PlaySE(SoundFactory::CRACKER, 1.5f);
+                Vector3 shotDirection = raySprite_->GetRay().diff;
                 Vector3 shotPosition = bullet->GetWorldPosition();
                 bullet->Shot(shotPosition, shotDirection, shotSpeed_, shotSize_, Bullet::kEnemyCold ? Bullet::kPlayerCold : Bullet::kPlayerHot);
 

@@ -43,6 +43,8 @@ public:
     /// @param flag フラグをセット
     void SetIsDraw(const bool flag) { isDraw_ = flag; };
     void Finalize() { ClearColliders(); }
+    //コライダーリストをもらう
+   const std::list<Collider*>& GetColliders() { return colliders_; }
 private:
     // コライダーのリスト
     std::list<Collider*> colliders_; 

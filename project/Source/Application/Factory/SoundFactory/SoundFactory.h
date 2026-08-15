@@ -51,6 +51,9 @@ public:
         MEDJED_JUMP,
         //ドの音
         Sound_C,
+        //日の音
+        Fire,
+
     };
 
    static void Load();
