@@ -97,11 +97,14 @@ void Bullet::SetBulletType(const BulletType& type)
             | CollisionTag::GetTag("Floor")
         );
 
-    } else if (type) {
+    } else if (type == kEnemyCold||type == kEnemyHot) {
 
-        SetCollisionAttribute(CollisionTag::GetTag("EnemyBulletCold"));
+        SetCollisionAttribute(
+            type == kEnemyCold ?
+            CollisionTag::GetTag("EnemyBulletCold") : CollisionTag::GetTag("EnemyBulletHot")
+        );
 
-        // 弾は「Player」とだけ衝突したい
+        // 弾のマスク処理
         SetCollisionMask(
             CollisionTag::GetTag("Player")
             | CollisionTag::GetTag("Wall")
@@ -109,6 +112,7 @@ void Bullet::SetBulletType(const BulletType& type)
         );
     }
 
+    //温度設定
     if (type == kEnemyCold || type == kPlayerCold) {
         body_->SetTemperature(0.375f);
 
