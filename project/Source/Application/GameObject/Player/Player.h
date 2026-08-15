@@ -5,7 +5,7 @@
 #include"CharacterState.h"
 #include"AABB.h"
 #include"Collider.h"
-#include"EyeCollider.h"
+#include"EyePosition.h"
 #include"RaySprite.h"
 
 class Model;
@@ -33,10 +33,10 @@ public:
     Vector3& GetBodyForward();
 
     const Matrix4x4& GetEyeMatrix() {
-        return eyeCollider_->GetWorldMatrix();
+        return eyePosition_->GetWorldMatrix();
     };
     WorldTransform& GetEyeWorldTransform() {
-        return eyeCollider_->GetWorldTransform();
+        return eyePosition_->GetWorldTransform();
     }
 
     WorldTransform& GetBodyWorldTransform() {
@@ -49,8 +49,8 @@ public:
     void OnCollision(Collider* collider)override;
     void OnCollisionEnemy(const int hitPoint = 10);
 
-    EyePosition* GetEyeCollider() {
-        return eyeCollider_.get();
+    EyePosition* GetEyePosition() {
+        return eyePosition_.get();
     }
 
     const bool& IsDead() { return characterState_.isDead; }
@@ -81,7 +81,8 @@ private:
     bool isZoom_ = false;
     //ズーム開始タイマー
     float zoomStartTimer_ = 0.0f;
-    std::unique_ptr<EyePosition>eyeCollider_ = nullptr;
+    //目の位置
+    std::unique_ptr<EyePosition>eyePosition_ = nullptr;
 #pragma endregion
 
     //レイスプライトクラスを包含する

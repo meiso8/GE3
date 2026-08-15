@@ -20,7 +20,6 @@ AmenStage::~AmenStage()
 void AmenStage::Initialize()
 {
 
-
     StageTransitionInitialize();
 
     if (isInitialize_) {
@@ -37,9 +36,7 @@ void AmenStage::Initialize()
 
 void AmenStage::StageTransitionInitialize()
 {
-    //サウンドの初期化
-    Sound::StopAllSound();
-    Sound::bgmVolume_ = 0.1f;
+
     //ステージのロード
     LoadAndCreateObject("AmenStage_objectEditor");
     //像の初期化
@@ -53,7 +50,7 @@ void AmenStage::StageTransitionInitialize()
 
 void AmenStage::Update()
 {
-    Sound::PlayBGM(SoundFactory::BGM_Sun);
+
     slidePuzzleSystem_->Update(*uiManager_->GetCurPosPtr());
     amenRa_->Update();
     backGround_->Update();

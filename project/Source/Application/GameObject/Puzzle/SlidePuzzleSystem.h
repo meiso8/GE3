@@ -29,8 +29,6 @@ private:
     static std::unique_ptr<Puzzle>puzzle_;
     std::unique_ptr<PuzzleObj>puzzleObj_ = nullptr;
 
-    const float maxTimer_ = 5.0f;
-    float clearTimer_ = maxTimer_;
     static bool isActive_;
     static bool isEnd_;
 };

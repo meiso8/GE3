@@ -1,6 +1,4 @@
 #include "AnubisStage.h"
-#include"Sound.h"
-
 #include"DebugUI.h"
 
 AnubisStage::AnubisStage()
@@ -32,9 +30,6 @@ void AnubisStage::Initialize()
 void AnubisStage::StageTransitionInitialize()
 {
 
-    Sound::StopAllSound();
-    Sound::bgmVolume_ = 0.1f;
-
     //ステージのロード
     LoadAndCreateObject("AnubisStage_objectEditor");
 
@@ -46,7 +41,6 @@ void AnubisStage::StageTransitionInitialize()
 
 void AnubisStage::Update()
 {
-    Sound::PlayBGM(SoundFactory::BGM_Sun);
 
     anubisBlockMap_->Update();
 

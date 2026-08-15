@@ -45,9 +45,6 @@ void MedjedStage::Initialize()
 void MedjedStage::StageTransitionInitialize()
 {
 
-    //パーティクルのリセット
-    ParticleManager::ResetAll();
-    SoundManager::InitMedjedScene();
     Sound::PlaySE(SoundFactory::VOICE_Asobimasyo, 0.5f);
 
     //ステージのロード
@@ -78,6 +75,8 @@ void MedjedStage::Update()
 
     //オブジェクトの更新
     UpdateObject();
+    //メジェド様が出現したかどうかで音を区別する
+    SoundManager::SetMedjedApper(FindMedjed()&& medjedManager_->GetIsApperMedjed());
 
     if (FindMedjed()) {
 
@@ -87,8 +86,7 @@ void MedjedStage::Update()
             //メジェド出現！
             rhythmBullet_->SetSound(SoundFactory::BGM_ArabRuins);
             rhythmBullet_->Update();
-            SoundManager::ApperMedjedUpdate();
-
+   
         }
 
 
@@ -111,8 +109,6 @@ void MedjedStage::Update()
 
         uiManager_->UpdateGage();
 
-    } else {
-        SoundManager::NotFindMedjedUpdate();
     }
 
     if (IsClear()) {

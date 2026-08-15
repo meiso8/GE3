@@ -56,9 +56,9 @@ void Player::OnCollision(Collider* collider)
 
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("CameraUp")) {
         //カメラ上昇するコライダーに当たった時を記入していく
-        eyeCollider_->SiftToUp();
+        eyePosition_->SiftToUp();
     } else {
-        eyeCollider_->ShftToTDown();
+        eyePosition_->ShftToTDown();
     }
 
 
@@ -99,9 +99,9 @@ Player::Player() {
     SetWorldMatrix(aniObject_->GetWorldTransform());
 
     raySprite_ = std::make_unique<RaySprite>();
-    eyeCollider_ = std::make_unique<EyePosition>();
+    eyePosition_ = std::make_unique<EyePosition>();
     //体の位置を親に設定
-    eyeCollider_->SetParentMatrix(&headMatrix_);
+    eyePosition_->SetParentMatrix(&headMatrix_);
 
     isInvincible_ = false;
 #ifdef _DEBUG
@@ -125,17 +125,23 @@ void Player::Init(const Vector3& pos)
 
     //体の位置初期化
     aniObject_->Initialize();
-    aniObject_->SetAnimation("Idle");
+
     aniObject_->SetTranslate(pos);
     aniObject_->SetObjectName("Player");
     aniObject_->RegisterObject();
+
+    aniObject_->SetAnimation("Idle");
+    aniObject_->UpdateAniTimer();
+   
     aniObject_->Update();
 
+    //頭の行列を取得する
+    headMatrix_ = aniObject_->GetWorldJointMatrix("Head");
 
     //目の位置初期化
-    eyeCollider_->Initialize();
-    eyeCollider_->Update();
+    eyePosition_->Initialize();
 
+    UpdateRay();
 
     velocity_ = { 0.0f,0.0f,0.0f };
     speed_ = { 0.5f };
@@ -166,13 +172,13 @@ void Player::Init(const Vector3& pos)
 
 void Player::UpdateRay()
 {
-    raySprite_->UpdateRay(Ray{ .origin = eyeCollider_->GetWorldTransform().GetWorldPosition(),.diff = GetEyeForward() });
+    raySprite_->UpdateRay(Ray{ .origin = eyePosition_->GetWorldTransform().GetWorldPosition(),.diff = GetEyeForward() });
 }
 
 void Player::Draw(Camera& camera)
 {
 
-    if (eyeCollider_->IsCameraUpOrDown()) {
+    if (eyePosition_->IsCameraUpOrDown()) {
         aniObject_->Draw(camera);
     }
 
@@ -209,14 +215,13 @@ void Player::Update()
     }
 
     //アニメーションタイマーのアップデート
-    // 一旦コメントアウトしておく
     aniObject_->UpdateAniTimer();
 
     aniObject_->Update();
     headMatrix_ = aniObject_->GetWorldJointMatrix("Head");
     handMatrix_ = aniObject_->GetWorldJointMatrix("Hand.L");
 
-    eyeCollider_->Update();
+    eyePosition_->Update();
 
 }
 
@@ -360,7 +365,7 @@ void Player::Zoom()
 
 Vector3& Player::GetEyeForward()
 {
-    return eyeCollider_->GetForward();
+    return eyePosition_->GetForward();
 }
 Vector3& Player::GetBodyForward()
 {
@@ -424,7 +429,7 @@ void Player::Thermography()
 void Player::MouseLook()
 {
 
-    if (eyeCollider_->IsCameraUpOrDown()) {
+    if (eyePosition_->IsCameraUpOrDown()) {
         //上昇時または下降時は回転を固定する
         aniObject_->GetTransform().rotate.y = 0.0f;
         return;
@@ -450,7 +455,7 @@ void Player::MouseLook()
     transform.rotate.y = Lerp(transform.rotate.y, cameraRotateY_, 0.5f);
 
 
-    eyeCollider_->MouseLook(cameraRotateX_);
+    eyePosition_->MouseLook(cameraRotateX_);
 
 }
 

@@ -128,7 +128,7 @@ void BastetBlockMap::Initialize()
            7.0f
         };
 
-        blackMap_[i]->SetPos(pos);
+        blackMap_[i]->SetPos(pos,-0.25f);
     }
 
 }

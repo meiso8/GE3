@@ -43,8 +43,9 @@ void AnimationObject3d::Initialize()
 
 void AnimationObject3d::Update()
 {
-    UpdateAnimation();
     WorldTransformUpdate(worldTransform_);
+    UpdateAnimation();
+
 }
 
 void AnimationObject3d::InitTime()

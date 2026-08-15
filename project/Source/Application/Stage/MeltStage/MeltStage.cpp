@@ -38,8 +38,7 @@ void MeltStage::Initialize()
 
 void MeltStage::StageTransitionInitialize()
 {
-    //パーティクルのリセット
-    ParticleManager::ResetAll();
+
 
     //ステージのロード
     LoadAndCreateObject("MeltStage_objectEditor");

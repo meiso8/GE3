@@ -36,4 +36,11 @@ void SoundFactory::Load()
 
     Sound::LoadAndMap("Resource/Sounds/externals/maou_se_inst_piano1_1do.mp3", Sound_C);
     Sound::LoadAndMap("Resource/Sounds/externals/fire.mp3", Fire);
+
+    Sound::LoadAndMap("Resource/Sounds/thermography.mp3", Thermography);
+
+
+    Sound::LoadAndMap("Resource/Sounds/lookFor.mp3", LookFor);
+
+    Sound::LoadAndMap("Resource/Sounds/piano.mp3", Piano);
 }

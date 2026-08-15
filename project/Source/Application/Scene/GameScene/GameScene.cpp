@@ -141,10 +141,13 @@ void GameScene::Update() {
 
     auto* stageManager = StageManager::GetInstance();
 
+
+
     if (!PauseScreen::GetIsActive() && !sceneChange_->IsStateTransition()) {
         //最初は移動しない
 
-        //アクティブなら更新しない
+
+    //アクティブなら更新しない
         player_->Update();
 
         //プレイヤーが死んだら初期化する
@@ -254,10 +257,6 @@ void GameScene::Debug()
     //プレイヤーのデバッグ
     player_->Debug();
 
-    //if (Input::IsTriggerKey(DIK_B)) {
-    //    auto* stageManager = StageManager::GetInstance();
-    //    stageManager->SetNestStage("BastetStage");
-    //}
 
 #endif // !USE_IMGUI
 

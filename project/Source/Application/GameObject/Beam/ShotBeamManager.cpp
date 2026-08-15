@@ -89,7 +89,7 @@ void ShotBeamManager::RayCastHit()
     float min = 0.0f;
 
     //中心点を考慮した座標を取得してくる
-    Vector3 pos = player_->GetEyeCollider()->GetWorldTransform().GetWorldPosition();
+    Vector3 pos = player_->GetEyePosition()->GetWorldTransform().GetWorldPosition();
 
     AABB aabbWorld = { .min = {-0.25f,-0.25f,-0.25f},.max = {0.25f,0.25f,0.25f} };
     aabbWorld.min += pos;
@@ -107,7 +107,7 @@ void ShotBeamManager::RayCastHit()
         if (IntersectsAABB(
             ray,
             aabbWorld,
-            player_->GetEyeCollider()->GetWorldTransform().GetWorldPosition(),
+            player_->GetEyePosition()->GetWorldTransform().GetWorldPosition(),
             length
         )) {
 

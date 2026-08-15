@@ -1544,8 +1544,13 @@ void DebugUI::CheckSound()
 #ifdef USE_IMGUI
     if (ImGui::TreeNode("Sound")) {
 
-        ImGui::SliderFloat("SE Val", &Sound::seVolume_, 0.0f, 1.0f);
-        ImGui::SliderFloat("BGM Val", &Sound::bgmVolume_, 0.0f, 1.0f);
+         float seVol = Sound::GetSEVolume();
+        float bgmVol = Sound::GetBGMVolume();
+        ImGui::SliderFloat("SE Val", &seVol, 0.0f, 10.0f);
+        ImGui::SliderFloat("BGM Val", &bgmVol, 0.0f, 10.0f);
+
+        Sound::SetSEVolume(seVol);
+        Sound::SetBGMVolume(bgmVol);
 
         static bool isLoop = false;
         static float volume = false;
@@ -1579,7 +1584,7 @@ void DebugUI::CheckSound()
                     std::vector<float> waveform = Sound::GetWaveform(filename);
                     writeIdx = (int)(Sound::GetSamplesPlayed(filename) % waveform.size());
 
-                    float scale = Sound::bgmVolume_; // 0.0〜1.0
+                    float scale = Sound::GetBGMVolume(); // 0.0〜1.0
 
                     ImGui::PlotLines("", waveform.data(), (int)waveform.size(), writeIdx,
                         nullptr, -scale, scale, ImVec2(0, 64));

@@ -4,27 +4,26 @@
 #include "Collider.h"
 #include"Player/RaySprite.h"
 #include "CollisionManager.h"
-
+#include"InputBind.h"
+#include"../StageManager/StageManager.h"
+#include "ItemManager/ItemManager.h"
 
 RaySprite* SoundManager::raySprite_ = nullptr;
 CollisionManager* SoundManager::collisionManager_ = nullptr;
+bool SoundManager::isMedjedApper_ = false;
+float SoundManager::bgmVolFactor_ = 0.0f;
 
-void SoundManager::InitMedjedScene()
-{
-    Sound::StopAllSound();
-    Sound::bgmVolume_ = 0.1f;
-}
+std::unordered_map<std::string, std::function<void()>> SoundManager::UpdateFunctions_ = {
 
-void SoundManager::PlayCorrectSE()
-{
-    Sound::PlayOriginSE(SoundFactory::CORRECT);
-}
+      {"AmenStage",SoundManager::AmenUpdate},
+      {"WaterStage",SoundManager::WaterUpdate},
+      {"MedjedStage",SoundManager::MedjedUpdate},
+      {"MummyStage",SoundManager::MummyUpdate},
+      {"AnubisStage",SoundManager::AnubisUpdate},
+      {"MeltStage",SoundManager::MeltUpdate},
+     {"BastetStage",SoundManager::BastetUpdate},
 
-
-void SoundManager::PlayGOGOGOSE()
-{
-    Sound::PlayOriginSE(SoundFactory::GOGOGO);
-}
+};
 
 void SoundManager::SetRaySprite(RaySprite* raySprite) {
     raySprite_ = raySprite;
@@ -35,12 +34,66 @@ void SoundManager::SetCollisionManager(CollisionManager* collisionManager)
     collisionManager_ = collisionManager;
 }
 
-void SoundManager::Update()
+void SoundManager::InitSound()
 {
-    PlayDistanceSE("Fire",SoundFactory::Fire,20.0f,5.0f);
+    Sound::StopAllSound();
+    Sound::SetBGMVolume(0.1f);
+
+    isMedjedApper_ = false;
+    bgmVolFactor_ = 0.0f;
 }
 
-void SoundManager::PlayDistanceSE(const std::string tagName, const SoundFactory::TAG soundTag, const float firstSoundDistance,const float maxVol)
+void SoundManager::PlayCorrectSE()
+{
+    Sound::PlayOriginSE(SoundFactory::CORRECT);
+}
+
+void SoundManager::PlayGOGOGOSE()
+{
+    Sound::PlayOriginSE(SoundFactory::GOGOGO);
+}
+
+void SoundManager::PlayCancelSE()
+{
+    Sound::PlayOriginSE(SoundFactory::BUZZER);
+}
+
+
+void SoundManager::Update()
+{
+    //サーモグラフィー中はbgmを一律小さくする
+
+    if (ItemManager::IsGetSolarDisc() && InputBind::IsClickR()) {
+        //サーモグラフィ
+        Sound::PlayOriginSE(SoundFactory::Thermography, 2.0f);
+    }
+
+    if (ItemManager::IsGetSolarDisc() && InputBind::IsClickPressR()) {
+        Sound::PlayLoopSE(SoundFactory::LookFor, 0.25f);
+        bgmVolFactor_ = 0.0f;
+
+    } else {
+        bgmVolFactor_ += TimeManager::DeltaTime();
+        bgmVolFactor_ = std::clamp(bgmVolFactor_, 0.0f, 1.0f);
+
+        Sound::Stop(SoundFactory::LookFor);
+    }
+
+    //最近のステージ
+    std::string currentStage = StageManager::GetInstance()->GetCurrentStageName();
+    if (UpdateFunctions_.count(currentStage) > 0) {
+        UpdateFunctions_[currentStage]();
+    }
+    //炎の近くなら鳴る
+    PlayDistanceSE("Fire", SoundFactory::Fire, 20.0f, 5.0f);
+}
+
+void SoundManager::PlayDistanceSE(
+    const std::string tagName,
+    const SoundFactory::TAG soundTag,
+    const float firstSoundDistance,
+    const float maxVol
+)
 {
     for (const auto& collider : collisionManager_->GetColliders()) {
         if (collider->GetCollisionAttribute() == CollisionTag::GetTag(tagName)) {
@@ -50,7 +103,7 @@ void SoundManager::PlayDistanceSE(const std::string tagName, const SoundFactory:
             if (distance <= firstSoundDistance) {
                 float vol = firstSoundDistance - distance;
                 vol /= firstSoundDistance;
-                vol=  std::clamp(vol, 0.0f, 1.0f);
+                vol = std::clamp(vol, 0.0f, 1.0f);
                 Sound::PlayLoopSE(soundTag, vol * maxVol);
                 break;
             } else {
@@ -61,23 +114,48 @@ void SoundManager::PlayDistanceSE(const std::string tagName, const SoundFactory:
     }
 }
 
-
-void SoundManager::PlayCancelSE()
+void SoundManager::AmenUpdate()
 {
-    Sound::PlaySE(SoundFactory::BUZZER);
+    Sound::PlayBGM(SoundFactory::BGM_Sun, bgmVolFactor_);
 }
 
-void SoundManager::ApperMedjedUpdate()
+void SoundManager::AnubisUpdate()
 {
-    if (Sound::bgmVolume_ < 0.5f) {
-        Sound::bgmVolume_ += TimeManager::DeltaTime() * 0.25f;
+    Sound::PlayBGM(SoundFactory::BGM_Sun, bgmVolFactor_);
+}
+
+void SoundManager::BastetUpdate()
+{
+    //カメライベント時になる
+    PlayDistanceSE("CameraUp", SoundFactory::Piano, 50.0f, bgmVolFactor_*0.25f);
+}
+
+void SoundManager::WaterUpdate()
+{
+    Sound::PlayBGM(SoundFactory::BGM_Sea, bgmVolFactor_);
+}
+
+void SoundManager::MedjedUpdate()
+{
+
+    if (isMedjedApper_) {
+        if (Sound::GetBGMVolume() < 0.5f) {
+            float vol = Sound::GetBGMVolume() + TimeManager::DeltaTime() * 0.25f;
+            Sound::SetBGMVolume(vol);
+        }
+        Sound::Stop(SoundFactory::HORROR2);
+        Sound::PlayBGM(SoundFactory::BGM_ArabRuins, bgmVolFactor_);
+
+    } else {
+        Sound::Stop(SoundFactory::BGM_ArabRuins);
+        Sound::PlayBGM(SoundFactory::HORROR2, bgmVolFactor_);
     }
-    Sound::Stop(SoundFactory::HORROR2);
-    Sound::PlayBGM(SoundFactory::BGM_ArabRuins);
 }
 
-void SoundManager::NotFindMedjedUpdate()
+void SoundManager::MummyUpdate()
 {
-    Sound::Stop(SoundFactory::BGM_ArabRuins);
-    Sound::PlayBGM(SoundFactory::HORROR2);
+}
+
+void SoundManager::MeltUpdate()
+{
 }

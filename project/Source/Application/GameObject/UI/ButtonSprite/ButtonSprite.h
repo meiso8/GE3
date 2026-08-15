@@ -25,7 +25,7 @@ public:
     void SetIsGetThermography(const bool flag) { isGetThermography_ = flag; }
 private:
     std::array<std::unique_ptr<Sprite>,kButtonMaxCount> sprites_;
-
+    bool isGetThermographyFirst_ = false;
     bool isGetThermography_ = false;
     float scaleTimerDuration_ = 0.0f;
     float timer_ = 0.0f;
