@@ -379,7 +379,13 @@ Vector2Int Input::GetCursorPositionInt()
 
 void Input::SetCursorPosition(const Vector2& pos)
 {
-    SetCursorPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+
+    // ゲームがアクティブ（最前面）のときだけカーソルを操作する
+    if (GetForegroundWindow() == window_->GetHwnd()) {
+        // 画面中央などに固定して移動量を取る処理
+        SetCursorPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+    }
+
 }
 
 bool Input::IsPressMouse(uint32_t index) {

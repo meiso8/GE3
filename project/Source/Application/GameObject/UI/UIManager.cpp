@@ -57,7 +57,10 @@ void UIManager::UpdatePauseScreen()
     } else {
         curPos_->Initialize();
 #ifdef _RELEASE
-        Input::SetCursorPosition(*curPos_->GetScreenPosPtr());
+        if(!Input::IsPressKey(DIK_ESCAPE)) {
+            Input::SetCursorPosition(*curPos_->GetScreenPosPtr());
+        }
+   
 #endif // _RELEASE
 
     }
