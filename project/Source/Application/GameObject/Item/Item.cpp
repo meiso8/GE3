@@ -3,6 +3,7 @@
 #include"TransformAni/TransformAni.h"
 #include"TimeManager.h"
 #include"MakeMatrix.h"
+#include"../StageManager/StageManager.h"
 
 #include"CoordinateTransform.h"
 
@@ -11,8 +12,7 @@ Item::Item()
     object_ = std::make_shared<Object3d>();
     object_->Create();
 
-    handItemObj_ = std::make_unique<Object3d>();
-    handItemObj_->Create();
+
    
     SetAABB({ .min = { -0.5f,-0.5f,-0.5f},.max = { 0.5f,0.5f,0.5f } });
     SetCollisionAttribute(CollisionTag::GetTag("Item"));
@@ -23,7 +23,7 @@ Item::Item()
 void Item::SetModel(const std::string& tagName)
 {
     object_->SetMeshAndMaterial(ModelManager::GetModel(tagName));
-    handItemObj_->SetMeshAndMaterial(ModelManager::GetModel(tagName));
+
 }
 void Item::Init()
 {
@@ -31,32 +31,17 @@ void Item::Init()
     isAnimEnd_ = false;
     isGet_ = false;
     isUsed_ = false;
+ 
     isMelt_ = false;
 
     object_->Initialize();
     object_->SetTemperature(0.5f);
-
-    handItemObj_->Initialize();
-    handItemObj_->SetTemperature(0.5f);
 
     startPos_ = { 0.0f };
     endPos_ = { 0.0f };
 }
 
 void Item::Draw(Camera& camera)
-{
-    if (isGet_&& !isUsed_) {
-    
-        if (parent_) {
-            handItemObj_->Draw(camera);
-        }
-
-    } else {
-        object_->Draw(camera);
-    }   
-}
-
-void Item::DrawForSlotItem(Camera& camera)
 {
     object_->Draw(camera);
 }
@@ -94,6 +79,12 @@ void Item::UpdateAniTimer(const float& endTime)
     aniTimer_ = std::clamp(aniTimer_, 0.0f, endTime);
 }
 
+bool Item::IsUseStage()
+{
+    return (useStage_ == StageManager::GetInstance()->GetCurrentStageName());
+}
+
+
 void Item::LerpScreenPosAndScale(const Vector2& screenPos, const Matrix4x4& matInverseVPV)
 {
 
@@ -117,11 +108,8 @@ void Item::SetStartEndPos(const Vector3& start, const Vector3& end)
 
 void Item::Update()
 {
-    object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-    object_->Update();
+        object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+        object_->Update();
+    
 
-    if (parent_&&isGet_) {
-        handItemObj_->SetWorldMatrix(*parent_);
-    }
-   
 }

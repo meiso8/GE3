@@ -24,9 +24,6 @@ public:
 
     //スクリーン座標に変換する
     virtual void LerpScreenPosAndScale(const Vector2& screenPos, const Matrix4x4& matInverseVPV);
-    //スロットアイテムとして描画する
-    void DrawForSlotItem(Camera& camera);
-
 
     Vector3 GetWorldPosition() const {
         return object_->GetWorldTransform().GetWorldPosition();
@@ -55,14 +52,18 @@ public:
     const float GetAnimTimer() { return aniTimer_; }
     std::shared_ptr<Object3d>& GetObject3d() { return object_; };
     const std::string& GetName() {return name_; };
-    void SetParentMat(Matrix4x4* parent) { parent_ = parent; }
+
     void UpdateAniTimer(const float& endTime = 4.0f);
     bool GetMelt() { return isMelt_; };
+    bool IsUseStage();
 protected:
 
-    float aniTimer_ = 0.0f;
 
+
+    float aniTimer_ = 0.0f;
+    std::string useStage_ = "unKnown";
     bool isUsed_ = false;
+
     //取得する
     bool isGet_ = false;
     bool isAnimEnd_ = false;
@@ -71,7 +72,7 @@ protected:
 
     // 3Dオブジェクトの参照（描画や当たり判定用）
     std::shared_ptr<Object3d> object_ = nullptr;
-    std::unique_ptr<Object3d>handItemObj_ = nullptr;
+
     // アイテムの名前や説明 
     std::string name_;
     std::string description_;
@@ -81,7 +82,6 @@ protected:
     Vector3 startPos_ = { 0.0f };
     Vector3 endPos_ = { 0.0f };
  
-    Matrix4x4* parent_ = nullptr;
 
     float screenEndSize_ = 0.03125f;
 };

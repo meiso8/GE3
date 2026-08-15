@@ -8,6 +8,7 @@
 
 class SceneManager {
 public:
+ 
     static void Finalize();
     static void Update();
     static void DrawModel();

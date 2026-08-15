@@ -53,6 +53,8 @@ GameScene::GameScene()
     //ステージマネージャーのインスタンスを取得する
     auto* stageManager = StageManager::GetInstance();
 
+    
+
     //プレイヤーをセットする
     stageManager->SetPlayer(player_.get());
     //メモ管理セット
@@ -280,7 +282,7 @@ void GameScene::DrawModel() {
     player_->Draw(*currentCamera_);
 
     //アイテムを手前に描画する
-    itemManager_->DrawGetItem();
+    itemManager_->DrawItemSlotItem();
 
 #ifdef _DEVELOP
     collisionManager_->DrawAllCollider(currentCamera_);

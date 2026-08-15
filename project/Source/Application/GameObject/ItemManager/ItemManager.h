@@ -19,7 +19,7 @@ public:
     /// @brief 更新
     void Update();
     /// @brief アイテムの描画
-    void DrawGetItem();
+    void DrawItemSlotItem();
     /// @brief 描画関数
     /// @param camera カメラ
     void Draw(Camera& camera);

@@ -5,7 +5,7 @@
 class Sprite;
 class ResultMedjed;
 class SkyboxObject3d;
-
+class Player;
 class ResultScene :public BaseScene
 {
 public:
@@ -28,6 +28,9 @@ private:
     std::unique_ptr<ResultMedjed>medjed_ = nullptr;
     //スカイボックス
     std::unique_ptr<SkyboxObject3d> skyBoxObj_ = nullptr;
+    //プレイやー
+    std::unique_ptr<Player> player_ = nullptr;
+
 
     size_t currentIndex_ = 0;
     float switchInterval_ = 5.0f; // 1秒ごとに切り替え

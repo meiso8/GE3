@@ -8,6 +8,7 @@
 #include "ResultMedjed/ResultMedjed.h"  
 #include"SkyboxObject3d.h"
 #include"Sprite.h"
+#include"Player/Player.h"
 
 ResultScene::~ResultScene() {}
 
@@ -33,10 +34,13 @@ ResultScene::ResultScene()
     creditSprite_ = std::make_unique<Sprite>();
     creditSprite_->Create(TextureFactory::Handle::CREDIT, { 640.0f, 360.0f });
     creditSprite_->SetAnchorPoint({ 0.5f, 0.5f });
-    medjed_ =std::make_unique<ResultMedjed>();
+    medjed_ = std::make_unique<ResultMedjed>();
 
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
+
+
+
 }
 
 
@@ -63,6 +67,8 @@ void ResultScene::Initialize()
     medjed_->Initialize();
 
     skyBoxObj_->Initialize();
+
+    player_ = std::make_unique<Player>();
 }
 
 void ResultScene::Update()
@@ -87,6 +93,7 @@ void ResultScene::Update()
         }
     }
 #endif
+    player_->Thermography();
 
     symbolSprite_->Update();
     const float deltaTime = TimeManager::DeltaTime();
