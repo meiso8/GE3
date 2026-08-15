@@ -1,10 +1,13 @@
 #include "GoldHeart.h"
 #include"Lerp.h"
 #include"DebugUI.h"
+#include"../StageManager/StageManager.h"
+
 void GoldHeart::Init()
 {
     isAnimEnd_ = false;
     isUsed_ = false;
+   
     isGet_ = false;
     aniTimer_ = 0.0f;
     object_->Initialize();
@@ -20,14 +23,16 @@ void GoldHeart::Init()
 
 void GoldHeart::Update()
 {
-    if (isUsed_) {
-        UpdateAniTimer(2.0f);
-        float localTimer = aniTimer_ * 0.5f;
-        object_->SetTranslate(Lerp(startPos_, endPos_, localTimer));
-    }
 
-    object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-    object_->Update();
+        if (isUsed_) {
+            UpdateAniTimer(2.0f);
+            float localTimer = aniTimer_ * 0.5f;
+            object_->SetTranslate(Lerp(startPos_, endPos_, localTimer));
+        }
+
+        object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+        object_->Update();
+
 }
 
 void GoldHeart::Use()
@@ -35,6 +40,7 @@ void GoldHeart::Use()
     //アニメーションタイマーをリセットする
     aniTimer_ = 0.0f;
     isUsed_ = true;
-
+    //取得はしていない
+    isGet_ = false;
     //ミイラにはめ込む
 }

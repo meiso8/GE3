@@ -32,20 +32,20 @@ void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
 {
     // 1. 前のステージの「未取得」のアイテムだけを削除（所持品は残す）
     for (auto it = items_.begin(); it != items_.end(); ) {
-        if (!it->second->IsGet()) {
-            it = items_.erase(it); // 未取得なら削除してイテレータを進める
+        if (!it->second->IsGet() && !it->second->IsUsed()) {
+            it = items_.erase(it); // 未取得且未使用なら削除してイテレータを進める
         } else {
             ++it;
         }
     }
 
     for (const auto& name : itemNames) {
-  
+
         // すでに存在しているなら生成をスキップ
         if (items_.find(name) != items_.end()) {
             continue;
-        }     
-        
+        }
+
         std::shared_ptr<Item> item = nullptr;
 
         if (name == "Crowbar") {
@@ -56,7 +56,7 @@ void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
             item = std::make_shared<GoldHeart>();
         } else if (name == "SunRod") {
             item = std::make_shared<SunRod>();
-        } else if(name == "SolarDisc") {
+        } else if (name == "SolarDisc") {
             item = std::make_shared<SolarDisc>();
         } else if (name == "Glass") {
             item = std::make_shared<Glass>();
@@ -72,13 +72,21 @@ void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
 }
 
 void ItemManager::Init() {
+
+    for (auto& [name, item] : items_) {
+        item->Init();
+    }
+
     items_.clear(); // 既存のアイテムをクリア
     itemSlot_.Init();
     //太陽円盤取得フラグの初期化
     isGetSolarDisc_ = false;
+
+
 }
 
 void ItemManager::Update() {
+
     for (auto& [name, item] : items_) {
         item->Update();
     }
@@ -87,28 +95,34 @@ void ItemManager::Update() {
         //未取得時のみ探す
         auto item = GetItem("SolarDisc");
         //取得アニメーションの終了を検知したとき
-        if (item && item->IsGet()&&item->IsGetAnimEnd()) {
+        if (item && item->IsGet() && item->IsGetAnimEnd()) {
             isGetSolarDisc_ = true;
-            //プレイヤーの手の行列を入れる
-            item->SetParentMat(playerHandMatrix_);
         };
     }
 
     itemSlot_.Update();
 }
 
-void ItemManager::DrawGetItem()
+void ItemManager::DrawItemSlotItem()
 {
     itemSlot_.Draw();
 }
 
 void ItemManager::Draw(Camera& camera) {
-  
+
     for (auto& [name, item] : items_) {
         if (!item) continue;
-        item->Draw(camera);
-    }
+        if (item->IsGet()) {
+            continue;
+        }
 
+        if (item->IsUsed() && !item->IsUseStage()) {
+            continue;
+        }
+
+        item->Draw(camera);
+
+    }
 }
 
 void ItemManager::DrawUI() {
@@ -164,7 +178,7 @@ std::shared_ptr<Item> ItemManager::RaycastHitItem(RaySprite& raySprite) {
     return nullptr;
 }
 
-void ItemManager::UseItemFromSlot(const Vector3& startPos,const Vector3& endPos,const char* name)
+void ItemManager::UseItemFromSlot(const Vector3& startPos, const Vector3& endPos, const char* name)
 {
 
     auto item = GetItem(name);

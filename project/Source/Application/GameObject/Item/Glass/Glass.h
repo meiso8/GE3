@@ -11,6 +11,7 @@ public:
         object_->SetLightMode(Object3d::kLightModeLReflectance);
         object_->SetObjectName(name_);
         object_->RegisterObject();
+        useStage_ = "MeltStage";
     }
     ~Glass() { object_->UnRegisterObject(); }
     void Update()override;

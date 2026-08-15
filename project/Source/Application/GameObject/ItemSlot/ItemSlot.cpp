@@ -149,8 +149,8 @@ void ItemSlot::DrawUI()
 void ItemSlot::Draw()
 {
     for (auto& item : slots_) {
-        if (item && !item->IsUsed()) {
-            item->DrawForSlotItem(*itemCamera_);
+        if (item && item->IsGet()&& !item->IsUsed()) {
+            item->Draw(*itemCamera_);
         }
     }
 }

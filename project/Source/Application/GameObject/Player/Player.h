@@ -58,13 +58,19 @@ public:
     //レイスプライトクラスを包含する
     RaySprite* GerRaySprite() { return raySprite_.get(); };
     Matrix4x4* GetHandMatrixPtr() { return &handMatrix_; }
+
+
+
+
+    void Thermography();
+
 private:
 
     void UpdateRay();
     void Move();
     void Jump();
     void Zoom();
-    void Thermography();
+
     void MouseLook();
 private:
 

@@ -27,16 +27,10 @@ void StageManager::Initialize()
     memoManager_->Initialize();
     LogFile::Log("Initialize　MemoManager");
 
-
-    if (currentStage_) {
-        currentStage_->ResetInitializeFlag();
+    for (auto& [name, stage] : stages_) {
+        stage->ResetInitializeFlag();
         LogFile::Log("ResetInitializeFlag");
-        //currentStage_->Initialize();
-        //LogFile::Log("Initialize　NextScene");
     }
-
-
-
 }
 
 void StageManager::Update()
