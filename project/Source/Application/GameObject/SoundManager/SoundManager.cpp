@@ -1,6 +1,13 @@
 #include "SoundManager.h"
 #include"Sound.h"
 #include"TimeManager.h"
+#include "Collider.h"
+#include"Player/RaySprite.h"
+#include "CollisionManager.h"
+
+
+RaySprite* SoundManager::raySprite_ = nullptr;
+CollisionManager* SoundManager::collisionManager_ = nullptr;
 
 void SoundManager::InitMedjedScene()
 {
@@ -17,6 +24,41 @@ void SoundManager::PlayCorrectSE()
 void SoundManager::PlayGOGOGOSE()
 {
     Sound::PlayOriginSE(SoundFactory::GOGOGO);
+}
+
+void SoundManager::SetRaySprite(RaySprite* raySprite) {
+    raySprite_ = raySprite;
+}
+
+void SoundManager::SetCollisionManager(CollisionManager* collisionManager)
+{
+    collisionManager_ = collisionManager;
+}
+
+void SoundManager::Update()
+{
+    PlayDistanceSE("Fire",SoundFactory::Fire,20.0f,5.0f);
+}
+
+void SoundManager::PlayDistanceSE(const std::string tagName, const SoundFactory::TAG soundTag, const float firstSoundDistance,const float maxVol)
+{
+    for (const auto& collider : collisionManager_->GetColliders()) {
+        if (collider->GetCollisionAttribute() == CollisionTag::GetTag(tagName)) {
+            Vector3 targetPos = collider->CalculateWorldPos();
+            Vector3 soundPos = raySprite_->GetRay().origin;
+            float distance = Distance(targetPos, soundPos);
+            if (distance <= firstSoundDistance) {
+                float vol = firstSoundDistance - distance;
+                vol /= firstSoundDistance;
+                vol=  std::clamp(vol, 0.0f, 1.0f);
+                Sound::PlayLoopSE(soundTag, vol * maxVol);
+                break;
+            } else {
+                Sound::Stop(soundTag);
+                break;
+            }
+        }
+    }
 }
 
 

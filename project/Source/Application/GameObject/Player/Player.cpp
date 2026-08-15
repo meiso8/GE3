@@ -260,7 +260,7 @@ void Player::Move()
 
         if (!isJump_) {
             if (soundTimer_ == 0.0f) {
-                Sound::PlaySE(SoundFactory::FOOT_STEP, (speed_ == 0.25f) ? 0.5f : 0.0f);
+                Sound::PlaySE(SoundFactory::FOOT_STEP, (speed_ == 0.25f) ? 1.5f : 1.0f);
             }
 
         }

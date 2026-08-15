@@ -14,6 +14,7 @@ private:
     std::unique_ptr<Sprite>sprite_ = nullptr;
     float tMin_ = 0.0f;
     float tMax_ = 1.0f;
+    Ray ray_ = {};
 private:
     void Update();
     bool IntersectAABB(Collider* collider, const float kMaxDistance);
@@ -33,8 +34,8 @@ public:
 
     void Draw();
     bool Intersect(Collider* collider, const float kMaxDistance = 5.0f);
-    Ray ray_ = {};
 
+    Ray& GetRay() { return ray_; }
 
 };
 

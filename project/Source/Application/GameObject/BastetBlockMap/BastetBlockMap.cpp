@@ -161,7 +161,7 @@ void BastetBlockMap::Update()
             if (!isPushs_[i]) {
                 isPushs_[i] = true;
                 //どの音からピッチを変化させてみる
-                Sound::PlaySE(SoundFactory::Sound_C, 1.0f);
+                Sound::PlaySE(SoundFactory::Sound_C, 2.0f);
                 Sound::SetFrequencyRatio(SoundFactory::Sound_C, i);
 
             }

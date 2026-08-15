@@ -65,7 +65,7 @@ public:
     std::unordered_map <std::string, ColliderGroup>& GetColliderGroup() { return colliders_; };
     std::unordered_map < std::string, Matrix4x4>& GetEyeMats() { return eyeMats_; };
     //ターゲットの設定
-    void SetTarget(Vector3& target) { target_ = &target; };
+    void SetTarget(Vector3* target) { target_ = target; };
     //ターゲットに向かうベクトル
     Vector3 GetToTarget();
     Vector3* GetTarget() { return target_; };

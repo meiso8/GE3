@@ -30,31 +30,34 @@ std::unordered_map<uint32_t, std::filesystem::path> Sound::handleToPath_;
 float Sound::bgmVolume_ = 0.25f;
 float Sound::seVolume_ = 0.75f;
 
-void Sound::PlayBGM(const SoundFactory::TAG& tag, const float& volumeOffset, const bool& loop)
+void Sound::PlayBGM(const SoundFactory::TAG& tag, const float& volumeFactor, const bool& loop)
 {
-    SetVol(bgmVolume_ + volumeOffset, tag);
+    SetVol(bgmVolume_ * volumeFactor, tag);
 
     if (!IsPlaying(tag)) {
-        Play(tag, bgmVolume_ + volumeOffset, loop);
+        Play(tag, bgmVolume_ * volumeFactor, loop);
     }
 }
 
-void Sound::PlaySE(const SoundFactory::TAG& tag, const float& volumeOffset, const bool& loop)
+void Sound::PlaySE(const SoundFactory::TAG& tag, const float& volumeFactor, const bool& loop)
 {
-    Play(tag, seVolume_ + volumeOffset);
+    Play(tag, seVolume_ * volumeFactor);
 }
 
-void Sound::PlayLoopSE(const SoundFactory::TAG& tag, const float& volumeOffset)
+void Sound::PlayLoopSE(const SoundFactory::TAG& tag, const float& volumeFactor)
 {
+
+    SetVol(seVolume_ * volumeFactor, tag);
+
     if (!IsPlaying(tag)) {
-        Play(tag, seVolume_ + volumeOffset, true);
+        Play(tag, seVolume_ * volumeFactor, true);
     }
 }
 
-void Sound::PlayOriginSE(const SoundFactory::TAG& tag, const float& volumeOffset)
+void Sound::PlayOriginSE(const SoundFactory::TAG& tag, const float& volumeFactor)
 {
     if (!IsPlaying(tag)) {
-        Play(tag, seVolume_ + volumeOffset, false);
+        Play(tag, seVolume_ * volumeFactor, false);
     }
 }
 
