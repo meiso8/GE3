@@ -54,7 +54,7 @@
     <ClCompile Include="Source\Application\Stage\MummyStage\MummyStage.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bullet\RhythmManager.cpp" />
     <ClCompile Include="Source\Application\GameObject\Mummy\Mummy.cpp" />
-    <ClCompile Include="Source\Application\GameObject\Player\EyeCollider.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Player\EyePosition.cpp" />
     <ClCompile Include="Source\Application\GameObject\BackGround\BackGround.cpp" />
     <ClCompile Include="Source\Application\GameObject\Bullet\RhythmBullet.cpp" />
     <ClCompile Include="Source\Application\GameObject\Player\RaySprite.cpp" />
@@ -238,7 +238,7 @@
     <ClInclude Include="Source\Application\Stage\MummyStage\MummyStage.h" />
     <ClInclude Include="Source\Application\GameObject\Bullet\RhythmManager.h" />
     <ClInclude Include="Source\Application\GameObject\Mummy\Mummy.h" />
-    <ClInclude Include="Source\Application\GameObject\Player\EyeCollider.h" />
+    <ClInclude Include="Source\Application\GameObject\Player\EyePosition.h" />
     <ClInclude Include="Source\Application\GameObject\BackGround\BackGround.h" />
     <ClInclude Include="Source\Application\GameObject\Bullet\RhythmBullet.h" />
     <ClInclude Include="Source\Application\GameObject\Player\RaySprite.h" />

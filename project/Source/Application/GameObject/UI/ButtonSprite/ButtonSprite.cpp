@@ -4,6 +4,7 @@
 #include"DebugUI.h"
 #include"InputBind.h"
 #include"Easing.h"
+#include"Sound.h"
 
 namespace {
     const float kTimer_ = 10.0f;
@@ -46,6 +47,8 @@ ButtonSprite::~ButtonSprite()
 void ButtonSprite::Initialize()
 {
     isGetThermography_ = false;
+
+    isGetThermographyFirst_ = false;
     timer_ = 0.0f;
     size_ = { 1.0f,1.0f };
 }
@@ -54,8 +57,15 @@ void ButtonSprite::Update()
 {
     if (isGetThermography_) {
 
-        if (InputBind::IsClickPressR()) {
+        if (InputBind::IsClickR()) {
+            if (!isGetThermographyFirst_) {
 
+
+                isGetThermographyFirst_ = true;
+            }
+        }
+        if (InputBind::IsClickPressR()) {
+  
             scaleTimerDuration_ = 0.0f;
             timer_ = 0.0f;
         

@@ -94,7 +94,12 @@ public:
     static void Load(const std::filesystem::path& path);
 
     static std::unordered_map<std::filesystem::path, SoundData>& GetSouneDatas() { return  soundDatas_; }
-public:
+
+    static void SetBGMVolume(const float vol) { bgmVolume_; }
+    static void SetSEVolume(const float vol) { seVolume_; }
+    static const float GetBGMVolume() { return bgmVolume_; }
+    static const float GetSEVolume() { return seVolume_; }
+private:
 
     static float bgmVolume_;
     static float seVolume_;

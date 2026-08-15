@@ -53,7 +53,13 @@ public:
         Sound_C,
         //日の音
         Fire,
+        //サーモグラフィー開始
+        Thermography,
 
+        //サーモグラフィー捜索
+        LookFor,
+        //ピアノ
+        Piano,
     };
 
    static void Load();

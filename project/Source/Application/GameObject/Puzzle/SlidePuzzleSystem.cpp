@@ -26,7 +26,6 @@ SlidePuzzleSystem::~SlidePuzzleSystem()
 void SlidePuzzleSystem::Initialize()
 {
 
-    clearTimer_ = maxTimer_;
     isActive_ = false;
     isEnd_ = false;
     puzzle_->Init();
@@ -37,19 +36,13 @@ void SlidePuzzleSystem::Update(const Vector2& screenPos)
 {
     //クリアしたら
     if (puzzle_->IsClear()) {
-
-        if (clearTimer_ == maxTimer_) {
+        if (!isEnd_) {
             SoundManager::PlayCorrectSE();
-        }
-
-        clearTimer_ -= TimeManager::DeltaTime();
-        clearTimer_ = std::clamp(clearTimer_, 0.0f, maxTimer_);
-
-        if (clearTimer_ == 0.0f) {
             //開ける
             puzzleObj_->SetIsOpen(true);
-            isEnd_ = true;
             isActive_ = false;
+            isEnd_ = true;
+      
         }
     }
 

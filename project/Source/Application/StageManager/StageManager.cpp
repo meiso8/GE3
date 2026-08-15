@@ -4,6 +4,8 @@
 #include"ObjectManager/ObjectManager.h"
 #include"ItemManager/ItemManager.h"
 #include"CollisionManager.h"
+#include"SoundManager/SoundManager.h"
+#include"Particle/Particle.h"
 
 StageManager::~StageManager()
 {
@@ -80,8 +82,15 @@ void StageManager::TransitionStage()
         //メモマネージャー
         memoManager_->Initialize();
         LogFile::Log("Initialize MemoManager");
+        
+        //サウンド管理
+        SoundManager::InitSound();
+        //パーティクルのリセット
+        ParticleManager::ResetAll();
+        
         currentStage_ = nextStage_;
         currentStage_->Initialize();
+       
         nextStage_ = nullptr;
         LogFile::Log("Initialize NextScene");
     }

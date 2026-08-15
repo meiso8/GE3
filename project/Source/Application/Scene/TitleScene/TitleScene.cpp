@@ -59,7 +59,7 @@ void TitleScene::Initialize()
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
 
-    Sound::bgmVolume_ = 0.5f;
+    Sound::SetBGMVolume(0.5f);
     Sound::StopAllSound();
 
     titleSprite_->SetScale({ 1.0f,1.0f });

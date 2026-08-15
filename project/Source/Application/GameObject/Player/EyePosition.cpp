@@ -1,10 +1,9 @@
-#include "EyeCollider.h"
+#include "EyePosition.h"
 #include"CollisionConfig.h"
 #include"TimeManager.h"
 #include"Easing.h"
 #include<algorithm>
 #include"MakeMatrix.h"
-
 
 void EyePosition::Update()
 {
@@ -97,8 +96,9 @@ void EyePosition::SiftToUp()
 void EyePosition::Initialize()
 {
     transform_.Initialize();
-    transform_.eTransform_.translate.z = 0.0f;
-    transform_.eTransform_.translate.y = 0.0f;
+
+    //行列計算
+    transform_.matWorld_ = MakeAffineMatrix(transform_.eTransform_.scale, transform_.eTransform_.rotate, transform_.eTransform_.translate) * *parent_;
 
     //上昇フラグ
     isUp_ = false;

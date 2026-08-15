@@ -37,8 +37,6 @@ bool RaySprite::Intersect(Collider* collider,const float kMaxDistance)
         return false;
     }
 
-
-
     auto type = collider->GetType();
 
     if (type == Collider::kSphere) {
@@ -95,7 +93,8 @@ void RaySprite::SetSprite(Collider* collider)
 {
     //アイテムのタグからテクスチャをセットする
     if (collider->GetCollisionAttribute() == CollisionTag::GetTag("Item")||
-        collider->GetCollisionAttribute() == CollisionTag::GetTag("Block")) {
+        collider->GetCollisionAttribute() == CollisionTag::GetTag("Block")||
+        collider->GetCollisionAttribute() == CollisionTag::GetTag("Fire")) {
         sprite_->SetTexture(TextureFactory::HAND);
     }
 

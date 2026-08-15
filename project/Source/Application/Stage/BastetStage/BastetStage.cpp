@@ -33,16 +33,12 @@ void BastetStage::Initialize()
 void BastetStage::StageTransitionInitialize()
 {
 
-    //パーティクルのリセット
-    ParticleManager::ResetAll();
     //ステージのロード
     LoadAndCreateObject("BastetStage_objectEditor");
     //メモの生成
     memoManager_->GenerateMemos({ TextureFactory::BOOK6 });
     //バステト　
     bastet_->LoadMap("BastetStage_BastetStep");
-    //パーティクルのリセット
-    ParticleManager::ResetAll();
 
     //少し手前側に移動する
     player_->Init({ 0.0f, 0.0f, -5.0f });

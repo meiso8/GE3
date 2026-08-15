@@ -78,8 +78,6 @@ void MummyStage::Initialize() {
 void MummyStage::StageTransitionInitialize()
 {
 
-
-    Sound::Stop(SoundFactory::BGM_Sea);
     Sound::PlaySE(SoundFactory::HORROR1);
 
     //ステージのロード
