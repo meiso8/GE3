@@ -45,6 +45,8 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
+            "glassFactor": 0.0,
+            "lightMode": 2,
             "name": "Object2",
             "nextStageName": "AnubisStage",
             "shininess": 0.0,
@@ -80,6 +82,8 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "DownStairs.obj",
+            "glassFactor": 0.0,
+            "lightMode": 2,
             "name": "Object3",
             "nextStageName": "WaterStage",
             "shininess": 250.0,
@@ -113,6 +117,8 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "Plane",
+            "glassFactor": 0.0,
+            "lightMode": 2,
             "name": "Object4",
             "nextStageName": "MeltStage",
             "shininess": 250.0,
@@ -148,6 +154,8 @@
             "disabled": false,
             "environmentCoefficient": 0.0,
             "file_name": "AmenRa.obj",
+            "glassFactor": 0.0,
+            "lightMode": 1,
             "name": "AmenRa5",
             "nextStageName": "",
             "shininess": 250.0,
@@ -178,10 +186,12 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "directoryPath": "Resource/Models/gentleman",
+            "directoryPath": "Resource/Models/Player",
             "disabled": false,
             "environmentCoefficient": 0.0,
-            "file_name": "gentleman.gltf",
+            "file_name": "player.gltf",
+            "glassFactor": 0.0,
+            "lightMode": 2,
             "name": "Player6",
             "nextStageName": "",
             "shininess": 250.0,
@@ -189,7 +199,7 @@
             "transform": {
                 "rotate": {
                     "x": 0.0,
-                    "y": 0.5745508670806885,
+                    "y": -56.46570587158203,
                     "z": 0.0
                 },
                 "scale": {
@@ -198,12 +208,48 @@
                     "z": 1.0
                 },
                 "translate": {
-                    "x": -2.1004867553710938,
-                    "y": 0.0,
-                    "z": 14.804019927978516
+                    "x": 11.070565223693848,
+                    "y": -6363.697265625,
+                    "z": -3.342984676361084
                 }
             },
             "type": "EMPTY"
-        }
+        },
+      {
+        "color": {
+          "w": 1.0,
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "directoryPath": "Resource/Models/UpStairs",
+        "disabled": false,
+        "environmentCoefficient": 0.0,
+        "file_name": "UpStairs.obj",
+        "glassFactor": 0.0,
+        "lightMode": 2,
+        "name": "Object5",
+        "nextStageName": "InformationStage",
+        "shininess": 250.0,
+        "temperature": 0.0,
+        "transform": {
+          "rotate": {
+            "x": 3.1415908336639404,
+            "y": 0.0,
+            "z": 3.1415908336639404
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "translate": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": -24.348115921020508
+          }
+        },
+        "type": "StageChangeTrigger"
+      }
     ]
 }

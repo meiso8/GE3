@@ -87,8 +87,6 @@ void MeltStage::Update()
 
     };
 
-    //オブジェクトの更新
-    UpdateObject();
 
 #ifdef USE_IMGUI
 
@@ -103,9 +101,6 @@ void MeltStage::Draw(Camera& camera)
     backGround_->Draw(camera);
     meltBlockMap_->Draw(camera);
 
-
-    //オブジェクトの描画
-    DrawObject(camera);
 
     if (meltBlockMap_->IsClear()) {
         //なぞ解きをクリアしたら
@@ -160,8 +155,6 @@ void MeltStage::CheckCollision(CollisionManager& collisionManager)
         collisionManager.AddCollider(bastet_.get());
     }
 
-    //コライダーを追加する
-    AddObjectCollision(collisionManager);
 }
 
 void MeltStage::CreateParticle()

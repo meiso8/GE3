@@ -17,6 +17,8 @@
 
 #include"SceneManager.h"
 
+
+#include"../Stage/InformationStage/InformationStage.h"
 #include"../Stage/MummyStage/MummyStage.h"
 #include"../Stage/WaterStage/WaterStage.h"
 #include"../Stage/MedjedStage/MedjedStage.h"
@@ -68,6 +70,7 @@ GameScene::GameScene()
     stageManager->SetSceneChange(sceneChange_.get());
     stageManager->SetCollisionManager(collisionManager_.get());
 
+    stageManager->SetMap("InformationStage", std::move(std::make_unique<InformationStage>()));
     stageManager->SetMap("AmenStage", std::move(std::make_unique<AmenStage>()));
     stageManager->SetMap("WaterStage", std::move(std::make_unique<WaterStage>()));
     stageManager->SetMap("MedjedStage", std::move(std::make_unique<MedjedStage>()));
@@ -103,7 +106,7 @@ void GameScene::Initialize() {
 
     stageManager->SetNestStage("AmenStage");
 #ifdef _DEVELOP
-    stageManager->SetNestStage("AnubisStage");
+    stageManager->SetNestStage("InformationStage");
 
 #endif
 

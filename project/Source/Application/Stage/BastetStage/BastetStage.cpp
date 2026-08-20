@@ -56,9 +56,6 @@ void BastetStage::Update()
 
     }
 
-    //オブジェクトの更新
-    UpdateObject();
-
 }
 
 void BastetStage::Draw(Camera& camera)
@@ -66,8 +63,6 @@ void BastetStage::Draw(Camera& camera)
     backGround_->Draw(camera);
     bastetBlockMap_->Draw(camera);
 
-    //オブジェクトの描画
-    DrawObject(camera);
     //バステトの描画
     bastet_->Draw(camera);
 }
@@ -87,6 +82,4 @@ void BastetStage::CheckCollision(CollisionManager& collisionManager)
     //    collisionManager.AddCollider(object.get());
     //}
 
-    //コライダーを追加する
-    AddObjectCollision(collisionManager);
 }

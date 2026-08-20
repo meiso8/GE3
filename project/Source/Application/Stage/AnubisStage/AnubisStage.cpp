@@ -55,8 +55,6 @@ void AnubisStage::Update()
     fountain_->Update();
     thoth_->Update();
 
-    //オブジェクトの更新
-    UpdateObject();
 }
 
 void AnubisStage::Draw(Camera& camera)
@@ -67,9 +65,6 @@ void AnubisStage::Draw(Camera& camera)
     //なぞ解きをクリアしたらトートが出てくる
     thoth_->Draw(camera);
 
-
-    //オブジェクトの描画
-    DrawObject(camera);
 }
 
 
@@ -99,7 +94,5 @@ void AnubisStage::CheckCollision(CollisionManager& collisionManager)
         collisionManager.AddCollider(thoth_.get());
     }
 
-    //コライダーを追加する
-    AddObjectCollision(collisionManager);
 }
 
