@@ -17,6 +17,8 @@ public:
         HORROR2,
         //物が落ちる
         FALL,
+        //改札
+        GATE,
         //水
         WATER_DROP,
         //メモ用

@@ -13,6 +13,9 @@ void SoundFactory::Load()
     Sound::LoadAndMap("Resource/Sounds/externals/Horror_Accent02-1(Far).mp3", HORROR1);
     Sound::LoadAndMap("Resource/Sounds/externals/Horror_Accent16-2(Mid-Long).mp3", HORROR2);
     Sound::LoadAndMap("Resource/Sounds/externals/maou_se_sound_fall02.mp3", FALL);
+    Sound::LoadAndMap("Resource/Sounds/externals/Ticket_Gate-Beep01-01(Tone1).mp3", GATE);
+
+
     Sound::LoadAndMap("Resource/Sounds/externals/Water_Drop02-1(Low-Reverb).mp3", WATER_DROP);
     Sound::LoadAndMap("Resource/Sounds/externals/Book01-1(Flip).mp3", BOOK);
     Sound::LoadAndMap("Resource/Sounds/moveRock.mp3", MOVE_ROCK);

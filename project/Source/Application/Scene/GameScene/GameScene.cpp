@@ -104,9 +104,9 @@ void GameScene::Initialize() {
 
     auto* stageManager = StageManager::GetInstance();
 
-    stageManager->SetNestStage("AmenStage");
-#ifdef _DEVELOP
     stageManager->SetNestStage("InformationStage");
+#ifdef _DEVELOP
+    //stageManager->SetNestStage("InformationStage");
 
 #endif
 
@@ -210,12 +210,11 @@ void GameScene::CheckAllCollision()
     //    collisionManager_->AddCollider(memo.get());
     //}
 
-
     //プレイヤーのコライダーを追加する
     collisionManager_->AddCollider(player_.get());
 
     StageManager::GetInstance()->CheckCollision();
-    //ここに入れるか同化は迷い中
+    //ここに入れるかどうかは迷い中
     ObjectManager::GetInstance()->CheckCollision(collisionManager_.get());
 
     collisionManager_->CheckAllCollisions();

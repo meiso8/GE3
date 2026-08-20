@@ -170,6 +170,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application\GameObject\Gate\Gate.cpp" />
+    <ClCompile Include="Source\Application\GameObject\GateSensor\GateSensor.cpp" />
     <ClCompile Include="Source\Application\GameObject\InformationRoom\InformationRoom.cpp" />
     <ClCompile Include="Source\Application\Stage\Entrance\Entrance.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\Scarab\Scarab.cpp" />
@@ -488,8 +490,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\StageManager\StageManager.cpp" />
     <ClCompile Include="Source\Engine\DescriptorHeap\CbvSrvUavDescriptorHeap\CbvSrvUavDescriptorHeap.cpp" />
     <ClCompile Include="Source\Application\GameObject\Thoth\Thoth.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\Ticket\Ticket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\GameObject\Gate\Gate.h" />
+    <ClInclude Include="Source\Application\GameObject\GateSensor\GateSensor.h" />
     <ClInclude Include="Source\Application\GameObject\InformationRoom\InformationRoom.h" />
     <ClInclude Include="Source\Application\Stage\Entrance\Entrance.h" />
     <ClInclude Include="Source\Application\GameObject\Item\Scarab\Scarab.h" />
@@ -702,6 +707,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\StageManager\StageManager.h" />
     <ClInclude Include="Source\Engine\DescriptorHeap\CbvSrvUavDescriptorHeap\CbvSrvUavDescriptorHeap.h" />
     <ClInclude Include="Source\Application\GameObject\Thoth\Thoth.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\Ticket\Ticket.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

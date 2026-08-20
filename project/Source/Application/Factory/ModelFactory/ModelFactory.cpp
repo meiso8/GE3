@@ -34,6 +34,9 @@ void ModelFactory::Load() {
 
     ModelManager::LoadModel("Resource/Models/Scarab/scarab.obj");
 
-
+    ModelManager::LoadModel("Resource/Models/Ticket/ticket.obj");
     ModelManager::LoadModel("Resource/Models/GlassCup/GlassCup.obj");
+
+
+
 };

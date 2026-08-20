@@ -1,7 +1,6 @@
 {
     "name": "GameScene",
     "objects": [
- 
         {
             "color": {
                 "w": 1.0,
@@ -15,7 +14,7 @@
             "file_name": "medjed.gltf",
             "glassFactor": 0.0,
             "lightMode": 2,
-            "name": "Medjed1",
+            "name": "Medjed11",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -50,7 +49,43 @@
             "file_name": "Plane",
             "glassFactor": 0.0,
             "lightMode": 2,
-            "name": "Trigger2",
+            "name": "Object52",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureHandle": 64,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 0.14441046118736267,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 1.8916079998016357,
+                    "y": 0.0,
+                    "z": 0.7634571194648743
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object3",
             "nextStageName": "AmenStage",
             "shininess": 250.0,
             "temperature": 0.0,
@@ -74,39 +109,40 @@
             },
             "type": "StageChangeTrigger"
         },
-    
+       
+     
         {
             "collider": {
                 "center": {
-                    "x": 0.0,
-                    "y": 0.7553370594978333,
-                    "z": 0.0
+                    "x": 0.31442952156066895,
+                    "y": 0.7316569089889526,
+                    "z": 0.05370806157588959
                 },
-                "maskTag": 4294443015,
+                "maskTag": 4293919235,
                 "size": {
-                    "x": 4.737147331237793,
-                    "y": 1.0,
-                    "z": 6.6882219314575195
+                    "x": 2.39933705329895,
+                    "y": 1.5653760433197021,
+                    "z": 0.5392143130302429
                 },
                 "tag": "Wall",
                 "type": "AABB"
             },
             "color": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             },
+            "directoryPath": "Resource/Models/Gate",
             "disabled": false,
             "environmentCoefficient": 0.0,
-            "file_name": "Plane",
+            "file_name": "gate.gltf",
             "glassFactor": 0.0,
             "lightMode": 2,
             "name": "Object5",
             "nextStageName": "",
             "shininess": 250.0,
             "temperature": 0.0,
-            "textureHandle": 64,
             "transform": {
                 "rotate": {
                     "x": 0.0,
@@ -114,17 +150,123 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 0.14441046118736267,
+                    "x": 1.0,
                     "y": 1.0,
                     "z": 1.0
                 },
                 "translate": {
-                    "x": 1.8916079998016357,
+                    "x": -2.9490816593170166,
                     "y": 0.0,
-                    "z": 0.7634571194648743
+                    "z": 0.0
                 }
             },
             "type": "MESH"
-        }
+        },
+      {
+        "collider": {
+          "center": {
+            "x": -0.4160034656524658,
+            "y": 0.09841430187225342,
+            "z": 0.02267872355878353
+          },
+          "maskTag": 4294959619,
+          "size": {
+            "x": 0.37838849425315857,
+            "y": 1.0,
+            "z": 2.171142101287842
+          },
+          "tag": "Wall",
+          "type": "AABB"
+        },
+        "color": {
+          "w": 1.0,
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "disabled": false,
+        "environmentCoefficient": 0.0,
+        "file_name": "Cube",
+        "glassFactor": 0.0,
+        "lightMode": 2,
+        "name": "Object6",
+        "nextStageName": "",
+        "shininess": 250.0,
+        "temperature": 0.0,
+        "textureHandle": 0,
+        "transform": {
+          "rotate": {
+            "x": 0.0,
+            "y": -0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 0.8006821274757385,
+            "y": 0.7072674036026001,
+            "z": 0.3982276916503906
+          },
+          "translate": {
+            "x": -1.9688719511032104,
+            "y": 0.375007688999176,
+            "z": 0.0
+          }
+        },
+        "type": "MESH"
+      },
+
+
+      {
+        "collider": {
+          "center": {
+            "x": 0.0,
+            "y": 0.7553370594978333,
+            "z": 0.0
+          },
+          "maskTag": 4294443015,
+          "size": {
+            "x": 4.737147331237793,
+            "y": 1.0,
+            "z": 6.6882219314575195
+          },
+          "tag": "Wall",
+          "type": "AABB"
+        },
+        "color": {
+          "w": 0.0,
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "disabled": false,
+        "environmentCoefficient": 0.0,
+        "file_name": "Cube",
+        "glassFactor": 0.0,
+        "lightMode": 2,
+        "name": "Object5",
+        "nextStageName": "",
+        "shininess": 250.0,
+        "temperature": 0.0,
+        "textureHandle": 1,
+        "transform": {
+          "rotate": {
+            "x": 0.0,
+            "y": -0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 0.14441046118736267,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "translate": {
+            "x": 1.8916079998016357,
+            "y": 0.0,
+            "z": 0.7634571194648743
+          }
+        },
+        "type": "MESH"
+      }
+
+
     ]
 }
