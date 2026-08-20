@@ -184,6 +184,9 @@
     <ClCompile Include="Source\Application\Stage\Entrance\Entrance.cpp" />
     <ClCompile Include="Source\Application\Stage\InformationStage\InformationStage.cpp" />
     <ClCompile Include="Source\Application\GameObject\InformationRoom\InformationRoom.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Gate\Gate.cpp" />
+    <ClCompile Include="Source\Application\GameObject\GateSensor\GateSensor.cpp" />
+    <ClCompile Include="Source\Application\GameObject\Item\Ticket\Ticket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -398,6 +401,9 @@
     <ClInclude Include="Source\Application\Stage\Entrance\Entrance.h" />
     <ClInclude Include="Source\Application\Stage\InformationStage\InformationStage.h" />
     <ClInclude Include="Source\Application\GameObject\InformationRoom\InformationRoom.h" />
+    <ClInclude Include="Source\Application\GameObject\Gate\Gate.h" />
+    <ClInclude Include="Source\Application\GameObject\GateSensor\GateSensor.h" />
+    <ClInclude Include="Source\Application\GameObject\Item\Ticket\Ticket.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />

@@ -88,6 +88,7 @@ Player::Player() {
         | CollisionTag::GetTag("StageTrigger")
         | CollisionTag::GetTag("Block")
         | CollisionTag::GetTag("CameraUp")
+        | CollisionTag::GetTag("Sensor")
     );
 
     //それぞれのObject3dを作る

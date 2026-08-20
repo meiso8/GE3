@@ -14,6 +14,7 @@
 #include"../Item/SolarDisc/SolarDisc.h"
 #include"../Item/Glass/Glass.h"
 #include"../Item/Scarab/Scarab.h"
+#include"../Item/Ticket/Ticket.h"
 #include"Line.h"
 
 bool ItemManager::isGetSolarDisc_ = false;
@@ -48,7 +49,10 @@ void ItemManager::GenerateItems(const std::vector<std::string>& itemNames)
 
         std::shared_ptr<Item> item = nullptr;
 
-        if (name == "Crowbar") {
+
+        if (name == "Ticket") {
+            item = std::make_shared<Ticket>();
+        }  else if (name == "Crowbar") {
             item = std::make_shared<Crowbar>();
         } else if (name == "SunMedal") {
             item = std::make_shared<SunMedal>();
