@@ -40,6 +40,7 @@ void StageManager::Update()
 
     if (currentStage_) {
         currentStage_->Update();
+        currentStage_->UpdateObject();
     }
 
 }
@@ -48,6 +49,7 @@ void StageManager::DrawModel(Camera* camera)
 {
     if (currentStage_) {
         currentStage_->Draw(*camera);
+        currentStage_->DrawObject(*camera);
     }
 }
 
@@ -121,6 +123,7 @@ void StageManager::CheckCollision()
 {
     if (currentStage_&& collisionManager_) {
         currentStage_->CheckCollision(*collisionManager_);
+        currentStage_-> AddObjectCollision(*collisionManager_);
     }
 }
 

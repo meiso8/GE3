@@ -1,0 +1,130 @@
+{
+    "name": "GameScene",
+    "objects": [
+ 
+        {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "directoryPath": "Resource/Models/Medjed",
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "medjed.gltf",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Medjed1",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "transform": {
+                "rotate": {
+                    "x": -3.1415884494781494,
+                    "y": -0.44794440269470215,
+                    "z": -3.1415908336639404
+                },
+                "scale": {
+                    "x": 0.9999999403953552,
+                    "y": 1.0,
+                    "z": 0.9999999403953552
+                },
+                "translate": {
+                    "x": 0.8164443969726563,
+                    "y": -0.029592234641313553,
+                    "z": 2.958151340484619
+                }
+            },
+            "type": "MESH"
+        },
+        {
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Trigger2",
+            "nextStageName": "AmenStage",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureHandle": 0,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": -2.0182442665100098,
+                    "y": 0.9064142107963562,
+                    "z": 3.558605909347534
+                }
+            },
+            "type": "StageChangeTrigger"
+        },
+    
+        {
+            "collider": {
+                "center": {
+                    "x": 0.0,
+                    "y": 0.7553370594978333,
+                    "z": 0.0
+                },
+                "maskTag": 4294443015,
+                "size": {
+                    "x": 4.737147331237793,
+                    "y": 1.0,
+                    "z": 6.6882219314575195
+                },
+                "tag": "Wall",
+                "type": "AABB"
+            },
+            "color": {
+                "w": 0.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "disabled": false,
+            "environmentCoefficient": 0.0,
+            "file_name": "Plane",
+            "glassFactor": 0.0,
+            "lightMode": 2,
+            "name": "Object5",
+            "nextStageName": "",
+            "shininess": 250.0,
+            "temperature": 0.0,
+            "textureHandle": 64,
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 0.14441046118736267,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 1.8916079998016357,
+                    "y": 0.0,
+                    "z": 0.7634571194648743
+                }
+            },
+            "type": "MESH"
+        }
+    ]
+}

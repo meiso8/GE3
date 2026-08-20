@@ -55,9 +55,6 @@ void AmenStage::Update()
     amenRa_->Update();
     backGround_->Update();
 
-    //オブジェクトの更新
-    UpdateObject();
-
     if (!isGenerateItem_ && slidePuzzleSystem_->GetIsGameEnd()) {
         //太陽円盤を生成する
         itemManager_->GenerateItems({ "SolarDisc" });
@@ -71,8 +68,7 @@ void AmenStage::Draw(Camera& camera)
     backGround_->Draw(camera);
     amenRa_->Draw(camera);
     slidePuzzleSystem_->Draw(camera);
-    //オブジェクトの描画
-    DrawObject(camera);
+
 }
 
 void AmenStage::DrawSprite()
@@ -95,9 +91,6 @@ void AmenStage::CheckCollision(CollisionManager& collisionManager)
     for (auto& [type, object] : backGround_->GetBuilding()->GetFieldPoses()) {
         collisionManager.AddCollider(object.get());
     }
-
-    //コライダーを追加する
-    AddObjectCollision(collisionManager);
 
 }
 

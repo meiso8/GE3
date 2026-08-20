@@ -117,8 +117,7 @@ void MummyStage::Update() {
     papyrus_->Update();
     mummy_->Update();
     mummyRoom_->Update();
-    //オブジェクトの更新
-    UpdateObject();
+
 }
 
 bool MummyStage::IsRayCastHit(RaySprite& raySprite)
@@ -175,8 +174,6 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager)
         collisionManager.AddCollider(object.get());
     }
 
-    //コライダーを追加する
-    AddObjectCollision(collisionManager);
 }
 
 void MummyStage::Draw(Camera& camera) {
@@ -189,7 +186,6 @@ void MummyStage::Draw(Camera& camera) {
     }
 
     mummy_->Draw(camera);
-    //オブジェクトの描画
-    DrawObject(camera);
+
 
 }

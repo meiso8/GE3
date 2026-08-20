@@ -24,9 +24,7 @@ protected:
     bool isInitialize_ = false;
 protected:
     void LoadAndCreateObject(const std::string& fileName );
-    void UpdateObject();
-    void DrawObject(Camera& camera);
-    void AddObjectCollision(CollisionManager& collisionManager);
+
 public:
     Stage();
    virtual ~Stage();
@@ -36,6 +34,11 @@ public:
     static void SetUIManager(UIManager* uiManager) { uiManager_ = uiManager; };
     static void SetLightingManager(LightingManager* lightingManager) { lightingManager_ = lightingManager; }
     void ResetInitializeFlag();
+    
+    void UpdateObject();
+    void DrawObject(Camera& camera);
+    void AddObjectCollision(CollisionManager& collisionManager);
+
     virtual void CheckCollision(CollisionManager& collisionManager) = 0;
     virtual void Initialize() = 0;
     //ステージ遷移時初期化

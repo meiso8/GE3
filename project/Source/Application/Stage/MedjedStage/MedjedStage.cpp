@@ -73,8 +73,6 @@ void MedjedStage::Update()
     medjedManager_->Update();
     backGround_->Update();
 
-    //オブジェクトの更新
-    UpdateObject();
     //メジェド様が出現したかどうかで音を区別する
     SoundManager::SetMedjedApper(FindMedjed()&& medjedManager_->GetIsApperMedjed());
 
@@ -139,8 +137,6 @@ void MedjedStage::Draw(Camera& camera)
         rhythmBullet_->Draw(camera);
     }
 
-    //オブジェクトの描画
-    DrawObject(camera);
 }
 
 void MedjedStage::DrawSprite()
@@ -196,8 +192,6 @@ void MedjedStage::CheckCollision(CollisionManager& collisionManager)
         collisionManager.AddCollider(object.get());
     }
 
-    //コライダーを追加する
-    AddObjectCollision(collisionManager);
 }
 
 void MedjedStage::UpdateEmitter(const Particels& particles)
