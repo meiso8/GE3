@@ -170,6 +170,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="PasswordText.cpp" />
     <ClCompile Include="Source\Application\GameObject\Gate\Gate.cpp" />
     <ClCompile Include="Source\Application\GameObject\GateSensor\GateSensor.cpp" />
     <ClCompile Include="Source\Application\GameObject\InformationRoom\InformationRoom.cpp" />
@@ -493,6 +494,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Item\Ticket\Ticket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PasswordText.h" />
     <ClInclude Include="Source\Application\GameObject\Gate\Gate.h" />
     <ClInclude Include="Source\Application\GameObject\GateSensor\GateSensor.h" />
     <ClInclude Include="Source\Application\GameObject\InformationRoom\InformationRoom.h" />
