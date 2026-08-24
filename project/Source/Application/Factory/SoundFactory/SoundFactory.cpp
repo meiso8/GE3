@@ -46,4 +46,8 @@ void SoundFactory::Load()
     Sound::LoadAndMap("Resource/Sounds/lookFor.mp3", LookFor);
 
     Sound::LoadAndMap("Resource/Sounds/piano.mp3", Piano);
+
+    Sound::LoadAndMap("Resource/Sounds/externals/PC-Keyboard04-08(Enter-Mid).mp3", PC_Keyboard);
+
+   
 }

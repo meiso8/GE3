@@ -34,6 +34,10 @@ FreeTypeScene::FreeTypeScene()
     skyBoxObj_ = std::make_unique<SkyboxObject3d>();
     skyBoxObj_->Create();
 
+
+
+ 
+
 }
 
 void FreeTypeScene::Initialize()
@@ -49,6 +53,8 @@ void FreeTypeScene::Initialize()
     sceneChange_->Initialize();
     sceneChange_->SetState(SceneChange::kFadeOut, 1.0f);
     CreateParticle();
+
+
 }
 
 void FreeTypeScene::Update()
@@ -56,16 +62,17 @@ void FreeTypeScene::Update()
     //デバック
     text_.Debug();
 
-    if (inputText_ == U"next") {
-        sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
-        SceneManager::SetNextScene("Title");
-    }
+
 
     if (Input::IsTriggerKey(DIK_SPACE)) {
         sceneChange_->SetState(SceneChange::kFadeIn, 1.0f);
         SceneManager::SetNextScene("Title");
     }
     currentCamera_->UpdateMatrix();
+
+
+
+
 
 #ifdef _DEVELOP
 
@@ -103,7 +110,6 @@ void FreeTypeScene::DrawSprite() {
     text_.Draw();
     pressSpaceText_.Draw();
     sceneChange_->Draw();
-
 };
 
 void FreeTypeScene::DrawModel()

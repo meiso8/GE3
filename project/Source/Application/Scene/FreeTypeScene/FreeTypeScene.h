@@ -20,7 +20,7 @@ public:
 private:
     void CreateParticle();
 private:
-    std::u32string inputText_;
+
     Text text_;
     uint32_t handle_;
     Text pressSpaceText_;
@@ -31,7 +31,6 @@ private:
 
     std::vector<std::unique_ptr<LevelEditor::ObjectSet>> objects_;
     std::array<std::unique_ptr<ParticleEmitter>, 2>particleEmitters_;
-
 
 };
 

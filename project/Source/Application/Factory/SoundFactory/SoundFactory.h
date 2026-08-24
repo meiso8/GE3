@@ -62,6 +62,8 @@ public:
         LookFor,
         //ピアノ
         Piano,
+        //キータイプ音
+        PC_Keyboard,
     };
 
    static void Load();

@@ -100,7 +100,7 @@ uint32_t FreeTypeManager::CreateFace(const string& fontPath, const uint32_t inde
 
     //登録！
     fontFaces_.emplace(handle, std::move(data));
-
+    SetPixelSizes(handle, 32, 32);
     //ハンドルを返す
     return handle;
 

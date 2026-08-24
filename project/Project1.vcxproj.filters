@@ -187,7 +187,7 @@
     <ClCompile Include="Source\Application\GameObject\Gate\Gate.cpp" />
     <ClCompile Include="Source\Application\GameObject\GateSensor\GateSensor.cpp" />
     <ClCompile Include="Source\Application\GameObject\Item\Ticket\Ticket.cpp" />
-    <ClCompile Include="PasswordText.cpp" />
+    <ClCompile Include="Source\Application\GameObject\UI\PasswordText\PasswordText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\ComputeShaderPSO\ComputeShaderPSO.h" />
@@ -405,7 +405,8 @@
     <ClInclude Include="Source\Application\GameObject\Gate\Gate.h" />
     <ClInclude Include="Source\Application\GameObject\GateSensor\GateSensor.h" />
     <ClInclude Include="Source\Application\GameObject\Item\Ticket\Ticket.h" />
-    <ClInclude Include="PasswordText.h" />
+    <ClInclude Include="Source\Application\GameObject\UI\PasswordText\PasswordText.h" />
+    <ClInclude Include="Source\Engine\FreeTypeManager\GlyphRun.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\numbers.png" />
