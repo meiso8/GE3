@@ -340,7 +340,6 @@ void Sound::LoadAndMap(const std::filesystem::path& path, const SoundFactory::TA
     if (LoadFile(path)) {
         //ハンドルとパスをマッピング
         handleToPath_[tag] = path;
-        LogFile::Log("Mapping AudioLoad File!");
     };
 
 
@@ -354,8 +353,7 @@ void Sound::Load(const std::filesystem::path& path)
         if (handleToPath_[handle].empty()) {
             handleToPath_[handle] = path;
         }
-    
-        LogFile::Log("Mapping AudioLoad File!");
+   
     };
 }
 

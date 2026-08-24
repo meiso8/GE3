@@ -3,6 +3,7 @@
 #include"InformationRoom/InformationRoom.h"
 #include"Gate/Gate.h"
 #include"GateSensor/GateSensor.h"
+#include"UI/PasswordText/PasswordText.h"
 
 class InformationStage :public Stage
 {
@@ -14,7 +15,9 @@ private:
     std::unique_ptr<Gate>gate_ = nullptr;
     //ゲート用センサー
     std::unique_ptr<GateSensor>gateSensor_ = nullptr;
-
+    //チケット番号入力システム
+    std::unique_ptr<PasswordText>passwordText_ = nullptr;
+    bool isGenerateTicket_ = false;
 public:
     InformationStage();
     void Initialize()override;
@@ -22,6 +25,6 @@ public:
     void Update()override;
     void Draw(Camera& camera)override;
     void CheckCollision(CollisionManager& collisionManager)override;
-
+    void DrawSprite()override;
 };
 

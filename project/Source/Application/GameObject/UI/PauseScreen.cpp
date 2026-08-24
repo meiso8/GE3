@@ -12,7 +12,7 @@
 #include"Memo/MemoManager.h"
 #include"RenderTexture/RenderTexture.h"
 #include"PostProcessManager/PostProcessManager.h"
-
+#include"PasswordText/PasswordText.h"
 
 bool PauseScreen::isActive_ = false;
 bool PauseScreen::isPause_ = false;
@@ -74,7 +74,7 @@ void PauseScreen::Update()
 
 
     //タイトル
-    isLookGameItem_ = SlidePuzzleSystem::IsActive() || MemoManager::IsLookItem();
+    isLookGameItem_ = SlidePuzzleSystem::IsActive() || MemoManager::IsLookItem()|| PasswordText::GetIsActive();
 
     auto* gaussianFilter = PostProcessManager::GetInstance()->
         GetPostEffectMaterial(PostProcessManager::kModel)->

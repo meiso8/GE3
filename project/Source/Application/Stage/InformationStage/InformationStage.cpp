@@ -10,6 +10,8 @@ InformationStage::InformationStage()
     gateSensor_ = std::make_unique<GateSensor>();
 
     gateSensor_->SetParent(gate_->GetWorldTransform());
+    //チケット番号システム
+    passwordText_ = std::make_unique<PasswordText>();
 }
 
 void InformationStage::Initialize()
@@ -23,9 +25,12 @@ void InformationStage::Initialize()
     room_->Init();
     room_->Update();
 
-    itemManager_->GenerateItems({"Ticket"});
+    passwordText_->Initialize();
+
+    isGenerateTicket_ = false;
 
     isInitialize_ = true;
+
 }
 
 void InformationStage::StageTransitionInitialize()
@@ -59,6 +64,15 @@ void InformationStage::Update()
 
     gate_->Update();
 
+    //パスワードシステム
+    passwordText_->Update();
+
+    if (passwordText_->GetIsUnLock()) {
+        if (!isGenerateTicket_) {
+            isGenerateTicket_ = true;
+            itemManager_->GenerateItems({ "Ticket" });
+        }
+    }
 }
 
 void InformationStage::Draw(Camera& camera)
@@ -78,4 +92,9 @@ void InformationStage::CheckCollision(CollisionManager& collisionManager)
     collisionManager.AddCollider(gate_.get());
     collisionManager.AddCollider(gateSensor_.get());
 
+}
+
+void InformationStage::DrawSprite()
+{
+    passwordText_->Draw();
 }

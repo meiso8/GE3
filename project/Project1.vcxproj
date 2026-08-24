@@ -170,7 +170,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="PasswordText.cpp" />
+    <ClCompile Include="Source\Application\GameObject\UI\PasswordText\PasswordText.cpp">
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Development|x64'">ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
     <ClCompile Include="Source\Application\GameObject\Gate\Gate.cpp" />
     <ClCompile Include="Source\Application\GameObject\GateSensor\GateSensor.cpp" />
     <ClCompile Include="Source\Application\GameObject\InformationRoom\InformationRoom.cpp" />
@@ -494,7 +497,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Source\Application\GameObject\Item\Ticket\Ticket.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PasswordText.h" />
+    <ClInclude Include="Source\Application\GameObject\UI\PasswordText\PasswordText.h" />
     <ClInclude Include="Source\Application\GameObject\Gate\Gate.h" />
     <ClInclude Include="Source\Application\GameObject\GateSensor\GateSensor.h" />
     <ClInclude Include="Source\Application\GameObject\InformationRoom\InformationRoom.h" />
@@ -504,6 +507,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Source\Application\GameObject\ResultMedjed\ResultMedjed.h" />
     <ClInclude Include="Source\Application\Stage\InformationStage\InformationStage.h" />
     <ClInclude Include="Source\ColliderObject\ColliderObject.h" />
+    <ClInclude Include="Source\Engine\FreeTypeManager\GlyphRun.h" />
     <ClInclude Include="Source\Engine\Mesh\MeshCommon\Melt.h" />
     <ClInclude Include="Source\Engine\Particle\GPUParticle.h" />
     <ClInclude Include="Source\Application\GameObject\BastetBlockMap\BastetBlockMap.h" />

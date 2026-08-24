@@ -6,7 +6,8 @@
 #include"BlendMode.h"
 class FreeTypeManager;
 class Font;
-struct GlyphRun;
+
+#include "GlyphRun.h"
 
 class Text {
 public:
