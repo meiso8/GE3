@@ -108,9 +108,9 @@ Window::Window(const std::wstring& title, const int32_t& clientWidth, const int3
 
     // 2. ウィンドウのスタイルを設定
 // WS_POPUP は枠線やタイトルバーが一切ないポップアップウィンドウを作ります
-    DWORD windowStyle = WS_POPUP | WS_VISIBLE;
+    //DWORD windowStyle = WS_POPUP | WS_VISIBLE;
 
-
+    DWORD  windowStyle = WS_OVERLAPPEDWINDOW;
     //クライアント領域をもとに実際のサイズにwrcを変更してもらう
     AdjustWindowRect(&wrc, windowStyle, false);
 
