@@ -127,7 +127,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\generated\outputs\$(Configuration)\;$(ProjectDir)externals\assimp\lib\Release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;ImGuizmo.lib;User32.lib;DirectXTex.lib;assimp-vc143-mt.lib</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;ImGuizmo.lib;User32.lib;DirectXTex.lib;assimp-vc143-mt.lib;shell32.lib</AdditionalDependencies>
       <AdditionalOptions>/ignore:4049 /ignore:4099 %(AdditionalOptions)</AdditionalOptions>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
