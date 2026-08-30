@@ -82,4 +82,6 @@ void TextureFactory::Load()
 
     Texture::LoadAndMapHandle("Resource/Textures/music.png", MUSIC);
     Texture::LoadAndMapHandle("Resource/Textures/musicH.png", MUSIC_HINT);
+    Texture::LoadAndMapHandle("Resource/Textures/web.png", WEB_SITE);
+    
 }

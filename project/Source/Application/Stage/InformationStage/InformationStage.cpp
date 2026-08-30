@@ -13,7 +13,7 @@ InformationStage::InformationStage()
     gateSensor_->SetParent(gate_->GetWorldTransform());
     //チケット番号システム
     passwordText_ = std::make_unique<PasswordText>();
-    
+    passwordText_->SetCurPosPtr(uiManager_->GetCurPosPtr());
 }
 
 void InformationStage::Initialize()

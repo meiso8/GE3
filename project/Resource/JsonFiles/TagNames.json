@@ -1,9 +1,9 @@
 [
     "Player",
     "Medjed",
+    "EnemyBulletHot",
     "PlayerBulletCold",
     "DummyMedjed",
-    "EnemyBulletHot",
     "PlayerBulletHot",
     "CameraUp",
     "Memo",
