@@ -21,7 +21,7 @@ PasswordText::PasswordText()
     text_.SetAlign(Text::TextAlign::Left);
     text_.SetBlendMode(BlendMode::kBlendModeNormal);
 
-    //情報テキスト
+    //情報テキストa
     infoText_.SetString(U"チケット番号を入力してください");
     infoText_.SetPosition({ 640, 300 });
     infoText_.SetColor({ 1, 1, 1, 1 });
