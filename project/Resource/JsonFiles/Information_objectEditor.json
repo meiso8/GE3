@@ -265,6 +265,57 @@
           }
         },
         "type": "MESH"
+      },
+      {
+        "collider": {
+          "center": {
+            "x": 0.0,
+            "y": 0.5,
+            "z": 0.0
+          },
+          "maskTag": 4292936199,
+          "size": {
+            "x": 1.0,
+            "y": 2.0,
+            "z": 1.0
+          },
+          "tag": "TicketMac",
+          "type": "AABB"
+        },
+        "color": {
+          "w": 1.0,
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "directoryPath": "Resource/Models/TicketMac",
+        "disabled": false,
+        "environmentCoefficient": 0.0,
+        "file_name": "ticketMac.obj",
+        "glassFactor": 0.0,
+        "lightMode": 2,
+        "name": "Object8",
+        "nextStageName": "",
+        "shininess": 250.0,
+        "temperature": 0.0,
+        "transform": {
+          "rotate": {
+            "x": -1.214098392665619e-05,
+            "y": 1.5699999332427979,
+            "z": -1.5858804545132443e-05
+          },
+          "scale": {
+            "x": 0.5,
+            "y": 0.5,
+            "z": 0.5
+          },
+          "translate": {
+            "x": -3.088137149810791,
+            "y": 1.1467222066130489e-05,
+            "z": -3.631819248199463
+          }
+        },
+        "type": "MESH"
       }
 
 

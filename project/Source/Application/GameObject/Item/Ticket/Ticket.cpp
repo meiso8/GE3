@@ -11,7 +11,7 @@ void Ticket::Init()
     isMelt_ = false;
 
     object_->Initialize();
-    object_->SetTranslate({ 1.0f,0.1f,-3.0f });
+    object_->SetTranslate({ -3.0f,0.1f,-3.0f });
     object_->SetRotate({ 0.0f,0.1f,0.0f });
     object_->SetTemperature(0.5f);
 

@@ -1,6 +1,7 @@
 #pragma once
 #include"../Engine/FreeTypeManager/Text.h"
-
+class Sprite;
+#include<memory>
 class PasswordText
 {
 public:
@@ -12,6 +13,7 @@ public:
     bool GetIsUnLock() { return isUnLock_; }
     static bool GetIsActive() { return isActive_; }
     static void SetIsActive(const bool isActive) { isActive_ = isActive; }
+
 private:
     //入力文字
     std::u32string inputString_;

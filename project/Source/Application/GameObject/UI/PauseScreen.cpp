@@ -107,10 +107,12 @@ void PauseScreen::Update()
 
     }
 
+#ifdef _DEVELOP
     for (int i = 0; i < sprites_.size(); ++i) {
         std::string world = std::to_string(i);
         DebugUI::CheckSprite(*sprites_[i], world.c_str());
     }
+#endif
 
     if (!isActive_) { return; }
 
@@ -183,7 +185,9 @@ void PauseScreen::SelectButton()
                     pauseTimer_ = 0.0f;
                     SlidePuzzleSystem::SetActive(false);
                     MemoManager::SetLookItem(false);
-                    break;
+                    //パスワードシステムを無効化する
+                    PasswordText::SetIsActive(false);
+;                   break;
                 case kBackToTitle:
                     isBackToTitle_ = true;
                     break;

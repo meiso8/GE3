@@ -27,6 +27,9 @@ PasswordText::PasswordText()
     infoText_.SetColor({ 1, 1, 1, 1 });
     infoText_.SetAlign(Text::TextAlign::Center);
     infoText_.SetBlendMode(BlendMode::kBlendModeNormal);
+
+    float width = static_cast<float>(Window::GetClientWidth());
+
 }
 
 void PasswordText::Initialize()
@@ -34,12 +37,15 @@ void PasswordText::Initialize()
     passworldString_ = U"A3N91KH7";
     text_.SetString(U"");
     isUnLock_ = false;
-    isActive_ = true;
+    isActive_ = false;
 }
 
 void PasswordText::Update()
 {
+
     if (!isActive_) {
+        //非アクティブの時はクリアする
+        inputString_.clear();
         return;
     }
 
@@ -49,6 +55,7 @@ void PasswordText::Update()
         //ロックが解除されたら今後処理を行わない
         return;
     }
+
 
     // Backspace　文字を消す
     if (Input::IsTriggerKey(DIK_BACK)) {
@@ -75,16 +82,18 @@ void PasswordText::Update()
             SoundManager::PlayCancelSE();
         }
     }
+    if (Input::IsAnyKeyPressed()) {
+        //特別なキー以外の時に記録する
+        for (char32_t ch : Input::GetInputChars()) {
+            if (ch == U'\r' || ch == U'\n' || ch == U'\t' || ch == U'　' || ch == U' ' || ch == U'\b' || ch == U'\0') {
 
-    //特別なキー以外の時に記録する
-    for (char32_t ch : Input::GetInputChars()) {
-        if (ch == U'\r' || ch == U'\n' || ch == U'\t' || ch == U'　' || ch == U' ' || ch == U'\b' || ch == U'\0') {
-            
-            continue;
+                continue;
+            }
+            //記録
+            Sound::PlaySE(SoundFactory::PC_Keyboard);
+            inputString_ += ch;
         }
-        //記録
-        Sound::PlaySE(SoundFactory::PC_Keyboard);
-        inputString_ += ch;
+
     }
 
     text_.SetString(inputString_);
@@ -101,4 +110,5 @@ void PasswordText::Draw()
     Sprite::PreDraw();
     infoText_.Draw();
     text_.Draw();
+
 }
