@@ -453,6 +453,8 @@ bool ObjectManager::UpdateImGuizmo(Camera& camera, Object3d* object3d)
     return isUsingPrev;
 
 #endif
+
+    return false;
 }
 
 bool ObjectManager::UpdateImGuizmoForCollider(Camera& camera, Collider* collider, const Matrix4x4& objectMat)
