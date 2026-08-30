@@ -13,7 +13,7 @@ public:
     bool GetIsUnLock() { return isUnLock_; }
     static bool GetIsActive() { return isActive_; }
     static void SetIsActive(const bool isActive) { isActive_ = isActive; }
-
+    void SetCurPosPtr(Vector2* curPosPtr) { curPosPtr_ = curPosPtr; }
 private:
     //入力文字
     std::u32string inputString_;
@@ -27,5 +27,8 @@ private:
     //ロックが解除される
     bool isUnLock_ = false;
     static bool isActive_;
+    //ウェブ用スプライト
+    std::unique_ptr<Sprite>webSprite_ = nullptr;
+    Vector2* curPosPtr_ = nullptr;
 };
 

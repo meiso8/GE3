@@ -6,7 +6,7 @@
 #include"InputBind.h"
 #include"Sound.h"
 
- bool PasswordText::isActive_ = true;
+bool PasswordText::isActive_ = true;
 PasswordText::PasswordText()
 {
     uint32_t meiryob = FreeTypeManager::CreateFace("Resource/Fonts/meiryob.ttc", 0);
@@ -30,6 +30,12 @@ PasswordText::PasswordText()
 
     float width = static_cast<float>(Window::GetClientWidth());
 
+    float height = static_cast<float>(Window::GetClientHeight());
+
+    webSprite_ = std::make_unique<Sprite>();
+    webSprite_->Create(TextureFactory::WEB_SITE, { width*0.5f,128.0f });
+    webSprite_->SetAnchorPoint({ 0.5f,0.5f });
+
 }
 
 void PasswordText::Initialize()
@@ -49,6 +55,7 @@ void PasswordText::Update()
         return;
     }
 
+
     if (isUnLock_) {
 
         isActive_ = false;
@@ -57,58 +64,79 @@ void PasswordText::Update()
     }
 
 
-    // Backspace　文字を消す
-    if (Input::IsTriggerKey(DIK_BACK)) {
-        if (!inputString_.empty()) {
-            inputString_.pop_back();
-            Sound::PlaySE(SoundFactory::PC_Keyboard);
+
+    if (IsCollision(*webSprite_, *curPosPtr_)) {
+        webSprite_->SetColor({ COLOR::RED });
+     
+        if (InputBind::IsClick()) {
+            // 既定のブラウザでURLを開く
+            ShellExecuteW(
+                nullptr,            // 親ウィンドウのハンドル（nullptrでも可）
+                L"open",            // 実行する操作
+                L"https://meiso-labyrinth.netlify.app/", // 開きたいURL
+                nullptr,            // パラメータ（URLの場合は不要）
+                nullptr,            // 作業ディレクトリ（URLの場合は不要）
+                SW_SHOWNORMAL       // 開くときのウィンドウの状態
+            );
+
         }
+    } else {
+        webSprite_->SetColor({ COLOR::WHITE });
     }
 
-    if (inputString_.size() >= passworldString_.size()) {
-        if (inputString_ == passworldString_) {
-            //チケット番号と同じ
-            
-           //成功音
-           SoundManager::PlayCorrectSE();
-           isUnLock_ = true;
-       
-
-        } else {
-
-            //間違っている
-            inputString_.clear();
-            //cancel音を鳴らす
-            SoundManager::PlayCancelSE();
-        }
-    }
-    if (Input::IsAnyKeyPressed()) {
-        //特別なキー以外の時に記録する
-        for (char32_t ch : Input::GetInputChars()) {
-            if (ch == U'\r' || ch == U'\n' || ch == U'\t' || ch == U'　' || ch == U' ' || ch == U'\b' || ch == U'\0') {
-
-                continue;
+        // Backspace　文字を消す
+        if (Input::IsTriggerKey(DIK_BACK)) {
+            if (!inputString_.empty()) {
+                inputString_.pop_back();
+                Sound::PlaySE(SoundFactory::PC_Keyboard);
             }
-            //記録
-            Sound::PlaySE(SoundFactory::PC_Keyboard);
-            inputString_ += ch;
         }
 
+        if (inputString_.size() >= passworldString_.size()) {
+            if (inputString_ == passworldString_) {
+                //チケット番号と同じ
+
+               //成功音
+                SoundManager::PlayCorrectSE();
+                isUnLock_ = true;
+
+
+            } else {
+
+                //間違っている
+                inputString_.clear();
+                //cancel音を鳴らす
+                SoundManager::PlayCancelSE();
+            }
+        }
+        if (Input::IsAnyKeyPressed()) {
+            //特別なキー以外の時に記録する
+            for (char32_t ch : Input::GetInputChars()) {
+                if (ch == U'\r' || ch == U'\n' || ch == U'\t' || ch == U'　' || ch == U' ' || ch == U'\b' || ch == U'\0') {
+
+                    continue;
+                }
+                //記録
+                Sound::PlaySE(SoundFactory::PC_Keyboard);
+                inputString_ += ch;
+            }
+
+        }
+
+        text_.SetString(inputString_);
+
+
     }
 
-    text_.SetString(inputString_);
+    void PasswordText::Draw()
+    {
+        if (!isActive_) {
+            return;
+        }
 
-
-}
-
-void PasswordText::Draw()
-{
-    if (!isActive_) {
-        return;
+        Sprite::PreDraw();
+        webSprite_->Draw();
+        infoText_.Draw();
+        text_.Draw();
+   
     }
-
-    Sprite::PreDraw();
-    infoText_.Draw();
-    text_.Draw();
-
-}

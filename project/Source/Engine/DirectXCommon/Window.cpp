@@ -104,19 +104,27 @@ Window::Window(const std::wstring& title, const int32_t& clientWidth, const int3
     //ウィンドウサイズを表す構造体にクライアント領域を入れる
     RECT wrc = { 0,0,clientWidth_,clientHeight_ };
 
+
+
+    // 2. ウィンドウのスタイルを設定
+// WS_POPUP は枠線やタイトルバーが一切ないポップアップウィンドウを作ります
+    DWORD windowStyle = WS_POPUP | WS_VISIBLE;
+
+
     //クライアント領域をもとに実際のサイズにwrcを変更してもらう
-    AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
+    AdjustWindowRect(&wrc, windowStyle, false);
 
 #pragma endregion
 
 #pragma region ウィンドウの生成と表示
+
 
     //ウィンドウの生成
     //CreateWindowの戻り値であるHWNDはウィンドウハンドルを呼びウィンドウを表す識別子である
     hwnd_ = CreateWindowW(
         wc_.lpszClassName,         // 利用するクラス名
         title.c_str(),                   // タイトルバーの文字(何でもいい)
-        WS_OVERLAPPEDWINDOW,      // よく見るウィンドウスタイル
+        windowStyle,      // よく見るウィンドウスタイル
         CW_USEDEFAULT,            // 表示X座標(Windowsに任せる)
         CW_USEDEFAULT,            // 表示Y座標(WindowsOsに任せる)
         wrc.right - wrc.left,     // ウィンドウ横幅

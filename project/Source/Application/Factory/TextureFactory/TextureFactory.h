@@ -87,6 +87,7 @@ public:
         //手
         HAND,
         MUSIC_HINT,
+        WEB_SITE,
         // ======================
         TEXTURES,
     };
