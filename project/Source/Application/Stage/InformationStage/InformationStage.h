@@ -18,6 +18,7 @@ private:
     //チケット番号入力システム
     std::unique_ptr<PasswordText>passwordText_ = nullptr;
     bool isGenerateTicket_ = false;
+  
 public:
     InformationStage();
     void Initialize()override;

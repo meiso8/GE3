@@ -1,5 +1,6 @@
 #include "InformationStage.h"
 
+#include"InputBind.h"
 
 InformationStage::InformationStage()
 {
@@ -12,6 +13,7 @@ InformationStage::InformationStage()
     gateSensor_->SetParent(gate_->GetWorldTransform());
     //チケット番号システム
     passwordText_ = std::make_unique<PasswordText>();
+    
 }
 
 void InformationStage::Initialize()
@@ -83,6 +85,32 @@ void InformationStage::Draw(Camera& camera)
 
 void InformationStage::CheckCollision(CollisionManager& collisionManager)
 {
+
+
+    //火のコライダーと当たっていたらがあるところで
+
+    for (auto& obj : objects_) {
+
+        if (obj->collider_->GetCollisionAttribute() == CollisionTag::GetTag("TicketMac")) {
+            auto* collider = obj->collider_.get();
+            if (player_->GerRaySprite()->Intersect(collider)) {
+                if (InputBind::IsClick()) {
+                    passwordText_->SetIsActive(true);
+                    break;
+                }
+          
+                //Vector3 pos = obj->obj_->GetWorldTransform().GetWorldPosition();
+                //Vector3 eyePos = player_->GetEyeWorldTransform().GetWorldPosition();
+                //Vector3 offset = { 0.0f,0.75f,0.0f };
+
+                ////ガラスを使う
+                //itemManager_->UseItemFromSlot(eyePos, pos + offset, "Glass"
+                //);
+              /*  break;*/
+            }
+        }
+    }
+
 
     //かべ
     for (auto& [type, object] : room_.get()->GetFieldPoses()) {

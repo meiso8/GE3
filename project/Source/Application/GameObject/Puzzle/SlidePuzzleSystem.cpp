@@ -54,12 +54,13 @@ void SlidePuzzleSystem::Update(const Vector2& screenPos)
 
     puzzleObj_->Update();
 
+#ifdef USE_IMGUI
+
     //デバック用に一旦
     if (Input::IsTriggerKey(DIK_P)) {
         isEnd_ = true;
     }
 
-#ifdef USE_IMGUI
     ImGui::Begin("Debug");
     ImGui::Checkbox("isEndPuzzle", &isEnd_);
     ImGui::End();
