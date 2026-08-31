@@ -11,7 +11,7 @@ public:
     
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     void OnCollision(Collider* collider) override;
     void SetColor(const Vector4& color) { aniObj_->SetColor(color); };
    

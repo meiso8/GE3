@@ -100,6 +100,13 @@ protected:
     // ==============メッシュ情報==================
     Primitive* primitive_ = nullptr;
 
+    // ==============/PSOの設定==================
+    BlendMode blendMode_ = kBlendModeNormal;
+    CullMode cullMode_ = kCullModeBack;
+    MaskMode maskMode_ = kAll;
+    bool usePSOKey_ = false;
+    TextureFactory::Handle skyBoxTexture_ = TextureFactory::Handle::SKYBOX_TEX;
+    TextureFactory::Handle dissolveTexture_ = TextureFactory::Handle::NOIZE0;
 private:
 
 public:
@@ -237,20 +244,24 @@ public:
     /// @brief 更新
     virtual void Update();
     /// @brief 描画関数
-    /// @param camera カメラ
     /// @param blendMode ブレンドモード
     /// @param cullMode カリング
     /// @param maskMode マスク
     /// @param usePSOKey PSOが無かったら生成するかどうか
     /// @param skyBoxTexture 環境テクスチャの設定
-    virtual void Draw(Camera& camera,
+    virtual void Draw(
         const BlendMode& blendMode = kBlendModeNormal,
         const CullMode& cullMode = kCullModeBack,
         const MaskMode maskMode = kAll,
         const bool usePSOKey = false,
         const TextureFactory::Handle skyBoxTexture = TextureFactory::Handle::SKYBOX_TEX,
-        const TextureFactory::Handle dissolveTexture =TextureFactory::Handle::NOIZE0
+        const TextureFactory::Handle dissolveTexture =TextureFactory::Handle::NOIZE0,
+        const bool useObjectManagerDraw = true
     );
+
+    virtual void DrawCommand(Camera& camera);
+
+
 protected:
     /// @brief モデルの描画
     /// @param modelData モデルデータを入れる

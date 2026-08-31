@@ -107,10 +107,10 @@ void MeltBlockMap::Update()
 }
 
 
-void MeltBlockMap::Draw(Camera& camera)
+void MeltBlockMap::Draw()
 {
     for (auto& block : blocks_) {
-        block->Draw(camera);
+        block->Draw();
     }
 }
 

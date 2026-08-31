@@ -59,7 +59,7 @@ void DummyMedjed::Init()
     transform.translate.y = startPosY_;
 }
 
-void DummyMedjed::Draw(Camera& camera)
+void DummyMedjed::Draw()
 {
 
     if (IsHide()) {
@@ -67,7 +67,7 @@ void DummyMedjed::Draw(Camera& camera)
     }
 
     object3d_->SetLightMode(Object3d::kLightModeHalfL);
-    object3d_->Draw(camera);
+    object3d_->Draw();
 
 }
 

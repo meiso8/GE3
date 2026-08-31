@@ -27,7 +27,7 @@ public:
 
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     const bool& IsClear() { return isClear_; };
     void ResetPushMap();
     void RayCastHit(RaySprite& raySprite);

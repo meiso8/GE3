@@ -12,7 +12,7 @@ public:
     DummyMummy();
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     void OnCollision(Collider* collider) override;
     void SetCollisionType();
     void SetIsOpen(const bool& isOpen) {

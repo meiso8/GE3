@@ -24,7 +24,7 @@ public:
     Player();
     ~Player();
     void Init(const Vector3& pos);
-    void Draw(Camera& camera);
+    void Draw();
     void DrawRaySprite();
     void Update();
     void Debug();

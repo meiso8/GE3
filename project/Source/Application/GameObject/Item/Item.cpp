@@ -41,9 +41,14 @@ void Item::Init()
     endPos_ = { 0.0f };
 }
 
-void Item::Draw(Camera& camera)
+void Item::Draw(const bool useItemCamera, Camera& camera)
 {
-    object_->Draw(camera);
+    object_->Draw(kBlendModeNormal, kCullModeBack, kAll, false, TextureFactory::SKYBOX_TEX, TextureFactory::NOIZE0, !useItemCamera);
+
+    if (useItemCamera) {
+        object_->DrawCommand(camera);
+    }
+
 }
 
 void Item::OnCollision(Collider* collider)

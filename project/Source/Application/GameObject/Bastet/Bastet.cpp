@@ -192,8 +192,8 @@ void Bastet::Update() {
 
 }
 
-void Bastet::Draw(Camera& camera) {
-    obj_->Draw(camera);
+void Bastet::Draw() {
+    obj_->Draw();
 
 }
 

@@ -22,7 +22,7 @@ protected:
 public:
     DummyMedjed();
     virtual void Init();
-    virtual void Draw(Camera& camera);
+    virtual void Draw();
     virtual void Update();
     void OnCollision(Collider* collider)override;
     virtual void Look(const Vector3& target);

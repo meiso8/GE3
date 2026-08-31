@@ -28,6 +28,7 @@ public:
     void SetColor(const Vector4& color)override { materialForSkyBox_->color = color; };
     void Initialize()override;
     void Create();
+    //スカイボックスに関してはこの時点で描画処理いれる
     void Draw(Camera& camera);
 private:
     void CreateMaterial(const Vector4& color = { 1.0f,1.0f,1.0f,1.0f });

@@ -56,8 +56,8 @@ void ResultMedjed::Update(const bool isResetAnim)
 
 }
 
-void ResultMedjed::Draw(Camera& camera)
+void ResultMedjed::Draw()
 {
-    aniObj_->Draw(camera);
+    aniObj_->Draw();
 
 }

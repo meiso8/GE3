@@ -20,7 +20,7 @@ public:
     ~BlockMap();
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     const bool& IsClear() { return isClear_; };
     std::array < std::array<std::unique_ptr<Block>, kMapWidth>, kMapHeight >& GetMap() { return map_; };
     void ResetPushMap();

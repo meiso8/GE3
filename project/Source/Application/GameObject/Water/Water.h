@@ -10,7 +10,7 @@ public:
     ~Water();
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     void OnCollision(Collider* collider) override;
     const bool& IsDrain() { return isDrain_; };
     void  SetIsDrain(const bool& isDrain) { isDrain_ = isDrain; };

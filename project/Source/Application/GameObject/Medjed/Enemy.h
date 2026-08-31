@@ -46,7 +46,7 @@ public:
     //初期化
     void Init();
     //描画
-    void Draw(Camera& camera, const Object3d::LightMode& lightMode);
+    void Draw(const Object3d::LightMode& lightMode);
     //更新
     void Update();
 

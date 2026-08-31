@@ -96,16 +96,14 @@ void MeltStage::Update()
 #endif // !USE_IMGUI
 }
 
-void MeltStage::Draw(Camera& camera)
+void MeltStage::Draw()
 {
-    backGround_->Draw(camera);
-    meltBlockMap_->Draw(camera);
-
+    backGround_->Draw();
+    meltBlockMap_->Draw();
 
     if (meltBlockMap_->IsClear()) {
         //なぞ解きをクリアしたら
-
-        bastet_->Draw(camera);
+        bastet_->Draw();
     }
 
 }

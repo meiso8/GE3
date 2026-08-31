@@ -19,7 +19,7 @@ public:
     ~MemoManager();
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     void DrawUI();
     void GenerateMemos(const std::vector<TextureFactory::Handle>& handles);
 

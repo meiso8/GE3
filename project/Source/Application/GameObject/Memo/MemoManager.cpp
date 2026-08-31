@@ -57,10 +57,10 @@ void MemoManager::Update()
     } 
 }
 
-void MemoManager::Draw(Camera& camera)
+void MemoManager::Draw()
 {
     for (auto& [handle, memo] : memos_) {
-        memo->Draw(camera);
+        memo->Draw();
     }
 
 

@@ -11,7 +11,7 @@ public:
     ~Fountain();
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     void OnCollision(Collider* collider) override;
 private:
     void CreateParticle();

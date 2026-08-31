@@ -12,7 +12,7 @@ public:
     ~SlidePuzzleSystem();
     void Initialize();
     void Update(const Vector2& screenPos);
-    void Draw(Camera& camera);
+    void Draw();
     void DrawUI();
     void RayCastHit(RaySprite& ray);
     bool GetIsGameEnd() {

@@ -2,13 +2,14 @@
 #include"MakeMatrix.h"
 #include"DirectXCommon.h"
 #include"Log.h"
+#include"ObjectManager/ObjectManager.h"
 
 void LineObject3d::SetVertex(const Vector3& start, const Vector3& end)
 {
     line_->SetVertex(start, end);
 }
 
-void LineObject3d::Create(const Vector3& startPos,const Vector3& endPos)
+void LineObject3d::Create(const Vector3& startPos, const Vector3& endPos)
 {
 
     line_ = std::make_unique<LineMesh>();
@@ -24,11 +25,11 @@ void LineObject3d::Create(const Vector3& startPos,const Vector3& endPos)
     Initialize();
 }
 
-void LineObject3d::Draw(Camera& camera,
+void LineObject3d::Draw(
     const bool useWorldMatrix,
     const BlendMode& blendMode,
     const CullMode& cullMode,
-    const MaskMode maskMode, 
+    const MaskMode maskMode,
     const bool usePSOKey,
     const RootSignature::TYPE rootSignatureType,
     const DxcCompiler::VS_TYPE vsType,
@@ -36,15 +37,32 @@ void LineObject3d::Draw(Camera& camera,
 {
     //データを書き込む
 
-    if (useWorldMatrix) {
+    useWorldMatrix_ = useWorldMatrix;
+    blendMode_ = blendMode;
+    cullMode_ = cullMode;
+    maskMode_ = maskMode;
+
+    usePSOKey_ = usePSOKey;
+    rootSignatureType_ = rootSignatureType;
+
+    vsType_ = vsType;
+    psType_ = psType;
+
+    ObjectManager::GetInstance()->SetDrawObject(materialForLine_->color.w, this);
+}
+
+void LineObject3d::DrawCommand(Camera& camera)
+{
+    if (useWorldMatrix_) {
         transformationMatrixResource_.data->World = worldTransform_.matWorld_;
     } else {
         transformationMatrixResource_.data->World = MakeIdentity4x4();
     }
+
     transformationMatrixResource_.data->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
     transformationMatrixResource_.data->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
-  
-    line_->SetRootSignatureAndGraphicsPipeline(commandList_,blendMode,cullMode,maskMode,usePSOKey,rootSignatureType,vsType,psType);
+
+    line_->SetRootSignatureAndGraphicsPipeline(commandList_, blendMode_, cullMode_, maskMode_, usePSOKey_, rootSignatureType_, vsType_, psType_);
 
     //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
     commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
@@ -59,7 +77,7 @@ void LineObject3d::Draw(Camera& camera,
     //ラインはインデックス関係なく2点のみのためこれ
     commandList_->DrawInstanced(line_->GetVertexCount(), 1, 0, 0);
 #pragma endregion
-    
+
 }
 
 LineObject3d::LineObject3d()
@@ -68,11 +86,11 @@ LineObject3d::LineObject3d()
 
 LineObject3d::~LineObject3d()
 {
-    
+
 }
 
 void LineObject3d::CreateMaterial(const Vector4& color)
-{   
+{
     //マテリアル用のリソースを作る。
     materialResource_.resource = ResourceFactory::CreateBufferResource(sizeof(MaterialForLine));
     //マテリアルにデータを書き込む

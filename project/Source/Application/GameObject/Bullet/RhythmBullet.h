@@ -23,7 +23,7 @@ public:
     void SetSound(const SoundFactory::TAG tag);
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
 
     BulletManager* GetBulletManager() { return bulletManager_.get(); };
     ShotBulletManager* GetShotBulletManager() { return shotBulletManager_.get();}

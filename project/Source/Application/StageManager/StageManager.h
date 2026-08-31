@@ -25,7 +25,7 @@ public:
 
     void Initialize();
     void Update();
-    void DrawModel(Camera* camera);
+    void DrawModel();
     void DrawSprite();
     void TransitionStage();
     void TransitionScene(const std::string& sceneName);

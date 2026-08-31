@@ -71,13 +71,13 @@ void Bullet::Update() {
 
 }
 
-void Bullet::Draw(Camera& camera) {
+void Bullet::Draw() {
 
     if (!isActive_) {
         return;
     }
 
-    body_->Draw(camera, kBlendModeNormal);
+    body_->Draw(kBlendModeNormal);
  
 }
 

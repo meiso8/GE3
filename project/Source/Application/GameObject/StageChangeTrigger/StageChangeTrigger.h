@@ -10,7 +10,7 @@ public:
     void Create(const LevelData::StageChangeTriggerData& data
     );
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     // コライダーが何かに当たった時に呼ばれる
     void OnCollision(Collider* collider) override;
 private:

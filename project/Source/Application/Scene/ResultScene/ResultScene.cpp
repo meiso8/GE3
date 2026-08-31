@@ -158,7 +158,7 @@ void ResultScene::DrawModel()
 {
     skyBoxObj_->Draw(*currentCamera_);
 
-    medjed_->Draw(*currentCamera_);
+    medjed_->Draw();
 }
 
 void ResultScene::SceneChangeUpdate()

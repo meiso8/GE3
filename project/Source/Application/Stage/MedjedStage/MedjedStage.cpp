@@ -123,18 +123,18 @@ void MedjedStage::Update()
 
 }
 
-void MedjedStage::Draw(Camera& camera)
+void MedjedStage::Draw()
 {
-    backGround_->Draw(camera);
+    backGround_->Draw();
 
     if (FindMedjed()) {
-        backGround_->DrawField(camera);
+        backGround_->DrawField();
     }
 
-    medjedManager_->Draw(camera);
+    medjedManager_->Draw();
 
     if (FindMedjed()) {
-        rhythmBullet_->Draw(camera);
+        rhythmBullet_->Draw();
     }
 
 }

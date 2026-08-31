@@ -68,9 +68,9 @@ void SlidePuzzleSystem::Update(const Vector2& screenPos)
 
 }
 
-void SlidePuzzleSystem::Draw(Camera& camera)
+void SlidePuzzleSystem::Draw()
 {
-    puzzleObj_->Draw(camera);
+    puzzleObj_->Draw();
 }
 
 void SlidePuzzleSystem::DrawUI()

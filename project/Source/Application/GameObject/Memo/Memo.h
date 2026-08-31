@@ -15,7 +15,7 @@ public:
     Memo();
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     WorldTransform& GetWorldTransform() { return object_->GetWorldTransform(); };
     void OnCollision(Collider* collider) override;
     void SetTexture(const TextureFactory::Handle& handle) {

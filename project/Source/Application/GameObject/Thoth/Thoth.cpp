@@ -58,13 +58,13 @@ void Thoth::Update()
     object_->Update();
 }
 
-void Thoth::Draw(Camera& camera) {
+void Thoth::Draw() {
     
     if (!isActive_) {
         return;
     }
 
-    object_->Draw(camera);
+    object_->Draw();
 
 }
 

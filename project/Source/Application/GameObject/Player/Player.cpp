@@ -176,11 +176,11 @@ void Player::UpdateRay()
     raySprite_->UpdateRay(Ray{ .origin = eyePosition_->GetWorldTransform().GetWorldPosition(),.diff = GetEyeForward() });
 }
 
-void Player::Draw(Camera& camera)
+void Player::Draw()
 {
 
     if (eyePosition_->IsCameraUpOrDown()) {
-        aniObject_->Draw(camera);
+        aniObject_->Draw();
     }
 
 }

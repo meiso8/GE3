@@ -127,11 +127,11 @@ void Beam::Update()
 
 }
 
-void Beam::Draw(Camera* camera)
+void Beam::Draw()
 {
 
 #ifdef _DEBUG
-    lineObj_->Draw(*camera, false);
+    lineObj_->Draw( false);
 #endif
 
     if (!isActive_) {
@@ -139,7 +139,7 @@ void Beam::Draw(Camera* camera)
     }
 
     object3d_->SetLightMode(Object3d::kLightModeNone);
-    object3d_->Draw(*camera);
+    object3d_->Draw();
 
 
 }

@@ -8,7 +8,7 @@ public:
     Gate();
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     void OnCollision(Collider* collider) override;
 
     void SetCanOpen(const bool isOpen) {

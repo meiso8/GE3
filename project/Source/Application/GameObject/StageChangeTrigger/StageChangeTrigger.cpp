@@ -83,9 +83,10 @@ void StageChangeTrigger::Update()
 
 }
 
-void StageChangeTrigger::Draw(Camera& camera)
+
+void StageChangeTrigger::Draw()
 {
-    object_->Draw(camera);
+    object_->Draw();
 }
 
 void StageChangeTrigger::OnCollision(Collider* collider)

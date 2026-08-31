@@ -80,13 +80,13 @@ void Bone::UpdateSkeleton(Skeleton& skeleton)
 // ===================================================================================================
 
 
-void DebugBone::Draw(Camera& camera)
+void DebugBone::Draw()
 {
     for (auto& value : bones_) {
-        value->Draw(camera,kBlendModeNormal, kCullModeNone, kZero_Depth_Stencil_Enable,true);
+        value->Draw(kBlendModeNormal, kCullModeNone, kZero_Depth_Stencil_Enable,true);
     }
     for (auto& value : boneLines_) {
-        value->Draw(camera, false,kBlendModeNormal, kCullModeNone, kZero_Depth_Stencil_Enable,true);
+        value->Draw(false,kBlendModeNormal, kCullModeNone, kZero_Depth_Stencil_Enable,true);
     }
 }
 

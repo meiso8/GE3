@@ -29,17 +29,17 @@ void Stage::UpdateObject()
     }
 }
 
-void Stage::DrawObject(Camera& camera)
+void Stage::DrawObject()
 {
 
     //オブジェクトの描画
     for (auto& obj : objects_) {
-        obj->obj_->Draw(camera);
+        obj->obj_->Draw();
     }
 
     //ステージトリガーの描画
     for (auto& trigger : stageTriggers_) {
-        trigger->Draw(camera);
+        trigger->Draw();
     }
 }
 

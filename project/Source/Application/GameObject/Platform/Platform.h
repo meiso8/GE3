@@ -13,7 +13,7 @@ public:
     const uint32_t GetSrvIndex() { return object_->GetSrvIndex(TEXTURE_USAGE_DIFFUSE); }
     virtual void Initialize();
     virtual void Update();
-    virtual void Draw(Camera& camera);
+    virtual void Draw();
     WorldTransform& GetWorldTransform() { return object_->GetWorldTransform(); };
     void OnCollision(Collider* collider) override;
     std::unique_ptr<Primitive>cubeMesh_ = nullptr;

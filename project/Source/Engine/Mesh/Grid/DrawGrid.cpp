@@ -85,13 +85,13 @@ void DrawGrid::Create()
     LogFile::Log("Create DrawGrid");
 }
 
-void DrawGrid::Draw(Camera& camera) {
+void DrawGrid::Draw() {
 
     for (auto& line : lineTransforms2_) {
-        line->Draw(camera,false);
+        line->Draw(false);
     }
 
     for (auto& cubeTransform : cubes_) {
-        cubeTransform->Draw(camera, kBlendModeNone);
+        cubeTransform->Draw(kBlendModeNone);
     }
 }

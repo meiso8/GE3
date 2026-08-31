@@ -270,24 +270,24 @@ void GameScene::Debug()
 void GameScene::DrawModel() {
 
 #ifdef _DEVELOP
-    DrawGrid::Draw(*currentCamera_);
+    DrawGrid::Draw();
 #endif
 
     skyboxObject3d_->Draw(*currentCamera_);
-    memoManager_->Draw(*currentCamera_);
+    memoManager_->Draw();
     itemManager_->Draw(*currentCamera_);
 
     //ステージごとの描画
-    StageManager::GetInstance()->DrawModel(currentCamera_);
+    StageManager::GetInstance()->DrawModel();
 
     //プレイヤーの描画
-    player_->Draw(*currentCamera_);
+    player_->Draw();
 
     //アイテムを手前に描画する
     itemManager_->DrawItemSlotItem();
 
 #ifdef _DEVELOP
-    collisionManager_->DrawAllCollider(currentCamera_);
+    collisionManager_->DrawAllCollider();
 #endif
 }
 

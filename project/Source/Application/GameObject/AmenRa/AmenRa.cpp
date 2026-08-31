@@ -45,8 +45,8 @@ void AmenRa::Update() {
 
 }
 
-void AmenRa::Draw(Camera& camera) {
-    object_->Draw(camera);
+void AmenRa::Draw() {
+    object_->Draw();
 
 }
 

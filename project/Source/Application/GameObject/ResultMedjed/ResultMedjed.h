@@ -14,6 +14,6 @@ public:
     ResultMedjed();
     void Initialize();
     void Update(const bool isResetAnim);
-    void Draw(Camera& camera);
+    void Draw();
 };
 

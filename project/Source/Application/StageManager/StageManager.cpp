@@ -45,13 +45,11 @@ void StageManager::Update()
 
 }
 
-void StageManager::DrawModel(Camera* camera)
+void StageManager::DrawModel()
 {
     if (currentStage_) {
-        //一旦二回描画しておく
-        currentStage_->DrawObject(*camera);
-        currentStage_->Draw(*camera);
-        currentStage_->DrawObject(*camera);
+        currentStage_->Draw();
+        currentStage_->DrawObject();
     }
 }
 

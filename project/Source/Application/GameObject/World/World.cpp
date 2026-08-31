@@ -33,9 +33,9 @@ void World::Update()
     object3d_->Update();
 }
 
-void World::Draw(Camera& camera)
+void World::Draw()
 {
-    object3d_->Draw(camera, kBlendModeNormal, kCullModeFront);
+    object3d_->Draw(kBlendModeNormal, kCullModeFront);
 }
 
 void World::SetTexture(const uint32_t& texture)

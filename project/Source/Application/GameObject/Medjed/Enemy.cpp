@@ -128,13 +128,13 @@ void Enemy::Init()
 
 }
 
-void Enemy::Draw(Camera& camera, const Object3d::LightMode& lightMode)
+void Enemy::Draw(const Object3d::LightMode& lightMode)
 {
     if (!isAppear_) { return; }
 
     bodyPos_->SetLightMode(lightMode);
-    bodyPos_->Draw(camera);
-    //ColliderDraw(camera);
+    bodyPos_->Draw();
+
 
 }
 

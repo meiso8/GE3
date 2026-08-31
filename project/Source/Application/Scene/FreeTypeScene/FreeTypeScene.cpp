@@ -118,7 +118,7 @@ void FreeTypeScene::DrawModel()
     skyBoxObj_->Draw(*currentCamera_);
 
     for (auto& obj : objects_) {
-        obj->obj_->Draw(*currentCamera_);
+        obj->obj_->Draw();
     }
 
 }

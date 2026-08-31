@@ -20,6 +20,7 @@ void SkyboxObject3d::Create()
     SetTextureHandle(TextureFactory::SKYBOX_TEX);
 }
 
+
 void SkyboxObject3d::Initialize()
 {
     worldTransform_.Initialize();
@@ -28,7 +29,6 @@ void SkyboxObject3d::Initialize()
 
 void SkyboxObject3d::Draw(Camera& camera)
 {
-    //データを書き込む
     Matrix4x4 viewMat = camera.GetViewMatrix();
     //平行移動成分を除去する
     viewMat.m[3][0] = 0.0f;
@@ -47,7 +47,7 @@ void SkyboxObject3d::Draw(Camera& camera)
         //wvp用のCBufferの場所を設定
         commandList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_.GetGPUVirtualAddress());
         //拡散反射テクスチャ 
-        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE],commandList_);
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(2, textureHandles_[TEXTURE_USAGE_DIFFUSE], commandList_);
         //メッシュの描画
         MeshDraw();
     }

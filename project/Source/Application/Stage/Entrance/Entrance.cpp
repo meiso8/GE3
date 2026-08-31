@@ -12,7 +12,7 @@ void Entrance::Update()
 {
 }
 
-void Entrance::Draw(Camera& camera)
+void Entrance::Draw()
 {
 }
 
