@@ -271,7 +271,7 @@ void AnimationObject3d::DrawCommand(Camera& camera)
 
 
 #ifdef _DEBUG
-    debugBone_->Draw(camera);
+    debugBone_->Draw();
 #endif
 
 }
