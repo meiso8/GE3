@@ -83,18 +83,41 @@ void Object3d::InitMeltData()
     }
 }
 
-void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& cullMode, const MaskMode maskMode, const bool usePSOKey, 
-    const TextureFactory::Handle skyBoxTexture,const TextureFactory::Handle dissolveTexture)
+void Object3d::Draw(const BlendMode& blendMode,
+    const CullMode& cullMode,
+    const MaskMode maskMode,
+    const bool usePSOKey, 
+    const TextureFactory::Handle skyBoxTexture,
+    const TextureFactory::Handle dissolveTexture,
+    const bool useObjectManagerDraw
+)
 {
     //データを書き込む
+
+    blendMode_ = blendMode;
+    cullMode_ = cullMode;
+
+    maskMode_ = maskMode;
+    usePSOKey_ = usePSOKey;
+    skyBoxTexture_ = skyBoxTexture;
+    dissolveTexture_ = dissolveTexture;
+
+    if (useObjectManagerDraw) {
+        ObjectManager::GetInstance()->SetDrawObject(material_->color.w, this);
+    }
+}
+
+void Object3d::DrawCommand(Camera& camera)
+{
 
     transformationMatrixResource_.data->World = worldTransform_.matWorld_;
     transformationMatrixResource_.data->WorldInverseTranspose = Transpose(Inverse(worldTransform_.matWorld_));
     transformationMatrixResource_.data->WVP = Multiply(worldTransform_.matWorld_, camera.GetViewProjectionMatrix());
 
+
     if (primitive_) {
 
-        primitive_->SetRootSignatureAndGraphicsPipeline(commandList_, blendMode, cullMode, maskMode, usePSOKey);
+        primitive_->SetRootSignatureAndGraphicsPipeline(commandList_, blendMode_, cullMode_, maskMode_, usePSOKey_);
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
         commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.resource->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
@@ -116,11 +139,11 @@ void Object3d::Draw(Camera& camera, const BlendMode& blendMode, const CullMode& 
         //SpotLightのDescriptorTableの設定をする
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(9, SpotLightManager::GetSrvIndex(), commandList_);
         //SkyBox
-        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture), commandList_);
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture_), commandList_);
         //MeltData
         commandList_->SetGraphicsRootConstantBufferView(11, meltResource_.GetGPUVirtualAddress());
         //SkyBox
-        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(12, Texture::GetSRVHandle(dissolveTexture), commandList_);
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(12, Texture::GetSRVHandle(dissolveTexture_), commandList_);
         MeshDraw();
 
     }

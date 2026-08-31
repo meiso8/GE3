@@ -15,8 +15,8 @@ public:
     BackGround();
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
-    void DrawField(Camera& camera);
+    void Draw();
+    void DrawField();
     void UpdateApperMedjed();
     Building* GetBuilding() {
         return building_

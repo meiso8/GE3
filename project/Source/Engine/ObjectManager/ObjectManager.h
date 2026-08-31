@@ -46,6 +46,9 @@ public:
     void Draw(Camera& camera);
     //終了処理
     void Finalize();
+
+    void SetDrawObject(float alpha, Object3d* object3d);
+
 private:      
     void Save();
     void SetName();
@@ -57,6 +60,7 @@ private:
     void ColliderCheck(Camera& camera);
     ObjectManager() = default;
     ~ObjectManager() = default;
+
 private:
     RenderTexture* renderTexture_ = nullptr;
 
@@ -75,5 +79,14 @@ private:
     std::vector<std::unique_ptr<Object3d>> createObjects_;
     //コライダーマップ
     std::unordered_map<Object3d*, std::unique_ptr<Collider>>colliderMaps_;
+    //αソートする
+
+    // 1. 構造体またはstd::pairのvectorを用意する
+    struct AlphaObject {
+        float alpha;
+        Object3d* ptr;
+    };
+
+    std::vector<AlphaObject> objectAlpha_;
 };
 

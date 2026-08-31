@@ -150,7 +150,7 @@ void ItemSlot::Draw()
 {
     for (auto& item : slots_) {
         if (item && item->IsGet()&& !item->IsUsed()) {
-            item->Draw(*itemCamera_);
+            item->Draw(true,*itemCamera_);
         }
     }
 }

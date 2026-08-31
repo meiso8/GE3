@@ -24,7 +24,7 @@ public:
     void Look(const Vector3& target)override;
     void Init()override;
     void Update()override;
-    void Draw(Camera& camera)override;
+    void Draw()override;
     void OnCollision(Collider* collider)override;
 
     WorldTransform& GetWorldTransform()const { return aniObj_->GetWorldTransform(); };

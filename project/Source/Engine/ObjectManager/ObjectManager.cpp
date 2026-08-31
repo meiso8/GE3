@@ -221,20 +221,42 @@ void ObjectManager::CheckCollision(CollisionManager* collisionManager)
 void ObjectManager::Draw(Camera& camera)
 {
     for (auto& obj : createObjects_) {
-        obj->Draw(camera);
+        obj->Draw();
     }
 
 #ifdef _DEVELOP
 
     for (auto& [objPtr, collider] : colliderMaps_) {
-        collider->ColliderDraw(camera);
+        collider->ColliderDraw();
     }
 
 #endif
+
+
+    // 2. 距離やアルファ値が変わるため、描画直前にソートする
+// ※半透明オブジェクトは「奥から手前」に描画する必要があるため、通常は降順、
+// もし純粋にアルファ値の大きさで並べたいなら、目的に応じて比較演算子（< や >）を変えてください。
+    std::sort(objectAlpha_.begin(), objectAlpha_.end(), [](const AlphaObject& a, const AlphaObject& b) {
+        return a.alpha > b.alpha; // アルファ値が大きい順（またはカメラから遠い順）
+        });
+
+    // 3. ソートされた順に描画
+    for (const auto& obj : objectAlpha_) {
+        obj.ptr->DrawCommand(camera);
+        objectAlpha_.pop_back();
+    }
+
+}
+
+void ObjectManager::SetDrawObject(float alpha, Object3d* object3d)
+{
+    AlphaObject alobj = { alpha ,object3d };
+    objectAlpha_.push_back(alobj);
 }
 
 void ObjectManager::Finalize()
 {
+    objectAlpha_.clear();
     createObjects_.clear();
     colliderMaps_.clear();
 }

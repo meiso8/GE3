@@ -12,7 +12,7 @@ class FieldCollider :public Collider {
 public:
     FieldCollider();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     void Initialize();
     void OnCollision(Collider* collider)override;
     void SettingAABB(const AABB& aabb);
@@ -46,7 +46,7 @@ public:
     virtual void SetWallAABB();
     virtual void SetWallPos();
     virtual void Update();
-    virtual void Draw(Camera& camera);
+    virtual void Draw();
     std::unordered_map<AABBType, std::unique_ptr <FieldCollider>>& GetFieldPoses() { return fieldPoses_; };
 private:
     //壁の厚みを設定する定数

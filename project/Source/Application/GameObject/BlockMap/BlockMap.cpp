@@ -156,11 +156,11 @@ void BlockMap::Update() {
 }
 
 
-void BlockMap::Draw(Camera& camera)
+void BlockMap::Draw()
 {
     for (auto& y : map_) {
         for (auto& x : y) {
-            x->Draw(camera);
+            x->Draw();
         }
     }
 }

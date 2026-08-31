@@ -72,14 +72,14 @@ void Collider::ColliderUpdate()
 #endif // _DEVELOP
 }
 
-void Collider::ColliderDraw(Camera& camera)
+void Collider::ColliderDraw()
 {
 #ifdef _DEVELOP
     if (!object3d_) {
         return;
     }
     object3d_->SetLightMode(Object3d::kLightModeNone);
-    object3d_->Draw(camera);
+    object3d_->Draw();
 #endif // _DEVELOP
 }
 

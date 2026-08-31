@@ -10,7 +10,7 @@ class DrawGrid {
 public:
     static void Finalize();
     static void Create();
-    static void Draw(Camera& camera);
+    static void Draw();
 private:
 
     static std::array <std::unique_ptr<Primitive>, 2> cube_;

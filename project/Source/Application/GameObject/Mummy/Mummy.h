@@ -10,7 +10,7 @@ public:
     Mummy();
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     void OnCollision(Collider* collider) override;
     Platform* GetPlatform() { return platform_.get(); }
     void SetIsOpen(const bool& isOpen) { isOpen_ = isOpen; }

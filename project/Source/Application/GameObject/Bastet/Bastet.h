@@ -9,7 +9,7 @@ class Bastet :public Collider
 public:
     Bastet();
     void Update();
-    void  Draw(Camera& camera);
+    void  Draw();
     void Initialize();
     void LoadMap(const std::string& tagName = "MeltStage_BastetStep");
     void OnCollision(Collider* collider) override;

@@ -84,10 +84,10 @@ void Fountain::Update()
     DebugUI::CheckEmitter(particleEmitter_[1]->GetEmitter(),"water");
 }
 
-void Fountain::Draw(Camera& camera)
+void Fountain::Draw()
 {
-    object_->Draw(camera);
-    waterObject_->Draw(camera);
+    object_->Draw();
+    waterObject_->Draw();
 
 }
 

@@ -25,8 +25,8 @@ void Memo::Update() {
     object_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 }
 
-void Memo::Draw(Camera& camera) {
-    object_->Draw(camera);
+void Memo::Draw() {
+    object_->Draw();
 
 }
 void Memo::OnCollision(Collider* collider)

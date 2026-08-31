@@ -31,10 +31,10 @@ void BeamManager::Update()
 	}
 }
 
-void BeamManager::Draw(Camera* camera)
+void BeamManager::Draw()
 {
 	for (auto& beam : beams_) {
-		beam->Draw(camera);
+		beam->Draw();
 	}
 }
 

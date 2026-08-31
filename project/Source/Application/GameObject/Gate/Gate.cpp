@@ -83,9 +83,9 @@ void Gate::Update()
 
 }
 
-void Gate::Draw(Camera& camera)
+void Gate::Draw()
 {
-    aniObj_->Draw(camera);
+    aniObj_->Draw();
 }
 
 void Gate::OnCollision(Collider* collider)

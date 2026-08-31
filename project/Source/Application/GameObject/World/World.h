@@ -19,7 +19,7 @@ public:
     World();
     void Init();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     uint32_t texture_ = NORMAL;
     void SetTexture(const uint32_t& texture);
     void UpdateColor();

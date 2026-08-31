@@ -56,6 +56,6 @@ public:
 
     void Create(Skeleton& skeleton);
     void Update(const Matrix4x4& parentMatrix);
-    void Draw(Camera& camera);
+    void Draw();
     void Finalize();
 };

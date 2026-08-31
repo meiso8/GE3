@@ -124,7 +124,7 @@ void ItemManager::Draw(Camera& camera) {
             continue;
         }
 
-        item->Draw(camera);
+        item->Draw(false, camera);
 
     }
 }

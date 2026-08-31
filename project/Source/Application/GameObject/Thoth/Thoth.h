@@ -11,7 +11,7 @@ public:
     ~Thoth();
     void Initialize();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     void OnCollision(Collider* collider)override;
     void SetIsActive(const bool flag) { isActive_ = flag; };
     const bool GetIsActive() { return isActive_; }

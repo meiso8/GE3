@@ -5,7 +5,7 @@ class InformationRoom :
 {
 public:
     InformationRoom();
-    void Draw(Camera& camera) override;
+    void Draw() override;
 
 private:
     void SetWallPos() override;

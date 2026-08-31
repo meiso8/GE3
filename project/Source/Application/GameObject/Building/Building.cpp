@@ -100,10 +100,10 @@ void Building::Update()
     }
 }
 
-void Building::Draw(Camera& camera)
+void Building::Draw()
 {
     for (const auto& [type, pos] : fieldPoses_) {
-        pos->Draw(camera);
+        pos->Draw();
     }
 }
 
@@ -134,9 +134,9 @@ void FieldCollider::Update()
 
 }
 
-void FieldCollider::Draw(Camera& camera)
+void FieldCollider::Draw()
 {
-    object_->Draw(camera);
+    object_->Draw();
 }
 
 void FieldCollider::Initialize()

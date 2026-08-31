@@ -19,7 +19,7 @@ public:
 
     virtual void Init();
     virtual void Update();
-    virtual void Draw(Camera& camera);
+    virtual void Draw(const bool useItemCamera, Camera& camera);
     void OnCollision(Collider* collider)override;
 
     //スクリーン座標に変換する

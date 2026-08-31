@@ -200,10 +200,10 @@ void BastetBlockMap::Update()
     }
 }
 
-void BastetBlockMap::Draw(Camera& camera)
+void BastetBlockMap::Draw()
 {
     for (auto& block : blocks_) {
-        block->Draw(camera);
+        block->Draw();
     }
 }
 

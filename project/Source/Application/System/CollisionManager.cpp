@@ -47,7 +47,7 @@ void CollisionManager::CheckAllCollisions() {
     }
 }
 
-void CollisionManager::DrawAllCollider(Camera* camera)
+void CollisionManager::DrawAllCollider()
 {
 
     if (!isDraw_) {
@@ -55,7 +55,7 @@ void CollisionManager::DrawAllCollider(Camera* camera)
     }
 
     for (auto& collider : colliders_) {
-        collider->ColliderDraw(*camera);
+        collider->ColliderDraw();
     }
 }
 

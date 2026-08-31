@@ -44,10 +44,10 @@ void MummyRoom::SetWallAABB() {
     }
 }
 
-void MummyRoom::Draw(Camera& camera)
+void MummyRoom::Draw()
 {
     buildingPos_->SetLightMode(Object3d::kLightModeHalfL);
-    buildingPos_->Draw(camera);
+    buildingPos_->Draw();
 
-     fieldPoses_[Floor]->Draw(camera);
+     fieldPoses_[Floor]->Draw();
 }

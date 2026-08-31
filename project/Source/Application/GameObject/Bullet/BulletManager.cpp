@@ -28,9 +28,9 @@ void BulletManager::Update() {
 	}
 }
 
-void BulletManager::Draw(Camera& camera) {
+void BulletManager::Draw() {
 	for (auto& bullet : bullets_) {
-		bullet->Draw(camera);
+		bullet->Draw();
 	}
 }
 

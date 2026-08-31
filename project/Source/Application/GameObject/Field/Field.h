@@ -20,7 +20,7 @@ public:
     Field();
     void Init();
     void Update();
-    void Draw(Camera& camera);
+    void Draw();
     Circle circle_;
     float uvTranslate_ = 0.0f;
 };

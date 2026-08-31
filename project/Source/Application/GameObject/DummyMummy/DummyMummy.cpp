@@ -76,9 +76,9 @@ void DummyMummy::Update()
 
 }
 
-void DummyMummy::Draw(Camera& camera)
+void DummyMummy::Draw()
 {
-    aniObj_->Draw(camera);
+    aniObj_->Draw();
 
 }
 

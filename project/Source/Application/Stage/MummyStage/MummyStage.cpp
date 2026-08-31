@@ -176,16 +176,16 @@ void MummyStage::CheckCollision(CollisionManager& collisionManager)
 
 }
 
-void MummyStage::Draw(Camera& camera) {
+void MummyStage::Draw() {
 
-    mummyRoom_->Draw(camera);
-    papyrus_->Draw(camera);
+    mummyRoom_->Draw();
+    papyrus_->Draw();
 
     for (auto& dummyMummy : dummyMummies_) {
-        dummyMummy->Draw(camera);
+        dummyMummy->Draw();
     }
 
-    mummy_->Draw(camera);
+    mummy_->Draw();
 
 
 }

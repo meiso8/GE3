@@ -88,7 +88,7 @@ void MedjedManager::Initialize()
     GetMedjed()->MoveStart();
 }
 
-void MedjedManager::Draw(Camera& camera)
+void MedjedManager::Draw()
 {
     for (auto& dummyMedjed : dummyMedjeds_) {
 
@@ -96,12 +96,12 @@ void MedjedManager::Draw(Camera& camera)
             continue;
         }
 
-        dummyMedjed->Draw(camera);
+        dummyMedjed->Draw();
     }
 
-    GetMedjed()->Draw(camera);
+    GetMedjed()->Draw();
 
-    enemy_->Draw(camera, Object3d::kLightModeHalfL);
+    enemy_->Draw( Object3d::kLightModeHalfL);
 
 }
 

@@ -5,7 +5,7 @@ class MummyRoom : public Building
 {
 public:
     MummyRoom();
-    void Draw(Camera& camera) override;
+    void Draw() override;
 
 private:
     void SetWallPos() override;

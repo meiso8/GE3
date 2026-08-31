@@ -46,8 +46,8 @@ void Papyrus::Update() {
     object_->Update();
 }
 
-void Papyrus::Draw(Camera& camera) {
-    object_->Draw(camera);
+void Papyrus::Draw() {
+    object_->Draw();
 }
 
 void Papyrus::OnCollision(Collider* collider) {

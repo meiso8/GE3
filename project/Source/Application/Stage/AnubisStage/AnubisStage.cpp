@@ -57,13 +57,13 @@ void AnubisStage::Update()
 
 }
 
-void AnubisStage::Draw(Camera& camera)
+void AnubisStage::Draw()
 {
-    fountain_->Draw(camera);
-    backGround_->Draw(camera);
-    anubisBlockMap_->Draw(camera);
+    fountain_->Draw();
+    backGround_->Draw();
+    anubisBlockMap_->Draw();
     //なぞ解きをクリアしたらトートが出てくる
-    thoth_->Draw(camera);
+    thoth_->Draw();
 
 }
 

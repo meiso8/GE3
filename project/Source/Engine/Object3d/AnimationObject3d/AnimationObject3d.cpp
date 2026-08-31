@@ -13,6 +13,7 @@
 #include"DirectXCommon.h"
 #include"Log.h"
 #include "ComputeShaderPSO/ComputeShaderPSO.h"
+#include"ObjectManager/ObjectManager.h"
 AnimationObject3d::AnimationObject3d() {
     animationTime_ = 0.0f;
     worldMatrix_ = MakeIdentity4x4();
@@ -172,11 +173,31 @@ void AnimationObject3d::SetModelAndLoadAnimation(Model* model)
 
 }
 
-void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const CullMode& cullMode,
-    const MaskMode maskMode,const bool usePSOKey,
+void AnimationObject3d::Draw(
+    const BlendMode& blendMode, 
+    const CullMode& cullMode,
+    const MaskMode maskMode,
+    const bool usePSOKey,
     const TextureFactory::Handle skyBoxTexture, 
-    const TextureFactory::Handle dissolveTexture)
+    const TextureFactory::Handle dissolveTexture,
+    const bool useObjectManagerDraw)
 {
+
+    blendMode_ = blendMode;
+    cullMode_ = cullMode;
+    maskMode_ = maskMode;
+    usePSOKey_ = usePSOKey;
+    skyBoxTexture_ = skyBoxTexture;
+    dissolveTexture_ = dissolveTexture;
+
+    if (useObjectManagerDraw) {
+        ObjectManager::GetInstance()->SetDrawObject(material_->color.w, this);
+    }
+}
+
+void AnimationObject3d::DrawCommand(Camera& camera)
+{
+
     transformationMatrixResource_.data->World = worldMatrix_;
     transformationMatrixResource_.data->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
     transformationMatrixResource_.data->WVP = Multiply(worldMatrix_, camera.GetViewProjectionMatrix());
@@ -198,25 +219,25 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
 
     commandList_->SetComputeRootSignature(PSO::GetRootSignature()->GetRootSignature(RootSignature::CS_SKINNING));
     commandList_->SetPipelineState(ComputeShaderPSO::GetInstance()->GetSkinningPSO().Get());
-     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(0, skinCluster->paletteSrvIndex, commandList_);
-     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(1, csResource->inputVertexResource_.srvIndex, commandList_);
-     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(2, skinCluster->influenceSrvIndex, commandList_);
-     cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(3, csResource->outputVertexResource_.uavIndex, commandList_);
-     commandList_->SetComputeRootConstantBufferView(4, csResource->skinningInformationResource_.GetGPUVirtualAddress());
+    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(0, skinCluster->paletteSrvIndex, commandList_);
+    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(1, csResource->inputVertexResource_.srvIndex, commandList_);
+    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(2, skinCluster->influenceSrvIndex, commandList_);
+    cbvSrvUavDescriptorHeap_->SetComputeRootDescriptorTable(3, csResource->outputVertexResource_.uavIndex, commandList_);
+    commandList_->SetComputeRootConstantBufferView(4, csResource->skinningInformationResource_.GetGPUVirtualAddress());
 
-     //ComputeShaderの実行
-     commandList_->Dispatch(UINT(skinningModel_->GetModelData()->vertices.size() + 1023) / 1024, 1, 1);
-     
-     // ====================================================================
-    // 2. Compute Shader実行後：UAVステート -> 頂点バッファステートへ戻す
+    //ComputeShaderの実行
+    commandList_->Dispatch(UINT(skinningModel_->GetModelData()->vertices.size() + 1023) / 1024, 1, 1);
+
     // ====================================================================
-     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-     barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
-     commandList_->ResourceBarrier(1, &barrier);
+   // 2. Compute Shader実行後：UAVステート -> 頂点バッファステートへ戻す
+   // ====================================================================
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+    commandList_->ResourceBarrier(1, &barrier);
 
     if (skinningModel_) {
-        skinningModel_->SetRootSignatureAndGraphicsPipeline(commandList_, blendMode, cullMode,maskMode,usePSOKey);
-       
+        skinningModel_->SetRootSignatureAndGraphicsPipeline(commandList_, blendMode_, cullMode_, maskMode_, usePSOKey_);
+
         //マテリアルCBufferの場所を設定　/*RotParameter配列の0番目 0->register(b4)1->register(b0)2->register(b4)*/
         commandList_->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
         //wvp用のCBufferの場所を設定
@@ -237,19 +258,17 @@ void AnimationObject3d::Draw(Camera& camera,  const BlendMode& blendMode, const 
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(8, PointLightManager::GetSrvIndex(), commandList_);
         //SpotLightのDescriptorTableの設定をする
         cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(9, SpotLightManager::GetSrvIndex(), commandList_);
-
-        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture), commandList_);
-
-
+        //環境テクスチャの設定
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(10, Texture::GetSRVHandle(skyBoxTexture_), commandList_);
         //MeltData
         commandList_->SetGraphicsRootConstantBufferView(11, meltResource_.GetGPUVirtualAddress());
-
         //SkyBox
-        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(12, Texture::GetSRVHandle(dissolveTexture), commandList_);
+        cbvSrvUavDescriptorHeap_->SetGraphicsRootDescriptorTable(12, Texture::GetSRVHandle(dissolveTexture_), commandList_);
 
         //ここでテクスチャの設定をする
         MeshDraw();
     }
+
 
 #ifdef _DEBUG
     debugBone_->Draw(camera);

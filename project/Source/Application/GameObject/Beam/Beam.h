@@ -20,7 +20,7 @@ public:
     ~Beam();
     void Initialize();
     void Update();
-    void Draw(Camera* camera);
+    void Draw();
     bool Shot(const Vector3& target, const  BeamType& type, const Vector3& startPos, Matrix4x4* parent);
     bool GetIsActive() { return isActive_; };
 

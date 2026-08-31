@@ -77,10 +77,10 @@ void Mummy::Update() {
 
 }
 
-void Mummy::Draw(Camera& camera) {
-    platform_->Draw(camera);
-    aniObj_->Draw(camera, kBlendModeNormal, kCullModeNone);
-    object_->Draw(camera);
+void Mummy::Draw() {
+    platform_->Draw();
+    aniObj_->Draw( kBlendModeNormal, kCullModeNone);
+    object_->Draw();
 
 }
 

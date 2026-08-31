@@ -144,7 +144,7 @@ public:
 	/// @param mask 衝突マスク
 	void SetCollisionMask(uint32_t mask) { collisionMask_ = mask; }
 
-	void ColliderDraw(Camera& camera);
+	void ColliderDraw();
 	void OnCollisionCollider();
 	void SetCollisionInfo(const CollisionInfo& info) { collisionInfo_ = info; };
 	CollisionInfo& GetCollisionInfo() {

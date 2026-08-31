@@ -100,10 +100,10 @@ void AnubisBlockMap::Update()
 
 }
 
-void AnubisBlockMap::Draw(Camera& camera)
+void AnubisBlockMap::Draw()
 {
     for (auto& block : blocks_) {
-        block->Draw(camera);
+        block->Draw();
     }
 }
 

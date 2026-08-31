@@ -48,8 +48,8 @@ void PuzzleObj::Update() {
     aniObj_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 }
 
-void PuzzleObj::Draw(Camera& camera) {
-    aniObj_->Draw(camera);
+void PuzzleObj::Draw() {
+    aniObj_->Draw();
 
 }
 

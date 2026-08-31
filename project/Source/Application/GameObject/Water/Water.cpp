@@ -75,8 +75,8 @@ void Water::Update() {
     object_->Update();
 }
 
-void Water::Draw(Camera& camera) {
-    object_->Draw(camera, kBlendModeMultiply);
+void Water::Draw() {
+    object_->Draw( kBlendModeMultiply);
 
 }
 

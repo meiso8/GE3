@@ -58,13 +58,13 @@ void BastetStage::Update()
 
 }
 
-void BastetStage::Draw(Camera& camera)
+void BastetStage::Draw()
 {
-    backGround_->Draw(camera);
-    bastetBlockMap_->Draw(camera);
+    backGround_->Draw();
+    bastetBlockMap_->Draw();
 
     //バステトの描画
-    bastet_->Draw(camera);
+    bastet_->Draw();
 }
 
 void BastetStage::CheckCollision(CollisionManager& collisionManager)

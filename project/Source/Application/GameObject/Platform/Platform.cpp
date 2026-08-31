@@ -36,8 +36,8 @@ void Platform::Update() {
     object_->Update();
 }
 
-void Platform::Draw(Camera& camera) {
-    object_->Draw(camera);
+void Platform::Draw() {
+    object_->Draw();
    
 }
 

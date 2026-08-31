@@ -39,7 +39,7 @@ public:
     void RayCastHit();
 
     void Initialize();
-    void Draw(Camera& camera);
+    void Draw();
     void Update();
     const bool& GetIsEnemyDead() {
         return enemy_->GetIsDead();

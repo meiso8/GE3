@@ -61,13 +61,13 @@ void WaterStage::Update()
     UpdateObject();
 }
 
-void WaterStage::Draw(Camera& camera)
+void WaterStage::Draw()
 {
-    papyrusWall_->Draw(camera);
-    blockMap_->Draw(camera);
+    papyrusWall_->Draw();
+    blockMap_->Draw();
     //オブジェクトの描画
-    DrawObject(camera);
-    water_->Draw(camera);
+    DrawObject();
+    water_->Draw();
  
 }
 

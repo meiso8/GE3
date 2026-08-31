@@ -63,11 +63,11 @@ void AmenStage::Update()
 
 }
 
-void AmenStage::Draw(Camera& camera)
+void AmenStage::Draw()
 {
-    backGround_->Draw(camera);
-    amenRa_->Draw(camera);
-    slidePuzzleSystem_->Draw(camera);
+    backGround_->Draw();
+    amenRa_->Draw();
+    slidePuzzleSystem_->Draw();
 
 }
 

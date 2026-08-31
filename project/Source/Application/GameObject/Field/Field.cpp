@@ -30,7 +30,7 @@ void Field::Update()
     object3d_->Update();
 }
 
-void Field::Draw(Camera& camera)
+void Field::Draw()
 {
-    object3d_->Draw(camera);
+    object3d_->Draw();
 }

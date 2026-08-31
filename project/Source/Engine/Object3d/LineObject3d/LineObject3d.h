@@ -17,9 +17,13 @@ public:
 protected:
     MaterialForLine* materialForLine_ = nullptr;
     std::unique_ptr<LineMesh>line_ = nullptr;
+private:
+    bool useWorldMatrix_ = false;
+    RootSignature::TYPE rootSignatureType_ = RootSignature::TYPE::LINE;
+    DxcCompiler::VS_TYPE vsType_ = DxcCompiler::VS_TYPE::VS_Line;
+    DxcCompiler::PS_TYPE psType_ = DxcCompiler::PS_TYPE::PS_Line;
 public:
     /// @brief 描画関数
-    /// @param camera カメラのセット
     /// @param useWorldMatrix ワールド行列を使うかの設定
     /// @param blendMode ブレンドモード
     /// @param cullMode カリング
@@ -29,7 +33,6 @@ public:
     /// @param vsType 頂点シェーダータイプ
     /// @param psType ピクセルシェーダータイプ
     void Draw(
-        Camera& camera,
         const bool useWorldMatrix,
         const BlendMode& blendMode = kBlendModeNone,
         const CullMode& cullMode = kCullModeBack,
@@ -39,6 +42,8 @@ public:
         const DxcCompiler::VS_TYPE vsType = DxcCompiler::VS_TYPE::VS_Line,
         const DxcCompiler::PS_TYPE psType = DxcCompiler::PS_TYPE::PS_Line
     );
+
+     void DrawCommand(Camera& camera)override;
     LineObject3d();
     ~LineObject3d();
     // ==============マテリアルデータ==================

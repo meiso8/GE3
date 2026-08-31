@@ -129,13 +129,13 @@ void Medjed::Init()
     aniObj_->RegisterObject();
 }
 
-void Medjed::Draw(Camera& camera)
+void Medjed::Draw()
 {
     if (IsHide()) {
         return;
     }
 
-    aniObj_->Draw(camera);
+    aniObj_->Draw();
 
 
 }

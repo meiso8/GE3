@@ -366,19 +366,18 @@ void ButtobiEngine::PreCommandSet() {
 
     directXCommon_->VeiwPortAndScissorRect();
 
-    // カメラ
-    auto* camera = SceneManager::GetCurrentCamera();
-#ifdef _DEVELOP
-    if (camera) {
 
-        DrawGrid::Draw(*camera);
-    }
+#ifdef _DEVELOP
+
+        DrawGrid::Draw();
+
 
 #endif //_DEVELOP
 
     // シーンの描画
     SceneManager::DrawModel();
-
+    // カメラ
+    auto* camera = SceneManager::GetCurrentCamera();
     //生成オブジェクト描画
     if (camera) {
         ObjectManager::GetInstance()->Draw(*camera);

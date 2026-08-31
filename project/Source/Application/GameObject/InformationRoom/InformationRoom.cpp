@@ -7,8 +7,8 @@ InformationRoom::InformationRoom() {
     buildingPos_->SetLightMode(Object3d::LightMode::kLightModeHalfL);
 };
 
-void InformationRoom::Draw(Camera& camera) {
-    buildingPos_->Draw(camera);
+void InformationRoom::Draw() {
+    buildingPos_->Draw();
 }
 void InformationRoom::SetWallPos() {
 

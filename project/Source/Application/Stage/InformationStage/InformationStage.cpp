@@ -77,10 +77,10 @@ void InformationStage::Update()
     }
 }
 
-void InformationStage::Draw(Camera& camera)
+void InformationStage::Draw()
 {
-    room_->Draw(camera);
-    gate_->Draw(camera);
+    room_->Draw();
+    gate_->Draw();
 }
 
 void InformationStage::CheckCollision(CollisionManager& collisionManager)

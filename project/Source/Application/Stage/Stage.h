@@ -36,7 +36,7 @@ public:
     void ResetInitializeFlag();
     
     void UpdateObject();
-    void DrawObject(Camera& camera);
+    void DrawObject();
     void AddObjectCollision(CollisionManager& collisionManager);
 
     virtual void CheckCollision(CollisionManager& collisionManager) = 0;
@@ -44,7 +44,7 @@ public:
     //ステージ遷移時初期化
     virtual void StageTransitionInitialize() = 0;
     virtual void Update() = 0;
-    virtual void Draw(Camera& camera) = 0;
+    virtual void Draw() = 0;
     virtual void DrawSprite() {};
 };
 

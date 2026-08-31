@@ -39,10 +39,10 @@ void RhythmBullet::Update()
     shotBeamManager_->Update();
 }
 
-void RhythmBullet::Draw(Camera& camera)
+void RhythmBullet::Draw()
 {
-    bulletManager_->Draw(camera);
-    beamManager_->Draw(&camera);
+    bulletManager_->Draw();
+    beamManager_->Draw();
 }
 
 
